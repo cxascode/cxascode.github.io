@@ -49,28 +49,10 @@ export default function App() {
     };
   }, []);
 
-  // ---- Manual upload fallback
-  async function onUpload(file) {
-    setLoadError("");
-    setSelected("");
-    setQuery("");
-    if (!file) return;
-
-    try {
-      const text = await file.text();
-      const json = JSON.parse(text);
-      if (!Array.isArray(json.resources)) {
-        throw new Error("JSON must contain a top-level 'resources' array");
-      }
-      setRaw(json);
-    } catch (e) {
-      setLoadError(String(e?.message || e));
-    }
-  }
-
   // ---- Build dependency maps
-  const { types, depsMap, reverseDepsMap } = useMemo(() => {
+  const { version, types, depsMap, reverseDepsMap } = useMemo(() => {
     const empty = {
+      version: "",
       types: [],
       depsMap: new Map(),
       reverseDepsMap: new Map(),
@@ -97,6 +79,7 @@ export default function App() {
     }
 
     return {
+      version: raw.version || "",
       types: uniqSorted([...new Set([...deps.keys(), ...rev.keys()])]),
       depsMap: deps,
       reverseDepsMap: rev,
@@ -117,6 +100,19 @@ export default function App() {
       <div style={styles.card}>
         <h1>Terraform Resource Dependency Explorer</h1>
 
+        <div style={styles.subhead}>
+          {loading ? (
+            "Loading provider metadata…"
+          ) : version ? (
+            <>
+              Provider version:&nbsp;
+              <code style={styles.code}>{version}</code>
+            </>
+          ) : (
+            "Provider version unavailable"
+          )}
+        </div>
+
         <div style={styles.controls}>
           <input
             style={styles.input}
@@ -128,16 +124,6 @@ export default function App() {
             }}
             disabled={loading}
           />
-
-          <label style={styles.upload}>
-            Upload JSON
-            <input
-              type="file"
-              accept=".json"
-              hidden
-              onChange={(e) => onUpload(e.target.files?.[0])}
-            />
-          </label>
         </div>
 
         {loadError && <div style={styles.error}>{loadError}</div>}
@@ -171,12 +157,16 @@ export default function App() {
 
               <h4>Depends on</h4>
               <ul>
-                {outgoing.length ? outgoing.map((d) => <li key={d}>{d}</li>) : <li>None</li>}
+                {outgoing.length
+                  ? outgoing.map((d) => <li key={d}>{d}</li>)
+                  : <li>None</li>}
               </ul>
 
               <h4>Dependency for</h4>
               <ul>
-                {incoming.length ? incoming.map((d) => <li key={d}>{d}</li>) : <li>None</li>}
+                {incoming.length
+                  ? incoming.map((d) => <li key={d}>{d}</li>)
+                  : <li>None</li>}
               </ul>
             </div>
           </div>
@@ -201,19 +191,49 @@ const styles = {
     padding: 20,
     borderRadius: 12,
   },
-  controls: { display: "flex", gap: 12, marginBottom: 12 },
-  input: { flex: 1, padding: 10, borderRadius: 8 },
-  upload: {
-    cursor: "pointer",
-    padding: "10px 12px",
-    background: "#334",
+  subhead: {
+    marginTop: 6,
+    marginBottom: 14,
+    opacity: 0.85,
+    fontSize: 14,
+  },
+  controls: { marginBottom: 12 },
+  input: {
+    width: "100%",
+    padding: 10,
     borderRadius: 8,
+    fontSize: 14,
   },
   error: { color: "#ff9b9b", marginBottom: 12 },
   muted: { opacity: 0.8 },
   grid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 },
-  list: { listStyle: "none", padding: 0, maxHeight: 400, overflow: "auto" },
-  item: { width: "100%", textAlign: "left" },
-  active: { width: "100%", textAlign: "left", background: "#556" },
-  box: { padding: 10, background: "#223", borderRadius: 8, marginBottom: 10 },
+  list: {
+    listStyle: "none",
+    padding: 0,
+    maxHeight: 400,
+    overflow: "auto",
+  },
+  item: {
+    width: "100%",
+    textAlign: "left",
+    padding: 6,
+  },
+  active: {
+    width: "100%",
+    textAlign: "left",
+    padding: 6,
+    background: "#556",
+  },
+  box: {
+    padding: 10,
+    background: "#223",
+    borderRadius: 8,
+    marginBottom: 10,
+  },
+  code: {
+    fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+    background: "rgba(255,255,255,0.12)",
+    padding: "2px 6px",
+    borderRadius: 6,
+  },
 };
