@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: "23 6 * * *" # daily (UTC)
 
 permissions:
   contents: read
@@ -19,6 +21,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Download latest dependency tree from provider repo
+        uses: robinraju/release-downloader@v1
+        with:
+          repository: "MyPureCloud/terraform-provider-genesyscloud"
+          latest: true
+          fileName: "dependency_tree-*.json"
+
+      - name: Place dependency tree into public/
+        run: |
+          mkdir -p public
+          f="$(ls dependency_tree-*.json | head -n 1)"
+          echo "Using asset: $f"
+          cp "$f" public/dependency_tree.json
 
       - uses: actions/setup-node@v4
         with:
@@ -36,5 +52,4 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - uses: actions/deploy-pages@v4
