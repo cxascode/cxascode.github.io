@@ -1,15 +1,22 @@
-// App.jsx
+// src/App.jsx
 import React, { useEffect, useMemo, useState } from "react";
 
 /**
- * Expected JSON shape (like your attached file :contentReference[oaicite:1]{index=1}):
- * {
- *   "version": "1.73.0",
- *   "resources": [
- *     { "name": "...", "type": "genesyscloud_x", "dependencies": ["genesyscloud_y"] }
- *   ]
- * }
+ * This app loads dependency data in two ways:
+ *  1) Automatically: fetch latest GitHub release -> find dependency_tree-*.json asset -> download JSON
+ *  2) Manually: user uploads a JSON file
+ *
+ * GitHub docs:
+ * - "Get the latest release" endpoint exists in the Releases REST API.  [oai_citation:3‡GitHub Docs](https://docs.github.com/en/rest/releases?utm_source=chatgpt.com)
+ * - Release assets include browser_download_url which can be fetched in a browser.  [oai_citation:4‡GitHub Docs](https://docs.github.com/rest/releases/assets?utm_source=chatgpt.com)
+ * - GitHub also documents /releases/latest/download/<asset-name> if the asset name is stable.  [oai_citation:5‡GitHub Docs](https://docs.github.com/en/repositories/releasing-projects-on-github/linking-to-releases?utm_source=chatgpt.com)
  */
+
+// ---- Config (change if needed)
+const GH_OWNER = "MyPureCloud";
+const GH_REPO = "terraform-provider-genesyscloud";
+const ASSET_PREFIX = "dependency_tree-";
+const ASSET_SUFFIX = ".json";
 
 function uniqSorted(arr) {
   return Array.from(new Set(arr)).sort((a, b) => a.localeCompare(b));
@@ -19,26 +26,102 @@ function normalizeType(s) {
   return (s || "").trim();
 }
 
+function prettyErr(e) {
+  const msg = typeof e === "string" ? e : e?.message || String(e);
+  // A small nudge for the most common GitHub API pain:
+  if (msg.toLowerCase().includes("rate limit")) {
+    return `${msg}\n\nGitHub unauthenticated API calls are rate-limited. If this page gets a lot of traffic, consider adding a server-side proxy/cache.`;
+  }
+  return msg;
+}
+
+async function fetchJson(url) {
+  const res = await fetch(url, {
+    headers: {
+      // vnd.github+json is recommended for GitHub REST API requests  [oai_citation:6‡GitHub Docs](https://docs.github.com/rest/releases/assets?utm_source=chatgpt.com)
+      Accept: "application/vnd.github+json",
+    },
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`Fetch failed (${res.status}) for ${url}${text ? `: ${text}` : ""}`);
+  }
+  return await res.json();
+}
+
+async function fetchLatestDependencyTreeFromGitHub() {
+  const apiUrl = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/releases/latest`;
+  const release = await fetchJson(apiUrl); // "Get the latest release"  [oai_citation:7‡GitHub Docs](https://docs.github.com/en/rest/releases?utm_source=chatgpt.com)
+
+  const assets = Array.isArray(release.assets) ? release.assets : [];
+  const asset = assets.find(
+    (a) =>
+      typeof a?.name === "string" &&
+      a.name.startsWith(ASSET_PREFIX) &&
+      a.name.endsWith(ASSET_SUFFIX)
+  );
+
+  if (!asset?.browser_download_url) {
+    const names = assets.map((a) => a?.name).filter(Boolean);
+    throw new Error(
+      `No matching asset found in latest release.\nExpected something like "${ASSET_PREFIX}<version>${ASSET_SUFFIX}".\nAssets present: ${names.length ? names.join(", ") : "(none)"}`
+    );
+  }
+
+  // browser_download_url is the URL to fetch in a browser to download the asset  [oai_citation:8‡GitHub Docs](https://docs.github.com/rest/releases/assets?utm_source=chatgpt.com)
+  const data = await fetchJson(asset.browser_download_url);
+
+  // Some extra metadata for UI
+  return {
+    data,
+    meta: {
+      releaseName: release.name || "",
+      tagName: release.tag_name || "",
+      publishedAt: release.published_at || "",
+      assetName: asset.name || "",
+      assetUrl: asset.browser_download_url || "",
+    },
+  };
+}
+
 export default function App() {
   const [raw, setRaw] = useState(null);
   const [loadError, setLoadError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  // metadata about what was loaded (release tag, asset name, etc.)
+  const [sourceMeta, setSourceMeta] = useState(null);
+
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState("");
 
-  // Optional: try to auto-load a bundled JSON if you place it in /public as dependency_tree.json
-  // (This is purely convenience; upload works regardless.)
+  // Auto-load latest on first render
   useEffect(() => {
     let cancelled = false;
+
     (async () => {
+      setLoading(true);
+      setLoadError("");
       try {
-        const res = await fetch("/dependency_tree.json");
-        if (!res.ok) return;
-        const json = await res.json();
-        if (!cancelled) setRaw(json);
-      } catch {
-        // ignore
+        const { data, meta } = await fetchLatestDependencyTreeFromGitHub();
+        if (cancelled) return;
+
+        if (!data || !Array.isArray(data.resources)) {
+          throw new Error("Downloaded JSON is missing a top-level 'resources' array.");
+        }
+
+        setRaw(data);
+        setSourceMeta({ kind: "github-latest-release", ...meta });
+      } catch (e) {
+        if (cancelled) return;
+        setRaw(null);
+        setSourceMeta(null);
+        setLoadError(prettyErr(e));
+      } finally {
+        if (!cancelled) setLoading(false);
       }
     })();
+
     return () => {
       cancelled = true;
     };
@@ -89,9 +172,9 @@ export default function App() {
   const normalizedSelected = normalizeType(selected);
 
   const suggestions = useMemo(() => {
-    if (!normalizedQuery) return types.slice(0, 50);
+    if (!normalizedQuery) return types.slice(0, 80);
     const q = normalizedQuery.toLowerCase();
-    return types.filter((t) => t.toLowerCase().includes(q)).slice(0, 50);
+    return types.filter((t) => t.toLowerCase().includes(q)).slice(0, 80);
   }, [types, normalizedQuery]);
 
   const activeType = normalizedSelected || normalizedQuery;
@@ -129,9 +212,36 @@ export default function App() {
         throw new Error("JSON must contain a top-level 'resources' array.");
       }
       setRaw(json);
+      setSourceMeta({
+        kind: "upload",
+        fileName: file.name,
+        loadedAt: new Date().toISOString(),
+      });
     } catch (e) {
       setRaw(null);
-      setLoadError(e?.message || String(e));
+      setSourceMeta(null);
+      setLoadError(prettyErr(e));
+    }
+  }
+
+  async function reloadLatest() {
+    setLoading(true);
+    setLoadError("");
+    setSelected("");
+    setQuery("");
+    try {
+      const { data, meta } = await fetchLatestDependencyTreeFromGitHub();
+      if (!data || !Array.isArray(data.resources)) {
+        throw new Error("Downloaded JSON is missing a top-level 'resources' array.");
+      }
+      setRaw(data);
+      setSourceMeta({ kind: "github-latest-release", ...meta });
+    } catch (e) {
+      setRaw(null);
+      setSourceMeta(null);
+      setLoadError(prettyErr(e));
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -142,28 +252,66 @@ export default function App() {
           <div>
             <h1 style={styles.h1}>Terraform Resource Dependency Explorer</h1>
             <div style={styles.sub}>
-              Upload your dependency JSON, then type a resource type to see <b>depends on</b> and <b>dependency for</b>.
+              Type a Terraform resource type to see <b>depends on</b> and <b>dependency for</b>.
               {version ? (
-                <span style={{ marginLeft: 10, opacity: 0.8 }}>
+                <span style={{ marginLeft: 10, opacity: 0.9 }}>
                   JSON version: <code style={styles.code}>{version}</code>
                 </span>
               ) : null}
             </div>
+            <div style={styles.metaLine}>
+              <span style={styles.metaLabel}>Data source:</span>{" "}
+              {sourceMeta?.kind === "github-latest-release" ? (
+                <span>
+                  GitHub latest release{" "}
+                  {sourceMeta.tagName ? (
+                    <>
+                      (<code style={styles.code}>{sourceMeta.tagName}</code>)
+                    </>
+                  ) : null}
+                  {sourceMeta.assetName ? (
+                    <>
+                      {" "}
+                      · asset <code style={styles.code}>{sourceMeta.assetName}</code>
+                    </>
+                  ) : null}
+                </span>
+              ) : sourceMeta?.kind === "upload" ? (
+                <span>
+                  Upload (<code style={styles.code}>{sourceMeta.fileName}</code>)
+                </span>
+              ) : (
+                <span style={{ opacity: 0.8 }}>Not loaded</span>
+              )}
+            </div>
           </div>
-          <label style={styles.uploadBtn}>
-            <input
-              type="file"
-              accept="application/json,.json"
-              style={{ display: "none" }}
-              onChange={(e) => onUpload(e.target.files?.[0])}
-            />
-            Upload JSON
-          </label>
+
+          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+            <button
+              style={{ ...styles.btn, opacity: loading ? 0.6 : 1 }}
+              onClick={reloadLatest}
+              disabled={loading}
+              title="Fetch the latest dependency_tree JSON from the latest GitHub release"
+            >
+              {loading ? "Loading…" : "Reload latest"}
+            </button>
+
+            <label style={styles.uploadBtn} title="Upload a dependency_tree JSON file">
+              <input
+                type="file"
+                accept="application/json,.json"
+                style={{ display: "none" }}
+                onChange={(e) => onUpload(e.target.files?.[0])}
+              />
+              Upload JSON
+            </label>
+          </div>
         </div>
 
         {loadError ? (
           <div style={styles.error}>
-            <b>Couldn’t load JSON:</b> {loadError}
+            <b>Couldn’t load dependency data:</b>
+            <pre style={styles.pre}>{loadError}</pre>
           </div>
         ) : null}
 
@@ -176,23 +324,23 @@ export default function App() {
               setQuery(e.target.value);
               setSelected("");
             }}
-            disabled={!raw}
+            disabled={!raw || loading}
           />
           <button
-            style={{ ...styles.btn, opacity: raw ? 1 : 0.5 }}
+            style={{ ...styles.btn, opacity: raw && !loading ? 1 : 0.5 }}
             onClick={() => setSelected(normalizeType(query))}
-            disabled={!raw}
+            disabled={!raw || loading}
             title="Lock in the current input"
           >
             Search
           </button>
           <button
-            style={{ ...styles.btn, opacity: raw ? 1 : 0.5 }}
+            style={{ ...styles.btn, opacity: raw && !loading ? 1 : 0.5 }}
             onClick={() => {
               setQuery("");
               setSelected("");
             }}
-            disabled={!raw}
+            disabled={!raw || loading}
             title="Clear"
           >
             Clear
@@ -201,9 +349,18 @@ export default function App() {
 
         {!raw ? (
           <div style={styles.muted}>
-            No JSON loaded yet. Click <b>Upload JSON</b> and select your file.
+            {loading ? (
+              <div>Fetching the latest release asset from GitHub…</div>
+            ) : (
+              <div>
+                No JSON loaded yet. Click <b>Reload latest</b> or <b>Upload JSON</b>.
+              </div>
+            )}
             <div style={{ marginTop: 8, fontSize: 13, opacity: 0.9 }}>
-              The file should look like: <code style={styles.code}>{"{ version, resources: [{type, dependencies?}, ...] }"}</code>
+              Expected shape:{" "}
+              <code style={styles.code}>
+                {"{ version, resources: [{type, dependencies?}, ...] }"}
+              </code>
             </div>
           </div>
         ) : (
@@ -233,17 +390,13 @@ export default function App() {
             </div>
 
             <div style={styles.panel}>
-              <div style={styles.panelTitle}>
-                Selected type
-              </div>
+              <div style={styles.panelTitle}>Selected type</div>
               <div style={{ marginBottom: 10 }}>
                 <code style={{ ...styles.code, fontSize: 14 }}>
                   {activeType || "(none)"}
                 </code>
                 {activeType && !exists ? (
-                  <div style={styles.warn}>
-                    Not found in JSON (check spelling / version).
-                  </div>
+                  <div style={styles.warn}>Not found in JSON (check spelling / provider version).</div>
                 ) : null}
               </div>
 
@@ -284,8 +437,9 @@ export default function App() {
               </div>
 
               <div style={{ marginTop: 14, fontSize: 13, opacity: 0.85 }}>
-                Nerd note: reverse-deps are computed by scanning every resource’s <code style={styles.code}>dependencies</code> list once,
-                then indexing <code style={styles.code}>dependency → dependents</code>.
+                Nerd note: reverse-deps are computed by scanning every resource’s{" "}
+                <code style={styles.code}>dependencies</code> list once, then indexing{" "}
+                <code style={styles.code}>dependency → dependents</code>.
               </div>
             </div>
           </div>
@@ -293,7 +447,11 @@ export default function App() {
       </div>
 
       <div style={styles.footer}>
-        Tip: if you drop your JSON into <code style={styles.code}>public/dependency_tree.json</code>, it’ll auto-load on refresh.
+        Using GitHub’s “latest release” API to resolve the newest asset at runtime.  [oai_citation:9‡GitHub Docs](https://docs.github.com/en/rest/releases?utm_source=chatgpt.com)
+        <div style={{ marginTop: 6, opacity: 0.75 }}>
+          If you ever rename the release asset to a stable name, you could use the simpler URL form
+          <code style={{ ...styles.code, marginLeft: 8 }}>/releases/latest/download/&lt;asset-name&gt;</code>.  [oai_citation:10‡GitHub Docs](https://docs.github.com/en/repositories/releasing-projects-on-github/linking-to-releases?utm_source=chatgpt.com)
+        </div>
       </div>
     </div>
   );
@@ -301,7 +459,8 @@ export default function App() {
 
 const styles = {
   page: {
-    fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
+    fontFamily:
+      "system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
     background: "#0b1020",
     color: "#eaf0ff",
     minHeight: "100vh",
@@ -316,9 +475,16 @@ const styles = {
     padding: 18,
     boxShadow: "0 10px 40px rgba(0,0,0,0.35)",
   },
-  headerRow: { display: "flex", justifyContent: "space-between", gap: 16, alignItems: "start" },
+  headerRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: 16,
+    alignItems: "start",
+  },
   h1: { margin: 0, fontSize: 22, letterSpacing: 0.2 },
   sub: { marginTop: 6, fontSize: 14, opacity: 0.9, lineHeight: 1.4 },
+  metaLine: { marginTop: 8, fontSize: 13, opacity: 0.9, lineHeight: 1.3 },
+  metaLabel: { opacity: 0.8 },
   uploadBtn: {
     background: "rgba(255,255,255,0.12)",
     border: "1px solid rgba(255,255,255,0.16)",
@@ -347,7 +513,12 @@ const styles = {
     color: "#eaf0ff",
     cursor: "pointer",
   },
-  bodyGrid: { display: "grid", gridTemplateColumns: "360px 1fr", gap: 14, marginTop: 14 },
+  bodyGrid: {
+    display: "grid",
+    gridTemplateColumns: "360px 1fr",
+    gap: 14,
+    marginTop: 14,
+  },
   panel: {
     borderRadius: 14,
     padding: 14,
@@ -355,7 +526,14 @@ const styles = {
     background: "rgba(0,0,0,0.18)",
     minHeight: 320,
   },
-  panelTitle: { fontSize: 14, opacity: 0.9, marginBottom: 10, display: "flex", gap: 8, alignItems: "center" },
+  panelTitle: {
+    fontSize: 14,
+    opacity: 0.9,
+    marginBottom: 10,
+    display: "flex",
+    gap: 8,
+    alignItems: "center",
+  },
   badge: {
     fontSize: 12,
     padding: "2px 8px",
@@ -364,7 +542,14 @@ const styles = {
     border: "1px solid rgba(255,255,255,0.12)",
     opacity: 0.95,
   },
-  list: { display: "flex", flexDirection: "column", gap: 8, maxHeight: 420, overflow: "auto", paddingRight: 6 },
+  list: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 8,
+    maxHeight: 420,
+    overflow: "auto",
+    paddingRight: 6,
+  },
   listItem: {
     textAlign: "left",
     borderRadius: 12,
@@ -374,7 +559,10 @@ const styles = {
     color: "#eaf0ff",
     cursor: "pointer",
   },
-  listItemActive: { background: "rgba(110,170,255,0.16)", border: "1px solid rgba(110,170,255,0.35)" },
+  listItemActive: {
+    background: "rgba(110,170,255,0.16)",
+    border: "1px solid rgba(110,170,255,0.35)",
+  },
   twoCol: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 },
   subPanel: {
     borderRadius: 12,
@@ -382,10 +570,18 @@ const styles = {
     border: "1px solid rgba(255,255,255,0.10)",
     background: "rgba(255,255,255,0.04)",
   },
-  subTitle: { fontSize: 13, opacity: 0.95, marginBottom: 8, display: "flex", gap: 8, alignItems: "center" },
+  subTitle: {
+    fontSize: 13,
+    opacity: 0.95,
+    marginBottom: 8,
+    display: "flex",
+    gap: 8,
+    alignItems: "center",
+  },
   ul: { margin: 0, paddingLeft: 18, lineHeight: 1.7 },
   code: {
-    fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+    fontFamily:
+      "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
     fontSize: 12,
     background: "rgba(255,255,255,0.08)",
     padding: "2px 6px",
@@ -409,5 +605,21 @@ const styles = {
     background: "rgba(255,90,90,0.16)",
     border: "1px solid rgba(255,90,90,0.28)",
   },
-  footer: { maxWidth: 1100, margin: "14px auto 0", opacity: 0.75, fontSize: 13 },
+  pre: {
+    margin: "8px 0 0",
+    whiteSpace: "pre-wrap",
+    wordBreak: "break-word",
+    fontFamily:
+      "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+    fontSize: 12,
+    lineHeight: 1.4,
+    opacity: 0.95,
+  },
+  footer: {
+    maxWidth: 1100,
+    margin: "14px auto 0",
+    opacity: 0.85,
+    fontSize: 13,
+    lineHeight: 1.35,
+  },
 };
