@@ -39,33 +39,28 @@ function applyOverrides(raw, overrides) {
   if (!raw || !Array.isArray(raw.resources)) return raw;
   if (!overrides || typeof overrides !== "object") return raw;
 
-  // Clone shallowly so we don't mutate the fetched object
   const patched = {
     ...raw,
     resources: raw.resources.map((r) => ({ ...r })),
   };
 
-  // Index resources by type
   const byType = new Map();
   for (const r of patched.resources) {
     if (r && typeof r.type === "string") byType.set(r.type, r);
   }
 
-  // 1) Replace bad dependency strings (fix typos, renames, etc.)
   const replace = overrides.replaceDependencies;
   if (replace && typeof replace === "object") {
     for (const [type, mapping] of Object.entries(replace)) {
       const r = byType.get(type);
       if (!r || !Array.isArray(r.dependencies) || typeof mapping !== "object") continue;
 
-      r.dependencies = r.dependencies.map((d) => {
-        if (typeof d !== "string") return d;
-        return mapping[d] || d;
-      });
+      r.dependencies = r.dependencies.map((d) =>
+        typeof d === "string" ? mapping[d] || d : d
+      );
     }
   }
 
-  // 2) Add extra dependencies (union)
   const add = overrides.addDependencies;
   if (add && typeof add === "object") {
     for (const [type, additions] of Object.entries(add)) {
@@ -134,24 +129,19 @@ export default function App() {
   const versionDropdownRef = useRef(null);
   const searchRef = useRef(null);
 
-  // Load overrides once (optional file)
   useEffect(() => {
     let cancelled = false;
 
     (async () => {
       try {
         const res = await fetch(OVERRIDES_URL, { cache: "no-store" });
-
-        // If file doesn't exist, that's fine; treat as "no overrides"
         if (!res.ok) {
           if (!cancelled) setOverrides(null);
           return;
         }
-
         const json = await res.json();
         if (!cancelled) setOverrides(json);
       } catch {
-        // If overrides.json is malformed or fetch fails, don't break the app
         if (!cancelled) setOverrides(null);
       }
     })();
@@ -159,7 +149,6 @@ export default function App() {
     return () => (cancelled = true);
   }, []);
 
-  // Load versions index
   useEffect(() => {
     let cancelled = false;
 
@@ -178,18 +167,15 @@ export default function App() {
     return () => (cancelled = true);
   }, []);
 
-  // Wire Spark dropdown (robust event value handling)
   useEffect(() => {
     const el = versionDropdownRef.current;
     if (!el) return;
 
     const handler = (evt) => {
-      // Prefer event target value first; fall back to detail (Spark version dependent)
       const next = evt?.target?.value ?? evt?.detail?.value ?? "";
       setSelectedVersion(next || "latest");
     };
 
-    // Some versions emit `guxchange`, some also emit `change`
     el.addEventListener("guxchange", handler);
     el.addEventListener("change", handler);
 
@@ -199,16 +185,14 @@ export default function App() {
     };
   }, []);
 
-  // Keep Spark dropdown in sync with React state (prevents drift after rerenders/options load)
   useEffect(() => {
     const el = versionDropdownRef.current;
     if (!el) return;
 
-    el.value = selectedVersion; // property
-    el.setAttribute("value", selectedVersion); // attribute (some builds care)
+    el.value = selectedVersion;
+    el.setAttribute("value", selectedVersion);
   }, [selectedVersion]);
 
-  // Final anti-flake sync: runs after versions finish loading
   useEffect(() => {
     if (loadingIndex) return;
     const el = versionDropdownRef.current;
@@ -218,7 +202,6 @@ export default function App() {
     el.setAttribute("value", selectedVersion);
   }, [loadingIndex, selectedVersion]);
 
-  // Load dependency tree (and patch it before use)
   useEffect(() => {
     let cancelled = false;
 
@@ -229,9 +212,7 @@ export default function App() {
           selectedVersion === "latest" ? LATEST_URL : VERSION_URL(selectedVersion);
         const res = await fetch(url, { cache: "no-store" });
         const json = await res.json();
-
         const patched = applyOverrides(json, overrides);
-
         if (!cancelled) setRaw(patched);
       } catch (e) {
         if (!cancelled) setError(String(e));
@@ -240,7 +221,6 @@ export default function App() {
       }
     })();
 
-    // Reset state on version change
     setQuery("");
     setSelectedType("");
 
@@ -259,7 +239,6 @@ export default function App() {
     return q ? allTypes.filter((t) => t.toLowerCase().includes(q)) : allTypes;
   }, [allTypes, query]);
 
-  // Only a click sets a real selection
   const activeType = selectedType;
 
   const dependsOn = useMemo(
@@ -274,7 +253,6 @@ export default function App() {
 
   return (
     <div className="gcShell">
-      {/* Page header */}
       <div className="gcPageHeader">
         <div className="gcPageTitleRow">
           <h1 className="gcPageTitle">CX as Code Dependency Explorer</h1>
@@ -299,10 +277,8 @@ export default function App() {
         </div>
       </div>
 
-      {/* Content */}
       <main className="gcContentArea">
         <div className="gcSplit">
-          {/* Left panel */}
           <section className="gcCard">
             <div className="gcCard__toolbar">
               <input
@@ -313,7 +289,7 @@ export default function App() {
                 value={query}
                 onInput={(e) => {
                   setQuery(e.target.value);
-                  setSelectedType(""); // typing ≠ selecting
+                  setSelectedType("");
                 }}
                 disabled={loadingData || !!error}
               />
@@ -340,7 +316,6 @@ export default function App() {
             </div>
           </section>
 
-          {/* Right panel */}
           <section className="gcCard">
             <div className="gcCard__header">
               <div className="gcCard__title">Dependency details</div>
@@ -423,6 +398,17 @@ export default function App() {
           </section>
         </div>
       </main>
+
+      <footer className="gcFooter" role="contentinfo">
+        <a
+          className="gcFooterLink"
+          href="https://www.genesys.com/customer-success/professional-services"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Made with <span role="img" aria-label="love">❤️</span> by Genesys Professional Services
+        </a>
+      </footer>
     </div>
   );
 }
