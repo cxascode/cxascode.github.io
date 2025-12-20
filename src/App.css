@@ -1,179 +1,434 @@
-/* Layout-only CSS so Spark (GUX) can control the visual language. */
+/* Genesys Cloud-ish layout + table styling. Spark provides core component styles. */
 
-.gcApp {
+:root {
+  --gc-bg: #f5f7f9;
+  --gc-surface: #ffffff;
+  --gc-border: #d7dde2;
+  --gc-border2: #e7ebef;
+  --gc-text: #1f2d3d;
+  --gc-subtle: #5b6b7a;
+  --gc-blue: #2a60ff;
+  --gc-blue-weak: rgba(42, 96, 255, 0.10);
+  --gc-row-hover: rgba(31, 45, 61, 0.04);
+}
+
+.gcShell {
   min-height: 100vh;
+  background: var(--gc-bg);
+  color: var(--gc-text);
   display: flex;
   flex-direction: column;
 }
 
-.gcTopbar {
+/* ---------------- App header ---------------- */
+
+.gcAppHeader {
+  height: 56px;
+  background: var(--gc-surface);
+  border-bottom: 1px solid var(--gc-border);
   display: flex;
-  gap: 16px;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  padding: 16px 20px;
-  border-bottom: 1px solid var(--gux-borderColor, rgba(0, 0, 0, 0.12));
+  padding: 0 14px;
+  gap: 12px;
 }
 
-.gcTopbar__left {
+.gcAppHeader__left,
+.gcAppHeader__right {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
-
-.gcTitle {
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.gcSubtitle {
-  font-size: 13px;
-  opacity: 0.8;
-}
-
-.gcTopbar__right {
-  display: flex;
-  gap: 16px;
   align-items: center;
-  flex-wrap: wrap;
+  gap: 10px;
 }
 
-.gcMeta {
+.gcIconButton {
+  height: 34px;
+  min-width: 34px;
+  padding: 0 10px;
+  border: 1px solid var(--gc-border);
+  background: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.gcIconButton--small {
+  height: 28px;
+  min-width: 28px;
+  padding: 0 8px;
+}
+
+.gcIconButton:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.gcGlobalSearch {
   display: flex;
   align-items: center;
   gap: 8px;
-  white-space: nowrap;
+  border: 1px solid var(--gc-border);
+  background: #fff;
+  border-radius: 6px;
+  padding: 0 8px;
+  height: 34px;
+  width: min(520px, 52vw);
+}
+
+.gcGlobalSearch__icon {
+  opacity: 0.7;
+}
+
+.gcGlobalSearch__input {
+  border: 0;
+  outline: none;
+  flex: 1;
+  height: 28px;
+  font-size: 14px;
+  background: transparent;
+  color: var(--gc-text);
+}
+
+.gcHeaderChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border: 1px solid var(--gc-border);
+  border-radius: 999px;
+  background: #fff;
+}
+
+.gcHeaderChip__label {
+  font-size: 13px;
+  color: var(--gc-subtle);
+}
+
+.gcToggle {
+  width: 36px;
+  height: 18px;
+  border-radius: 999px;
+  background: rgba(31, 45, 61, 0.15);
+  position: relative;
+}
+
+.gcToggle::after {
+  content: "";
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: #fff;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+/* ---------------- Page header ---------------- */
+
+.gcPageHeader {
+  background: var(--gc-bg);
+  padding: 14px 18px 0 18px;
+}
+
+.gcBreadcrumb {
+  font-size: 13px;
+  color: var(--gc-subtle);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gcBreadcrumb__link {
+  color: var(--gc-blue);
+  text-decoration: none;
+}
+
+.gcBreadcrumb__link:hover {
+  text-decoration: underline;
+}
+
+.gcBreadcrumb__sep {
+  opacity: 0.6;
+}
+
+.gcPageTitleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 10px 0 14px 0;
+  border-bottom: 1px solid var(--gc-border);
+}
+
+.gcPageTitle {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.gcPageMeta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .gcMetaLabel {
   font-size: 12px;
-  opacity: 0.8;
+  color: var(--gc-subtle);
 }
 
-.gcMain {
+/* Make Spark cards their own stacking context */
+gux-badge,
+gux-dropdown {
+  position: relative;
+  z-index: 0;
+}
+
+.gcUpdated {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--gc-subtle);
+  padding-left: 8px;
+  border-left: 1px solid var(--gc-border2);
+}
+
+.gcUpdated__icon {
+  opacity: 0.75;
+}
+
+/* ---------------- Content ---------------- */
+
+.gcContentArea {
+  padding: 16px 18px;
   flex: 1;
-  display: grid;
-  grid-template-columns: 360px 1fr;
-  gap: 16px;
-  padding: 16px;
   min-height: 0;
 }
 
-.gcSidebar,
-.gcContent {
+.gcAlert {
+  background: #fff;
+  border: 1px solid rgba(210, 28, 28, 0.4);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+}
+
+.gcAlert__title {
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.gcAlert__body {
+  color: #8f1111;
+}
+
+/* Split like GC: list left, details right */
+.gcSplit {
+  display: grid;
+  grid-template-columns: 520px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+/* Card surface */
+.gcCard {
+  background: var(--gc-surface);
+  border: 1px solid var(--gc-border);
+  border-radius: 10px;
+  overflow: hidden;
+  min-height: 520px;
   min-width: 0;
 }
 
-/* Card internals (Spark card provides the look; we provide spacing) */
-.gcCardHeader {
+/* Toolbar row above table */
+.gcCard__toolbar {
+  padding: 12px 12px;
+  border-bottom: 1px solid var(--gc-border2);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 16px 16px 8px 16px;
 }
 
-.gcCardTitle {
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.gcCardSubtitle {
-  font-size: 12px;
-  opacity: 0.8;
-}
-
-.gcCardActions {
-  display: flex;
-  gap: 8px;
+.gcToolbarRight {
+  display: inline-flex;
   align-items: center;
+  gap: 12px;
 }
 
-.gcCardBody {
-  padding: 8px 16px 16px 16px;
+.gcToolbarStat {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  color: var(--gc-subtle);
+}
+
+.gcToolbarStat__label {
+  font-size: 12px;
+}
+
+.gcToolbarStat__value {
+  font-weight: 700;
+  color: var(--gc-text);
+}
+
+/* Buttons */
+.gcPrimaryButton,
+.gcSecondaryButton {
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 6px;
+  border: 1px solid var(--gc-border);
+  cursor: pointer;
+  font-weight: 600;
+  background: #fff;
+}
+
+.gcPrimaryButton {
+  border-color: rgba(42, 96, 255, 0.35);
+  color: var(--gc-blue);
+}
+
+.gcPrimaryButton:hover,
+.gcSecondaryButton:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.gcPrimaryButton:disabled,
+.gcSecondaryButton:disabled,
+.gcIconButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Table-like list */
+.gcTable {
+  display: flex;
+  flex-direction: column;
   min-height: 0;
 }
 
-.gcListMeta {
-  margin-top: 10px;
-  font-size: 12px;
-  opacity: 0.8;
+.gcTable__head {
+  display: grid;
+  grid-template-columns: 1fr;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--gc-border2);
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
-/* Resource list */
-.gcList {
-  margin-top: 10px;
-  max-height: 62vh;
+.gcTh {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gc-text);
+}
+
+.gcTable__body {
   overflow: auto;
-  border-radius: 8px;
-  border: 1px solid var(--gux-borderColor, rgba(0, 0, 0, 0.12));
+  min-height: 0;
+  max-height: calc(100vh - 260px);
 }
 
-.gcListItem {
+.gcTr {
   width: 100%;
   text-align: left;
   border: 0;
   background: transparent;
-  padding: 10px 12px;
+  display: grid;
+  grid-template-columns: 1fr;
+  padding: 12px 12px;
+  border-bottom: 1px solid var(--gc-border2);
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
-.gcListItem:hover {
-  background: rgba(0, 0, 0, 0.04);
+.gcTr:hover {
+  background: var(--gc-row-hover);
 }
 
-.gcListItem.isActive {
-  background: rgba(0, 90, 255, 0.10);
+.gcTr.isActive {
+  background: var(--gc-blue-weak);
 }
 
-.gcListItemText {
-  font-size: 13px;
-  white-space: nowrap;
+.gcTd {
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.gcListFooter {
-  padding: 10px 12px;
-  font-size: 12px;
-  opacity: 0.8;
-  border-top: 1px solid var(--gux-borderColor, rgba(0, 0, 0, 0.12));
+.gcMono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
 }
 
-/* Details grid */
-.gcGrid {
+.gcEmptyRow {
+  padding: 12px 12px;
+  font-size: 13px;
+  color: var(--gc-subtle);
+}
+
+/* Details card */
+.gcCard__header {
+  padding: 14px 14px 12px 14px;
+  border-bottom: 1px solid var(--gc-border2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gcCard__title {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.gcCard__subtitle {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--gc-subtle);
+}
+
+.gcDetailsGrid {
+  padding: 14px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 14px;
 }
 
 .gcPanel {
-  border: 1px solid var(--gux-borderColor, rgba(0, 0, 0, 0.12));
+  border: 1px solid var(--gc-border);
   border-radius: 10px;
   overflow: hidden;
+  background: #fff;
+  min-width: 0;
 }
 
-.gcPanelHeader {
+.gcPanel__header {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--gc-border2);
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 8px;
-  padding: 12px;
-  border-bottom: 1px solid var(--gux-borderColor, rgba(0, 0, 0, 0.12));
+  justify-content: space-between;
+  gap: 10px;
 }
 
-.gcPanelTitle {
+.gcPanel__title {
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
-.gcPanelBody {
+.gcPanel__body {
   padding: 12px;
+}
+
+.gcMuted {
+  font-size: 13px;
+  color: var(--gc-subtle);
 }
 
 .gcPills {
@@ -183,8 +438,8 @@
 }
 
 .gcPill {
-  border: 1px solid var(--gux-borderColor, rgba(0, 0, 0, 0.12));
-  background: transparent;
+  border: 1px solid var(--gc-border);
+  background: #fff;
   border-radius: 999px;
   padding: 6px 10px;
   font-size: 12px;
@@ -192,56 +447,30 @@
 }
 
 .gcPill:hover {
-  background: rgba(0, 0, 0, 0.04);
+  background: rgba(0, 0, 0, 0.03);
 }
 
-.gcMuted {
+/* Footer */
+.gcFooterBar {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  border-top: 1px solid var(--gc-border);
+  background: var(--gc-surface);
+  color: var(--gc-subtle);
   font-size: 12px;
-  opacity: 0.8;
-}
-
-.gcEmpty {
-  font-size: 13px;
-  opacity: 0.9;
-}
-
-.gcError {
-  border: 1px solid rgba(210, 28, 28, 0.6);
-  background: rgba(210, 28, 28, 0.10);
-  border-radius: 10px;
-  padding: 12px;
-}
-
-.gcErrorTitle {
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-
-.gcErrorText {
-  font-size: 13px;
-}
-
-.mono {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-    "Courier New", monospace;
-}
-
-.gcFooter {
-  padding: 12px 16px;
-  font-size: 12px;
-  opacity: 0.8;
-  border-top: 1px solid var(--gux-borderColor, rgba(0, 0, 0, 0.12));
 }
 
 /* Responsive */
-@media (max-width: 980px) {
-  .gcMain {
+@media (max-width: 1100px) {
+  .gcSplit {
     grid-template-columns: 1fr;
   }
-  .gcList {
-    max-height: 40vh;
-  }
-  .gcGrid {
+  .gcDetailsGrid {
     grid-template-columns: 1fr;
+  }
+  .gcTable__body {
+    max-height: 45vh;
   }
 }

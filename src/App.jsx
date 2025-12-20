@@ -48,7 +48,6 @@ function buildDepsMaps(raw) {
       reverseMap.get(d).add(from);
     }
 
-    // Ensure node exists even if it has no edges
     if (!reverseMap.has(from)) reverseMap.set(from, new Set());
   }
 
@@ -68,8 +67,8 @@ export default function App() {
   const [loadingData, setLoadingData] = useState(true);
   const [error, setError] = useState("");
 
-  const searchInputRef = useRef(null);
   const versionDropdownRef = useRef(null);
+  const globalSearchRef = useRef(null);
 
   // Load versions index for dropdown
   useEffect(() => {
@@ -81,9 +80,9 @@ export default function App() {
         setError("");
 
         const res = await fetch(INDEX_URL, { cache: "no-store" });
-        if (!res.ok) throw new Error(`Failed to load index.json (${res.status})`);
+        if (!res.ok) throw new Error(`Failed to load versions/index.json (${res.status})`);
         const json = await res.json();
-        if (!Array.isArray(json)) throw new Error("index.json is not an array");
+        if (!Array.isArray(json)) throw new Error("versions/index.json is not an array");
 
         if (!cancelled) setAvailableVersions(json);
       } catch (e) {
@@ -99,12 +98,10 @@ export default function App() {
     };
   }, []);
 
-  // Keep the Spark dropdown element's value in sync with React state
+  // Keep Spark dropdown value synced
   useEffect(() => {
     const el = versionDropdownRef.current;
     if (!el) return;
-
-    // Some web components don't react to attribute changes; set the property.
     try {
       el.value = selectedVersion;
     } catch {
@@ -118,7 +115,6 @@ export default function App() {
     if (!el) return;
 
     const readValue = (evt) => {
-      // Prefer the element's value, then fall back to event detail/target.
       const fromEl = el.value;
       const fromDetail = evt?.detail?.value;
       const fromTarget = evt?.target?.value;
@@ -132,7 +128,6 @@ export default function App() {
       if (v) setSelectedVersion(v);
     };
 
-    // Spark components may emit one of these depending on version/component internals
     el.addEventListener("guxchange", readValue);
     el.addEventListener("change", readValue);
     el.addEventListener("input", readValue);
@@ -165,8 +160,6 @@ export default function App() {
 
         if (!cancelled) {
           setRaw(json);
-
-          // Prefer the version embedded in the file (best truth).
           const embedded = typeof json.version === "string" ? json.version : "";
           setDownloadedVersion(
             embedded ||
@@ -182,7 +175,7 @@ export default function App() {
       }
     }
 
-    // Reset selection when changing versions to avoid phantom types
+    // Reset selection when changing versions
     setQuery("");
     setSelectedType("");
 
@@ -190,7 +183,6 @@ export default function App() {
     return () => {
       cancelled = true;
     };
-    // Intentionally not depending on availableVersions (avoid refetch jitter)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedVersion]);
 
@@ -224,38 +216,75 @@ export default function App() {
   const onPickType = (t) => {
     setSelectedType(t);
     setQuery(t);
-    requestAnimationFrame(() => searchInputRef.current?.focus?.());
   };
 
   const clearSearch = () => {
     setQuery("");
     setSelectedType("");
-    requestAnimationFrame(() => searchInputRef.current?.focus?.());
+    requestAnimationFrame(() => globalSearchRef.current?.focus?.());
   };
 
   const loading = loadingIndex || loadingData;
 
   return (
-    <div className="gcApp">
-      <header className="gcTopbar">
-        <div className="gcTopbar__left">
-          <div className="gcTitle">CX as Code Dependency Explorer</div>
-          <div className="gcSubtitle">Resource dependencies across provider versions</div>
+    <div className="gcShell">
+      {/* App header (Genesys Cloud-ish) */}
+      <header className="gcAppHeader">
+        <div className="gcAppHeader__left">
+          <button className="gcIconButton" type="button" aria-label="Menu">
+            ☰
+          </button>
+          <div className="gcGlobalSearch">
+            <span className="gcGlobalSearch__icon">🔍</span>
+            <input
+              ref={globalSearchRef}
+              className="gcGlobalSearch__input"
+              value={query}
+              placeholder="Search resource types"
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setSelectedType("");
+              }}
+              disabled={loading || !!error}
+            />
+            {query ? (
+              <button className="gcIconButton gcIconButton--small" type="button" onClick={clearSearch} aria-label="Clear search">
+                ✕
+              </button>
+            ) : null}
+          </div>
         </div>
 
-        <div className="gcTopbar__right">
-          <div className="gcMeta">
-            <span className="gcMetaLabel">Downloaded:</span>
-            <gux-badge accent="info">{downloadedVersion || "—"}</gux-badge>
+        <div className="gcAppHeader__right">
+          <div className="gcHeaderChip">
+            <span className="gcHeaderChip__label">Off Queue</span>
+            <span className="gcToggle" aria-hidden="true" />
           </div>
 
-          <div className="gcMeta">
+          <button className="gcIconButton" type="button" aria-label="Help">?</button>
+          <button className="gcIconButton" type="button" aria-label="Phone">📞</button>
+          <button className="gcIconButton" type="button" aria-label="Chat">💬</button>
+          <button className="gcIconButton" type="button" aria-label="Notifications">🔔</button>
+          <button className="gcIconButton" type="button" aria-label="Profile">👤</button>
+        </div>
+      </header>
+
+      {/* Page header (breadcrumb + title) */}
+      <div className="gcPageHeader">
+        <div className="gcBreadcrumb">
+          <a className="gcBreadcrumb__link" href="#" onClick={(e) => e.preventDefault()}>
+            Dependencies
+          </a>
+          <span className="gcBreadcrumb__sep">/</span>
+          <span className="gcBreadcrumb__current">Explorer</span>
+        </div>
+        <div className="gcPageTitleRow">
+          <h1 className="gcPageTitle">CX as Code Dependency Explorer</h1>
+          <div className="gcPageMeta">
+            <span className="gcMetaLabel">Downloaded:</span>
+            <gux-badge accent="info">{downloadedVersion || "—"}</gux-badge>
             <span className="gcMetaLabel">Version:</span>
-            <gux-dropdown
-              ref={versionDropdownRef}
-              placeholder="Select version"
-              disabled={loadingIndex}
-            >
+            <gux-dropdown ref={versionDropdownRef} placeholder="Select version" disabled={loadingIndex}>
               <gux-listbox aria-label="Select provider version">
                 <gux-option value="latest">Latest</gux-option>
                 {availableVersions.map((v) => (
@@ -265,160 +294,137 @@ export default function App() {
                 ))}
               </gux-listbox>
             </gux-dropdown>
+
+            <div className="gcUpdated">
+              <span className="gcUpdated__icon">⟳</span>
+              <span>{loading ? "Updating…" : "Updated just now"}</span>
+            </div>
           </div>
         </div>
-      </header>
+      </div>
 
-      <main className="gcMain">
-        <section className="gcSidebar">
-          <gux-card accent="bordered">
-            <div className="gcCardHeader">
-              <div className="gcCardTitle">Resource type</div>
-              <div className="gcCardActions">
-                <gux-button
-                  accent="secondary"
-                  onClick={clearSearch}
-                  disabled={!query && !selectedType}
-                >
+      {/* Main content area */}
+      <main className="gcContentArea">
+        {error ? (
+          <div className="gcAlert">
+            <div className="gcAlert__title">Failed to load</div>
+            <div className="gcAlert__body">{error}</div>
+          </div>
+        ) : null}
+
+        <div className="gcSplit">
+          {/* Left: “table list” like GC */}
+          <section className="gcCard">
+            <div className="gcCard__toolbar">
+              <button className="gcPrimaryButton" type="button" onClick={() => globalSearchRef.current?.focus?.()} disabled={loading || !!error}>
+                + Search Type
+              </button>
+
+              <div className="gcToolbarRight">
+                <div className="gcToolbarStat">
+                  <span className="gcToolbarStat__label">Types</span>
+                  <span className="gcToolbarStat__value">{filteredTypes.length}</span>
+                </div>
+
+                <button className="gcSecondaryButton" type="button" onClick={clearSearch} disabled={!query && !selectedType}>
                   Clear
-                </gux-button>
+                </button>
               </div>
             </div>
 
-            <div className="gcCardBody">
-              <gux-form-field label="Search">
-                <input
-                  ref={searchInputRef}
-                  slot="input"
-                  value={query}
-                  placeholder='e.g. "genesyscloud_flow"'
-                  onChange={(e) => {
-                    setQuery(e.target.value);
-                    setSelectedType("");
-                  }}
-                  disabled={loading || !!error}
-                />
-              </gux-form-field>
-
-              <div className="gcListMeta">
-                {loadingIndex ? "Loading versions…" : `${filteredTypes.length} types`}
-                {loadingData ? " • Loading data…" : ""}
+            <div className="gcTable">
+              <div className="gcTable__head">
+                <div className="gcTh">Resource Type</div>
               </div>
-
-              <div className="gcList" role="list" aria-busy={loading ? "true" : "false"}>
-                {filteredTypes.slice(0, 250).map((t) => {
+              <div className="gcTable__body" role="list" aria-busy={loading ? "true" : "false"}>
+                {filteredTypes.slice(0, 500).map((t) => {
                   const active = t === activeType;
                   return (
                     <button
                       key={t}
-                      className={`gcListItem ${active ? "isActive" : ""}`}
+                      type="button"
+                      className={`gcTr ${active ? "isActive" : ""}`}
                       onClick={() => onPickType(t)}
                       title={t}
-                      type="button"
-                      disabled={!!error}
                     >
-                      <span className="gcListItemText">{t}</span>
+                      <div className="gcTd gcMono">{t}</div>
                     </button>
                   );
                 })}
 
-                {filteredTypes.length > 250 && (
-                  <div className="gcListFooter">
-                    Showing first 250 matches. Refine your search to narrow it down.
-                  </div>
-                )}
+                {filteredTypes.length === 0 ? (
+                  <div className="gcEmptyRow">No matches.</div>
+                ) : null}
+
+                {filteredTypes.length > 500 ? (
+                  <div className="gcEmptyRow">Showing first 500. Refine search to narrow results.</div>
+                ) : null}
               </div>
             </div>
-          </gux-card>
-        </section>
+          </section>
 
-        <section className="gcContent">
-          <gux-card accent="bordered">
-            <div className="gcCardHeader">
-              <div className="gcCardTitle">Dependency details</div>
-              <div className="gcCardSubtitle">
-                {activeType ? <span className="mono">{activeType}</span> : "Pick a resource type"}
+          {/* Right: details panel like GC */}
+          <section className="gcCard">
+            <div className="gcCard__header">
+              <div>
+                <div className="gcCard__title">Dependency details</div>
+                <div className="gcCard__subtitle">
+                  {activeType ? <span className="gcMono">{activeType}</span> : "Pick a resource type"}
+                </div>
               </div>
             </div>
 
-            <div className="gcCardBody">
-              {error && (
-                <div className="gcError">
-                  <div className="gcErrorTitle">Failed to load</div>
-                  <div className="gcErrorText">{error}</div>
+            <div className="gcDetailsGrid">
+              <div className="gcPanel">
+                <div className="gcPanel__header">
+                  <div className="gcPanel__title">Depends on</div>
+                  <gux-badge>{dependsOn.length}</gux-badge>
                 </div>
-              )}
-
-              {!error && !activeType && (
-                <div className="gcEmpty">
-                  Type a resource name on the left (or click one) to see:
-                  <ul>
-                    <li>What it depends on</li>
-                    <li>What depends on it</li>
-                  </ul>
+                <div className="gcPanel__body">
+                  {activeType && dependsOn.length === 0 ? (
+                    <div className="gcMuted">No dependencies found.</div>
+                  ) : !activeType ? (
+                    <div className="gcMuted">Select a type to view dependencies.</div>
+                  ) : (
+                    <div className="gcPills">
+                      {dependsOn.map((t) => (
+                        <button key={t} type="button" className="gcPill" onClick={() => onPickType(t)}>
+                          {t}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
 
-              {!error && activeType && (
-                <div className="gcGrid">
-                  <div className="gcPanel">
-                    <div className="gcPanelHeader">
-                      <div className="gcPanelTitle">Depends on</div>
-                      <gux-badge>{dependsOn.length}</gux-badge>
-                    </div>
-                    <div className="gcPanelBody">
-                      {dependsOn.length === 0 ? (
-                        <div className="gcMuted">No dependencies found.</div>
-                      ) : (
-                        <div className="gcPills">
-                          {dependsOn.map((t) => (
-                            <button
-                              key={t}
-                              className="gcPill"
-                              onClick={() => onPickType(t)}
-                              type="button"
-                            >
-                              {t}
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="gcPanel">
-                    <div className="gcPanelHeader">
-                      <div className="gcPanelTitle">Dependency for</div>
-                      <gux-badge>{dependencyFor.length}</gux-badge>
-                    </div>
-                    <div className="gcPanelBody">
-                      {dependencyFor.length === 0 ? (
-                        <div className="gcMuted">Nothing depends on this (in this version).</div>
-                      ) : (
-                        <div className="gcPills">
-                          {dependencyFor.map((t) => (
-                            <button
-                              key={t}
-                              className="gcPill"
-                              onClick={() => onPickType(t)}
-                              type="button"
-                            >
-                              {t}
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
+              <div className="gcPanel">
+                <div className="gcPanel__header">
+                  <div className="gcPanel__title">Dependency for</div>
+                  <gux-badge>{dependencyFor.length}</gux-badge>
                 </div>
-              )}
+                <div className="gcPanel__body">
+                  {activeType && dependencyFor.length === 0 ? (
+                    <div className="gcMuted">Nothing depends on this (in this version).</div>
+                  ) : !activeType ? (
+                    <div className="gcMuted">Select a type to view reverse dependencies.</div>
+                  ) : (
+                    <div className="gcPills">
+                      {dependencyFor.map((t) => (
+                        <button key={t} type="button" className="gcPill" onClick={() => onPickType(t)}>
+                          {t}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
-          </gux-card>
-        </section>
+          </section>
+        </div>
       </main>
 
-      <footer className="gcFooter">
-        <span>{loading ? "Loading…" : "Built with Genesys Spark components."}</span>
+      <footer className="gcFooterBar">
+        <span>Built with Genesys Spark components.</span>
       </footer>
     </div>
   );
