@@ -188,6 +188,16 @@ export default function App() {
     el.setAttribute("value", selectedVersion); // attribute (some builds care)
   }, [selectedVersion]);
 
+  // Final anti-flake sync: runs after versions finish loading
+  useEffect(() => {
+    if (loadingIndex) return;
+    const el = versionDropdownRef.current;
+    if (!el) return;
+
+    el.value = selectedVersion;
+    el.setAttribute("value", selectedVersion);
+  }, [loadingIndex, selectedVersion]);
+
   // Load dependency tree (and patch it before use)
   useEffect(() => {
     let cancelled = false;
