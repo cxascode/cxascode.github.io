@@ -44,6 +44,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           OWNER: MyPureCloud
           REPO: terraform-provider-genesyscloud
+          EVENT_NAME: ${{ github.event_name }}
         run: |
           set -euo pipefail
           mkdir -p public/versions .cache-meta
@@ -73,13 +74,20 @@ jobs:
             have_latest_json="true"
           fi
 
+          # IMPORTANT:
+          # - For push + workflow_dispatch, always deploy (code may have changed).
+          # - For schedule, deploy only if the provider release changed or cache is missing.
           needs_deploy="true"
 
-          if [ "${bootstrapped}" = "true" ] && [ "${prev_ver}" = "${latest_ver}" ] && [ "${have_latest_json}" = "true" ]; then
-            needs_deploy="false"
-            echo "No change: already bootstrapped and latest (${latest_ver}) is unchanged + present. Skipping."
+          if [ "${EVENT_NAME}" = "schedule" ]; then
+            if [ "${bootstrapped}" = "true" ] && [ "${prev_ver}" = "${latest_ver}" ] && [ "${have_latest_json}" = "true" ]; then
+              needs_deploy="false"
+              echo "Scheduled run: no change (latest still ${latest_ver} and JSON cached). Skipping."
+            else
+              echo "Scheduled run: work needed. bootstrapped=${bootstrapped}, prev_ver='${prev_ver}', latest_ver='${latest_ver}', have_latest_json=${have_latest_json}"
+            fi
           else
-            echo "Work needed. bootstrapped=${bootstrapped}, prev_ver='${prev_ver}', latest_ver='${latest_ver}', have_latest_json=${have_latest_json}"
+            echo "Event '${EVENT_NAME}': forcing deploy (code changes may exist)."
           fi
 
           {
@@ -161,7 +169,7 @@ jobs:
           echo "${latest}" > .cache-meta/latest.txt
           echo "true" > .cache-meta/bootstrapped.txt
 
-      # Incremental update: only download the latest JSON when latest changes
+      # Incremental update: only download the latest JSON when latest changes (or on forced deploy event)
       - name: Update latest version only
         if: steps.check.outputs.needs_deploy == 'true' && steps.check.outputs.bootstrapped == 'true'
         env:
