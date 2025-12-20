@@ -15,12 +15,11 @@ function sortAlpha(arr) {
 }
 
 /**
- * Expected JSON schema (per provider release asset):
+ * Expected JSON schema:
  * {
  *   "version": "1.73.0",
  *   "resources": [
- *     { "type": "genesyscloud_foo", "dependencies": ["genesyscloud_bar", ...] },
- *     ...
+ *     { "type": "genesyscloud_foo", "dependencies": ["genesyscloud_bar", ...] }
  *   ]
  * }
  */
@@ -49,7 +48,7 @@ function buildDepsMaps(raw) {
       reverseMap.get(d).add(from);
     }
 
-    // Ensure the node exists even if it has no edges
+    // Ensure node exists even if it has no edges
     if (!reverseMap.has(from)) reverseMap.set(from, new Set());
   }
 
@@ -100,26 +99,48 @@ export default function App() {
     };
   }, []);
 
-  // Wire up Spark dropdown events (custom element)
+  // Keep the Spark dropdown element's value in sync with React state
   useEffect(() => {
     const el = versionDropdownRef.current;
     if (!el) return;
 
-    const handler = (evt) => {
-      const v = evt?.detail?.value;
-      if (typeof v === "string" && v.length > 0) {
-        setSelectedVersion(v);
-      }
+    // Some web components don't react to attribute changes; set the property.
+    try {
+      el.value = selectedVersion;
+    } catch {
+      // no-op
+    }
+  }, [selectedVersion]);
+
+  // Wire up Spark dropdown events robustly
+  useEffect(() => {
+    const el = versionDropdownRef.current;
+    if (!el) return;
+
+    const readValue = (evt) => {
+      // Prefer the element's value, then fall back to event detail/target.
+      const fromEl = el.value;
+      const fromDetail = evt?.detail?.value;
+      const fromTarget = evt?.target?.value;
+
+      const v =
+        (typeof fromEl === "string" && fromEl) ||
+        (typeof fromDetail === "string" && fromDetail) ||
+        (typeof fromTarget === "string" && fromTarget) ||
+        "";
+
+      if (v) setSelectedVersion(v);
     };
 
-    el.addEventListener("change", handler);
-    el.addEventListener("input", handler);
-    el.addEventListener("guxchange", handler);
+    // Spark components may emit one of these depending on version/component internals
+    el.addEventListener("guxchange", readValue);
+    el.addEventListener("change", readValue);
+    el.addEventListener("input", readValue);
 
     return () => {
-      el.removeEventListener("change", handler);
-      el.removeEventListener("input", handler);
-      el.removeEventListener("guxchange", handler);
+      el.removeEventListener("guxchange", readValue);
+      el.removeEventListener("change", readValue);
+      el.removeEventListener("input", readValue);
     };
   }, []);
 
@@ -138,7 +159,6 @@ export default function App() {
         if (!res.ok) throw new Error(`Failed to load dependency JSON (${res.status})`);
         const json = await res.json();
 
-        // Basic schema check to avoid silent weirdness later
         if (!json || !Array.isArray(json.resources)) {
           throw new Error("Dependency JSON is missing a top-level 'resources' array.");
         }
@@ -146,13 +166,14 @@ export default function App() {
         if (!cancelled) {
           setRaw(json);
 
-          // Prefer the version embedded in the file; fall back to dropdown intent
-          const embeddedVersion = typeof json.version === "string" ? json.version : "";
-          const computed =
-            embeddedVersion ||
-            (selectedVersion === "latest" ? availableVersions[0] || "latest" : selectedVersion);
-
-          setDownloadedVersion(computed);
+          // Prefer the version embedded in the file (best truth).
+          const embedded = typeof json.version === "string" ? json.version : "";
+          setDownloadedVersion(
+            embedded ||
+              (selectedVersion === "latest"
+                ? availableVersions[0] || "latest"
+                : selectedVersion)
+          );
         }
       } catch (e) {
         if (!cancelled) setError(String(e?.message || e));
@@ -161,7 +182,7 @@ export default function App() {
       }
     }
 
-    // Reset selection when changing versions to avoid “phantom” types
+    // Reset selection when changing versions to avoid phantom types
     setQuery("");
     setSelectedType("");
 
@@ -169,8 +190,7 @@ export default function App() {
     return () => {
       cancelled = true;
     };
-    // availableVersions is intentionally not a dependency; we don't want to refetch data
-    // just because the index arrives slightly later.
+    // Intentionally not depending on availableVersions (avoid refetch jitter)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedVersion]);
 
@@ -233,7 +253,6 @@ export default function App() {
             <span className="gcMetaLabel">Version:</span>
             <gux-dropdown
               ref={versionDropdownRef}
-              value={selectedVersion}
               placeholder="Select version"
               disabled={loadingIndex}
             >
@@ -353,7 +372,12 @@ export default function App() {
                       ) : (
                         <div className="gcPills">
                           {dependsOn.map((t) => (
-                            <button key={t} className="gcPill" onClick={() => onPickType(t)} type="button">
+                            <button
+                              key={t}
+                              className="gcPill"
+                              onClick={() => onPickType(t)}
+                              type="button"
+                            >
                               {t}
                             </button>
                           ))}
@@ -373,7 +397,12 @@ export default function App() {
                       ) : (
                         <div className="gcPills">
                           {dependencyFor.map((t) => (
-                            <button key={t} className="gcPill" onClick={() => onPickType(t)} type="button">
+                            <button
+                              key={t}
+                              className="gcPill"
+                              onClick={() => onPickType(t)}
+                              type="button"
+                            >
                               {t}
                             </button>
                           ))}
