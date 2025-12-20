@@ -1,5 +1,3 @@
-/* Genesys Cloud-ish layout + table styling. Spark provides core component styles. */
-
 :root {
   --gc-bg: #f5f7f9;
   --gc-surface: #ffffff;
@@ -8,149 +6,27 @@
   --gc-text: #1f2d3d;
   --gc-subtle: #5b6b7a;
   --gc-blue: #2a60ff;
-  --gc-blue-weak: rgba(42, 96, 255, 0.10);
-  --gc-row-hover: rgba(31, 45, 61, 0.04);
+  --gc-blue-weak: rgba(42, 96, 255, 0.1);
 }
 
 .gcShell {
   min-height: 100vh;
   background: var(--gc-bg);
-  color: var(--gc-text);
   display: flex;
   flex-direction: column;
 }
 
-/* ---------------- App header ---------------- */
-
-.gcAppHeader {
-  height: 56px;
-  background: var(--gc-surface);
-  border-bottom: 1px solid var(--gc-border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 14px;
-  gap: 12px;
-}
-
-.gcAppHeader__left,
-.gcAppHeader__right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.gcIconButton {
-  height: 34px;
-  min-width: 34px;
-  padding: 0 10px;
-  border: 1px solid var(--gc-border);
-  background: #fff;
-  border-radius: 6px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-}
-
-.gcIconButton--small {
-  height: 28px;
-  min-width: 28px;
-  padding: 0 8px;
-}
-
-.gcIconButton:hover {
-  background: rgba(0, 0, 0, 0.03);
-}
-
-.gcGlobalSearch {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid var(--gc-border);
-  background: #fff;
-  border-radius: 6px;
-  padding: 0 8px;
-  height: 34px;
-  width: min(520px, 52vw);
-}
-
-.gcGlobalSearch__icon {
-  opacity: 0.7;
-}
-
-.gcGlobalSearch__input {
-  border: 0;
-  outline: none;
-  flex: 1;
-  height: 28px;
-  font-size: 14px;
-  background: transparent;
-  color: var(--gc-text);
-}
-
-.gcHeaderChip {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
-  border: 1px solid var(--gc-border);
-  border-radius: 999px;
-  background: #fff;
-}
-
-.gcHeaderChip__label {
-  font-size: 13px;
-  color: var(--gc-subtle);
-}
-
-.gcToggle {
-  width: 36px;
-  height: 18px;
-  border-radius: 999px;
-  background: rgba(31, 45, 61, 0.15);
-  position: relative;
-}
-
-.gcToggle::after {
-  content: "";
-  width: 14px;
-  height: 14px;
-  border-radius: 999px;
-  background: #fff;
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-}
-
-/* ---------------- Page header ---------------- */
-
 .gcPageHeader {
-  background: var(--gc-bg);
   padding: 14px 18px 0 18px;
 }
 
 .gcBreadcrumb {
   font-size: 13px;
   color: var(--gc-subtle);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.gcBreadcrumb__link {
-  color: var(--gc-blue);
-  text-decoration: none;
-}
-
-.gcBreadcrumb__link:hover {
-  text-decoration: underline;
 }
 
 .gcBreadcrumb__sep {
-  opacity: 0.6;
+  margin: 0 6px;
 }
 
 .gcPageTitleRow {
@@ -165,7 +41,6 @@
 .gcPageTitle {
   margin: 0;
   font-size: 22px;
-  line-height: 1.2;
 }
 
 .gcPageMeta {
@@ -180,175 +55,72 @@
   color: var(--gc-subtle);
 }
 
-/* Make Spark cards their own stacking context */
-gux-badge,
-gux-dropdown {
-  position: relative;
-  z-index: 0;
-}
-
-.gcUpdated {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  color: var(--gc-subtle);
-  padding-left: 8px;
-  border-left: 1px solid var(--gc-border2);
-}
-
-.gcUpdated__icon {
-  opacity: 0.75;
-}
-
-/* ---------------- Content ---------------- */
-
 .gcContentArea {
   padding: 16px 18px;
   flex: 1;
-  min-height: 0;
 }
 
-.gcAlert {
-  background: #fff;
-  border: 1px solid rgba(210, 28, 28, 0.4);
-  border-radius: 10px;
-  padding: 12px 14px;
-  margin-bottom: 14px;
-}
-
-.gcAlert__title {
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
-.gcAlert__body {
-  color: #8f1111;
-}
-
-/* Split like GC: list left, details right */
 .gcSplit {
   display: grid;
   grid-template-columns: 520px 1fr;
   gap: 16px;
-  align-items: start;
 }
 
-/* Card surface */
 .gcCard {
   background: var(--gc-surface);
   border: 1px solid var(--gc-border);
   border-radius: 10px;
   overflow: hidden;
-  min-height: 520px;
-  min-width: 0;
 }
 
-/* Toolbar row above table */
 .gcCard__toolbar {
-  padding: 12px 12px;
+  padding: 12px;
   border-bottom: 1px solid var(--gc-border2);
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
 }
 
-.gcToolbarRight {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
+.gcSearchInput {
+  flex: 1;
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 6px;
+  border: 1px solid var(--gc-border);
 }
 
 .gcToolbarStat {
   display: inline-flex;
+  gap: 6px;
   align-items: baseline;
-  gap: 8px;
-  color: var(--gc-subtle);
 }
 
 .gcToolbarStat__label {
   font-size: 12px;
+  color: var(--gc-subtle);
 }
 
 .gcToolbarStat__value {
   font-weight: 700;
-  color: var(--gc-text);
-}
-
-/* Buttons */
-.gcPrimaryButton,
-.gcSecondaryButton {
-  height: 34px;
-  padding: 0 12px;
-  border-radius: 6px;
-  border: 1px solid var(--gc-border);
-  cursor: pointer;
-  font-weight: 600;
-  background: #fff;
-}
-
-.gcPrimaryButton {
-  border-color: rgba(42, 96, 255, 0.35);
-  color: var(--gc-blue);
-}
-
-.gcPrimaryButton:hover,
-.gcSecondaryButton:hover {
-  background: rgba(0, 0, 0, 0.03);
-}
-
-.gcPrimaryButton:disabled,
-.gcSecondaryButton:disabled,
-.gcIconButton:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* Table-like list */
-.gcTable {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-}
-
-.gcTable__head {
-  display: grid;
-  grid-template-columns: 1fr;
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--gc-border2);
-  background: #fff;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-
-.gcTh {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--gc-text);
 }
 
 .gcTable__body {
+  max-height: 70vh;
   overflow: auto;
-  min-height: 0;
-  max-height: calc(100vh - 260px);
 }
 
 .gcTr {
-  width: 100%;
-  text-align: left;
-  border: 0;
-  background: transparent;
-  display: grid;
-  grid-template-columns: 1fr;
-  padding: 12px 12px;
+  padding: 12px;
   border-bottom: 1px solid var(--gc-border2);
+  text-align: left;
+  background: transparent;
+  border: 0;
+  width: 100%;
   cursor: pointer;
 }
 
 .gcTr:hover {
-  background: var(--gc-row-hover);
+  background: rgba(0, 0, 0, 0.03);
 }
 
 .gcTr.isActive {
@@ -356,30 +128,18 @@ gux-dropdown {
 }
 
 .gcTd {
-  min-width: 0;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .gcMono {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-    "Courier New", monospace;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-.gcEmptyRow {
-  padding: 12px 12px;
-  font-size: 13px;
-  color: var(--gc-subtle);
-}
-
-/* Details card */
 .gcCard__header {
-  padding: 14px 14px 12px 14px;
+  padding: 14px;
   border-bottom: 1px solid var(--gc-border2);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }
 
 .gcCard__title {
@@ -388,9 +148,9 @@ gux-dropdown {
 }
 
 .gcCard__subtitle {
-  margin-top: 6px;
   font-size: 13px;
   color: var(--gc-subtle);
+  margin-top: 4px;
 }
 
 .gcDetailsGrid {
@@ -403,74 +163,44 @@ gux-dropdown {
 .gcPanel {
   border: 1px solid var(--gc-border);
   border-radius: 10px;
-  overflow: hidden;
-  background: #fff;
-  min-width: 0;
 }
 
 .gcPanel__header {
   padding: 10px 12px;
   border-bottom: 1px solid var(--gc-border2);
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  align-items: center;
 }
 
 .gcPanel__title {
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .gcPanel__body {
   padding: 12px;
 }
 
-.gcMuted {
-  font-size: 13px;
-  color: var(--gc-subtle);
-}
-
-.gcPills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
 .gcPill {
   border: 1px solid var(--gc-border);
-  background: #fff;
   border-radius: 999px;
   padding: 6px 10px;
   font-size: 12px;
+  background: #fff;
   cursor: pointer;
+  margin: 4px 4px 0 0;
 }
 
 .gcPill:hover {
   background: rgba(0, 0, 0, 0.03);
 }
 
-/* Footer */
-.gcFooterBar {
-  height: 44px;
-  display: flex;
-  align-items: center;
-  padding: 0 16px;
-  border-top: 1px solid var(--gc-border);
-  background: var(--gc-surface);
-  color: var(--gc-subtle);
-  font-size: 12px;
-}
-
-/* Responsive */
 @media (max-width: 1100px) {
   .gcSplit {
     grid-template-columns: 1fr;
   }
   .gcDetailsGrid {
     grid-template-columns: 1fr;
-  }
-  .gcTable__body {
-    max-height: 45vh;
   }
 }
