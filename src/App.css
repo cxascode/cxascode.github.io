@@ -20,15 +20,6 @@
   padding: 14px 18px 0 18px;
 }
 
-.gcBreadcrumb {
-  font-size: 13px;
-  color: var(--gc-subtle);
-}
-
-.gcBreadcrumb__sep {
-  margin: 0 6px;
-}
-
 .gcPageTitleRow {
   display: flex;
   align-items: center;
@@ -41,6 +32,7 @@
 .gcPageTitle {
   margin: 0;
   font-size: 22px;
+  color: var(--gc-text);
 }
 
 .gcPageMeta {
@@ -58,12 +50,31 @@
 .gcContentArea {
   padding: 16px 18px;
   flex: 1;
+  min-height: 0;
+}
+
+.gcAlert {
+  background: #fff;
+  border: 1px solid rgba(210, 28, 28, 0.4);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+}
+
+.gcAlert__title {
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.gcAlert__body {
+  color: #8f1111;
 }
 
 .gcSplit {
   display: grid;
   grid-template-columns: 520px 1fr;
   gap: 16px;
+  min-height: 0;
 }
 
 .gcCard {
@@ -71,6 +82,8 @@
   border: 1px solid var(--gc-border);
   border-radius: 10px;
   overflow: hidden;
+  min-height: 520px;
+  min-width: 0;
 }
 
 .gcCard__toolbar {
@@ -90,24 +103,10 @@
   font-size: 14px;
 }
 
-.gcToolbarStat {
-  display: inline-flex;
-  gap: 6px;
-  align-items: baseline;
-}
-
-.gcToolbarStat__label {
-  font-size: 12px;
-  color: var(--gc-subtle);
-}
-
-.gcToolbarStat__value {
-  font-weight: 700;
-}
-
 .gcTable__body {
-  max-height: 70vh;
+  max-height: calc(100vh - 260px);
   overflow: auto;
+  min-height: 0;
 }
 
 .gcTr {
@@ -138,6 +137,12 @@
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
+.gcEmptyRow {
+  padding: 12px;
+  color: var(--gc-subtle);
+  font-size: 13px;
+}
+
 .gcCard__header {
   padding: 14px;
   border-bottom: 1px solid var(--gc-border2);
@@ -146,6 +151,7 @@
 .gcCard__title {
   font-size: 16px;
   font-weight: 800;
+  color: var(--gc-text);
 }
 
 .gcCard__subtitle {
@@ -164,6 +170,9 @@
 .gcPanel {
   border: 1px solid var(--gc-border);
   border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+  min-width: 0;
 }
 
 .gcPanel__header {
@@ -183,6 +192,17 @@
   padding: 12px;
 }
 
+.gcMuted {
+  font-size: 13px;
+  color: var(--gc-subtle);
+}
+
+.gcPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .gcPill {
   border: 1px solid var(--gc-border);
   border-radius: 999px;
@@ -190,7 +210,6 @@
   font-size: 12px;
   background: #fff;
   cursor: pointer;
-  margin: 4px 4px 0 0;
 }
 
 .gcPill:hover {
@@ -203,5 +222,8 @@
   }
   .gcDetailsGrid {
     grid-template-columns: 1fr;
+  }
+  .gcTable__body {
+    max-height: 45vh;
   }
 }
