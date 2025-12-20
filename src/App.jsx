@@ -399,7 +399,7 @@ export default function App() {
                       ))
                     ) : (
                       <div className="gcMuted">
-                        Nothing depends on this (in this version).
+                        Nothing depends on this.
                       </div>
                     )
                   ) : (
