@@ -4,57 +4,62 @@ const INDEX_URL = `${import.meta.env.BASE_URL}versions/index.json`;
 const LATEST_URL = `${import.meta.env.BASE_URL}dependency_tree.json`;
 const VERSION_URL = (v) => `${import.meta.env.BASE_URL}versions/${v}.json`;
 
-// --- Helpers ---------------------------------------------------------------
-
 function normalizeType(s) {
   return (s || "").trim();
 }
 
-// Best-effort: handle a few possible shapes without guessing too hard.
-// Your provider file historically maps resource type -> dependencies array,
-// but this keeps it resilient.
+function sortAlpha(arr) {
+  return arr
+    .filter((x) => typeof x === "string")
+    .sort((a, b) => a.localeCompare(b));
+}
+
+/**
+ * Expected JSON schema (per provider release asset):
+ * {
+ *   "version": "1.73.0",
+ *   "resources": [
+ *     { "type": "genesyscloud_foo", "dependencies": ["genesyscloud_bar", ...] },
+ *     ...
+ *   ]
+ * }
+ */
 function buildDepsMaps(raw) {
-  const depsMap = new Map(); // type -> Set(deps)
-  const reverseMap = new Map(); // type -> Set(dependents)
+  const depsMap = new Map(); // string -> Set<string>
+  const reverseMap = new Map(); // string -> Set<string>
 
-  const addEdge = (from, to) => {
-    if (!from || !to) return;
+  if (!raw || !Array.isArray(raw.resources)) {
+    return { depsMap, reverseMap };
+  }
+
+  for (const r of raw.resources) {
+    if (!r || typeof r.type !== "string") continue;
+
+    const from = r.type;
+    const deps = Array.isArray(r.dependencies) ? r.dependencies : [];
+
     if (!depsMap.has(from)) depsMap.set(from, new Set());
-    depsMap.get(from).add(to);
 
-    if (!reverseMap.has(to)) reverseMap.set(to, new Set());
-    reverseMap.get(to).add(from);
-  };
+    for (const d of deps) {
+      if (typeof d !== "string") continue;
 
-  if (!raw) return { depsMap, reverseMap };
+      depsMap.get(from).add(d);
 
-  // Case A: { "genesyscloud_foo": ["genesyscloud_bar", ...], ... }
-  if (typeof raw === "object" && !Array.isArray(raw)) {
-    for (const [k, v] of Object.entries(raw)) {
-      if (Array.isArray(v)) {
-        v.forEach((dep) => addEdge(k, dep));
-      } else if (v && typeof v === "object") {
-        // Case B-ish: { "type": { depends_on: [...] } }
-        const list =
-          v.depends_on || v.dependencies || v.dependsOn || v.depends || [];
-        if (Array.isArray(list)) list.forEach((dep) => addEdge(k, dep));
-      }
+      if (!reverseMap.has(d)) reverseMap.set(d, new Set());
+      reverseMap.get(d).add(from);
     }
+
+    // Ensure the node exists even if it has no edges
+    if (!reverseMap.has(from)) reverseMap.set(from, new Set());
   }
 
   return { depsMap, reverseMap };
 }
 
-function sortAlpha(arr) {
-  return [...arr].sort((a, b) => a.localeCompare(b));
-}
-
-// --- App -------------------------------------------------------------------
-
 export default function App() {
   const [availableVersions, setAvailableVersions] = useState([]);
   const [selectedVersion, setSelectedVersion] = useState("latest");
-  const [downloadedVersion, setDownloadedVersion] = useState(""); // what JSON we actually loaded
+  const [downloadedVersion, setDownloadedVersion] = useState("");
   const [raw, setRaw] = useState(null);
 
   const [query, setQuery] = useState("");
@@ -65,6 +70,7 @@ export default function App() {
   const [error, setError] = useState("");
 
   const searchInputRef = useRef(null);
+  const versionDropdownRef = useRef(null);
 
   // Load versions index for dropdown
   useEffect(() => {
@@ -73,10 +79,13 @@ export default function App() {
     async function loadIndex() {
       try {
         setLoadingIndex(true);
+        setError("");
+
         const res = await fetch(INDEX_URL, { cache: "no-store" });
         if (!res.ok) throw new Error(`Failed to load index.json (${res.status})`);
         const json = await res.json();
         if (!Array.isArray(json)) throw new Error("index.json is not an array");
+
         if (!cancelled) setAvailableVersions(json);
       } catch (e) {
         if (!cancelled) setError(String(e?.message || e));
@@ -88,6 +97,29 @@ export default function App() {
     loadIndex();
     return () => {
       cancelled = true;
+    };
+  }, []);
+
+  // Wire up Spark dropdown events (custom element)
+  useEffect(() => {
+    const el = versionDropdownRef.current;
+    if (!el) return;
+
+    const handler = (evt) => {
+      const v = evt?.detail?.value;
+      if (typeof v === "string" && v.length > 0) {
+        setSelectedVersion(v);
+      }
+    };
+
+    el.addEventListener("change", handler);
+    el.addEventListener("input", handler);
+    el.addEventListener("guxchange", handler);
+
+    return () => {
+      el.removeEventListener("change", handler);
+      el.removeEventListener("input", handler);
+      el.removeEventListener("guxchange", handler);
     };
   }, []);
 
@@ -106,9 +138,21 @@ export default function App() {
         if (!res.ok) throw new Error(`Failed to load dependency JSON (${res.status})`);
         const json = await res.json();
 
+        // Basic schema check to avoid silent weirdness later
+        if (!json || !Array.isArray(json.resources)) {
+          throw new Error("Dependency JSON is missing a top-level 'resources' array.");
+        }
+
         if (!cancelled) {
           setRaw(json);
-          setDownloadedVersion(selectedVersion === "latest" ? (availableVersions[0] || "latest") : selectedVersion);
+
+          // Prefer the version embedded in the file; fall back to dropdown intent
+          const embeddedVersion = typeof json.version === "string" ? json.version : "";
+          const computed =
+            embeddedVersion ||
+            (selectedVersion === "latest" ? availableVersions[0] || "latest" : selectedVersion);
+
+          setDownloadedVersion(computed);
         }
       } catch (e) {
         if (!cancelled) setError(String(e?.message || e));
@@ -125,6 +169,8 @@ export default function App() {
     return () => {
       cancelled = true;
     };
+    // availableVersions is intentionally not a dependency; we don't want to refetch data
+    // just because the index arrives slightly later.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedVersion]);
 
@@ -155,38 +201,9 @@ export default function App() {
     return sortAlpha([...(reverseMap.get(activeType) || [])]);
   }, [reverseMap, activeType]);
 
-  // --- Spark dropdown wiring (web component events) -------------------------
-  // gux-dropdown emits a change-ish event; React doesn’t automatically map it
-  // like a native <select>. We attach a listener directly.
-  const versionDropdownRef = useRef(null);
-
-  useEffect(() => {
-    const el = versionDropdownRef.current;
-    if (!el) return;
-
-    const handler = (evt) => {
-      // gux-dropdown commonly reports selected value on evt.detail.value
-      const v = evt?.detail?.value;
-      if (typeof v === "string" && v.length > 0) {
-        setSelectedVersion(v);
-      }
-    };
-
-    el.addEventListener("change", handler);
-    el.addEventListener("input", handler);
-    el.addEventListener("guxchange", handler);
-
-    return () => {
-      el.removeEventListener("change", handler);
-      el.removeEventListener("input", handler);
-      el.removeEventListener("guxchange", handler);
-    };
-  }, []);
-
   const onPickType = (t) => {
     setSelectedType(t);
     setQuery(t);
-    // Keep focus in the search box for quick iterative lookups
     requestAnimationFrame(() => searchInputRef.current?.focus?.());
   };
 
@@ -195,6 +212,8 @@ export default function App() {
     setSelectedType("");
     requestAnimationFrame(() => searchInputRef.current?.focus?.());
   };
+
+  const loading = loadingIndex || loadingData;
 
   return (
     <div className="gcApp">
@@ -212,7 +231,12 @@ export default function App() {
 
           <div className="gcMeta">
             <span className="gcMetaLabel">Version:</span>
-            <gux-dropdown ref={versionDropdownRef} value={selectedVersion} placeholder="Select version">
+            <gux-dropdown
+              ref={versionDropdownRef}
+              value={selectedVersion}
+              placeholder="Select version"
+              disabled={loadingIndex}
+            >
               <gux-listbox aria-label="Select provider version">
                 <gux-option value="latest">Latest</gux-option>
                 {availableVersions.map((v) => (
@@ -253,6 +277,7 @@ export default function App() {
                     setQuery(e.target.value);
                     setSelectedType("");
                   }}
+                  disabled={loading || !!error}
                 />
               </gux-form-field>
 
@@ -261,7 +286,7 @@ export default function App() {
                 {loadingData ? " • Loading data…" : ""}
               </div>
 
-              <div className="gcList" role="list">
+              <div className="gcList" role="list" aria-busy={loading ? "true" : "false"}>
                 {filteredTypes.slice(0, 250).map((t) => {
                   const active = t === activeType;
                   return (
@@ -270,6 +295,8 @@ export default function App() {
                       className={`gcListItem ${active ? "isActive" : ""}`}
                       onClick={() => onPickType(t)}
                       title={t}
+                      type="button"
+                      disabled={!!error}
                     >
                       <span className="gcListItemText">{t}</span>
                     </button>
@@ -291,13 +318,7 @@ export default function App() {
             <div className="gcCardHeader">
               <div className="gcCardTitle">Dependency details</div>
               <div className="gcCardSubtitle">
-                {activeType ? (
-                  <>
-                    <span className="mono">{activeType}</span>
-                  </>
-                ) : (
-                  "Pick a resource type to view dependencies"
-                )}
+                {activeType ? <span className="mono">{activeType}</span> : "Pick a resource type"}
               </div>
             </div>
 
@@ -332,7 +353,7 @@ export default function App() {
                       ) : (
                         <div className="gcPills">
                           {dependsOn.map((t) => (
-                            <button key={t} className="gcPill" onClick={() => onPickType(t)}>
+                            <button key={t} className="gcPill" onClick={() => onPickType(t)} type="button">
                               {t}
                             </button>
                           ))}
@@ -352,7 +373,7 @@ export default function App() {
                       ) : (
                         <div className="gcPills">
                           {dependencyFor.map((t) => (
-                            <button key={t} className="gcPill" onClick={() => onPickType(t)}>
+                            <button key={t} className="gcPill" onClick={() => onPickType(t)} type="button">
                               {t}
                             </button>
                           ))}
@@ -368,7 +389,7 @@ export default function App() {
       </main>
 
       <footer className="gcFooter">
-        <span>Built with Genesys Spark components.</span>
+        <span>{loading ? "Loading…" : "Built with Genesys Spark components."}</span>
       </footer>
     </div>
   );
