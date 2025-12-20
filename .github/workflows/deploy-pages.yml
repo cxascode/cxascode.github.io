@@ -25,19 +25,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Cache holds:
-      # - public/versions/*.json  (historical immutables)
-      # - .cache-meta/latest.txt  (what we last deployed as "latest")
-      # - .cache-meta/bootstrapped.txt (marker for one-time backfill)
-      - name: Restore versions cache
-        id: cache-restore
-        uses: actions/cache/restore@v4
-        with:
-          path: |
-            public/versions
-            .cache-meta
-          key: versions-${{ runner.os }}-v3
-
+      # Step 1: Determine latest provider release and whether we should deploy.
+      # IMPORTANT:
+      # - push + workflow_dispatch always deploy (code may have changed)
+      # - schedule deploys only when provider "latest" changes OR cache/bootstrap missing
       - name: Check latest release + decide what to do
         id: check
         env:
@@ -51,7 +42,6 @@ jobs:
 
           api_base="https://api.github.com/repos/${OWNER}/${REPO}"
 
-          # Latest tag like "v1.73.0" -> "1.73.0"
           latest_tag="$(curl -fsSL \
             -H "Authorization: Bearer ${GH_TOKEN}" \
             -H "Accept: application/vnd.github+json" \
@@ -74,15 +64,12 @@ jobs:
             have_latest_json="true"
           fi
 
-          # IMPORTANT:
-          # - For push + workflow_dispatch, always deploy (code may have changed).
-          # - For schedule, deploy only if the provider release changed or cache is missing.
           needs_deploy="true"
 
           if [ "${EVENT_NAME}" = "schedule" ]; then
             if [ "${bootstrapped}" = "true" ] && [ "${prev_ver}" = "${latest_ver}" ] && [ "${have_latest_json}" = "true" ]; then
               needs_deploy="false"
-              echo "Scheduled run: no change (latest still ${latest_ver} and JSON cached). Skipping."
+              echo "Scheduled run: no change (latest still ${latest_ver} and JSON present). Skipping."
             else
               echo "Scheduled run: work needed. bootstrapped=${bootstrapped}, prev_ver='${prev_ver}', latest_ver='${latest_ver}', have_latest_json=${have_latest_json}"
             fi
@@ -96,6 +83,20 @@ jobs:
             echo "bootstrapped=${bootstrapped}"
             echo "needs_deploy=${needs_deploy}"
           } >> "${GITHUB_OUTPUT}"
+
+      # Step 2: Restore cache using a versioned key so we don't get "cache save failed".
+      # - key: exact match for current latest version
+      # - restore-keys: fall back to the most recent saved cache for this OS
+      - name: Restore versions cache
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            public/versions
+            .cache-meta
+          key: versions-${{ runner.os }}-${{ steps.check.outputs.latest_ver }}
+          restore-keys: |
+            versions-${{ runner.os }}-
 
       # One-time bootstrap: download all versions >= 1.60.0
       - name: Bootstrap versions history (>= 1.60.0)
@@ -136,7 +137,6 @@ jobs:
             ' | while IFS=$'\t' read -r tag url; do
               ver="${tag#v}"
 
-              # ver >= MIN_VERSION (semver)
               first="$(printf "%s\n%s\n" "${MIN_VERSION}" "${ver}" | sort -V | head -n 1)"
               if [ "${first}" != "${MIN_VERSION}" ]; then
                 continue
@@ -169,7 +169,7 @@ jobs:
           echo "${latest}" > .cache-meta/latest.txt
           echo "true" > .cache-meta/bootstrapped.txt
 
-      # Incremental update: only download the latest JSON when latest changes (or on forced deploy event)
+      # Incremental update: download ONLY the latest JSON (history files never change)
       - name: Update latest version only
         if: steps.check.outputs.needs_deploy == 'true' && steps.check.outputs.bootstrapped == 'true'
         env:
@@ -186,7 +186,6 @@ jobs:
 
           echo "INCREMENTAL: ensuring latest (${latest_ver}) exists..."
 
-          # Fetch latest release JSON and extract dependency_tree asset URL
           rel_json="$(curl -fsSL \
             -H "Authorization: Bearer ${GH_TOKEN}" \
             -H "Accept: application/vnd.github+json" \
@@ -211,22 +210,12 @@ jobs:
             echo "Already have ${out}; not downloading."
           fi
 
-          # Rebuild index and dependency_tree.json from the local versions folder
           versions_sorted="$(ls -1 public/versions/*.json | sed 's|.*/||; s|\.json$||' | sort -Vr)"
           printf "%s\n" "${versions_sorted}" | jq -R -s 'split("\n") | map(select(length>0))' > public/versions/index.json
 
           latest="$(printf "%s\n" "${versions_sorted}" | head -n 1)"
           cp "public/versions/${latest}.json" public/dependency_tree.json
           echo "${latest}" > .cache-meta/latest.txt
-
-      - name: Save versions cache
-        if: steps.check.outputs.needs_deploy == 'true'
-        uses: actions/cache/save@v4
-        with:
-          path: |
-            public/versions
-            .cache-meta
-          key: versions-${{ runner.os }}-v3
 
       - uses: actions/setup-node@v4
         if: steps.check.outputs.needs_deploy == 'true'
