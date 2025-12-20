@@ -1,10 +1,9 @@
-/* Keep CSS focused on layout + spacing. Let Spark do the “Genesys look”. */
+/* Layout-only CSS so Spark (GUX) can control the visual language. */
 
 .gcApp {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--gux-grey-100, #f5f7f9);
 }
 
 .gcTopbar {
@@ -13,25 +12,25 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px 20px;
-  background: var(--gux-grey-0, #ffffff);
-  border-bottom: 1px solid var(--gux-grey-30, #d7dde2);
+  border-bottom: 1px solid var(--gux-borderColor, rgba(0, 0, 0, 0.12));
 }
 
 .gcTopbar__left {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0;
 }
 
 .gcTitle {
   font-size: 18px;
   font-weight: 700;
-  color: var(--gux-grey-1000, #1f2d3d);
+  line-height: 1.2;
 }
 
 .gcSubtitle {
   font-size: 13px;
-  color: var(--gux-grey-600, #5b6b7a);
+  opacity: 0.8;
 }
 
 .gcTopbar__right {
@@ -45,11 +44,12 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  white-space: nowrap;
 }
 
 .gcMetaLabel {
   font-size: 12px;
-  color: var(--gux-grey-700, #4a5a68);
+  opacity: 0.8;
 }
 
 .gcMain {
@@ -58,6 +58,7 @@
   grid-template-columns: 360px 1fr;
   gap: 16px;
   padding: 16px;
+  min-height: 0;
 }
 
 .gcSidebar,
@@ -65,6 +66,7 @@
   min-width: 0;
 }
 
+/* Card internals (Spark card provides the look; we provide spacing) */
 .gcCardHeader {
   display: flex;
   align-items: center;
@@ -76,12 +78,11 @@
 .gcCardTitle {
   font-size: 14px;
   font-weight: 700;
-  color: var(--gux-grey-1000, #1f2d3d);
 }
 
 .gcCardSubtitle {
   font-size: 12px;
-  color: var(--gux-grey-700, #4a5a68);
+  opacity: 0.8;
 }
 
 .gcCardActions {
@@ -92,21 +93,22 @@
 
 .gcCardBody {
   padding: 8px 16px 16px 16px;
+  min-height: 0;
 }
 
 .gcListMeta {
   margin-top: 10px;
   font-size: 12px;
-  color: var(--gux-grey-700, #4a5a68);
+  opacity: 0.8;
 }
 
+/* Resource list */
 .gcList {
   margin-top: 10px;
   max-height: 62vh;
   overflow: auto;
-  border: 1px solid var(--gux-grey-30, #d7dde2);
   border-radius: 8px;
-  background: var(--gux-grey-0, #fff);
+  border: 1px solid var(--gux-borderColor, rgba(0, 0, 0, 0.12));
 }
 
 .gcListItem {
@@ -122,16 +124,15 @@
 }
 
 .gcListItem:hover {
-  background: var(--gux-grey-10, #eef2f5);
+  background: rgba(0, 0, 0, 0.04);
 }
 
 .gcListItem.isActive {
-  background: var(--gux-blue-10, #e8f1ff);
+  background: rgba(0, 90, 255, 0.10);
 }
 
 .gcListItemText {
   font-size: 13px;
-  color: var(--gux-grey-1000, #1f2d3d);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -140,10 +141,11 @@
 .gcListFooter {
   padding: 10px 12px;
   font-size: 12px;
-  color: var(--gux-grey-700, #4a5a68);
-  border-top: 1px solid var(--gux-grey-30, #d7dde2);
+  opacity: 0.8;
+  border-top: 1px solid var(--gux-borderColor, rgba(0, 0, 0, 0.12));
 }
 
+/* Details grid */
 .gcGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -151,9 +153,8 @@
 }
 
 .gcPanel {
-  border: 1px solid var(--gux-grey-30, #d7dde2);
+  border: 1px solid var(--gux-borderColor, rgba(0, 0, 0, 0.12));
   border-radius: 10px;
-  background: var(--gux-grey-0, #fff);
   overflow: hidden;
 }
 
@@ -162,14 +163,13 @@
   justify-content: space-between;
   align-items: center;
   gap: 8px;
-  padding: 12px 12px;
-  border-bottom: 1px solid var(--gux-grey-30, #d7dde2);
+  padding: 12px;
+  border-bottom: 1px solid var(--gux-borderColor, rgba(0, 0, 0, 0.12));
 }
 
 .gcPanelTitle {
   font-size: 13px;
   font-weight: 700;
-  color: var(--gux-grey-1000, #1f2d3d);
 }
 
 .gcPanelBody {
@@ -183,9 +183,8 @@
 }
 
 .gcPill {
-  border: 1px solid var(--gux-grey-30, #d7dde2);
-  background: var(--gux-grey-0, #fff);
-  color: var(--gux-grey-1000, #1f2d3d);
+  border: 1px solid var(--gux-borderColor, rgba(0, 0, 0, 0.12));
+  background: transparent;
   border-radius: 999px;
   padding: 6px 10px;
   font-size: 12px;
@@ -193,22 +192,22 @@
 }
 
 .gcPill:hover {
-  background: var(--gux-grey-10, #eef2f5);
+  background: rgba(0, 0, 0, 0.04);
 }
 
 .gcMuted {
   font-size: 12px;
-  color: var(--gux-grey-700, #4a5a68);
+  opacity: 0.8;
 }
 
 .gcEmpty {
   font-size: 13px;
-  color: var(--gux-grey-800, #3f4c59);
+  opacity: 0.9;
 }
 
 .gcError {
-  border: 1px solid var(--gux-red-60, #d21c1c);
-  background: var(--gux-red-10, #fdecec);
+  border: 1px solid rgba(210, 28, 28, 0.6);
+  background: rgba(210, 28, 28, 0.10);
   border-radius: 10px;
   padding: 12px;
 }
@@ -216,12 +215,10 @@
 .gcErrorTitle {
   font-weight: 700;
   margin-bottom: 6px;
-  color: var(--gux-red-90, #8f1111);
 }
 
 .gcErrorText {
   font-size: 13px;
-  color: var(--gux-red-90, #8f1111);
 }
 
 .mono {
@@ -232,11 +229,11 @@
 .gcFooter {
   padding: 12px 16px;
   font-size: 12px;
-  color: var(--gux-grey-700, #4a5a68);
-  border-top: 1px solid var(--gux-grey-30, #d7dde2);
-  background: var(--gux-grey-0, #fff);
+  opacity: 0.8;
+  border-top: 1px solid var(--gux-borderColor, rgba(0, 0, 0, 0.12));
 }
 
+/* Responsive */
 @media (max-width: 980px) {
   .gcMain {
     grid-template-columns: 1fr;
