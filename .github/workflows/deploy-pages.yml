@@ -5,7 +5,7 @@ on:
     branches: [main]
   workflow_dispatch:
   schedule:
-    - cron: "23 6 * * *" # daily (UTC)
+    - cron: "23 6 * * *" # once per day (UTC)
 
 permissions:
   contents: read
@@ -19,37 +19,227 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      needs_deploy: ${{ steps.check.outputs.needs_deploy }}
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download latest dependency tree from provider repo
-        uses: robinraju/release-downloader@v1
+      # Cache holds:
+      # - public/versions/*.json  (historical immutables)
+      # - .cache-meta/latest.txt  (what we last deployed as "latest")
+      # - .cache-meta/bootstrapped.txt (marker for one-time backfill)
+      - name: Restore versions cache
+        id: cache-restore
+        uses: actions/cache/restore@v4
         with:
-          repository: "MyPureCloud/terraform-provider-genesyscloud"
-          latest: true
-          fileName: "dependency_tree-*.json"
+          path: |
+            public/versions
+            .cache-meta
+          key: versions-${{ runner.os }}-v3
 
-      - name: Place dependency tree into public/
+      - name: Check latest release + decide what to do
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OWNER: MyPureCloud
+          REPO: terraform-provider-genesyscloud
         run: |
-          mkdir -p public
-          f="$(ls dependency_tree-*.json | head -n 1)"
-          echo "Using asset: $f"
-          cp "$f" public/dependency_tree.json
+          set -euo pipefail
+          mkdir -p public/versions .cache-meta
+
+          api_base="https://api.github.com/repos/${OWNER}/${REPO}"
+
+          # Latest tag like "v1.73.0" -> "1.73.0"
+          latest_tag="$(curl -fsSL \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "${api_base}/releases/latest" | jq -r '.tag_name')"
+          latest_ver="${latest_tag#v}"
+          echo "Latest release: ${latest_tag} (${latest_ver})"
+
+          prev_ver=""
+          if [ -f ".cache-meta/latest.txt" ]; then
+            prev_ver="$(cat .cache-meta/latest.txt || true)"
+          fi
+
+          bootstrapped="false"
+          if [ -f ".cache-meta/bootstrapped.txt" ]; then
+            bootstrapped="true"
+          fi
+
+          have_latest_json="false"
+          if [ -f "public/versions/${latest_ver}.json" ]; then
+            have_latest_json="true"
+          fi
+
+          needs_deploy="true"
+
+          if [ "${bootstrapped}" = "true" ] && [ "${prev_ver}" = "${latest_ver}" ] && [ "${have_latest_json}" = "true" ]; then
+            needs_deploy="false"
+            echo "No change: already bootstrapped and latest (${latest_ver}) is unchanged + present. Skipping."
+          else
+            echo "Work needed. bootstrapped=${bootstrapped}, prev_ver='${prev_ver}', latest_ver='${latest_ver}', have_latest_json=${have_latest_json}"
+          fi
+
+          {
+            echo "latest_ver=${latest_ver}"
+            echo "latest_tag=${latest_tag}"
+            echo "bootstrapped=${bootstrapped}"
+            echo "needs_deploy=${needs_deploy}"
+          } >> "${GITHUB_OUTPUT}"
+
+      # One-time bootstrap: download all versions >= 1.60.0
+      - name: Bootstrap versions history (>= 1.60.0)
+        if: steps.check.outputs.needs_deploy == 'true' && steps.check.outputs.bootstrapped != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OWNER: MyPureCloud
+          REPO: terraform-provider-genesyscloud
+          MIN_VERSION: "1.60.0"
+        run: |
+          set -euo pipefail
+          mkdir -p public/versions .cache-meta
+          rm -f public/versions/index.json public/dependency_tree.json
+
+          api_base="https://api.github.com/repos/${OWNER}/${REPO}"
+          page=1
+
+          echo "BOOTSTRAP: downloading all dependency_tree JSONs >= ${MIN_VERSION}..."
+
+          while true; do
+            releases_json="$(curl -fsSL \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H "Accept: application/vnd.github+json" \
+              "${api_base}/releases?per_page=100&page=${page}")"
+
+            count="$(echo "${releases_json}" | jq 'length')"
+            if [ "${count}" -eq 0 ]; then
+              break
+            fi
+
+            echo "${releases_json}" | jq -r '
+              .[] |
+              { tag: .tag_name, assets: (.assets // []) } |
+              .tag as $tag |
+              (.assets[]? | select(.name | startswith("dependency_tree-") and endswith(".json")) | .browser_download_url) as $url |
+              select($url != null) |
+              "\($tag)\t\($url)"
+            ' | while IFS=$'\t' read -r tag url; do
+              ver="${tag#v}"
+
+              # ver >= MIN_VERSION (semver)
+              first="$(printf "%s\n%s\n" "${MIN_VERSION}" "${ver}" | sort -V | head -n 1)"
+              if [ "${first}" != "${MIN_VERSION}" ]; then
+                continue
+              fi
+
+              out="public/versions/${ver}.json"
+              if [ -f "${out}" ]; then
+                echo "Already have ${ver}, skipping"
+                continue
+              fi
+
+              echo "Downloading ${ver} -> ${out}"
+              curl -fsSL -L "${url}" -o "${out}"
+            done
+
+            page=$((page + 1))
+          done
+
+          if [ "$(ls -1 public/versions/*.json 2>/dev/null | wc -l)" -eq 0 ]; then
+            echo "Bootstrap failed: no version JSONs found. Check release assets and MIN_VERSION."
+            exit 1
+          fi
+
+          versions_sorted="$(ls -1 public/versions/*.json | sed 's|.*/||; s|\.json$||' | sort -Vr)"
+          printf "%s\n" "${versions_sorted}" | jq -R -s 'split("\n") | map(select(length>0))' > public/versions/index.json
+
+          latest="$(printf "%s\n" "${versions_sorted}" | head -n 1)"
+          cp "public/versions/${latest}.json" public/dependency_tree.json
+
+          echo "${latest}" > .cache-meta/latest.txt
+          echo "true" > .cache-meta/bootstrapped.txt
+
+      # Incremental update: only download the latest JSON when latest changes
+      - name: Update latest version only
+        if: steps.check.outputs.needs_deploy == 'true' && steps.check.outputs.bootstrapped == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OWNER: MyPureCloud
+          REPO: terraform-provider-genesyscloud
+        run: |
+          set -euo pipefail
+          mkdir -p public/versions .cache-meta
+          rm -f public/versions/index.json public/dependency_tree.json
+
+          api_base="https://api.github.com/repos/${OWNER}/${REPO}"
+          latest_ver="${{ steps.check.outputs.latest_ver }}"
+
+          echo "INCREMENTAL: ensuring latest (${latest_ver}) exists..."
+
+          # Fetch latest release JSON and extract dependency_tree asset URL
+          rel_json="$(curl -fsSL \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "${api_base}/releases/latest")"
+
+          url="$(echo "${rel_json}" | jq -r '
+            (.assets // [])
+            | map(select(.name | startswith("dependency_tree-") and endswith(".json")))
+            | .[0].browser_download_url // empty
+          ')"
+
+          if [ -z "${url}" ]; then
+            echo "Could not find dependency_tree-*.json asset in latest release."
+            exit 1
+          fi
+
+          out="public/versions/${latest_ver}.json"
+          if [ ! -f "${out}" ]; then
+            echo "Downloading latest -> ${out}"
+            curl -fsSL -L "${url}" -o "${out}"
+          else
+            echo "Already have ${out}; not downloading."
+          fi
+
+          # Rebuild index and dependency_tree.json from the local versions folder
+          versions_sorted="$(ls -1 public/versions/*.json | sed 's|.*/||; s|\.json$||' | sort -Vr)"
+          printf "%s\n" "${versions_sorted}" | jq -R -s 'split("\n") | map(select(length>0))' > public/versions/index.json
+
+          latest="$(printf "%s\n" "${versions_sorted}" | head -n 1)"
+          cp "public/versions/${latest}.json" public/dependency_tree.json
+          echo "${latest}" > .cache-meta/latest.txt
+
+      - name: Save versions cache
+        if: steps.check.outputs.needs_deploy == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            public/versions
+            .cache-meta
+          key: versions-${{ runner.os }}-v3
 
       - uses: actions/setup-node@v4
+        if: steps.check.outputs.needs_deploy == 'true'
         with:
           node-version: 20
           cache: npm
 
       - run: npm ci
+        if: steps.check.outputs.needs_deploy == 'true'
+
       - run: npm run build
+        if: steps.check.outputs.needs_deploy == 'true'
 
       - uses: actions/upload-pages-artifact@v3
+        if: steps.check.outputs.needs_deploy == 'true'
         with:
           path: dist
 
   deploy:
     needs: build
+    if: needs.build.outputs.needs_deploy == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/deploy-pages@v4
