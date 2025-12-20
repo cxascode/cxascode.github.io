@@ -103,6 +103,27 @@
   font-size: 14px;
 }
 
+.gcClearButton {
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 6px;
+  border: 1px solid var(--gc-border);
+  background: #fff;
+  color: var(--gc-text);
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.gcClearButton:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.gcClearButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 .gcTable__body {
   max-height: calc(100vh - 260px);
   overflow: auto;

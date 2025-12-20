@@ -251,6 +251,12 @@ export default function App() {
     [reverseMap, activeType]
   );
 
+  const clearSearch = () => {
+    setQuery("");
+    setSelectedType("");
+    searchRef.current?.focus();
+  };
+
   return (
     <div className="gcShell">
       <div className="gcPageHeader">
@@ -293,6 +299,15 @@ export default function App() {
                 }}
                 disabled={loadingData || !!error}
               />
+
+              <button
+                type="button"
+                className="gcClearButton"
+                onClick={clearSearch}
+                disabled={loadingData || !!error || (!query && !selectedType)}
+              >
+                Clear
+              </button>
             </div>
 
             <div className="gcTable__body">
