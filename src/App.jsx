@@ -15,8 +15,8 @@ function sortAlpha(arr) {
 }
 
 function buildDepsMaps(raw) {
-  const depsMap = new Map(); // string -> Set<string>
-  const reverseMap = new Map(); // string -> Set<string>
+  const depsMap = new Map();
+  const reverseMap = new Map();
 
   if (!raw || !Array.isArray(raw.resources)) {
     return { depsMap, reverseMap };
@@ -32,9 +32,7 @@ function buildDepsMaps(raw) {
 
     for (const d of deps) {
       if (typeof d !== "string") continue;
-
       depsMap.get(from).add(d);
-
       if (!reverseMap.has(d)) reverseMap.set(d, new Set());
       reverseMap.get(d).add(from);
     }
@@ -61,115 +59,62 @@ export default function App() {
   const versionDropdownRef = useRef(null);
   const searchRef = useRef(null);
 
-  // Load versions index for dropdown
+  // Load versions index
   useEffect(() => {
     let cancelled = false;
 
-    async function loadIndex() {
+    (async () => {
       try {
-        setLoadingIndex(true);
-        setError("");
-
         const res = await fetch(INDEX_URL, { cache: "no-store" });
-        if (!res.ok) throw new Error(`Failed to load versions/index.json (${res.status})`);
         const json = await res.json();
-        if (!Array.isArray(json)) throw new Error("versions/index.json is not an array");
-
-        // Assumption: index.json is sorted newest -> oldest (your action builds it that way).
         if (!cancelled) setAvailableVersions(json);
       } catch (e) {
-        if (!cancelled) setError(String(e?.message || e));
+        if (!cancelled) setError(String(e));
       } finally {
         if (!cancelled) setLoadingIndex(false);
       }
-    }
+    })();
 
-    loadIndex();
-    return () => {
-      cancelled = true;
-    };
+    return () => (cancelled = true);
   }, []);
 
-  // Compute latest label ONLY from the index (never from the loaded JSON)
-  const latestFromIndex = availableVersions.length > 0 ? availableVersions[0] : "";
-  const latestLabel = latestFromIndex ? `Latest (${latestFromIndex})` : "Latest";
-
-  // Keep Spark dropdown's internal value synced with React state
-  useEffect(() => {
-    const el = versionDropdownRef.current;
-    if (!el) return;
-    try {
-      el.value = selectedVersion;
-    } catch {
-      // ignore
-    }
-  }, [selectedVersion]);
-
-  // Robust dropdown event wiring (Spark custom element)
+  // Wire Spark dropdown
   useEffect(() => {
     const el = versionDropdownRef.current;
     if (!el) return;
 
-    const readValue = (evt) => {
-      const fromEl = el.value;
-      const fromDetail = evt?.detail?.value;
-      const fromTarget = evt?.target?.value;
-
-      const v =
-        (typeof fromEl === "string" && fromEl) ||
-        (typeof fromDetail === "string" && fromDetail) ||
-        (typeof fromTarget === "string" && fromTarget) ||
-        "";
-
+    const handler = (evt) => {
+      const v = el.value || evt?.detail?.value;
       if (v) setSelectedVersion(v);
     };
 
-    el.addEventListener("guxchange", readValue);
-    el.addEventListener("change", readValue);
-    el.addEventListener("input", readValue);
-
-    return () => {
-      el.removeEventListener("guxchange", readValue);
-      el.removeEventListener("change", readValue);
-      el.removeEventListener("input", readValue);
-    };
+    el.addEventListener("guxchange", handler);
+    return () => el.removeEventListener("guxchange", handler);
   }, []);
 
-  // Load dependency JSON for selected version
+  // Load dependency tree
   useEffect(() => {
     let cancelled = false;
 
-    async function loadData() {
+    (async () => {
       try {
-        setError("");
         setLoadingData(true);
-        setRaw(null);
-
         const url = selectedVersion === "latest" ? LATEST_URL : VERSION_URL(selectedVersion);
         const res = await fetch(url, { cache: "no-store" });
-        if (!res.ok) throw new Error(`Failed to load dependency JSON (${res.status})`);
         const json = await res.json();
-
-        if (!json || !Array.isArray(json.resources)) {
-          throw new Error("Dependency JSON is missing a top-level 'resources' array.");
-        }
-
         if (!cancelled) setRaw(json);
       } catch (e) {
-        if (!cancelled) setError(String(e?.message || e));
+        if (!cancelled) setError(String(e));
       } finally {
         if (!cancelled) setLoadingData(false);
       }
-    }
+    })();
 
-    // Reset selection when switching versions
+    // Reset state on version change
     setQuery("");
     setSelectedType("");
 
-    loadData();
-    return () => {
-      cancelled = true;
-    };
+    return () => (cancelled = true);
   }, [selectedVersion]);
 
   const { depsMap, reverseMap } = useMemo(() => buildDepsMaps(raw), [raw]);
@@ -184,31 +129,33 @@ export default function App() {
     return q ? allTypes.filter((t) => t.toLowerCase().includes(q)) : allTypes;
   }, [allTypes, query]);
 
-  const activeType = selectedType || query;
+  // IMPORTANT: only a click sets a real selection
+  const activeType = selectedType;
 
   const dependsOn = useMemo(
-    () => sortAlpha([...(depsMap.get(activeType) || [])]),
+    () => (activeType ? sortAlpha([...(depsMap.get(activeType) || [])]) : []),
     [depsMap, activeType]
   );
 
   const dependencyFor = useMemo(
-    () => sortAlpha([...(reverseMap.get(activeType) || [])]),
+    () => (activeType ? sortAlpha([...(reverseMap.get(activeType) || [])]) : []),
     [reverseMap, activeType]
   );
 
   return (
     <div className="gcShell">
-      {/* Page header (no breadcrumbs, no Downloaded badge) */}
+      {/* Page header */}
       <div className="gcPageHeader">
         <div className="gcPageTitleRow">
           <h1 className="gcPageTitle">CX as Code Dependency Explorer</h1>
 
           <div className="gcPageMeta">
             <span className="gcMetaLabel">Version:</span>
-
             <gux-dropdown ref={versionDropdownRef} disabled={loadingIndex}>
-              <gux-listbox aria-label="Select provider version">
-                <gux-option value="latest">{latestLabel}</gux-option>
+              <gux-listbox>
+                <gux-option value="latest">
+                  Latest ({availableVersions[0] || "—"})
+                </gux-option>
                 {availableVersions.map((v) => (
                   <gux-option key={v} value={v}>
                     {v}
@@ -222,13 +169,6 @@ export default function App() {
 
       {/* Content */}
       <main className="gcContentArea">
-        {error ? (
-          <div className="gcAlert">
-            <div className="gcAlert__title">Failed to load</div>
-            <div className="gcAlert__body">{error}</div>
-          </div>
-        ) : null}
-
         <div className="gcSplit">
           {/* Left panel */}
           <section className="gcCard">
@@ -240,20 +180,18 @@ export default function App() {
                 placeholder="Search resource types"
                 value={query}
                 onInput={(e) => {
-                  const v = e.target.value;
-                  setQuery(v);
-                  setSelectedType(""); // reset selection when typing or clearing via built-in X
+                  setQuery(e.target.value);
+                  setSelectedType(""); // typing ≠ selecting
                 }}
                 disabled={loadingData || !!error}
               />
             </div>
 
-            <div className="gcTable__body" aria-busy={loadingData ? "true" : "false"}>
+            <div className="gcTable__body">
               {filteredTypes.map((t) => (
                 <button
                   key={t}
                   className={`gcTr ${t === activeType ? "isActive" : ""}`}
-                  type="button"
                   onClick={() => {
                     setSelectedType(t);
                     setQuery(t);
@@ -274,7 +212,11 @@ export default function App() {
             <div className="gcCard__header">
               <div className="gcCard__title">Dependency details</div>
               <div className="gcCard__subtitle">
-                {activeType ? <span className="gcMono">{activeType}</span> : "Pick a resource type"}
+                {activeType ? (
+                  <span className="gcMono">{activeType}</span>
+                ) : (
+                  "Pick a resource type"
+                )}
               </div>
             </div>
 
@@ -285,17 +227,12 @@ export default function App() {
                   <gux-badge>{dependsOn.length}</gux-badge>
                 </div>
                 <div className="gcPanel__body">
-                  {activeType && dependsOn.length === 0 ? (
-                    <div className="gcMuted">No dependencies found.</div>
-                  ) : !activeType ? (
-                    <div className="gcMuted">Select a type to view dependencies.</div>
-                  ) : (
-                    <div className="gcPills">
-                      {dependsOn.map((t) => (
+                  {activeType ? (
+                    dependsOn.length ? (
+                      dependsOn.map((t) => (
                         <button
                           key={t}
                           className="gcPill"
-                          type="button"
                           onClick={() => {
                             setSelectedType(t);
                             setQuery(t);
@@ -303,8 +240,12 @@ export default function App() {
                         >
                           {t}
                         </button>
-                      ))}
-                    </div>
+                      ))
+                    ) : (
+                      <div className="gcMuted">No dependencies found.</div>
+                    )
+                  ) : (
+                    <div className="gcMuted">Select a type to view dependencies.</div>
                   )}
                 </div>
               </div>
@@ -315,17 +256,12 @@ export default function App() {
                   <gux-badge>{dependencyFor.length}</gux-badge>
                 </div>
                 <div className="gcPanel__body">
-                  {activeType && dependencyFor.length === 0 ? (
-                    <div className="gcMuted">Nothing depends on this (in this version).</div>
-                  ) : !activeType ? (
-                    <div className="gcMuted">Select a type to view reverse dependencies.</div>
-                  ) : (
-                    <div className="gcPills">
-                      {dependencyFor.map((t) => (
+                  {activeType ? (
+                    dependencyFor.length ? (
+                      dependencyFor.map((t) => (
                         <button
                           key={t}
                           className="gcPill"
-                          type="button"
                           onClick={() => {
                             setSelectedType(t);
                             setQuery(t);
@@ -333,7 +269,15 @@ export default function App() {
                         >
                           {t}
                         </button>
-                      ))}
+                      ))
+                    ) : (
+                      <div className="gcMuted">
+                        Nothing depends on this (in this version).
+                      </div>
+                    )
+                  ) : (
+                    <div className="gcMuted">
+                      Select a type to view reverse dependencies.
                     </div>
                   )}
                 </div>
