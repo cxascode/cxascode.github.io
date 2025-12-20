@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 const INDEX_URL = `${import.meta.env.BASE_URL}versions/index.json`;
 const LATEST_URL = `${import.meta.env.BASE_URL}dependency_tree.json`;
 const VERSION_URL = (v) => `${import.meta.env.BASE_URL}versions/${v}.json`;
+const OVERRIDES_URL = `${import.meta.env.BASE_URL}overrides.json`;
 
 function normalizeType(s) {
   return (s || "").trim();
@@ -12,6 +13,59 @@ function sortAlpha(arr) {
   return arr
     .filter((x) => typeof x === "string")
     .sort((a, b) => a.localeCompare(b));
+}
+
+/**
+ * Apply optional overrides to a dependency tree JSON.
+ *
+ * overrides.json shape:
+ * {
+ *   "addDependencies": {
+ *     "<resource_type>": ["other_type", ...]
+ *   }
+ * }
+ *
+ * Behavior:
+ * - For each resource_type in addDependencies, union the dependencies list.
+ * - No duplicates.
+ * - If a resource_type is not present in the JSON, it is ignored (no auto-create).
+ */
+function applyOverrides(raw, overrides) {
+  if (!raw || !Array.isArray(raw.resources)) return raw;
+  if (!overrides || typeof overrides !== "object") return raw;
+
+  const add = overrides.addDependencies;
+  if (!add || typeof add !== "object") return raw;
+
+  // Clone shallowly so we don't mutate the fetched object
+  const patched = {
+    ...raw,
+    resources: raw.resources.map((r) => ({ ...r })),
+  };
+
+  // Index resources by type
+  const byType = new Map();
+  for (const r of patched.resources) {
+    if (r && typeof r.type === "string") byType.set(r.type, r);
+  }
+
+  for (const [type, additions] of Object.entries(add)) {
+    if (!Array.isArray(additions)) continue;
+
+    const r = byType.get(type);
+    if (!r) continue;
+
+    const current = Array.isArray(r.dependencies) ? r.dependencies : [];
+    const set = new Set(current.filter((d) => typeof d === "string"));
+
+    for (const dep of additions) {
+      if (typeof dep === "string" && dep.trim()) set.add(dep.trim());
+    }
+
+    r.dependencies = [...set];
+  }
+
+  return patched;
 }
 
 function buildDepsMaps(raw) {
@@ -48,6 +102,7 @@ export default function App() {
   const [selectedVersion, setSelectedVersion] = useState("latest");
 
   const [raw, setRaw] = useState(null);
+  const [overrides, setOverrides] = useState(null);
 
   const [query, setQuery] = useState("");
   const [selectedType, setSelectedType] = useState("");
@@ -58,6 +113,31 @@ export default function App() {
 
   const versionDropdownRef = useRef(null);
   const searchRef = useRef(null);
+
+  // Load overrides once (optional file)
+  useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const res = await fetch(OVERRIDES_URL, { cache: "no-store" });
+
+        // If file doesn't exist, that's fine; treat as "no overrides"
+        if (!res.ok) {
+          if (!cancelled) setOverrides(null);
+          return;
+        }
+
+        const json = await res.json();
+        if (!cancelled) setOverrides(json);
+      } catch {
+        // If overrides.json is malformed or fetch fails, don't break the app
+        if (!cancelled) setOverrides(null);
+      }
+    })();
+
+    return () => (cancelled = true);
+  }, []);
 
   // Load versions index
   useEffect(() => {
@@ -92,7 +172,7 @@ export default function App() {
     return () => el.removeEventListener("guxchange", handler);
   }, []);
 
-  // Load dependency tree
+  // Load dependency tree (and patch it before use)
   useEffect(() => {
     let cancelled = false;
 
@@ -102,7 +182,10 @@ export default function App() {
         const url = selectedVersion === "latest" ? LATEST_URL : VERSION_URL(selectedVersion);
         const res = await fetch(url, { cache: "no-store" });
         const json = await res.json();
-        if (!cancelled) setRaw(json);
+
+        const patched = applyOverrides(json, overrides);
+
+        if (!cancelled) setRaw(patched);
       } catch (e) {
         if (!cancelled) setError(String(e));
       } finally {
@@ -115,7 +198,7 @@ export default function App() {
     setSelectedType("");
 
     return () => (cancelled = true);
-  }, [selectedVersion]);
+  }, [selectedVersion, overrides]);
 
   const { depsMap, reverseMap } = useMemo(() => buildDepsMaps(raw), [raw]);
 
@@ -129,7 +212,7 @@ export default function App() {
     return q ? allTypes.filter((t) => t.toLowerCase().includes(q)) : allTypes;
   }, [allTypes, query]);
 
-  // IMPORTANT: only a click sets a real selection
+  // Only a click sets a real selection
   const activeType = selectedType;
 
   const dependsOn = useMemo(
@@ -196,6 +279,7 @@ export default function App() {
                     setSelectedType(t);
                     setQuery(t);
                   }}
+                  type="button"
                 >
                   <div className="gcTd gcMono">{t}</div>
                 </button>
@@ -237,6 +321,7 @@ export default function App() {
                             setSelectedType(t);
                             setQuery(t);
                           }}
+                          type="button"
                         >
                           {t}
                         </button>
@@ -266,6 +351,7 @@ export default function App() {
                             setSelectedType(t);
                             setQuery(t);
                           }}
+                          type="button"
                         >
                           {t}
                         </button>

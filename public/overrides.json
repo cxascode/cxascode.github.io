@@ -1,0 +1,5 @@
+{
+  "addDependencies": {
+    "genesyscloud_script": ["genesyscloud_integration_action"]
+  }
+}
