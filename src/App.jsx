@@ -49,9 +49,6 @@ export default function App() {
   const [availableVersions, setAvailableVersions] = useState([]);
   const [selectedVersion, setSelectedVersion] = useState("latest");
 
-  // This is the version reported INSIDE the JSON we loaded (truth source)
-  const [loadedVersion, setLoadedVersion] = useState("");
-
   const [raw, setRaw] = useState(null);
 
   const [query, setQuery] = useState("");
@@ -78,6 +75,7 @@ export default function App() {
         const json = await res.json();
         if (!Array.isArray(json)) throw new Error("versions/index.json is not an array");
 
+        // Assumption: index.json is sorted newest -> oldest (your action builds it that way).
         if (!cancelled) setAvailableVersions(json);
       } catch (e) {
         if (!cancelled) setError(String(e?.message || e));
@@ -91,6 +89,10 @@ export default function App() {
       cancelled = true;
     };
   }, []);
+
+  // Compute latest label ONLY from the index (never from the loaded JSON)
+  const latestFromIndex = availableVersions.length > 0 ? availableVersions[0] : "";
+  const latestLabel = latestFromIndex ? `Latest (${latestFromIndex})` : "Latest";
 
   // Keep Spark dropdown's internal value synced with React state
   useEffect(() => {
@@ -152,10 +154,7 @@ export default function App() {
           throw new Error("Dependency JSON is missing a top-level 'resources' array.");
         }
 
-        if (!cancelled) {
-          setRaw(json);
-          setLoadedVersion(typeof json.version === "string" ? json.version : "");
-        }
+        if (!cancelled) setRaw(json);
       } catch (e) {
         if (!cancelled) setError(String(e?.message || e));
       } finally {
@@ -197,11 +196,9 @@ export default function App() {
     [reverseMap, activeType]
   );
 
-  const latestLabel = loadedVersion ? `Latest (${loadedVersion})` : "Latest";
-
   return (
     <div className="gcShell">
-      {/* Page header (no breadcrumbs) */}
+      {/* Page header (no breadcrumbs, no Downloaded badge) */}
       <div className="gcPageHeader">
         <div className="gcPageTitleRow">
           <h1 className="gcPageTitle">CX as Code Dependency Explorer</h1>
@@ -245,7 +242,7 @@ export default function App() {
                 onInput={(e) => {
                   const v = e.target.value;
                   setQuery(v);
-                  setSelectedType(""); // reset selection when typing or clearing via the built-in X
+                  setSelectedType(""); // reset selection when typing or clearing via built-in X
                 }}
                 disabled={loadingData || !!error}
               />
