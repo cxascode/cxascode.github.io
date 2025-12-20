@@ -4,6 +4,7 @@
       "genesyscloud_integration_action"
     ],
     "genesyscloud_flow": [
+      "genesyscloud_architect_datatable",
       "genesyscloud_architect_emergencygroup",
       "genesyscloud_architect_schedulegroups",
       "genesyscloud_architect_schedules",
@@ -11,7 +12,10 @@
       "genesyscloud_externalcontacts_contact",
       "genesyscloud_externalcontacts_organization",
       "genesyscloud_flow",
+      "genesyscloud_flow_milestone",
+      "genesyscloud_flow_outcome",
       "genesyscloud_group",
+      "genesyscloud_integration_action",
       "genesyscloud_journey_action_map",
       "genesyscloud_journey_outcome",
       "genesyscloud_journey_segment",
