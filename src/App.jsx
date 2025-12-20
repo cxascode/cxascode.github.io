@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import "./App.css";
 
 function uniqSorted(arr) {
   return Array.from(new Set(arr)).sort((a, b) => a.localeCompare(b));
@@ -9,8 +10,8 @@ function normalizeType(s) {
 }
 
 export default function App() {
-  const [availableVersions, setAvailableVersions] = useState([]); // ["1.73.0", ...]
-  const [selectedVersion, setSelectedVersion] = useState("latest"); // "latest" or "1.72.0" etc.
+  const [availableVersions, setAvailableVersions] = useState([]);
+  const [selectedVersion, setSelectedVersion] = useState("latest");
 
   const [raw, setRaw] = useState(null);
   const [loadError, setLoadError] = useState("");
@@ -34,9 +35,7 @@ export default function App() {
         const list = await res.json();
         if (!Array.isArray(list)) throw new Error("versions/index.json is not an array");
 
-        if (!cancelled) {
-          setAvailableVersions(list);
-        }
+        if (!cancelled) setAvailableVersions(list);
       } catch (e) {
         if (!cancelled) setLoadError(String(e?.message || e));
       } finally {
@@ -49,7 +48,7 @@ export default function App() {
     };
   }, []);
 
-  // Load dependency tree JSON for chosen version
+  // Load dependency tree for selected version
   useEffect(() => {
     let cancelled = false;
 
@@ -67,11 +66,12 @@ export default function App() {
         if (!res.ok) throw new Error(`Failed to load ${url} (${res.status})`);
 
         const data = await res.json();
-        if (!Array.isArray(data?.resources)) throw new Error("Invalid dependency_tree JSON format");
+        if (!Array.isArray(data?.resources)) {
+          throw new Error("Invalid dependency_tree JSON format");
+        }
 
         if (!cancelled) {
           setRaw(data);
-          // Clear selection when switching versions to avoid confusion
           setQuery("");
           setSelectedType("");
         }
@@ -96,8 +96,8 @@ export default function App() {
     };
     if (!raw?.resources) return empty;
 
-    const deps = new Map(); // type -> Set(dependencies)
-    const rev = new Map();  // type -> Set(dependents)
+    const deps = new Map();
+    const rev = new Map();
 
     for (const r of raw.resources) {
       const t = r?.type;
@@ -147,29 +147,27 @@ export default function App() {
   const loading = loadingIndex || loadingData;
 
   return (
-    <div style={styles.page}>
-      <div style={styles.card}>
-        <div style={styles.headerRow}>
+    <div className="page">
+      <div className="card">
+        <div className="headerRow">
           <div>
-            <h1 style={styles.h1}>Terraform Resource Dependency Explorer</h1>
-            <div style={styles.subhead}>
-              Loaded provider version:&nbsp;
-              <code style={styles.code}>{version || "(unknown)"}</code>
-              <span style={{ opacity: 0.75 }}>
-                &nbsp;·&nbsp;History available back to&nbsp;
-                <code style={styles.code}>1.60.0</code>
+            <h1 className="h1">CX as Code – Resource Dependency Explorer</h1>
+            <div className="subhead">
+              Loaded provider version: <code className="code">{version || "(unknown)"}</code>
+              <span className="subheadMuted">
+                {" "}
+                · History available back to <code className="code">1.60.0</code>
               </span>
             </div>
           </div>
 
-          <div style={styles.rightControls}>
-            <label style={styles.label}>Version</label>
+          <div className="rightControls">
+            <label className="label">Version</label>
             <select
-              style={styles.select}
+              className="select"
               value={selectedVersion}
               onChange={(e) => setSelectedVersion(e.target.value)}
               disabled={loadingIndex}
-              title="Choose a provider version to view its dependency tree"
             >
               <option value="latest">Latest</option>
               {availableVersions.map((v) => (
@@ -181,10 +179,10 @@ export default function App() {
           </div>
         </div>
 
-        <div style={styles.controls}>
+        <div className="controls">
           <input
-            style={styles.input}
-            placeholder="Type a resource type (e.g., genesyscloud_routing_queue)"
+            className="input"
+            placeholder="genesyscloud_routing_queue"
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
@@ -194,202 +192,85 @@ export default function App() {
           />
         </div>
 
-        {loadError ? <div style={styles.error}>{loadError}</div> : null}
-        {loading ? <div style={styles.muted}>Loading…</div> : null}
+        {loadError ? <div className="error">{loadError}</div> : null}
+        {loading ? <div className="muted">Loading CX as Code dependency data…</div> : null}
 
         {!loading && raw ? (
-          <div style={styles.grid}>
-            <div style={styles.panel}>
-              <div style={styles.panelTitle}>
-                Resources <span style={styles.badge}>{types.length}</span>
+          <div className="grid">
+            <div className="panel">
+              <div className="panelTitle">
+                Resources <span className="badge">{types.length}</span>
               </div>
-              <div style={styles.list}>
+              <div className="list">
                 {suggestions.length === 0 ? (
-                  <div style={styles.muted}>No matches.</div>
+                  <div className="muted">No matches.</div>
                 ) : (
                   suggestions.map((t) => (
                     <button
                       key={t}
-                      style={{
-                        ...styles.listItem,
-                        ...(t === activeType ? styles.listItemActive : null),
-                      }}
+                      className={`listItem ${t === activeType ? "listItemActive" : ""}`}
                       onClick={() => {
                         setSelectedType(t);
                         setQuery(t);
                       }}
+                      type="button"
                     >
-                      <code style={styles.code}>{t}</code>
+                      <code className="code">{t}</code>
                     </button>
                   ))
                 )}
               </div>
             </div>
 
-            <div style={styles.panel}>
-              <div style={styles.panelTitle}>Selected type</div>
-              <div style={{ marginBottom: 10 }}>
-                <code style={{ ...styles.code, fontSize: 14 }}>
-                  {activeType || "(none)"}
-                </code>
+            <div className="panel">
+              <div className="panelTitle">Selected resource</div>
+
+              <div className="selectedTypeRow">
+                <code className="code codeBig">{activeType || "(none)"}</code>
                 {activeType && !types.includes(activeType) ? (
-                  <div style={styles.warn}>Not found in this version’s JSON.</div>
+                  <div className="warn">Not found in this version’s JSON.</div>
                 ) : null}
               </div>
 
-              <div style={styles.twoCol}>
-                <div style={styles.subPanel}>
-                  <div style={styles.subTitle}>
-                    Depends on <span style={styles.badge}>{outgoing.length}</span>
+              <div className="twoCol">
+                <div className="subPanel">
+                  <div className="subTitle">
+                    Depends on <span className="badge">{outgoing.length}</span>
                   </div>
                   {outgoing.length ? (
-                    <ul style={styles.ul}>
+                    <ul className="ul">
                       {outgoing.map((d) => (
                         <li key={d}>
-                          <code style={styles.code}>{d}</code>
+                          <code className="code">{d}</code>
                         </li>
                       ))}
                     </ul>
                   ) : (
-                    <div style={styles.muted}>None.</div>
+                    <div className="muted">None.</div>
                   )}
                 </div>
 
-                <div style={styles.subPanel}>
-                  <div style={styles.subTitle}>
-                    Dependency for <span style={styles.badge}>{incoming.length}</span>
+                <div className="subPanel">
+                  <div className="subTitle">
+                    Dependency for <span className="badge">{incoming.length}</span>
                   </div>
                   {incoming.length ? (
-                    <ul style={styles.ul}>
+                    <ul className="ul">
                       {incoming.map((d) => (
                         <li key={d}>
-                          <code style={styles.code}>{d}</code>
+                          <code className="code">{d}</code>
                         </li>
                       ))}
                     </ul>
                   ) : (
-                    <div style={styles.muted}>None.</div>
+                    <div className="muted">None.</div>
                   )}
                 </div>
-              </div>
-
-              <div style={{ marginTop: 14, fontSize: 13, opacity: 0.85 }}>
-                Reverse-deps are computed by scanning every resource’s{" "}
-                <code style={styles.code}>dependencies</code> list once.
               </div>
             </div>
           </div>
         ) : null}
       </div>
-
-      <div style={styles.footer}>
-        Tip: “Latest” updates automatically once per day via GitHub Actions (no runtime GitHub fetch = no CORS drama).
-      </div>
     </div>
   );
 }
-
-const styles = {
-  page: {
-    fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
-    background: "#0b1020",
-    color: "#eaf0ff",
-    minHeight: "100vh",
-    padding: 24,
-  },
-  card: {
-    maxWidth: 1100,
-    margin: "0 auto",
-    background: "rgba(255,255,255,0.06)",
-    border: "1px solid rgba(255,255,255,0.10)",
-    borderRadius: 16,
-    padding: 18,
-    boxShadow: "0 10px 40px rgba(0,0,0,0.35)",
-  },
-  headerRow: { display: "flex", justifyContent: "space-between", gap: 16, alignItems: "start" },
-  h1: { margin: 0, fontSize: 22, letterSpacing: 0.2 },
-  subhead: { marginTop: 6, fontSize: 14, opacity: 0.9, lineHeight: 1.4 },
-  rightControls: { display: "flex", flexDirection: "column", gap: 6, minWidth: 220 },
-  label: { fontSize: 12, opacity: 0.8 },
-  select: {
-    padding: "10px 12px",
-    borderRadius: 12,
-    border: "1px solid rgba(255,255,255,0.16)",
-    background: "rgba(0,0,0,0.25)",
-    color: "#eaf0ff",
-    outline: "none",
-  },
-  controls: { display: "flex", gap: 10, marginTop: 14 },
-  input: {
-    flex: 1,
-    padding: "12px 12px",
-    borderRadius: 12,
-    border: "1px solid rgba(255,255,255,0.16)",
-    background: "rgba(0,0,0,0.25)",
-    color: "#eaf0ff",
-    outline: "none",
-  },
-  grid: { display: "grid", gridTemplateColumns: "360px 1fr", gap: 14, marginTop: 14 },
-  panel: {
-    borderRadius: 14,
-    padding: 14,
-    border: "1px solid rgba(255,255,255,0.10)",
-    background: "rgba(0,0,0,0.18)",
-    minHeight: 320,
-  },
-  panelTitle: { fontSize: 14, opacity: 0.9, marginBottom: 10, display: "flex", gap: 8, alignItems: "center" },
-  badge: {
-    fontSize: 12,
-    padding: "2px 8px",
-    borderRadius: 999,
-    background: "rgba(255,255,255,0.10)",
-    border: "1px solid rgba(255,255,255,0.12)",
-    opacity: 0.95,
-  },
-  list: { display: "flex", flexDirection: "column", gap: 8, maxHeight: 420, overflow: "auto", paddingRight: 6 },
-  listItem: {
-    textAlign: "left",
-    borderRadius: 12,
-    padding: "10px 10px",
-    border: "1px solid rgba(255,255,255,0.10)",
-    background: "rgba(255,255,255,0.06)",
-    color: "#eaf0ff",
-    cursor: "pointer",
-  },
-  listItemActive: { background: "rgba(110,170,255,0.16)", border: "1px solid rgba(110,170,255,0.35)" },
-  twoCol: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 },
-  subPanel: {
-    borderRadius: 12,
-    padding: 12,
-    border: "1px solid rgba(255,255,255,0.10)",
-    background: "rgba(255,255,255,0.04)",
-  },
-  subTitle: { fontSize: 13, opacity: 0.95, marginBottom: 8, display: "flex", gap: 8, alignItems: "center" },
-  ul: { margin: 0, paddingLeft: 18, lineHeight: 1.7 },
-  code: {
-    fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
-    fontSize: 12,
-    background: "rgba(255,255,255,0.08)",
-    padding: "2px 6px",
-    borderRadius: 8,
-    border: "1px solid rgba(255,255,255,0.10)",
-  },
-  muted: { opacity: 0.78, fontSize: 14, marginTop: 10 },
-  warn: {
-    marginTop: 8,
-    fontSize: 13,
-    padding: "8px 10px",
-    borderRadius: 12,
-    background: "rgba(255,180,70,0.14)",
-    border: "1px solid rgba(255,180,70,0.25)",
-  },
-  error: {
-    marginTop: 12,
-    fontSize: 13,
-    padding: "10px 12px",
-    borderRadius: 12,
-    background: "rgba(255,90,90,0.16)",
-    border: "1px solid rgba(255,90,90,0.28)",
-  },
-  footer: { maxWidth: 1100, margin: "14px auto 0", opacity: 0.75, fontSize: 13 },
-};
