@@ -1,6 +1,7 @@
 {
   "addDependencies": {
     "genesyscloud_script": [
+      "genesyscloud_auth_division",
       "genesyscloud_integration_action"
     ],
     "genesyscloud_flow": [
@@ -11,6 +12,7 @@
       "genesyscloud_architect_user_prompt",
       "genesyscloud_externalcontacts_contact",
       "genesyscloud_externalcontacts_organization",
+      "genesyscloud_auth_division",
       "genesyscloud_flow",
       "genesyscloud_flow_milestone",
       "genesyscloud_flow_outcome",
