@@ -1,5 +1,32 @@
 {
   "addDependencies": {
-    "genesyscloud_script": ["genesyscloud_integration_action"]
+    "genesyscloud_script": [
+      "genesyscloud_integration_action"
+    ],
+    "genesyscloud_flow": [
+      "genesyscloud_architect_emergencygroup",
+      "genesyscloud_architect_schedulegroups",
+      "genesyscloud_architect_schedules",
+      "genesyscloud_architect_user_prompt",
+      "genesyscloud_externalcontacts_contact",
+      "genesyscloud_externalcontacts_organization",
+      "genesyscloud_flow",
+      "genesyscloud_group",
+      "genesyscloud_journey_action_map",
+      "genesyscloud_journey_outcome",
+      "genesyscloud_journey_segment",
+      "genesyscloud_knowledge_document",
+      "genesyscloud_outbound_contact_list",
+      "genesyscloud_quality_forms_survey",
+      "genesyscloud_routing_language",
+      "genesyscloud_routing_queue",
+      "genesyscloud_routing_skill",
+      "genesyscloud_routing_utilization_label",
+      "genesyscloud_routing_wrapupcode",
+      "genesyscloud_task_management_workbin",
+      "genesyscloud_task_management_workitem",
+      "genesyscloud_task_management_worktype_status",
+      "genesyscloud_user"
+    ]
   }
 }
