@@ -158,19 +158,35 @@ export default function App() {
     return () => (cancelled = true);
   }, []);
 
-  // Wire Spark dropdown
+  // Wire Spark dropdown (robust event value handling)
   useEffect(() => {
     const el = versionDropdownRef.current;
     if (!el) return;
 
     const handler = (evt) => {
-      const v = el.value || evt?.detail?.value;
-      if (v) setSelectedVersion(v);
+      // Prefer event target value first; fall back to detail (Spark version dependent)
+      const next = evt?.target?.value ?? evt?.detail?.value ?? "";
+      setSelectedVersion(next || "latest");
     };
 
+    // Some versions emit `guxchange`, some also emit `change`
     el.addEventListener("guxchange", handler);
-    return () => el.removeEventListener("guxchange", handler);
+    el.addEventListener("change", handler);
+
+    return () => {
+      el.removeEventListener("guxchange", handler);
+      el.removeEventListener("change", handler);
+    };
   }, []);
+
+  // Keep Spark dropdown in sync with React state (prevents drift after rerenders/options load)
+  useEffect(() => {
+    const el = versionDropdownRef.current;
+    if (!el) return;
+
+    el.value = selectedVersion; // property
+    el.setAttribute("value", selectedVersion); // attribute (some builds care)
+  }, [selectedVersion]);
 
   // Load dependency tree (and patch it before use)
   useEffect(() => {
@@ -179,7 +195,8 @@ export default function App() {
     (async () => {
       try {
         setLoadingData(true);
-        const url = selectedVersion === "latest" ? LATEST_URL : VERSION_URL(selectedVersion);
+        const url =
+          selectedVersion === "latest" ? LATEST_URL : VERSION_URL(selectedVersion);
         const res = await fetch(url, { cache: "no-store" });
         const json = await res.json();
 
@@ -237,8 +254,10 @@ export default function App() {
             <gux-dropdown ref={versionDropdownRef} disabled={loadingIndex}>
               <gux-listbox>
                 <gux-option value="latest">
-                  Latest ({availableVersions[0] || "—"})
+                  Latest{" "}
+                  {availableVersions.length ? `(${availableVersions[0]})` : ""}
                 </gux-option>
+
                 {availableVersions.map((v) => (
                   <gux-option key={v} value={v}>
                     {v}
@@ -330,7 +349,9 @@ export default function App() {
                       <div className="gcMuted">No dependencies found.</div>
                     )
                   ) : (
-                    <div className="gcMuted">Select a type to view dependencies.</div>
+                    <div className="gcMuted">
+                      Select a type to view dependencies.
+                    </div>
                   )}
                 </div>
               </div>
