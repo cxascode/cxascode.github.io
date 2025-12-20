@@ -32,7 +32,6 @@ function buildDepsMaps(raw) {
 
     for (const d of deps) {
       if (typeof d !== "string") continue;
-
       depsMap.get(from).add(d);
       if (!reverseMap.has(d)) reverseMap.set(d, new Set());
       reverseMap.get(d).add(from);
@@ -60,6 +59,7 @@ export default function App() {
   const versionDropdownRef = useRef(null);
   const searchRef = useRef(null);
 
+  // Load versions index
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -76,6 +76,7 @@ export default function App() {
     return () => (cancelled = true);
   }, []);
 
+  // Wire Spark dropdown
   useEffect(() => {
     const el = versionDropdownRef.current;
     if (!el) return;
@@ -89,6 +90,7 @@ export default function App() {
     return () => el.removeEventListener("guxchange", handler);
   }, []);
 
+  // Load dependency tree
   useEffect(() => {
     let cancelled = false;
 
@@ -110,6 +112,7 @@ export default function App() {
       }
     })();
 
+    // Reset selection on version change
     setQuery("");
     setSelectedType("");
 
@@ -138,9 +141,9 @@ export default function App() {
       {/* Page header */}
       <div className="gcPageHeader">
         <div className="gcBreadcrumb">
-          <span className="gcBreadcrumb__current">CX as Code</span>
+          <span>CX as Code</span>
           <span className="gcBreadcrumb__sep">/</span>
-          <span className="gcBreadcrumb__current">Dependencies</span>
+          <span>Dependencies</span>
         </div>
 
         <div className="gcPageTitleRow">
@@ -168,17 +171,21 @@ export default function App() {
       {/* Content */}
       <main className="gcContentArea">
         <div className="gcSplit">
+          {/* Left panel */}
           <section className="gcCard">
             <div className="gcCard__toolbar">
               <input
                 ref={searchRef}
+                type="search"
                 className="gcSearchInput"
                 placeholder="Search resource types"
                 value={query}
-                onChange={(e) => {
-                  setQuery(e.target.value);
-                  setSelectedType("");
+                onInput={(e) => {
+                  const v = e.target.value;
+                  setQuery(v);
+                  setSelectedType(""); // reset selection when typing or clearing
                 }}
+                disabled={loadingData || !!error}
               />
 
               <div className="gcToolbarStat">
@@ -203,6 +210,7 @@ export default function App() {
             </div>
           </section>
 
+          {/* Right panel */}
           <section className="gcCard">
             <div className="gcCard__header">
               <div className="gcCard__title">Dependency details</div>
@@ -219,7 +227,14 @@ export default function App() {
                 </div>
                 <div className="gcPanel__body">
                   {dependsOn.map((t) => (
-                    <button key={t} className="gcPill" onClick={() => setSelectedType(t)}>
+                    <button
+                      key={t}
+                      className="gcPill"
+                      onClick={() => {
+                        setSelectedType(t);
+                        setQuery(t);
+                      }}
+                    >
                       {t}
                     </button>
                   ))}
@@ -233,7 +248,14 @@ export default function App() {
                 </div>
                 <div className="gcPanel__body">
                   {dependencyFor.map((t) => (
-                    <button key={t} className="gcPill" onClick={() => setSelectedType(t)}>
+                    <button
+                      key={t}
+                      className="gcPill"
+                      onClick={() => {
+                        setSelectedType(t);
+                        setQuery(t);
+                      }}
+                    >
                       {t}
                     </button>
                   ))}

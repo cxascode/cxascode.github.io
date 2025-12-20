@@ -87,6 +87,7 @@
   padding: 0 10px;
   border-radius: 6px;
   border: 1px solid var(--gc-border);
+  font-size: 14px;
 }
 
 .gcToolbarStat {
@@ -112,10 +113,10 @@
 .gcTr {
   padding: 12px;
   border-bottom: 1px solid var(--gc-border2);
-  text-align: left;
   background: transparent;
   border: 0;
   width: 100%;
+  text-align: left;
   cursor: pointer;
 }
 
