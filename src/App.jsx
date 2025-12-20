@@ -22,20 +22,22 @@ function sortAlpha(arr) {
  * {
  *   "addDependencies": {
  *     "<resource_type>": ["other_type", ...]
+ *   },
+ *   "replaceDependencies": {
+ *     "<resource_type>": {
+ *       "<bad_dep_type>": "<correct_dep_type>"
+ *     }
  *   }
  * }
  *
  * Behavior:
- * - For each resource_type in addDependencies, union the dependencies list.
- * - No duplicates.
+ * - addDependencies: union the dependencies list (no duplicates).
+ * - replaceDependencies: string-replace dependency entries for a given resource_type.
  * - If a resource_type is not present in the JSON, it is ignored (no auto-create).
  */
 function applyOverrides(raw, overrides) {
   if (!raw || !Array.isArray(raw.resources)) return raw;
   if (!overrides || typeof overrides !== "object") return raw;
-
-  const add = overrides.addDependencies;
-  if (!add || typeof add !== "object") return raw;
 
   // Clone shallowly so we don't mutate the fetched object
   const patched = {
@@ -49,20 +51,38 @@ function applyOverrides(raw, overrides) {
     if (r && typeof r.type === "string") byType.set(r.type, r);
   }
 
-  for (const [type, additions] of Object.entries(add)) {
-    if (!Array.isArray(additions)) continue;
+  // 1) Replace bad dependency strings (fix typos, renames, etc.)
+  const replace = overrides.replaceDependencies;
+  if (replace && typeof replace === "object") {
+    for (const [type, mapping] of Object.entries(replace)) {
+      const r = byType.get(type);
+      if (!r || !Array.isArray(r.dependencies) || typeof mapping !== "object") continue;
 
-    const r = byType.get(type);
-    if (!r) continue;
-
-    const current = Array.isArray(r.dependencies) ? r.dependencies : [];
-    const set = new Set(current.filter((d) => typeof d === "string"));
-
-    for (const dep of additions) {
-      if (typeof dep === "string" && dep.trim()) set.add(dep.trim());
+      r.dependencies = r.dependencies.map((d) => {
+        if (typeof d !== "string") return d;
+        return mapping[d] || d;
+      });
     }
+  }
 
-    r.dependencies = [...set];
+  // 2) Add extra dependencies (union)
+  const add = overrides.addDependencies;
+  if (add && typeof add === "object") {
+    for (const [type, additions] of Object.entries(add)) {
+      if (!Array.isArray(additions)) continue;
+
+      const r = byType.get(type);
+      if (!r) continue;
+
+      const current = Array.isArray(r.dependencies) ? r.dependencies : [];
+      const set = new Set(current.filter((d) => typeof d === "string"));
+
+      for (const dep of additions) {
+        if (typeof dep === "string" && dep.trim()) set.add(dep.trim());
+      }
+
+      r.dependencies = [...set];
+    }
   }
 
   return patched;

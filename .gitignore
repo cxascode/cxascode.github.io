@@ -25,3 +25,5 @@ dist-ssr
 
 public/dependency_tree.json
 public/versions/
+# Snyk Security Extension - AI Rules (auto-generated)
+.github/instructions/snyk_rules.instructions.md

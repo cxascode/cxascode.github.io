@@ -34,5 +34,10 @@
       "genesyscloud_task_management_worktype_status",
       "genesyscloud_user"
     ]
+  },
+  "replaceDependencies": {
+    "genesyscloud_responsemanagement_response": {
+      "responsemanagement_responseasset": "genesyscloud_responsemanagement_responseasset"
+    }
   }
 }
