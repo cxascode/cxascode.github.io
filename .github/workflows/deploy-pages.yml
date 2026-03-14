@@ -25,7 +25,33 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Step 1: Determine latest provider release and whether we should deploy.
+      # Restore cache BEFORE deciding whether work is needed.
+      - name: Restore versions cache
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            public/versions
+            .cache-meta
+          key: versions-${{ runner.os }}-${{ github.ref_name }}-${{ github.run_id }}
+          restore-keys: |
+            versions-${{ runner.os }}-${{ github.ref_name }}-
+            versions-${{ runner.os }}-
+
+      - name: Show restored cache state
+        run: |
+          set -euo pipefail
+          echo "Cache hit: ${{ steps.cache.outputs.cache-hit }}"
+          echo "--- .cache-meta ---"
+          ls -la .cache-meta || true
+          echo "--- public/versions (first 20) ---"
+          ls -la public/versions | head -n 20 || true
+          echo "--- latest.txt ---"
+          cat .cache-meta/latest.txt || true
+          echo "--- bootstrapped.txt ---"
+          cat .cache-meta/bootstrapped.txt || true
+
+      # Determine latest provider release and whether we should deploy.
       # IMPORTANT:
       # - push + workflow_dispatch always deploy (code may have changed)
       # - schedule deploys only when provider "latest" changes OR cache/bootstrap missing
@@ -84,19 +110,9 @@ jobs:
             echo "needs_deploy=${needs_deploy}"
           } >> "${GITHUB_OUTPUT}"
 
-      # Step 2: Restore cache using a versioned key so we don't get "cache save failed".
-      # - key: exact match for current latest version
-      # - restore-keys: fall back to the most recent saved cache for this OS
-      - name: Restore versions cache
-        id: cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            public/versions
-            .cache-meta
-          key: versions-${{ runner.os }}-${{ steps.check.outputs.latest_ver }}
-          restore-keys: |
-            versions-${{ runner.os }}-
+      - name: Configure GitHub Pages
+        if: steps.check.outputs.needs_deploy == 'true'
+        uses: actions/configure-pages@v5
 
       # One-time bootstrap: download all versions >= 1.60.0
       - name: Bootstrap versions history (>= 1.60.0)
@@ -238,5 +254,9 @@ jobs:
     needs: build
     if: needs.build.outputs.needs_deploy == 'true'
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/deploy-pages@v4
+      - id: deployment
+        uses: actions/deploy-pages@v4
