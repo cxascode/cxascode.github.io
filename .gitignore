@@ -23,7 +23,9 @@ dist-ssr
 *.sln
 *.sw?
 
-public/dependency_tree.json
-public/versions/
+public/dependency-tree-json/
+public/resource-permissions-json/
+public/resource-permissions-tf/
+
 # Snyk Security Extension - AI Rules (auto-generated)
 .github/instructions/snyk_rules.instructions.md
