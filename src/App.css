@@ -47,6 +47,35 @@
   color: var(--gc-subtle);
 }
 
+.gcHeaderLinks {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.gcHeaderLink {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--gc-border);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--gc-blue);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.gcHeaderLink:hover,
+.gcHeaderLink:focus-visible {
+  background: var(--gc-blue-weak);
+  text-decoration: none;
+  outline: none;
+}
+
 .gcContentArea {
   padding: 16px 18px;
   flex: 1;
@@ -84,6 +113,11 @@
   overflow: hidden;
   min-height: 520px;
   min-width: 0;
+}
+
+.gcRightCard {
+  display: flex;
+  flex-direction: column;
 }
 
 .gcCard__toolbar {
@@ -218,12 +252,6 @@
   color: var(--gc-subtle);
 }
 
-.gcPills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
 .gcPill {
   border: 1px solid var(--gc-border);
   border-radius: 999px;
@@ -231,13 +259,13 @@
   font-size: 12px;
   background: #fff;
   cursor: pointer;
+  margin: 0 8px 8px 0;
 }
 
 .gcPill:hover {
   background: rgba(0, 0, 0, 0.03);
 }
 
-/* Footer */
 .gcFooter {
   padding: 12px 18px;
   border-top: 1px solid var(--gc-border);
@@ -261,9 +289,11 @@
   .gcSplit {
     grid-template-columns: 1fr;
   }
+
   .gcDetailsGrid {
     grid-template-columns: 1fr;
   }
+
   .gcTable__body {
     max-height: 45vh;
   }

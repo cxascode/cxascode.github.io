@@ -25,13 +25,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Restore cache BEFORE deciding whether work is needed.
       - name: Restore versions cache
         id: cache
         uses: actions/cache@v4
         with:
           path: |
-            public/versions
+            public/dependency-tree-json
+            public/resource-permissions-json
+            public/resource-permissions-tf
             .cache-meta
           key: versions-${{ runner.os }}-${{ github.ref_name }}-${{ github.run_id }}
           restore-keys: |
@@ -44,17 +45,17 @@ jobs:
           echo "Cache hit: ${{ steps.cache.outputs.cache-hit }}"
           echo "--- .cache-meta ---"
           ls -la .cache-meta || true
-          echo "--- public/versions (first 20) ---"
-          ls -la public/versions | head -n 20 || true
+          echo "--- public/dependency-tree-json (first 20) ---"
+          ls -la public/dependency-tree-json | head -n 20 || true
+          echo "--- public/resource-permissions-json (first 20) ---"
+          ls -la public/resource-permissions-json | head -n 20 || true
+          echo "--- public/resource-permissions-tf (first 20) ---"
+          ls -la public/resource-permissions-tf | head -n 20 || true
           echo "--- latest.txt ---"
           cat .cache-meta/latest.txt || true
           echo "--- bootstrapped.txt ---"
           cat .cache-meta/bootstrapped.txt || true
 
-      # Determine latest provider release and whether we should deploy.
-      # IMPORTANT:
-      # - push + workflow_dispatch always deploy (code may have changed)
-      # - schedule deploys only when provider "latest" changes OR cache/bootstrap missing
       - name: Check latest release + decide what to do
         id: check
         env:
@@ -64,7 +65,7 @@ jobs:
           EVENT_NAME: ${{ github.event_name }}
         run: |
           set -euo pipefail
-          mkdir -p public/versions .cache-meta
+          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf .cache-meta
 
           api_base="https://api.github.com/repos/${OWNER}/${REPO}"
 
@@ -86,7 +87,7 @@ jobs:
           fi
 
           have_latest_json="false"
-          if [ -f "public/versions/${latest_ver}.json" ]; then
+          if [ -f "public/dependency-tree-json/${latest_ver}.json" ]; then
             have_latest_json="true"
           fi
 
@@ -114,23 +115,31 @@ jobs:
         if: steps.check.outputs.needs_deploy == 'true'
         uses: actions/configure-pages@v5
 
-      # One-time bootstrap: download all versions >= 1.60.0
-      - name: Bootstrap versions history (>= 1.60.0)
+      - name: Bootstrap dependency and permissions history
         if: steps.check.outputs.needs_deploy == 'true' && steps.check.outputs.bootstrapped != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           OWNER: MyPureCloud
           REPO: terraform-provider-genesyscloud
-          MIN_VERSION: "1.60.0"
+          MIN_DEP_VERSION: "1.60.0"
+          MIN_PERM_VERSION: "1.76.0"
         run: |
           set -euo pipefail
-          mkdir -p public/versions .cache-meta
-          rm -f public/versions/index.json public/dependency_tree.json
+          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf .cache-meta
+          rm -f \
+            public/dependency-tree-json/index.json \
+            public/dependency-tree-json/latest.json \
+            public/resource-permissions-tf/latest-read-write-role.tf \
+            public/resource-permissions-tf/latest-read-only-role.tf \
+            public/dependency_tree.json \
+            public/read-write-role.tf \
+            public/read-only-role.tf
 
           api_base="https://api.github.com/repos/${OWNER}/${REPO}"
           page=1
 
-          echo "BOOTSTRAP: downloading all dependency_tree JSONs >= ${MIN_VERSION}..."
+          echo "BOOTSTRAP: downloading dependency_tree JSONs >= ${MIN_DEP_VERSION}..."
+          echo "BOOTSTRAP: downloading resource_permissions JSONs >= ${MIN_PERM_VERSION}..."
 
           while true; do
             releases_json="$(curl -fsSL \
@@ -147,45 +156,54 @@ jobs:
               .[] |
               { tag: .tag_name, assets: (.assets // []) } |
               .tag as $tag |
-              (.assets[]? | select(.name | startswith("dependency_tree-") and endswith(".json")) | .browser_download_url) as $url |
-              select($url != null) |
-              "\($tag)\t\($url)"
-            ' | while IFS=$'\t' read -r tag url; do
+              [
+                $tag,
+                ((.assets[]? | select(.name | startswith("dependency_tree-") and endswith(".json")) | .browser_download_url) // ""),
+                ((.assets[]? | select(.name | startswith("resource_permissions-") and endswith(".json")) | .browser_download_url) // "")
+              ] |
+              @tsv
+            ' | while IFS=$'\t' read -r tag dep_url perm_url; do
               ver="${tag#v}"
 
-              first="$(printf "%s\n%s\n" "${MIN_VERSION}" "${ver}" | sort -V | head -n 1)"
-              if [ "${first}" != "${MIN_VERSION}" ]; then
-                continue
+              dep_first="$(printf "%s\n%s\n" "${MIN_DEP_VERSION}" "${ver}" | sort -V | head -n 1)"
+              perm_first="$(printf "%s\n%s\n" "${MIN_PERM_VERSION}" "${ver}" | sort -V | head -n 1)"
+
+              if [ -n "${dep_url}" ] && [ "${dep_first}" = "${MIN_DEP_VERSION}" ]; then
+                dep_out="public/dependency-tree-json/${ver}.json"
+                if [ ! -f "${dep_out}" ]; then
+                  echo "Downloading dependency tree ${ver} -> ${dep_out}"
+                  curl -fsSL -L "${dep_url}" -o "${dep_out}"
+                fi
               fi
 
-              out="public/versions/${ver}.json"
-              if [ -f "${out}" ]; then
-                echo "Already have ${ver}, skipping"
-                continue
+              if [ -n "${perm_url}" ] && [ "${perm_first}" = "${MIN_PERM_VERSION}" ]; then
+                perm_out="public/resource-permissions-json/${ver}.json"
+                if [ ! -f "${perm_out}" ]; then
+                  echo "Downloading resource permissions ${ver} -> ${perm_out}"
+                  curl -fsSL -L "${perm_url}" -o "${perm_out}"
+                fi
               fi
-
-              echo "Downloading ${ver} -> ${out}"
-              curl -fsSL -L "${url}" -o "${out}"
             done
 
             page=$((page + 1))
           done
 
-          if [ "$(ls -1 public/versions/*.json 2>/dev/null | wc -l)" -eq 0 ]; then
-            echo "Bootstrap failed: no version JSONs found. Check release assets and MIN_VERSION."
+          if [ "$(find public/dependency-tree-json -maxdepth 1 -name '*.json' | wc -l)" -eq 0 ]; then
+            echo "Bootstrap failed: no dependency tree JSONs found. Check release assets and MIN_DEP_VERSION."
             exit 1
           fi
 
-          versions_sorted="$(ls -1 public/versions/*.json | sed 's|.*/||; s|\.json$||' | sort -Vr)"
-          printf "%s\n" "${versions_sorted}" | jq -R -s 'split("\n") | map(select(length>0))' > public/versions/index.json
+          versions_sorted="$(find public/dependency-tree-json -maxdepth 1 -name '*.json' | sed 's|.*/||; s|\.json$||' | sort -Vr)"
+          printf "%s\n" "${versions_sorted}" | jq -R -s 'split("\n") | map(select(length>0))' > public/dependency-tree-json/index.json
 
           latest="$(printf "%s\n" "${versions_sorted}" | head -n 1)"
-          cp "public/versions/${latest}.json" public/dependency_tree.json
+          cp "public/dependency-tree-json/${latest}.json" public/dependency-tree-json/latest.json
+
+          node scripts/generate-resource-permissions-tf.mjs --latest="${latest}"
 
           echo "${latest}" > .cache-meta/latest.txt
           echo "true" > .cache-meta/bootstrapped.txt
 
-      # Incremental update: download ONLY the latest JSON (history files never change)
       - name: Update latest version only
         if: steps.check.outputs.needs_deploy == 'true' && steps.check.outputs.bootstrapped == 'true'
         env:
@@ -194,8 +212,15 @@ jobs:
           REPO: terraform-provider-genesyscloud
         run: |
           set -euo pipefail
-          mkdir -p public/versions .cache-meta
-          rm -f public/versions/index.json public/dependency_tree.json
+          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf .cache-meta
+          rm -f \
+            public/dependency-tree-json/index.json \
+            public/dependency-tree-json/latest.json \
+            public/resource-permissions-tf/latest-read-write-role.tf \
+            public/resource-permissions-tf/latest-read-only-role.tf \
+            public/dependency_tree.json \
+            public/read-write-role.tf \
+            public/read-only-role.tf
 
           api_base="https://api.github.com/repos/${OWNER}/${REPO}"
           latest_ver="${{ steps.check.outputs.latest_ver }}"
@@ -207,30 +232,49 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             "${api_base}/releases/latest")"
 
-          url="$(echo "${rel_json}" | jq -r '
+          dep_url="$(echo "${rel_json}" | jq -r '
             (.assets // [])
             | map(select(.name | startswith("dependency_tree-") and endswith(".json")))
             | .[0].browser_download_url // empty
           ')"
 
-          if [ -z "${url}" ]; then
+          perm_url="$(echo "${rel_json}" | jq -r '
+            (.assets // [])
+            | map(select(.name | startswith("resource_permissions-") and endswith(".json")))
+            | .[0].browser_download_url // empty
+          ')"
+
+          if [ -z "${dep_url}" ]; then
             echo "Could not find dependency_tree-*.json asset in latest release."
             exit 1
           fi
 
-          out="public/versions/${latest_ver}.json"
-          if [ ! -f "${out}" ]; then
-            echo "Downloading latest -> ${out}"
-            curl -fsSL -L "${url}" -o "${out}"
+          dep_out="public/dependency-tree-json/${latest_ver}.json"
+          if [ ! -f "${dep_out}" ]; then
+            echo "Downloading latest dependency tree -> ${dep_out}"
+            curl -fsSL -L "${dep_url}" -o "${dep_out}"
           else
-            echo "Already have ${out}; not downloading."
+            echo "Already have ${dep_out}; not downloading."
           fi
 
-          versions_sorted="$(ls -1 public/versions/*.json | sed 's|.*/||; s|\.json$||' | sort -Vr)"
-          printf "%s\n" "${versions_sorted}" | jq -R -s 'split("\n") | map(select(length>0))' > public/versions/index.json
+          if [ -n "${perm_url}" ]; then
+            perm_out="public/resource-permissions-json/${latest_ver}.json"
+            if [ ! -f "${perm_out}" ]; then
+              echo "Downloading latest resource permissions -> ${perm_out}"
+              curl -fsSL -L "${perm_url}" -o "${perm_out}"
+            else
+              echo "Already have ${perm_out}; not downloading."
+            fi
+          fi
+
+          versions_sorted="$(find public/dependency-tree-json -maxdepth 1 -name '*.json' | sed 's|.*/||; s|\.json$||' | sort -Vr)"
+          printf "%s\n" "${versions_sorted}" | jq -R -s 'split("\n") | map(select(length>0))' > public/dependency-tree-json/index.json
 
           latest="$(printf "%s\n" "${versions_sorted}" | head -n 1)"
-          cp "public/versions/${latest}.json" public/dependency_tree.json
+          cp "public/dependency-tree-json/${latest}.json" public/dependency-tree-json/latest.json
+
+          node scripts/generate-resource-permissions-tf.mjs --latest="${latest}"
+
           echo "${latest}" > .cache-meta/latest.txt
 
       - uses: actions/setup-node@v4

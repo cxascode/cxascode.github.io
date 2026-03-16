@@ -1,8 +1,19 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
-const INDEX_URL = `${import.meta.env.BASE_URL}versions/index.json`;
-const LATEST_URL = `${import.meta.env.BASE_URL}dependency_tree.json`;
-const VERSION_URL = (v) => `${import.meta.env.BASE_URL}versions/${v}.json`;
+const INDEX_URL = `${import.meta.env.BASE_URL}dependency-tree-json/index.json`;
+const LATEST_URL = `${import.meta.env.BASE_URL}dependency-tree-json/latest.json`;
+const VERSION_URL = (v) => `${import.meta.env.BASE_URL}dependency-tree-json/${v}.json`;
+
+const READ_WRITE_ROLE_URL =
+  `${import.meta.env.BASE_URL}resource-permissions-tf/latest-read-write-role.tf`;
+const READ_ONLY_ROLE_URL =
+  `${import.meta.env.BASE_URL}resource-permissions-tf/latest-read-only-role.tf`;
+
+const VERSIONED_READ_WRITE_ROLE_URL = (v) =>
+  `${import.meta.env.BASE_URL}resource-permissions-tf/${v}-read-write-role.tf`;
+const VERSIONED_READ_ONLY_ROLE_URL = (v) =>
+  `${import.meta.env.BASE_URL}resource-permissions-tf/${v}-read-only-role.tf`;
+
 const OVERRIDES_URL = `${import.meta.env.BASE_URL}overrides.json`;
 
 function normalizeType(s) {
@@ -146,7 +157,9 @@ export default function App() {
       }
     })();
 
-    return () => (cancelled = true);
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
@@ -155,7 +168,15 @@ export default function App() {
     (async () => {
       try {
         const res = await fetch(INDEX_URL, { cache: "no-store" });
+        if (!res.ok) {
+          throw new Error(`Failed to fetch version index: ${res.status} ${res.statusText}`);
+        }
+
         const json = await res.json();
+        if (!Array.isArray(json)) {
+          throw new Error("Version index is not an array");
+        }
+
         if (!cancelled) setAvailableVersions(json);
       } catch (e) {
         if (!cancelled) setError(String(e));
@@ -164,7 +185,9 @@ export default function App() {
       }
     })();
 
-    return () => (cancelled = true);
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
@@ -195,6 +218,7 @@ export default function App() {
 
   useEffect(() => {
     if (loadingIndex) return;
+
     const el = versionDropdownRef.current;
     if (!el) return;
 
@@ -208,14 +232,30 @@ export default function App() {
     (async () => {
       try {
         setLoadingData(true);
-        const url =
+        setError("");
+
+        const depsUrl =
           selectedVersion === "latest" ? LATEST_URL : VERSION_URL(selectedVersion);
-        const res = await fetch(url, { cache: "no-store" });
-        const json = await res.json();
+
+        const depsRes = await fetch(depsUrl, { cache: "no-store" });
+
+        if (!depsRes.ok) {
+          throw new Error(
+            `Failed to fetch dependency tree: ${depsRes.status} ${depsRes.statusText}`
+          );
+        }
+
+        const json = await depsRes.json();
         const patched = applyOverrides(json, overrides);
-        if (!cancelled) setRaw(patched);
+
+        if (!cancelled) {
+          setRaw(patched);
+        }
       } catch (e) {
-        if (!cancelled) setError(String(e));
+        if (!cancelled) {
+          setError(String(e));
+          setRaw(null);
+        }
       } finally {
         if (!cancelled) setLoadingData(false);
       }
@@ -224,7 +264,9 @@ export default function App() {
     setQuery("");
     setSelectedType("");
 
-    return () => (cancelled = true);
+    return () => {
+      cancelled = true;
+    };
   }, [selectedVersion, overrides]);
 
   const { depsMap, reverseMap } = useMemo(() => buildDepsMaps(raw), [raw]);
@@ -251,6 +293,22 @@ export default function App() {
     [reverseMap, activeType]
   );
 
+  const effectiveVersion =
+    selectedVersion === "latest" ? availableVersions[0] || "latest" : selectedVersion;
+
+  const readWriteRoleHref =
+    selectedVersion === "latest"
+      ? READ_WRITE_ROLE_URL
+      : VERSIONED_READ_WRITE_ROLE_URL(selectedVersion);
+
+  const readOnlyRoleHref =
+    selectedVersion === "latest"
+      ? READ_ONLY_ROLE_URL
+      : VERSIONED_READ_ONLY_ROLE_URL(selectedVersion);
+
+  const readWriteDownloadName = `read-write-role-${effectiveVersion}.tf`;
+  const readOnlyDownloadName = `read-only-role-${effectiveVersion}.tf`;
+
   const clearSearch = () => {
     setQuery("");
     setSelectedType("");
@@ -264,12 +322,30 @@ export default function App() {
           <h1 className="gcPageTitle">CX as Code Dependency Explorer</h1>
 
           <div className="gcPageMeta">
+            <span className="gcMetaLabel">Role Download:</span>
+
+            <div className="gcHeaderLinks">
+              <a
+                className="gcHeaderLink"
+                href={readWriteRoleHref}
+                download={readWriteDownloadName}
+              >
+                Read/Write .tf
+              </a>
+              <a
+                className="gcHeaderLink"
+                href={readOnlyRoleHref}
+                download={readOnlyDownloadName}
+              >
+                Read-only .tf
+              </a>
+            </div>
+
             <span className="gcMetaLabel">Version:</span>
             <gux-dropdown ref={versionDropdownRef} disabled={loadingIndex}>
               <gux-listbox>
                 <gux-option value="latest">
-                  Latest{" "}
-                  {availableVersions.length ? `(${availableVersions[0]})` : ""}
+                  Latest {availableVersions.length ? `(${availableVersions[0]})` : ""}
                 </gux-option>
 
                 {availableVersions.map((v) => (
@@ -284,6 +360,13 @@ export default function App() {
       </div>
 
       <main className="gcContentArea">
+        {error ? (
+          <div className="gcAlert" role="alert">
+            <div className="gcAlert__title">Something broke</div>
+            <div className="gcAlert__body gcMono">{error}</div>
+          </div>
+        ) : null}
+
         <div className="gcSplit">
           <section className="gcCard">
             <div className="gcCard__toolbar">
@@ -311,19 +394,22 @@ export default function App() {
             </div>
 
             <div className="gcTable__body">
-              {filteredTypes.map((t) => (
-                <button
-                  key={t}
-                  className={`gcTr ${t === activeType ? "isActive" : ""}`}
-                  onClick={() => {
-                    setSelectedType(t);
-                    setQuery(t);
-                  }}
-                  type="button"
-                >
-                  <div className="gcTd gcMono">{t}</div>
-                </button>
-              ))}
+              {loadingData ? <div className="gcEmptyRow">Loading dependency data...</div> : null}
+
+              {!loadingData &&
+                filteredTypes.map((t) => (
+                  <button
+                    key={t}
+                    className={`gcTr ${t === activeType ? "isActive" : ""}`}
+                    onClick={() => {
+                      setSelectedType(t);
+                      setQuery(t);
+                    }}
+                    type="button"
+                  >
+                    <div className="gcTd gcMono">{t}</div>
+                  </button>
+                ))}
 
               {!loadingData && filteredTypes.length === 0 ? (
                 <div className="gcEmptyRow">No matches.</div>
@@ -331,7 +417,7 @@ export default function App() {
             </div>
           </section>
 
-          <section className="gcCard">
+          <section className="gcCard gcRightCard">
             <div className="gcCard__header">
               <div className="gcCard__title">Dependency details</div>
               <div className="gcCard__subtitle">
@@ -369,9 +455,7 @@ export default function App() {
                       <div className="gcMuted">No dependencies found.</div>
                     )
                   ) : (
-                    <div className="gcMuted">
-                      Select a type to view dependencies.
-                    </div>
+                    <div className="gcMuted">Select a type to view dependencies.</div>
                   )}
                 </div>
               </div>
@@ -398,14 +482,10 @@ export default function App() {
                         </button>
                       ))
                     ) : (
-                      <div className="gcMuted">
-                        Nothing depends on this.
-                      </div>
+                      <div className="gcMuted">Nothing depends on this.</div>
                     )
                   ) : (
-                    <div className="gcMuted">
-                      Select a type to view reverse dependencies.
-                    </div>
+                    <div className="gcMuted">Select a type to view reverse dependencies.</div>
                   )}
                 </div>
               </div>
