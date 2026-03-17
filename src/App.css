@@ -40,24 +40,33 @@
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .gcRoleDownloads {
   display: flex;
   align-items: center;
   gap: 10px;
-  min-width: 430px;
-  flex-shrink: 0;
+  flex: 0 0 auto;
 }
 
 .gcRoleDownloads.isHidden {
   visibility: hidden;
+  opacity: 0;
   pointer-events: none;
 }
 
 .gcRoleDownloads.isVisible {
   visibility: visible;
+  opacity: 1;
   pointer-events: auto;
+}
+
+.gcVersionPicker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
 }
 
 .gcMetaLabel {
@@ -316,8 +325,16 @@
     max-height: 45vh;
   }
 
-  .gcRoleDownloads {
-    min-width: 0;
-    flex-shrink: 1;
+  .gcPageTitleRow {
+    align-items: flex-start;
+  }
+
+  .gcPageMeta {
+    justify-content: flex-start;
+  }
+
+  .gcRoleDownloads,
+  .gcVersionPicker {
+    flex: 1 1 100%;
   }
 }
