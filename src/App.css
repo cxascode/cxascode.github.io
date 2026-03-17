@@ -42,6 +42,24 @@
   flex-wrap: wrap;
 }
 
+.gcRoleDownloads {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 430px;
+  flex-shrink: 0;
+}
+
+.gcRoleDownloads.isHidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.gcRoleDownloads.isVisible {
+  visibility: visible;
+  pointer-events: auto;
+}
+
 .gcMetaLabel {
   font-size: 12px;
   color: var(--gc-subtle);
@@ -296,5 +314,10 @@
 
   .gcTable__body {
     max-height: 45vh;
+  }
+
+  .gcRoleDownloads {
+    min-width: 0;
+    flex-shrink: 1;
   }
 }

@@ -58,26 +58,6 @@ function isRoleDownloadSupported(version) {
   return compareVersions(version, MIN_ROLE_DOWNLOAD_VERSION) >= 0;
 }
 
-/**
- * Apply optional overrides to a dependency tree JSON.
- *
- * overrides.json shape:
- * {
- *   "addDependencies": {
- *     "<resource_type>": ["other_type", ...]
- *   },
- *   "replaceDependencies": {
- *     "<resource_type>": {
- *       "<bad_dep_type>": "<correct_dep_type>"
- *     }
- *   }
- * }
- *
- * Behavior:
- * - addDependencies: union the dependencies list (no duplicates).
- * - replaceDependencies: string-replace dependency entries for a given resource_type.
- * - If a resource_type is not present in the JSON, it is ignored (no auto-create).
- */
 function applyOverrides(raw, overrides) {
   if (!raw || !Array.isArray(raw.resources)) return raw;
   if (!overrides || typeof overrides !== "object") return raw;
@@ -167,7 +147,6 @@ export default function App() {
 
   const [loadingIndex, setLoadingIndex] = useState(true);
   const [loadingData, setLoadingData] = useState(true);
-  const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState("");
 
   const versionDropdownRef = useRef(null);
@@ -237,7 +216,6 @@ export default function App() {
       const normalizedNext = next || "latest";
 
       if (normalizedNext === selectedVersionRef.current) return;
-
       setSelectedVersion(normalizedNext);
     };
 
@@ -276,15 +254,8 @@ export default function App() {
     let cancelled = false;
 
     (async () => {
-      const firstLoad = raw === null;
-
       try {
-        if (firstLoad) {
-          setLoadingData(true);
-        } else {
-          setIsRefreshing(true);
-        }
-
+        setLoadingData(true);
         setError("");
 
         const depsUrl =
@@ -307,23 +278,16 @@ export default function App() {
       } catch (e) {
         if (!cancelled) {
           setError(String(e));
-
-          if (raw === null) {
-            setRaw(null);
-          }
         }
       } finally {
-        if (!cancelled) {
-          setLoadingData(false);
-          setIsRefreshing(false);
-        }
+        if (!cancelled) setLoadingData(false);
       }
     })();
 
     return () => {
       cancelled = true;
     };
-  }, [selectedVersion, overrides]); // intentionally keep current UI while reloading
+  }, [selectedVersion, overrides]);
 
   const { depsMap, reverseMap } = useMemo(() => buildDepsMaps(raw), [raw]);
 
@@ -386,28 +350,31 @@ export default function App() {
           <h1 className="gcPageTitle">CX as Code Dependency Explorer</h1>
 
           <div className="gcPageMeta">
-            {roleDownloadsSupported ? (
-              <>
-                <span className="gcMetaLabel">Role Download:</span>
+            <div
+              className={`gcRoleDownloads ${roleDownloadsSupported ? "isVisible" : "isHidden"}`}
+              aria-hidden={!roleDownloadsSupported}
+            >
+              <span className="gcMetaLabel">Role Download:</span>
 
-                <div className="gcHeaderLinks">
-                  <a
-                    className="gcHeaderLink"
-                    href={readWriteRoleHref}
-                    download={readWriteDownloadName}
-                  >
-                    Read/Write .tf
-                  </a>
-                  <a
-                    className="gcHeaderLink"
-                    href={readOnlyRoleHref}
-                    download={readOnlyDownloadName}
-                  >
-                    Read-only .tf
-                  </a>
-                </div>
-              </>
-            ) : null}
+              <div className="gcHeaderLinks">
+                <a
+                  className="gcHeaderLink"
+                  href={readWriteRoleHref}
+                  download={readWriteDownloadName}
+                  tabIndex={roleDownloadsSupported ? 0 : -1}
+                >
+                  Read/Write .tf
+                </a>
+                <a
+                  className="gcHeaderLink"
+                  href={readOnlyRoleHref}
+                  download={readOnlyDownloadName}
+                  tabIndex={roleDownloadsSupported ? 0 : -1}
+                >
+                  Read-only .tf
+                </a>
+              </div>
+            </div>
 
             <span className="gcMetaLabel">Version:</span>
             <gux-dropdown ref={versionDropdownRef} disabled={loadingIndex}>
@@ -423,16 +390,6 @@ export default function App() {
                 ))}
               </gux-listbox>
             </gux-dropdown>
-
-            {isRefreshing ? (
-              <span
-                className="gcMetaLabel"
-                aria-live="polite"
-                style={{ marginLeft: "0.5rem" }}
-              >
-                Refreshing...
-              </span>
-            ) : null}
           </div>
         </div>
       </div>
