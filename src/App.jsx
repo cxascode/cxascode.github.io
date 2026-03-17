@@ -58,6 +58,26 @@ function isRoleDownloadSupported(version) {
   return compareVersions(version, MIN_ROLE_DOWNLOAD_VERSION) >= 0;
 }
 
+/**
+ * Apply optional overrides to a dependency tree JSON.
+ *
+ * overrides.json shape:
+ * {
+ *   "addDependencies": {
+ *     "<resource_type>": ["other_type", ...]
+ *   },
+ *   "replaceDependencies": {
+ *     "<resource_type>": {
+ *       "<bad_dep_type>": "<correct_dep_type>"
+ *     }
+ *   }
+ * }
+ *
+ * Behavior:
+ * - addDependencies: union the dependencies list (no duplicates).
+ * - replaceDependencies: string-replace dependency entries for a given resource_type.
+ * - If a resource_type is not present in the JSON, it is ignored (no auto-create).
+ */
 function applyOverrides(raw, overrides) {
   if (!raw || !Array.isArray(raw.resources)) return raw;
   if (!overrides || typeof overrides !== "object") return raw;
@@ -376,20 +396,22 @@ export default function App() {
               </div>
             </div>
 
-            <span className="gcMetaLabel">Version:</span>
-            <gux-dropdown ref={versionDropdownRef} disabled={loadingIndex}>
-              <gux-listbox>
-                <gux-option value="latest">
-                  Latest {availableVersions.length ? `(${availableVersions[0]})` : ""}
-                </gux-option>
-
-                {availableVersions.map((v) => (
-                  <gux-option key={v} value={v}>
-                    {v}
+            <div className="gcVersionPicker">
+              <span className="gcMetaLabel">Version:</span>
+              <gux-dropdown ref={versionDropdownRef} disabled={loadingIndex}>
+                <gux-listbox>
+                  <gux-option value="latest">
+                    Latest {availableVersions.length ? `(${availableVersions[0]})` : ""}
                   </gux-option>
-                ))}
-              </gux-listbox>
-            </gux-dropdown>
+
+                  {availableVersions.map((v) => (
+                    <gux-option key={v} value={v}>
+                      {v}
+                    </gux-option>
+                  ))}
+                </gux-listbox>
+              </gux-dropdown>
+            </div>
           </div>
         </div>
       </div>
