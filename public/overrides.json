@@ -39,5 +39,27 @@
     "genesyscloud_responsemanagement_response": {
       "responsemanagement_responseasset": "genesyscloud_responsemanagement_responseasset"
     }
+  },
+  "addReadWritePermissions": {
+    "genesyscloud_outbound_dnclist": [
+      "outbound:dnc:add",
+      "outbound:dnc:delete",
+      "outbound:dnc:edit",
+      "outbound:dnc:view"
+    ]
+  },
+  "addReadOnlyPermissions": {
+    "genesyscloud_routing_email_route": [
+      "routing:email:manage"
+    ],
+    "genesyscloud_outbound_dnclist": [
+      "outbound:dnc:view"
+    ],
+    "genesyscloud_telephony_providers_edges_site": [
+      "telephony:plugin:all"
+    ],
+    "genesyscloud_organization_authentication_settings": [
+      "directory:organization:admin"
+    ]
   }
 }
