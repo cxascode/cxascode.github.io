@@ -167,10 +167,16 @@ export default function App() {
 
   const [loadingIndex, setLoadingIndex] = useState(true);
   const [loadingData, setLoadingData] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState("");
 
   const versionDropdownRef = useRef(null);
   const searchRef = useRef(null);
+  const selectedVersionRef = useRef("latest");
+
+  useEffect(() => {
+    selectedVersionRef.current = selectedVersion;
+  }, [selectedVersion]);
 
   useEffect(() => {
     let cancelled = false;
@@ -228,7 +234,11 @@ export default function App() {
 
     const handler = (evt) => {
       const next = evt?.target?.value ?? evt?.detail?.value ?? "";
-      setSelectedVersion(next || "latest");
+      const normalizedNext = next || "latest";
+
+      if (normalizedNext === selectedVersionRef.current) return;
+
+      setSelectedVersion(normalizedNext);
     };
 
     el.addEventListener("guxchange", handler);
@@ -244,7 +254,9 @@ export default function App() {
     const el = versionDropdownRef.current;
     if (!el) return;
 
-    el.value = selectedVersion;
+    if (el.value !== selectedVersion) {
+      el.value = selectedVersion;
+    }
     el.setAttribute("value", selectedVersion);
   }, [selectedVersion]);
 
@@ -254,7 +266,9 @@ export default function App() {
     const el = versionDropdownRef.current;
     if (!el) return;
 
-    el.value = selectedVersion;
+    if (el.value !== selectedVersion) {
+      el.value = selectedVersion;
+    }
     el.setAttribute("value", selectedVersion);
   }, [loadingIndex, selectedVersion]);
 
@@ -262,8 +276,15 @@ export default function App() {
     let cancelled = false;
 
     (async () => {
+      const firstLoad = raw === null;
+
       try {
-        setLoadingData(true);
+        if (firstLoad) {
+          setLoadingData(true);
+        } else {
+          setIsRefreshing(true);
+        }
+
         setError("");
 
         const depsUrl =
@@ -286,20 +307,23 @@ export default function App() {
       } catch (e) {
         if (!cancelled) {
           setError(String(e));
-          setRaw(null);
+
+          if (raw === null) {
+            setRaw(null);
+          }
         }
       } finally {
-        if (!cancelled) setLoadingData(false);
+        if (!cancelled) {
+          setLoadingData(false);
+          setIsRefreshing(false);
+        }
       }
     })();
-
-    setQuery("");
-    setSelectedType("");
 
     return () => {
       cancelled = true;
     };
-  }, [selectedVersion, overrides]);
+  }, [selectedVersion, overrides]); // intentionally keep current UI while reloading
 
   const { depsMap, reverseMap } = useMemo(() => buildDepsMaps(raw), [raw]);
 
@@ -313,7 +337,10 @@ export default function App() {
     return q ? allTypes.filter((t) => t.toLowerCase().includes(q)) : allTypes;
   }, [allTypes, query]);
 
-  const activeType = selectedType;
+  const activeType = useMemo(() => {
+    if (!selectedType) return "";
+    return allTypes.includes(selectedType) ? selectedType : "";
+  }, [allTypes, selectedType]);
 
   const dependsOn = useMemo(
     () => (activeType ? sortAlpha([...(depsMap.get(activeType) || [])]) : []),
@@ -349,6 +376,8 @@ export default function App() {
     setSelectedType("");
     searchRef.current?.focus();
   };
+
+  const showInitialLoading = loadingData && raw === null;
 
   return (
     <div className="gcShell">
@@ -394,6 +423,16 @@ export default function App() {
                 ))}
               </gux-listbox>
             </gux-dropdown>
+
+            {isRefreshing ? (
+              <span
+                className="gcMetaLabel"
+                aria-live="polite"
+                style={{ marginLeft: "0.5rem" }}
+              >
+                Refreshing...
+              </span>
+            ) : null}
           </div>
         </div>
       </div>
@@ -419,23 +458,25 @@ export default function App() {
                   setQuery(e.target.value);
                   setSelectedType("");
                 }}
-                disabled={loadingData || !!error}
+                disabled={showInitialLoading || !!error}
               />
 
               <button
                 type="button"
                 className="gcClearButton"
                 onClick={clearSearch}
-                disabled={loadingData || !!error || (!query && !selectedType)}
+                disabled={showInitialLoading || !!error || (!query && !selectedType)}
               >
                 Clear
               </button>
             </div>
 
             <div className="gcTable__body">
-              {loadingData ? <div className="gcEmptyRow">Loading dependency data...</div> : null}
+              {showInitialLoading ? (
+                <div className="gcEmptyRow">Loading dependency data...</div>
+              ) : null}
 
-              {!loadingData &&
+              {!showInitialLoading &&
                 filteredTypes.map((t) => (
                   <button
                     key={t}
@@ -450,7 +491,7 @@ export default function App() {
                   </button>
                 ))}
 
-              {!loadingData && filteredTypes.length === 0 ? (
+              {!showInitialLoading && filteredTypes.length === 0 ? (
                 <div className="gcEmptyRow">No matches.</div>
               ) : null}
             </div>
