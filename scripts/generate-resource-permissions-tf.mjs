@@ -218,7 +218,7 @@ function buildPolicyMaps(json, overrides) {
   return { rw, ro, skippedDomains, injectedOverrides };
 }
 
-function renderRole(resourceName, roleName, policies) {
+function renderRole(resourceName, roleName, version, policies) {
   const blocks = [...policies.entries()]
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([key, actionSet]) => {
@@ -235,7 +235,7 @@ function renderRole(resourceName, roleName, policies) {
 
   return `resource "genesyscloud_auth_role" "${resourceName}" {
   name        = "${roleName}"
-  description = "Created by Genesys Professional Services"
+  description = "v${version}"
 
 ${blocks}
 }
@@ -283,12 +283,14 @@ async function main() {
     const rwTf = renderRole(
       "CX_as_Code_Read_Write",
       "CX as Code Read/Write",
+      version,
       rw
     );
 
     const roTf = renderRole(
       "CX_as_Code_Read_Only",
       "CX as Code Read Only",
+      version,
       ro
     );
 
