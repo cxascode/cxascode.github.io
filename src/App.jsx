@@ -54,6 +54,7 @@ function compareVersions(a, b) {
 }
 
 function isRoleDownloadSupported(version) {
+  if (!version || version === "latest") return false;
   return compareVersions(version, MIN_ROLE_DOWNLOAD_VERSION) >= 0;
 }
 
@@ -325,10 +326,9 @@ export default function App() {
   );
 
   const effectiveVersion =
-    selectedVersion === "latest" ? availableVersions[0] || "latest" : selectedVersion;
+    selectedVersion === "latest" ? availableVersions[0] || "" : selectedVersion;
 
-  const roleDownloadsSupported =
-    effectiveVersion !== "latest" && isRoleDownloadSupported(effectiveVersion);
+  const roleDownloadsSupported = isRoleDownloadSupported(effectiveVersion);
 
   const readWriteRoleHref =
     selectedVersion === "latest"
@@ -340,8 +340,9 @@ export default function App() {
       ? READ_ONLY_ROLE_URL
       : VERSIONED_READ_ONLY_ROLE_URL(selectedVersion);
 
-  const readWriteDownloadName = `read-write-role-${effectiveVersion}.tf`;
-  const readOnlyDownloadName = `read-only-role-${effectiveVersion}.tf`;
+  const downloadVersionLabel = effectiveVersion || selectedVersion || "unknown";
+  const readWriteDownloadName = `read-write-role-${downloadVersionLabel}.tf`;
+  const readOnlyDownloadName = `read-only-role-${downloadVersionLabel}.tf`;
 
   const clearSearch = () => {
     setQuery("");
