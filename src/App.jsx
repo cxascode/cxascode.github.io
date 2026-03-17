@@ -15,6 +15,7 @@ const VERSIONED_READ_ONLY_ROLE_URL = (v) =>
   `${import.meta.env.BASE_URL}resource-permissions-tf/${v}-read-only-role.tf`;
 
 const OVERRIDES_URL = `${import.meta.env.BASE_URL}overrides.json`;
+const MIN_ROLE_DOWNLOAD_VERSION = "1.76.0";
 
 function normalizeType(s) {
   return (s || "").trim();
@@ -24,6 +25,36 @@ function sortAlpha(arr) {
   return arr
     .filter((x) => typeof x === "string")
     .sort((a, b) => a.localeCompare(b));
+}
+
+function compareVersions(a, b) {
+  const aParts = String(a)
+    .trim()
+    .replace(/^v/i, "")
+    .split(".")
+    .map((n) => Number.parseInt(n, 10) || 0);
+
+  const bParts = String(b)
+    .trim()
+    .replace(/^v/i, "")
+    .split(".")
+    .map((n) => Number.parseInt(n, 10) || 0);
+
+  const length = Math.max(aParts.length, bParts.length);
+
+  for (let i = 0; i < length; i += 1) {
+    const av = aParts[i] ?? 0;
+    const bv = bParts[i] ?? 0;
+
+    if (av > bv) return 1;
+    if (av < bv) return -1;
+  }
+
+  return 0;
+}
+
+function isRoleDownloadSupported(version) {
+  return compareVersions(version, MIN_ROLE_DOWNLOAD_VERSION) >= 0;
 }
 
 /**
@@ -296,6 +327,9 @@ export default function App() {
   const effectiveVersion =
     selectedVersion === "latest" ? availableVersions[0] || "latest" : selectedVersion;
 
+  const roleDownloadsSupported =
+    effectiveVersion !== "latest" && isRoleDownloadSupported(effectiveVersion);
+
   const readWriteRoleHref =
     selectedVersion === "latest"
       ? READ_WRITE_ROLE_URL
@@ -322,24 +356,28 @@ export default function App() {
           <h1 className="gcPageTitle">CX as Code Dependency Explorer</h1>
 
           <div className="gcPageMeta">
-            <span className="gcMetaLabel">Role Download:</span>
+            {roleDownloadsSupported ? (
+              <>
+                <span className="gcMetaLabel">Role Download:</span>
 
-            <div className="gcHeaderLinks">
-              <a
-                className="gcHeaderLink"
-                href={readWriteRoleHref}
-                download={readWriteDownloadName}
-              >
-                Read/Write .tf
-              </a>
-              <a
-                className="gcHeaderLink"
-                href={readOnlyRoleHref}
-                download={readOnlyDownloadName}
-              >
-                Read-only .tf
-              </a>
-            </div>
+                <div className="gcHeaderLinks">
+                  <a
+                    className="gcHeaderLink"
+                    href={readWriteRoleHref}
+                    download={readWriteDownloadName}
+                  >
+                    Read/Write .tf
+                  </a>
+                  <a
+                    className="gcHeaderLink"
+                    href={readOnlyRoleHref}
+                    download={readOnlyDownloadName}
+                  >
+                    Read-only .tf
+                  </a>
+                </div>
+              </>
+            ) : null}
 
             <span className="gcMetaLabel">Version:</span>
             <gux-dropdown ref={versionDropdownRef} disabled={loadingIndex}>
