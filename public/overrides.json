@@ -46,6 +46,9 @@
       "outbound:dnc:delete",
       "outbound:dnc:edit",
       "outbound:dnc:view"
+    ],
+    "genesyscloud_flow": [
+      "architect:ui:view"
     ]
   },
   "addReadOnlyPermissions": {
@@ -60,6 +63,9 @@
     ],
     "genesyscloud_organization_authentication_settings": [
       "directory:organization:admin"
+    ],
+    "genesyscloud_flow": [
+      "architect:ui:view"
     ]
   }
 }
