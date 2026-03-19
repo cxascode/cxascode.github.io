@@ -49,6 +49,12 @@
     ],
     "genesyscloud_flow": [
       "architect:ui:view"
+    ],
+    "genesyscloud_routing_skill_group": [
+      "routing:skillGroup:add",
+      "routing:skillGroup:delete",
+      "routing:skillGroup:edit",
+      "routing:skillGroup:view"
     ]
   },
   "addReadOnlyPermissions": {
@@ -66,6 +72,9 @@
     ],
     "genesyscloud_flow": [
       "architect:ui:view"
+    ],
+    "genesyscloud_routing_skill_group": [
+      "routing:skillGroup:view"
     ]
   }
 }
