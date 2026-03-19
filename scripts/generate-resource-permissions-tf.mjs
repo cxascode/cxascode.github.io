@@ -142,6 +142,61 @@ function addPermissionToMap({ permission, map, skippedDomains }) {
   };
 }
 
+function getOverrideResourceTypes(overrides) {
+  return new Set([
+    ...Object.keys(normalizeOverrideMap(overrides?.addReadOnlyPermissions)),
+    ...Object.keys(normalizeOverrideMap(overrides?.addReadWritePermissions)),
+  ]);
+}
+
+function applyOverridePermissions({
+  resourceType,
+  overrides,
+  ro,
+  rw,
+  skippedDomains,
+  injectedOverrides,
+}) {
+  if (!resourceType) return;
+
+  const { readOnlyPermissions, readWritePermissions } = getOverridePermissions(
+    resourceType,
+    overrides
+  );
+
+  for (const perm of readOnlyPermissions) {
+    const added = addPermissionToMap({
+      permission: perm,
+      map: ro,
+      skippedDomains,
+    });
+
+    if (added) {
+      injectedOverrides.push({
+        resourceType,
+        permission: perm,
+        target: "read-only",
+      });
+    }
+  }
+
+  for (const perm of readWritePermissions) {
+    const added = addPermissionToMap({
+      permission: perm,
+      map: rw,
+      skippedDomains,
+    });
+
+    if (added) {
+      injectedOverrides.push({
+        resourceType,
+        permission: perm,
+        target: "read-write",
+      });
+    }
+  }
+}
+
 function buildPolicyMaps(json, overrides) {
   const rw = new Map();
   const ro = new Map();
@@ -149,10 +204,15 @@ function buildPolicyMaps(json, overrides) {
   const resources = Array.isArray(json?.resources) ? json.resources : [];
   const skippedDomains = new Map();
   const injectedOverrides = [];
+  const seenResourceTypes = new Set();
 
   for (const resource of resources) {
     const permissions = Array.isArray(resource?.permissions) ? resource.permissions : [];
     const resourceType = getResourceType(resource);
+
+    if (resourceType) {
+      seenResourceTypes.add(resourceType);
+    }
 
     for (const perm of permissions) {
       const parsed = parsePermission(perm);
@@ -175,44 +235,27 @@ function buildPolicyMaps(json, overrides) {
       }
     }
 
-    if (!resourceType) continue;
-
-    const { readOnlyPermissions, readWritePermissions } = getOverridePermissions(
+    applyOverridePermissions({
       resourceType,
-      overrides
-    );
+      overrides,
+      ro,
+      rw,
+      skippedDomains,
+      injectedOverrides,
+    });
+  }
 
-    for (const perm of readOnlyPermissions) {
-      const added = addPermissionToMap({
-        permission: perm,
-        map: ro,
-        skippedDomains,
-      });
+  for (const resourceType of getOverrideResourceTypes(overrides)) {
+    if (seenResourceTypes.has(resourceType)) continue;
 
-      if (added) {
-        injectedOverrides.push({
-          resourceType,
-          permission: perm,
-          target: "read-only",
-        });
-      }
-    }
-
-    for (const perm of readWritePermissions) {
-      const added = addPermissionToMap({
-        permission: perm,
-        map: rw,
-        skippedDomains,
-      });
-
-      if (added) {
-        injectedOverrides.push({
-          resourceType,
-          permission: perm,
-          target: "read-write",
-        });
-      }
-    }
+    applyOverridePermissions({
+      resourceType,
+      overrides,
+      ro,
+      rw,
+      skippedDomains,
+      injectedOverrides,
+    });
   }
 
   return { rw, ro, skippedDomains, injectedOverrides };
