@@ -71,7 +71,9 @@
       "directory:organization:admin"
     ],
     "genesyscloud_flow": [
-      "architect:ui:view"
+      "architect:ui:view",
+      "architect:jobExport:create",
+      "architect:jobExport:view"
     ],
     "genesyscloud_routing_skill_group": [
       "routing:skillGroup:view"
