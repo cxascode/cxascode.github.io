@@ -57,6 +57,14 @@
       "routing:skillGroup:delete",
       "routing:skillGroup:edit",
       "routing:skillGroup:view"
+    ],
+    "genesyscloud_telephony_providers_edges_phone": [
+      "conversation:callForwarding:view",
+      "telephony:otherStationAssociation:view",
+      "telephony:otherStationAssociation:edit",
+      "telephony:selfStationAssociation:view",
+      "telephony:selfStationAssociation:edit",
+      "telephony:station:disassociate"
     ]
   },
   "addReadOnlyPermissions": {
@@ -79,6 +87,11 @@
     ],
     "genesyscloud_routing_skill_group": [
       "routing:skillGroup:view"
+    ],
+    "genesyscloud_telephony_providers_edges_phone": [
+      "conversation:callForwarding:view",
+      "telephony:otherStationAssociation:view",
+      "telephony:selfStationAssociation:view"
     ]
   }
 }
