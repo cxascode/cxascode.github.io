@@ -53,7 +53,10 @@
       "architect:jobExport:view",
       "architect:flow:add",
       "architect:flow:edit",
-      "architect:flow:view"
+      "architect:flow:view",
+      "architect:flow:publish",
+      "architect:flow:unlock",
+      "languageUnderstanding:nluDomainVersion:view"
     ],
     "genesyscloud_routing_skill_group": [
       "routing:skillGroup:add",
@@ -74,6 +77,9 @@
       "processautomation:trigger:delete",
       "processautomation:trigger:edit",
       "processautomation:trigger:view"
+    ],
+    "genesyscloud_architect_user_prompt": [
+      "architect:systemPrompt:view"
     ]
   },
   "addReadOnlyPermissions": {
@@ -93,7 +99,8 @@
       "architect:ui:view",
       "architect:jobExport:create",
       "architect:jobExport:view",
-      "architect:flow:view"
+      "architect:flow:view",
+      "languageUnderstanding:nluDomainVersion:view"
     ],
     "genesyscloud_routing_skill_group": [
       "routing:skillGroup:view"
@@ -105,6 +112,9 @@
     ],
     "genesyscloud_processautomation_trigger": [
       "processautomation:trigger:view"
+    ],
+    "genesyscloud_architect_user_prompt": [
+      "architect:systemPrompt:view"
     ]
   }
 }
