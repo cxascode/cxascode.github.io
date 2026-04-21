@@ -50,7 +50,10 @@
     "genesyscloud_flow": [
       "architect:ui:view",
       "architect:jobExport:create",
-      "architect:jobExport:view"
+      "architect:jobExport:view",
+      "architect:flow:add",
+      "architect:flow:edit",
+      "architect:flow:view"
     ],
     "genesyscloud_routing_skill_group": [
       "routing:skillGroup:add",
@@ -89,7 +92,8 @@
     "genesyscloud_flow": [
       "architect:ui:view",
       "architect:jobExport:create",
-      "architect:jobExport:view"
+      "architect:jobExport:view",
+      "architect:flow:view"
     ],
     "genesyscloud_routing_skill_group": [
       "routing:skillGroup:view"
