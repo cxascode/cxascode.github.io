@@ -56,13 +56,14 @@
       "architect:flow:view",
       "architect:flow:publish",
       "architect:flow:unlock",
-      "languageUnderstanding:nluDomainVersion:view"
+      "languageUnderstanding:nluDomainVersion:view",
+      "limits:organization:view"
     ],
     "genesyscloud_routing_skill_group": [
-      "routing:skillGroup:add",
-      "routing:skillGroup:delete",
-      "routing:skillGroup:edit",
-      "routing:skillGroup:view"
+      "routing:skillgroup:add",
+      "routing:skillgroup:delete",
+      "routing:skillgroup:edit",
+      "routing:skillgroup:view"
     ],
     "genesyscloud_telephony_providers_edges_phone": [
       "conversation:callForwarding:view",
@@ -80,6 +81,40 @@
     ],
     "genesyscloud_architect_user_prompt": [
       "architect:systemPrompt:view"
+    ],
+    "genesyscloud_outbound_contact_list": [
+      "outbound:contactList:search"
+    ],
+    "genesyscloud_architect_datatable": [
+      "architect:datatable:search"
+    ],
+    "genesyscloud_flow_milestone": [
+      "architect:flowMilestone:search"
+    ],
+    "genesyscloud_flow_outcome": [
+      "architect:flowOutcome:search"
+    ],
+    "genesyscloud_knowledge_knowledgebase": [
+      "knowledge:knowledgeSetting:view",
+      "knowledge:knowledgeSetting:search"
+    ],
+    "genesyscloud_routing_queue": [
+      "routing:queue:search"
+    ],
+    "genesyscloud_architect_emergencygroup": [
+      "routing:emergencyGroup:search"
+    ],
+    "genesyscloud_architect_schedules": [
+      "routing:schedule:search"
+    ],
+    "genesyscloud_architect_schedulegroups": [
+      "routing:scheduleGroup:search"
+    ],
+    "genesyscloud_routing_wrapupcode": [
+      "routing:wrapupCode:search"
+    ],
+    "genesyscloud_script": [
+      "scripter:script:search"
     ]
   },
   "addReadOnlyPermissions": {
@@ -100,10 +135,11 @@
       "architect:jobExport:create",
       "architect:jobExport:view",
       "architect:flow:view",
-      "languageUnderstanding:nluDomainVersion:view"
+      "languageUnderstanding:nluDomainVersion:view",
+      "limits:organization:view"
     ],
     "genesyscloud_routing_skill_group": [
-      "routing:skillGroup:view"
+      "routing:skillgroup:view"
     ],
     "genesyscloud_telephony_providers_edges_phone": [
       "conversation:callForwarding:view",
@@ -115,6 +151,40 @@
     ],
     "genesyscloud_architect_user_prompt": [
       "architect:systemPrompt:view"
+    ],
+    "genesyscloud_outbound_contact_list": [
+      "outbound:contactList:search"
+    ],
+    "genesyscloud_architect_datatable": [
+      "architect:datatable:search"
+    ],
+    "genesyscloud_flow_milestone": [
+      "architect:flowMilestone:search"
+    ],
+    "genesyscloud_flow_outcome": [
+      "architect:flowOutcome:search"
+    ],
+    "genesyscloud_knowledge_knowledgebase": [
+      "knowledge:knowledgeSetting:view",
+      "knowledge:knowledgeSetting:search"
+    ],
+    "genesyscloud_routing_queue": [
+      "routing:queue:search"
+    ],
+    "genesyscloud_architect_emergencygroup": [
+      "routing:emergencyGroup:search"
+    ],
+    "genesyscloud_architect_schedules": [
+      "routing:schedule:search"
+    ],
+    "genesyscloud_architect_schedulegroups": [
+      "routing:scheduleGroup:search"
+    ],
+    "genesyscloud_routing_wrapupcode": [
+      "routing:wrapupCode:search"
+    ],
+    "genesyscloud_script": [
+      "scripter:script:search"
     ]
   }
 }
