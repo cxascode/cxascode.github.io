@@ -21,6 +21,34 @@ function normalizeType(s) {
   return (s || "").trim();
 }
 
+/** Query param used for shareable links to a selected resource type (?type=...) */
+const TYPE_QUERY_KEY = "type";
+
+function readTypeFromSearch() {
+  try {
+    const raw = new URLSearchParams(window.location.search).get(TYPE_QUERY_KEY);
+    return normalizeType(raw);
+  } catch {
+    return "";
+  }
+}
+
+function replaceUrlForActiveType(activeType) {
+  try {
+    const url = new URL(window.location.href);
+    const typed = normalizeType(activeType);
+    if (typed) url.searchParams.set(TYPE_QUERY_KEY, typed);
+    else url.searchParams.delete(TYPE_QUERY_KEY);
+    const next = `${url.pathname}${url.search}${url.hash}`;
+    const current = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    if (next !== current) {
+      history.replaceState(null, "", next);
+    }
+  } catch {
+    /* ignore invalid URLs */
+  }
+}
+
 function sortAlpha(arr) {
   return arr
     .filter((x) => typeof x === "string")
@@ -172,6 +200,10 @@ export default function App() {
   const versionDropdownRef = useRef(null);
   const searchRef = useRef(null);
   const selectedVersionRef = useRef("latest");
+  /** Skip one URL sync after applying ?type= from the address bar (avoids clearing the param before state catches up). */
+  const skipNextUrlSyncRef = useRef(false);
+  /** Only merge ?type= from the URL once per mount so later clears/version changes are not overwritten. */
+  const hydratedFromUrlRef = useRef(false);
 
   useEffect(() => {
     selectedVersionRef.current = selectedVersion;
@@ -325,6 +357,31 @@ export default function App() {
     if (!selectedType) return "";
     return allTypes.includes(selectedType) ? selectedType : "";
   }, [allTypes, selectedType]);
+
+  useEffect(() => {
+    if (!allTypes.length || hydratedFromUrlRef.current) return;
+    hydratedFromUrlRef.current = true;
+
+    const fromUrl = readTypeFromSearch();
+    if (fromUrl && allTypes.includes(fromUrl)) {
+      skipNextUrlSyncRef.current = true;
+      setSelectedType(fromUrl);
+      setQuery(fromUrl);
+    } else if (fromUrl) {
+      replaceUrlForActiveType("");
+      setSelectedType("");
+      setQuery("");
+    }
+  }, [allTypes]);
+
+  useEffect(() => {
+    if (!allTypes.length) return;
+    if (skipNextUrlSyncRef.current) {
+      skipNextUrlSyncRef.current = false;
+      return;
+    }
+    replaceUrlForActiveType(activeType);
+  }, [activeType, allTypes]);
 
   const dependsOn = useMemo(
     () => (activeType ? sortAlpha([...(depsMap.get(activeType) || [])]) : []),
