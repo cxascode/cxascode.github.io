@@ -114,7 +114,12 @@
       "routing:wrapupCode:search"
     ],
     "genesyscloud_script": [
+      "scripter:script:add",
+      "scripter:script:delete",
+      "scripter:script:edit",
       "scripter:script:search",
+      "scripter:publishedScript:delete",
+      "scripter:publishedScript:edit",
       "scripter:publishedScript:search",
       "scripter:publishedScript:view"
     ]
