@@ -114,7 +114,9 @@
       "routing:wrapupCode:search"
     ],
     "genesyscloud_script": [
-      "scripter:script:search"
+      "scripter:script:search",
+      "scripter:publishedScript:search",
+      "scripter:publishedScript:view"
     ]
   },
   "addReadOnlyPermissions": {
@@ -184,7 +186,9 @@
       "routing:wrapupCode:search"
     ],
     "genesyscloud_script": [
-      "scripter:script:search"
+      "scripter:script:search",
+      "scripter:publishedScript:search",
+      "scripter:publishedScript:view"
     ]
   }
 }
