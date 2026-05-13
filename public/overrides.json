@@ -57,7 +57,8 @@
       "architect:flow:publish",
       "architect:flow:unlock",
       "languageUnderstanding:nluDomainVersion:view",
-      "limits:organization:view"
+      "limits:organization:view",
+      "architect:dependencyTracking:view"
     ],
     "genesyscloud_routing_skill_group": [
       "routing:skillgroup:add",
@@ -143,7 +144,8 @@
       "architect:jobExport:view",
       "architect:flow:view",
       "languageUnderstanding:nluDomainVersion:view",
-      "limits:organization:view"
+      "limits:organization:view",
+      "architect:dependencyTracking:view"
     ],
     "genesyscloud_routing_skill_group": [
       "routing:skillgroup:view"
