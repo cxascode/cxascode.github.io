@@ -2,7 +2,11 @@
   "addDependencies": {
     "genesyscloud_script": [
       "genesyscloud_auth_division",
-      "genesyscloud_integration_action"
+      "genesyscloud_flow",
+      "genesyscloud_integration_action",
+      "genesyscloud_routing_queue",
+      "genesyscloud_script",
+      "genesyscloud_user"
     ],
     "genesyscloud_flow": [
       "genesyscloud_architect_datatable",
