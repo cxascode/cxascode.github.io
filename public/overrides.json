@@ -29,6 +29,7 @@
       "genesyscloud_routing_skill",
       "genesyscloud_routing_utilization_label",
       "genesyscloud_routing_wrapupcode",
+      "genesyscloud_script",
       "genesyscloud_task_management_workbin",
       "genesyscloud_task_management_workitem",
       "genesyscloud_task_management_worktype_status",
