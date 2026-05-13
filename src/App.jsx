@@ -86,6 +86,15 @@ function isRoleDownloadSupported(version) {
   return compareVersions(version, MIN_ROLE_DOWNLOAD_VERSION) >= 0;
 }
 
+/** index.json may only list semver trees; exclude bundled filenames if present. */
+function firstReleaseVersionInIndex(versions) {
+  if (!Array.isArray(versions)) return "";
+  const found = versions.find(
+    (v) => typeof v === "string" && v.trim() && v !== "latest" && v !== "index"
+  );
+  return found ? found.trim() : "";
+}
+
 /**
  * Apply optional overrides to a dependency tree JSON.
  *
@@ -393,8 +402,13 @@ export default function App() {
     [reverseMap, activeType]
   );
 
+  const newestListedRelease = useMemo(
+    () => firstReleaseVersionInIndex(availableVersions),
+    [availableVersions]
+  );
+
   const effectiveVersion =
-    selectedVersion === "latest" ? availableVersions[0] || "" : selectedVersion;
+    selectedVersion === "latest" ? newestListedRelease : selectedVersion;
 
   const roleDownloadsSupported = isRoleDownloadSupported(effectiveVersion);
 
@@ -458,7 +472,7 @@ export default function App() {
               <gux-dropdown ref={versionDropdownRef} disabled={loadingIndex}>
                 <gux-listbox>
                   <gux-option value="latest">
-                    Latest {availableVersions.length ? `(${availableVersions[0]})` : ""}
+                    Latest {newestListedRelease ? `(${newestListedRelease})` : ""}
                   </gux-option>
 
                   {availableVersions.map((v) => (
