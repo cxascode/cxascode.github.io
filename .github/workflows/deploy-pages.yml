@@ -7,18 +7,59 @@ on:
   schedule:
     - cron: "23 6 * * *" # once per day (UTC)
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  build:
+  keepalive:
+    if: github.event_name == 'schedule'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Reset GitHub 60-Day Inactivity Clock
+        run: |
+          set -euo pipefail
+
+          # Only commit on the first day of the month.
+          if [ "$(date -u +%d)" != "01" ]; then
+            echo "Skipping keep-alive heartbeat today; only runs on the 1st of the month."
+            exit 0
+          fi
+
+          echo "First of the month detected. Creating keep-alive heartbeat..."
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          mkdir -p .automation
+          date -u +"%Y-%m-%dT%H:%M:%SZ" > .automation/keep_alive.txt
+
+          git add .automation/keep_alive.txt
+
+          if git diff --cached --quiet; then
+            echo "No keep-alive changes to commit."
+            exit 0
+          fi
+
+          git commit -m "chore: monthly keep-alive heartbeat [skip ci]"
+          git push
+
+  build:
+    needs: keepalive
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
     outputs:
       needs_deploy: ${{ steps.check.outputs.needs_deploy }}
 
@@ -298,9 +339,14 @@ jobs:
     needs: build
     if: needs.build.outputs.needs_deploy == 'true'
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
