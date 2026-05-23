@@ -52,8 +52,6 @@ jobs:
           git push
 
   build:
-    needs: keepalive
-    if: always()
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -151,6 +149,15 @@ jobs:
             echo "bootstrapped=${bootstrapped}"
             echo "needs_deploy=${needs_deploy}"
           } >> "${GITHUB_OUTPUT}"
+
+      - name: Show deploy decision
+        run: |
+          set -euo pipefail
+          echo "event=${{ github.event_name }}"
+          echo "needs_deploy=${{ steps.check.outputs.needs_deploy }}"
+          echo "bootstrapped=${{ steps.check.outputs.bootstrapped }}"
+          echo "latest_tag=${{ steps.check.outputs.latest_tag }}"
+          echo "latest_ver=${{ steps.check.outputs.latest_ver }}"
 
       - name: Configure GitHub Pages
         if: steps.check.outputs.needs_deploy == 'true'
@@ -337,7 +344,7 @@ jobs:
 
   deploy:
     needs: build
-    if: needs.build.outputs.needs_deploy == 'true'
+    if: needs.build.result == 'success' && needs.build.outputs.needs_deploy == 'true'
     runs-on: ubuntu-latest
     permissions:
       pages: write
