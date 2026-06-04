@@ -242,11 +242,143 @@
   margin-top: 4px;
 }
 
+.gcDependencyNote {
+  padding: 0 14px 14px;
+}
+
+.gcDependencyNote__markdown {
+  overflow-x: auto;
+}
+
+.gcDependencyNote__body {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--gc-text);
+}
+
+.gcDependencyNote__markdown > :first-child {
+  margin-top: 0;
+}
+
+.gcDependencyNote__markdown > :last-child {
+  margin-bottom: 0;
+}
+
+.gcDependencyNote__markdown p,
+.gcDependencyNote__markdown ul,
+.gcDependencyNote__markdown ol,
+.gcDependencyNote__markdown blockquote,
+.gcDependencyNote__markdown pre {
+  margin: 0 0 0.75em;
+}
+
+.gcDependencyNote__markdown h1,
+.gcDependencyNote__markdown h2,
+.gcDependencyNote__markdown h3 {
+  margin: 0 0 0.5em;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.gcDependencyNote__markdown ul,
+.gcDependencyNote__markdown ol {
+  padding-left: 1.25em;
+}
+
+.gcDependencyNote__markdown code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+}
+
+.gcDependencyNote__markdown pre {
+  padding: 10px;
+  border: 1px solid var(--gc-border2);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.03);
+  overflow-x: auto;
+}
+
+.gcDependencyNote__markdown pre code {
+  padding: 0;
+  background: none;
+}
+
+.gcDependencyNote__markdown blockquote {
+  margin-left: 0;
+  padding-left: 12px;
+  border-left: 3px solid var(--gc-border);
+  color: var(--gc-subtle);
+}
+
+.gcDependencyNote__markdown a {
+  color: var(--gc-blue);
+}
+
+.gcDependencyNote__markdown table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-bottom: 0.75em;
+}
+
+.gcDependencyNote__markdown th,
+.gcDependencyNote__markdown td {
+  border: 1px solid var(--gc-border2);
+  padding: 6px 8px;
+  text-align: left;
+}
+
 .gcDetailsGrid {
   padding: 14px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 14px;
+}
+
+.gcExportTemplate {
+  padding: 0 14px 14px;
+}
+
+.gcExportTemplate__hint {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: var(--gc-subtle);
+  line-height: 1.45;
+}
+
+.gcExportTemplate__code {
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--gc-border2);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.03);
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-x: auto;
+}
+
+.gcCopyButton {
+  border: 1px solid var(--gc-border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #fff;
+  cursor: pointer;
+}
+
+.gcCopyButton:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.gcCopyButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .gcPanel {
