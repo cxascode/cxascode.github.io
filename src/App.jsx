@@ -1,4 +1,10 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import DependencyNote from "./DependencyNote.jsx";
+import {
+  buildTfExportAttributes,
+  resolveTfExportResourceName,
+  RESOURCE_NAME_PLACEHOLDER,
+} from "./tfExportTemplate.js";
 
 const INDEX_URL = `${import.meta.env.BASE_URL}dependency-tree-json/index.json`;
 const LATEST_URL = `${import.meta.env.BASE_URL}dependency-tree-json/latest.json`;
@@ -107,6 +113,12 @@ function firstReleaseVersionInIndex(versions) {
  *     "<resource_type>": {
  *       "<bad_dep_type>": "<correct_dep_type>"
  *     }
+ *   },
+ *   "tfExportResourceNames": {
+ *     "<resource_type>": "Genesys Cloud resource name"
+ *   },
+ *   "dependencyNotes": {
+ *     "<resource_type>": "Markdown note shown in Dependency details"
  *   }
  * }
  *
@@ -161,6 +173,17 @@ function applyOverrides(raw, overrides) {
   }
 
   return patched;
+}
+
+function resolveDependencyNote(resourceType, overrides) {
+  const type = (resourceType || "").trim();
+  if (!type) return "";
+
+  const notes = overrides?.dependencyNotes;
+  if (!notes || typeof notes !== "object") return "";
+
+  const note = notes[type];
+  return typeof note === "string" ? note.trim() : "";
 }
 
 function buildDepsMaps(raw) {
@@ -223,7 +246,7 @@ export default function App() {
 
     (async () => {
       try {
-        const res = await fetch(OVERRIDES_URL, { cache: "no-store" });
+        const res = await fetch(`${OVERRIDES_URL}?_=${Date.now()}`, { cache: "no-store" });
         if (!res.ok) {
           if (!cancelled) setOverrides(null);
           return;
@@ -397,6 +420,28 @@ export default function App() {
     [depsMap, activeType]
   );
 
+  const dependencyNote = useMemo(
+    () => resolveDependencyNote(activeType, overrides),
+    [activeType, overrides]
+  );
+
+  const tfExportResourceName = useMemo(
+    () => resolveTfExportResourceName(activeType, overrides),
+    [activeType, overrides]
+  );
+
+  const tfExportTemplate = useMemo(
+    () =>
+      activeType ? buildTfExportAttributes(activeType, dependsOn, tfExportResourceName) : "",
+    [activeType, dependsOn, tfExportResourceName]
+  );
+
+  const [copyState, setCopyState] = useState("idle");
+
+  useEffect(() => {
+    setCopyState("idle");
+  }, [tfExportTemplate]);
+
   const dependencyFor = useMemo(
     () => (activeType ? sortAlpha([...(reverseMap.get(activeType) || [])]) : []),
     [reverseMap, activeType]
@@ -430,6 +475,17 @@ export default function App() {
     setQuery("");
     setSelectedType("");
     searchRef.current?.focus();
+  };
+
+  const copyTfExportTemplate = async () => {
+    if (!tfExportTemplate) return;
+
+    try {
+      await navigator.clipboard.writeText(tfExportTemplate);
+      setCopyState("copied");
+    } catch {
+      setCopyState("failed");
+    }
   };
 
   const showInitialLoading = loadingData && raw === null;
@@ -620,6 +676,68 @@ export default function App() {
                 </div>
               </div>
             </div>
+
+            <div className="gcExportTemplate">
+              <div className="gcPanel">
+                <div className="gcPanel__header">
+                  <div className="gcPanel__title">genesyscloud_tf_export template</div>
+                  <button
+                    type="button"
+                    className="gcCopyButton"
+                    onClick={copyTfExportTemplate}
+                    disabled={!tfExportTemplate}
+                  >
+                    {copyState === "copied"
+                      ? "Copied"
+                      : copyState === "failed"
+                        ? "Copy failed"
+                        : "Copy"}
+                  </button>
+                </div>
+                <div className="gcPanel__body">
+                  {activeType && tfExportTemplate ? (
+                    <>
+                      <p className="gcExportTemplate__hint">
+                        {tfExportResourceName === RESOURCE_NAME_PLACEHOLDER ? (
+                          <>
+                            Set{" "}
+                            <code className="gcMono">tfExportResourceNames</code> in{" "}
+                            <code className="gcMono">overrides.json</code> for this type, or
+                            replace{" "}
+                            <code className="gcMono">&lt;resource name&gt;</code> with the
+                            Genesys Cloud name. Paste into a{" "}
+                            <code className="gcMono">genesyscloud_tf_export</code> block.
+                          </>
+                        ) : (
+                          <>
+                            Paste into a{" "}
+                            <code className="gcMono">genesyscloud_tf_export</code> block.
+                          </>
+                        )}
+                      </p>
+                      <pre className="gcExportTemplate__code gcMono">{tfExportTemplate}</pre>
+                    </>
+                  ) : (
+                    <div className="gcMuted">
+                      Select a type to generate export filters and datasource replacements.
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {activeType && dependencyNote ? (
+              <div className="gcDependencyNote">
+                <div className="gcPanel">
+                  <div className="gcPanel__header">
+                    <div className="gcPanel__title">Note</div>
+                  </div>
+                  <div className="gcPanel__body gcDependencyNote__body">
+                    <DependencyNote content={dependencyNote} />
+                  </div>
+                </div>
+              </div>
+            ) : null}
           </section>
         </div>
       </main>
