@@ -3,7 +3,6 @@ import DependencyNote from "./DependencyNote.jsx";
 import {
   buildTfExportAttributes,
   resolveTfExportResourceName,
-  RESOURCE_NAME_PLACEHOLDER,
 } from "./tfExportTemplate.js";
 
 const INDEX_URL = `${import.meta.env.BASE_URL}dependency-tree-json/index.json`;
@@ -698,22 +697,8 @@ export default function App() {
                   {activeType && tfExportTemplate ? (
                     <>
                       <p className="gcExportTemplate__hint">
-                        {tfExportResourceName === RESOURCE_NAME_PLACEHOLDER ? (
-                          <>
-                            Set{" "}
-                            <code className="gcMono">tfExportResourceNames</code> in{" "}
-                            <code className="gcMono">overrides.json</code> for this type, or
-                            replace{" "}
-                            <code className="gcMono">&lt;resource name&gt;</code> with the
-                            Genesys Cloud name. Paste into a{" "}
-                            <code className="gcMono">genesyscloud_tf_export</code> block.
-                          </>
-                        ) : (
-                          <>
-                            Paste into a{" "}
-                            <code className="gcMono">genesyscloud_tf_export</code> block.
-                          </>
-                        )}
+                        Paste into a{" "}
+                        <code className="gcMono">genesyscloud_tf_export</code> block.
                       </p>
                       <pre className="gcExportTemplate__code gcMono">{tfExportTemplate}</pre>
                     </>
