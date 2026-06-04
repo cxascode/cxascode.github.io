@@ -18,7 +18,7 @@ export function resolveTfExportResourceName(resourceType, overrides) {
 }
 
 /**
- * Build genesyscloud_tf_export attribute lines for a resource type.
+ * Build a genesyscloud_tf_export resource block for a resource type.
  *
  * - include_filter_resources: single filter for the selected type and resource name
  * - replace_with_datasource: depends-on types as datasource patterns, excluding self-deps
@@ -37,10 +37,19 @@ export function buildTfExportAttributes(resourceType, dependencies, resourceName
     .filter((d) => typeof d === "string" && d.trim() && d.trim() !== type)
     .map((d) => `${d.trim()}::.*`);
 
-  const includeLine = `include_filter_resources = ["${type}::^${name}$"]`;
-  const replaceLine = `replace_with_datasource = [${replaceEntries
-    .map((e) => JSON.stringify(e))
-    .join(",")}]`;
+  const includeFilter = `["${type}::^${name}$"]`;
+  const replaceWith = `[${replaceEntries.map((e) => JSON.stringify(e)).join(", ")}]`;
 
-  return `${includeLine}\n${replaceLine}`;
+  return `resource "genesyscloud_tf_export" "tf_export" {
+  directory                    = "./genesyscloud"
+  enable_dependency_resolution = true
+  export_format                = "hcl"
+  exclude_attributes           = []
+  include_state_file           = false
+  include_filter_resources = ${includeFilter}
+  log_permission_errors        = true
+  replace_with_datasource = ${replaceWith}
+  split_files_by_resource      = false
+  use_legacy_architect_flow_exporter = false
+}`;
 }
