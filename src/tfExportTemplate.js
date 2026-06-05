@@ -1,4 +1,4 @@
-export const RESOURCE_NAME_PLACEHOLDER = "<resource name>";
+export const RESOURCE_NAME_PLACEHOLDER = "<name>";
 
 /**
  * Resolve the Genesys Cloud resource name for include_filter_resources.
@@ -15,6 +15,12 @@ export function resolveTfExportResourceName(resourceType, overrides) {
   if (typeof name === "string" && name.trim()) return name.trim();
 
   return RESOURCE_NAME_PLACEHOLDER;
+}
+
+const TF_EXPORT_ATTR_WIDTH = "use_legacy_architect_flow_exporter".length;
+
+function tfExportAttrLine(name, value) {
+  return `  ${name.padEnd(TF_EXPORT_ATTR_WIDTH)} = ${value}`;
 }
 
 /**
@@ -40,16 +46,18 @@ export function buildTfExportAttributes(resourceType, dependencies, resourceName
   const includeFilter = `["${type}::^${name}$"]`;
   const replaceWith = `[${replaceEntries.map((e) => JSON.stringify(e)).join(", ")}]`;
 
-  return `resource "genesyscloud_tf_export" "tf_export" {
-  directory                    = "./genesyscloud"
-  enable_dependency_resolution = true
-  export_format                = "hcl"
-  exclude_attributes           = []
-  include_state_file           = false
-  include_filter_resources = ${includeFilter}
-  log_permission_errors        = true
-  replace_with_datasource = ${replaceWith}
-  split_files_by_resource      = false
-  use_legacy_architect_flow_exporter = false
-}`;
+  const body = [
+    tfExportAttrLine("directory", '"./genesyscloud"'),
+    tfExportAttrLine("enable_dependency_resolution", "true"),
+    tfExportAttrLine("export_format", '"hcl"'),
+    tfExportAttrLine("exclude_attributes", "[]"),
+    tfExportAttrLine("include_state_file", "false"),
+    tfExportAttrLine("include_filter_resources", includeFilter),
+    tfExportAttrLine("log_permission_errors", "true"),
+    tfExportAttrLine("replace_with_datasource", replaceWith),
+    tfExportAttrLine("split_files_by_resource", "false"),
+    tfExportAttrLine("use_legacy_architect_flow_exporter", "false"),
+  ].join("\n");
+
+  return `resource "genesyscloud_tf_export" "tf_export" {\n${body}\n}`;
 }
