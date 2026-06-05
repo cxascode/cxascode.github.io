@@ -7,7 +7,7 @@
     "dev": "vite",
     "bootstrap-local-dev": "node scripts/bootstrap-local-dev.mjs",
     "generate-spreadsheet-template": "node scripts/generate-spreadsheet-template.mjs",
-    "build": "vite build",
+    "build": "node scripts/write-sitemap.mjs && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
