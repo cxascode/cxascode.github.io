@@ -7,7 +7,7 @@ const OUTPUT_DIR = path.resolve("public/spreadsheet-templates");
 const TEMPLATE_PATH = path.resolve(
   "scripts/templates/cx-as-code-spreadsheet-template.xlsx"
 );
-const DEFAULT_OVERRIDES_PATH = path.resolve("public/overrides.json");
+const DEFAULT_OVERRIDES_PATH = path.resolve("src/overrides.json");
 
 const AUTH_DIVISION_RESOURCE_TYPE = "genesyscloud_auth_division";
 

@@ -37,10 +37,11 @@ npm run dev
 
 ## overrides.json
 
-`public/overrides.json` patches release data and export templates served by the site:
+`src/overrides.json` patches release data and export templates. It is imported at build time and bundled into the app (not served as a separate download). Rebuild and redeploy after editing it.
 
 - `addDependencies` / `replaceDependencies` — adjust dependency trees from the provider release JSON
 - `tfExportResourceNames` — per resource type, set the Genesys Cloud name used in `include_filter_resources` instead of the `<name>` placeholder
+- `tfExportNote` — default Markdown note (GFM) shown in the **genesyscloud_tf_export template** panel when a resource type is selected. Use `\n` in JSON for line breaks (not `\\n`).
 - `dependencyNotes` — per resource type, Markdown note (GFM) shown at the bottom of Resource Type Details when that type is selected. Use `\n` in JSON for line breaks (not `\\n`).
 - `guiMenuPaths` — per resource type, Genesys Cloud admin menu path shown in Resource Type Details (segments separated by ` > `)
 - `hiddenResourceTypes` — resource types omitted from the left-hand list (still appear in Depends on / Dependency for when referenced)
@@ -55,6 +56,7 @@ Examples:
 "tfExportResourceNames": {
   "genesyscloud_flow": "Customer Callback"
 },
+"tfExportNote": "**Tip:** replace `<name>` with the Genesys Cloud resource name before export.",
 "guiMenuPaths": {
   "genesyscloud_routing_language": "User Management > ACD Skills and Languages > Languages"
 },
