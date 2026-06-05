@@ -70,6 +70,18 @@ function replaceUrlForActiveType(activeType) {
   }
 }
 
+function buildResourceTypePermalink(resourceType) {
+  try {
+    const url = new URL(window.location.href);
+    const typed = normalizeType(resourceType);
+    if (typed) url.searchParams.set(TYPE_QUERY_KEY, typed);
+    else url.searchParams.delete(TYPE_QUERY_KEY);
+    return url.toString();
+  } catch {
+    return "";
+  }
+}
+
 function sortAlpha(arr) {
   return arr
     .filter((x) => typeof x === "string")
@@ -535,11 +547,12 @@ export default function App() {
     [activeType, selectedVersion]
   );
 
-  const [copyState, setCopyState] = useState("idle");
+  const resourceTypePermalink = useMemo(
+    () => (activeType ? buildResourceTypePermalink(activeType) : ""),
+    [activeType]
+  );
 
-  useEffect(() => {
-    setCopyState("idle");
-  }, [tfExportTemplate]);
+  const [copyState, setCopyState] = useState("idle");
 
   const dependencyFor = useMemo(
     () => (activeType ? sortAlpha([...(reverseMap.get(activeType) || [])]) : []),
@@ -618,6 +631,10 @@ export default function App() {
     );
     row?.scrollIntoView({ block: "nearest" });
   }, [activeType, filteredTypes]);
+
+  useEffect(() => {
+    setCopyState("idle");
+  }, [activeType, tfExportTemplate]);
 
   const copyTfExportTemplate = async () => {
     if (!tfExportTemplate) return;
@@ -941,7 +958,32 @@ export default function App() {
                 {activeType ? (
                   <div className="gcResourceHeader">
                     <div className="gcResourceTypeLine">
-                      <code className="gcResourceTypeName">{activeType}</code>
+                      <span className="gcResourceTypeGroup">
+                        <code className="gcResourceTypeName">{activeType}</code>
+                        <a
+                          className="gcPermalinkAnchor"
+                          href={resourceTypePermalink}
+                          aria-label="Link to this resource type"
+                          title="Link to this resource type"
+                        >
+                          <svg
+                            className="gcPermalinkAnchor__icon"
+                            viewBox="0 0 16 16"
+                            width="16"
+                            height="16"
+                            aria-hidden="true"
+                          >
+                            <path
+                              d="M6.2 8.8a2.2 2.2 0 0 0 3.1 0l1.9-1.9a2.2 2.2 0 1 0-3.1-3.1L7.2 4.6M9.8 7.2a2.2 2.2 0 0 0-3.1 0L4.8 9.1a2.2 2.2 0 0 0 3.1 3.1l1.9-1.9"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="1.4"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </a>
+                      </span>
                       {isDivisionAware ? (
                         <span
                           className="gcDivisionBadge"
