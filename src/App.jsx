@@ -178,6 +178,9 @@ function firstReleaseVersionInIndex(versions) {
  *     "<resource_type>": "Admin > Menu > Path"
  *   },
  *   "hiddenResourceTypes": ["genesyscloud_bcp_tf_exporter", ...]
+ *   "spreadsheetScopePrefixes": {
+ *     "In scope - ": ["genesyscloud_flow", "genesyscloud_script"]
+ *   }
  * }
  *
  * Behavior:

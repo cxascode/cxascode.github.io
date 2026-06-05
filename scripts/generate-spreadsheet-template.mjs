@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import ExcelJS from "exceljs";
+import { computeCreationOrder } from "../src/dependencyOrder.js";
 
 const INPUT_DIR = path.resolve("public/dependency-tree-json");
 const OUTPUT_DIR = path.resolve("public/spreadsheet-templates");
@@ -97,9 +98,64 @@ function resolveGuiMenuPath(resourceType, overrides) {
   return typeof menuPath === "string" ? menuPath.trim() : "";
 }
 
+function resolveSpreadsheetScopePrefix(resourceType, overrides) {
+  const type = (resourceType || "").trim();
+  if (!type) return null;
+
+  const prefixGroups = overrides?.spreadsheetScopePrefixes;
+  if (!prefixGroups || typeof prefixGroups !== "object") return null;
+
+  for (const [prefix, resourceTypes] of Object.entries(prefixGroups)) {
+    if (typeof prefix !== "string" || !prefix) continue;
+    if (!Array.isArray(resourceTypes)) continue;
+
+    if (resourceTypes.some((entry) => typeof entry === "string" && entry.trim() === type)) {
+      return prefix;
+    }
+  }
+
+  return null;
+}
+
 function isDivisionAware(dependencies) {
   if (!Array.isArray(dependencies)) return false;
   return dependencies.includes(AUTH_DIVISION_RESOURCE_TYPE);
+}
+
+function buildDepsMap(raw) {
+  const depsMap = new Map();
+
+  if (!raw || !Array.isArray(raw.resources)) {
+    return depsMap;
+  }
+
+  for (const resource of raw.resources) {
+    if (!resource || typeof resource.type !== "string") continue;
+
+    const from = resource.type;
+    const deps = Array.isArray(resource.dependencies) ? resource.dependencies : [];
+
+    if (!depsMap.has(from)) depsMap.set(from, new Set());
+
+    for (const dep of deps) {
+      if (typeof dep !== "string") continue;
+      depsMap.get(from).add(dep);
+    }
+  }
+
+  return depsMap;
+}
+
+function buildTierByType(tiers) {
+  const tierByType = new Map();
+
+  for (let index = 0; index < tiers.length; index += 1) {
+    for (const type of tiers[index]) {
+      tierByType.set(type, index + 1);
+    }
+  }
+
+  return tierByType;
 }
 
 function buildResourceRows(raw, overrides) {
@@ -113,13 +169,12 @@ function buildResourceRows(raw, overrides) {
     byType.set(resource.type, resource);
   }
 
-  const guiOrder = Object.keys(overrides?.guiMenuPaths || {}).filter((type) =>
-    byType.has(type)
-  );
+  const depsMap = buildDepsMap(patched);
+  const { flatOrder, tiers } = computeCreationOrder(depsMap, { hiddenTypes: hidden });
+  const tierByType = buildTierByType(tiers);
+  const orderedTypes = [...flatOrder];
 
-  const orderedTypes = [...guiOrder];
   const orderedSet = new Set(orderedTypes);
-
   const remaining = [...byType.keys()]
     .filter((type) => !orderedSet.has(type))
     .sort((a, b) => a.localeCompare(b));
@@ -137,6 +192,8 @@ function buildResourceRows(raw, overrides) {
       resourceType: type,
       divisionAware: isDivisionAware(dependencies) ? "Yes" : "No",
       dependencyCount: dependencies.length,
+      scopePrefix: resolveSpreadsheetScopePrefix(type, overrides),
+      priority: tierByType.get(type) ?? null,
     };
   });
 }
@@ -186,9 +243,9 @@ async function writeWorkbook(rows, outPath) {
     row.getCell(2).value = entry.resourceType;
     row.getCell(3).value = entry.divisionAware;
     row.getCell(4).value = entry.dependencyCount;
-    row.getCell(5).value = null;
+    row.getCell(5).value = entry.scopePrefix;
     row.getCell(6).value = null;
-    row.getCell(7).value = null;
+    row.getCell(7).value = entry.priority;
     row.getCell(8).value = null;
     row.getCell(9).value = null;
     row.getCell(10).value = null;
@@ -203,11 +260,30 @@ async function writeWorkbook(rows, outPath) {
   await workbook.xlsx.writeFile(outPath);
 }
 
+async function resolveLatestVersion(explicitLatest, jsonFiles) {
+  if (explicitLatest) return explicitLatest;
+
+  const indexPath = path.join(INPUT_DIR, "index.json");
+  try {
+    const versions = JSON.parse(await fs.readFile(indexPath, "utf8"));
+    if (Array.isArray(versions) && versions.length > 0) {
+      return versions[0];
+    }
+  } catch {
+    // fall through to versioned filenames
+  }
+
+  const fromFiles = jsonFiles
+    .map((file) => file.replace(/\.json$/, ""))
+    .sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
+
+  return fromFiles[0] || "";
+}
+
 async function main() {
   await ensureDir(INPUT_DIR);
   await ensureDir(OUTPUT_DIR);
 
-  const latest = getArgValue("latest");
   const overrides = await loadOverrides();
 
   const entries = await fs.readdir(INPUT_DIR, { withFileTypes: true });
@@ -222,6 +298,19 @@ async function main() {
     .map((e) => e.name)
     .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
 
+  if (jsonFiles.length === 0) {
+    throw new Error(
+      `No dependency tree JSON files found in ${INPUT_DIR}. Run "npm run bootstrap-local-dev" first.`
+    );
+  }
+
+  const latest = await resolveLatestVersion(getArgValue("latest"), jsonFiles);
+  if (!latest) {
+    throw new Error("Could not determine latest provider version.");
+  }
+
+  console.log(`Using latest version: ${latest}`);
+
   for (const file of jsonFiles) {
     const version = file.replace(/\.json$/, "");
     const inputPath = path.join(INPUT_DIR, file);
@@ -231,19 +320,33 @@ async function main() {
 
     await writeWorkbook(rows, outPath);
     console.log(
-      `Generated spreadsheet template for ${version} (${rows.length} resource types)`
+      `Generated spreadsheet template for ${version} (${rows.length} resource types) -> ${outPath}`
     );
   }
 
-  if (latest) {
-    const latestSrc = path.join(OUTPUT_DIR, `${latest}-cx-as-code-template.xlsx`);
-    const latestDst = path.join(OUTPUT_DIR, "latest-cx-as-code-template.xlsx");
-    await fs.copyFile(latestSrc, latestDst);
-    console.log(`Updated latest spreadsheet alias for ${latest}`);
+  const latestSrc = path.join(OUTPUT_DIR, `${latest}-cx-as-code-template.xlsx`);
+  const latestDst = path.join(OUTPUT_DIR, "latest-cx-as-code-template.xlsx");
+
+  try {
+    await fs.access(latestSrc);
+  } catch {
+    throw new Error(
+      `Expected ${latestSrc} was not generated. Check that public/dependency-tree-json/${latest}.json exists.`
+    );
   }
+
+  await fs.copyFile(latestSrc, latestDst);
+  console.log(`Updated latest spreadsheet alias -> ${latestDst}`);
+  console.log(
+    'Local download URL after "npm run dev": /spreadsheet-templates/latest-cx-as-code-template.xlsx'
+  );
 }
 
 main().catch((err) => {
-  console.error(err);
+  if (err?.code === "ERR_MODULE_NOT_FOUND" && String(err.message).includes("exceljs")) {
+    console.error('Missing exceljs. Run "npm ci" first, then retry.');
+  } else {
+    console.error(err);
+  }
   process.exit(1);
 });
