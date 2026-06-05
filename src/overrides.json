@@ -1,13 +1,5 @@
 {
   "addDependencies": {
-    "genesyscloud_script": [
-      "genesyscloud_auth_division",
-      "genesyscloud_flow",
-      "genesyscloud_integration_action",
-      "genesyscloud_routing_queue",
-      "genesyscloud_script",
-      "genesyscloud_user"
-    ],
     "genesyscloud_flow": [
       "genesyscloud_architect_datatable",
       "genesyscloud_architect_emergencygroup",
@@ -37,6 +29,26 @@
       "genesyscloud_task_management_workbin",
       "genesyscloud_task_management_workitem",
       "genesyscloud_task_management_worktype_status",
+      "genesyscloud_user"
+    ],
+    "genesyscloud_location": [
+      "genesyscloud_location"
+    ],
+    "genesyscloud_routing_email_route": [
+      "genesyscloud_routing_email_route"
+    ],
+    "genesyscloud_routing_queue": [
+      "genesyscloud_routing_queue"
+    ],
+    "genesyscloud_script": [
+      "genesyscloud_auth_division",
+      "genesyscloud_flow",
+      "genesyscloud_integration_action",
+      "genesyscloud_routing_queue",
+      "genesyscloud_script",
+      "genesyscloud_user"
+    ],
+    "genesyscloud_user": [
       "genesyscloud_user"
     ]
   },
