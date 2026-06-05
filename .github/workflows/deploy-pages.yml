@@ -208,10 +208,11 @@ jobs:
               .[] |
               { tag: .tag_name, assets: (.assets // []) } |
               .tag as $tag |
+              ($tag | ltrimstr("v")) as $ver |
               [
                 $tag,
-                ((.assets[]? | select(.name | startswith("dependency_tree-") and endswith(".json")) | .browser_download_url) // ""),
-                ((.assets[]? | select(.name | startswith("resource_permissions-") and endswith(".json")) | .browser_download_url) // "")
+                ((.assets[]? | select(.name == ("dependency_tree-" + $ver + ".json")) | .browser_download_url) // ""),
+                ((.assets[]? | select(.name == ("resource_permissions-" + $ver + ".json")) | .browser_download_url) // "")
               ] |
               @tsv
             ' | while IFS=$'\t' read -r tag dep_url perm_url; do
@@ -286,15 +287,15 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             "${api_base}/releases/latest")"
 
-          dep_url="$(echo "${rel_json}" | jq -r '
+          dep_url="$(echo "${rel_json}" | jq -r --arg ver "${latest_ver}" '
             (.assets // [])
-            | map(select(.name | startswith("dependency_tree-") and endswith(".json")))
+            | map(select(.name == ("dependency_tree-" + $ver + ".json")))
             | .[0].browser_download_url // empty
           ')"
 
-          perm_url="$(echo "${rel_json}" | jq -r '
+          perm_url="$(echo "${rel_json}" | jq -r --arg ver "${latest_ver}" '
             (.assets // [])
-            | map(select(.name | startswith("resource_permissions-") and endswith(".json")))
+            | map(select(.name == ("resource_permissions-" + $ver + ".json")))
             | .[0].browser_download_url // empty
           ')"
 

@@ -83,11 +83,10 @@ async function getLatestRelease(token) {
   return fetchJson(`${apiBase}/releases/latest`, token);
 }
 
-function getAssetUrl(releaseJson, prefix) {
+function getVersionedAssetUrl(releaseJson, prefix, version) {
+  const expectedName = `${prefix}${version}.json`;
   const assets = Array.isArray(releaseJson?.assets) ? releaseJson.assets : [];
-  const match = assets.find(
-    (asset) => typeof asset?.name === "string" && asset.name.startsWith(prefix) && asset.name.endsWith(".json"),
-  );
+  const match = assets.find((asset) => asset?.name === expectedName);
   return match?.browser_download_url || "";
 }
 
@@ -165,8 +164,8 @@ async function main() {
     }
 
     latestVersion = latestTag.replace(/^v/, "");
-    depUrl = getAssetUrl(release, "dependency_tree-");
-    permUrl = getAssetUrl(release, "resource_permissions-");
+    depUrl = getVersionedAssetUrl(release, "dependency_tree-", latestVersion);
+    permUrl = getVersionedAssetUrl(release, "resource_permissions-", latestVersion);
 
     console.log(`Latest upstream release: ${latestTag} (${latestVersion})`);
   }
@@ -175,7 +174,7 @@ async function main() {
   if (!(await exists(depOut))) {
     if (!depUrl) {
       const release = await getLatestRelease(token);
-      depUrl = getAssetUrl(release, "dependency_tree-");
+      depUrl = getVersionedAssetUrl(release, "dependency_tree-", latestVersion);
     }
     if (!depUrl) {
       throw new Error(`Could not find dependency_tree-${latestVersion}.json asset in latest release`);
@@ -190,7 +189,7 @@ async function main() {
   if (!(await exists(permOut))) {
     if (!permUrl && !forcedLatest) {
       const release = await getLatestRelease(token);
-      permUrl = getAssetUrl(release, "resource_permissions-");
+      permUrl = getVersionedAssetUrl(release, "resource_permissions-", latestVersion);
     }
     if (permUrl) {
       console.log(`Downloading resource permissions ${latestVersion} -> ${permOut}`);
