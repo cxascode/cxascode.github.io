@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import AboutCxAsCode from "./AboutCxAsCode.jsx";
 import DependencyNote from "./DependencyNote.jsx";
 import OrderOfOperationsDialog from "./OrderOfOperationsDialog.jsx";
 import overrides from "./overrides.json";
@@ -694,7 +695,10 @@ export default function App() {
     <div className="gcShell">
       <div className="gcPageHeader">
         <div className="gcPageTitleRow">
-          <h1 className="gcPageTitle">CX as Code Explorer</h1>
+          <div className="gcPageTitleGroup">
+            <h1 className="gcPageTitle">CX as Code Explorer</h1>
+            <AboutCxAsCode />
+          </div>
 
           <div className="gcPageMeta">
             <button
