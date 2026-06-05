@@ -1,9 +1,10 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import DependencyNote from "./DependencyNote.jsx";
 import {
   buildTfExportAttributes,
   resolveTfExportResourceName,
 } from "./tfExportTemplate.js";
+import { buildTerraformRegistryDocsUrl } from "./terraformRegistry.js";
 
 const INDEX_URL = `${import.meta.env.BASE_URL}dependency-tree-json/index.json`;
 const LATEST_URL = `${import.meta.env.BASE_URL}dependency-tree-json/latest.json`;
@@ -20,7 +21,10 @@ const VERSIONED_READ_ONLY_ROLE_URL = (v) =>
   `${import.meta.env.BASE_URL}resource-permissions-tf/${v}-read-only-role.tf`;
 
 const OVERRIDES_URL = `${import.meta.env.BASE_URL}overrides.json`;
+const MIN_DEPENDENCY_VERSION = "1.60.0";
 const MIN_ROLE_DOWNLOAD_VERSION = "1.76.0";
+
+const VERSION_PICKER_TOOLTIP = `Dependencies - v${MIN_DEPENDENCY_VERSION}+, Permissions - v${MIN_ROLE_DOWNLOAD_VERSION}+`;
 
 function normalizeType(s) {
   return (s || "").trim();
@@ -58,6 +62,31 @@ function sortAlpha(arr) {
   return arr
     .filter((x) => typeof x === "string")
     .sort((a, b) => a.localeCompare(b));
+}
+
+function moveResourceListSelection(filteredTypes, activeType, direction) {
+  if (!filteredTypes.length) return "";
+
+  const currentIndex = activeType ? filteredTypes.indexOf(activeType) : -1;
+
+  if (direction === "down") {
+    if (currentIndex < 0) return filteredTypes[0];
+    return filteredTypes[(currentIndex + 1) % filteredTypes.length];
+  }
+
+  if (direction === "up") {
+    if (currentIndex < 0) return filteredTypes[filteredTypes.length - 1];
+    return filteredTypes[(currentIndex - 1 + filteredTypes.length) % filteredTypes.length];
+  }
+
+  if (direction === "home") return filteredTypes[0];
+  if (direction === "end") return filteredTypes[filteredTypes.length - 1];
+
+  return activeType;
+}
+
+function isResourceListNavKey(key) {
+  return key === "ArrowDown" || key === "ArrowUp" || key === "Home" || key === "End";
 }
 
 function compareVersions(a, b) {
@@ -117,8 +146,12 @@ function firstReleaseVersionInIndex(versions) {
  *     "<resource_type>": "Genesys Cloud resource name"
  *   },
  *   "dependencyNotes": {
- *     "<resource_type>": "Markdown note shown in Dependency details"
- *   }
+ *     "<resource_type>": "Markdown note shown in Resource Type Details"
+ *   },
+ *   "guiMenuPaths": {
+ *     "<resource_type>": "Admin > Menu > Path"
+ *   },
+ *   "hiddenResourceTypes": ["genesyscloud_bcp_tf_exporter", ...]
  * }
  *
  * Behavior:
@@ -185,6 +218,29 @@ function resolveDependencyNote(resourceType, overrides) {
   return typeof note === "string" ? note.trim() : "";
 }
 
+function resolveGuiMenuPath(resourceType, overrides) {
+  const type = (resourceType || "").trim();
+  if (!type) return "";
+
+  const paths = overrides?.guiMenuPaths;
+  if (!paths || typeof paths !== "object") return "";
+
+  const path = paths[type];
+  return typeof path === "string" ? path.trim() : "";
+}
+
+function getHiddenResourceTypes(overrides) {
+  const hidden = overrides?.hiddenResourceTypes;
+  if (!Array.isArray(hidden)) return new Set();
+
+  return new Set(
+    hidden
+      .filter((t) => typeof t === "string")
+      .map((t) => t.trim())
+      .filter(Boolean)
+  );
+}
+
 function buildDepsMaps(raw) {
   const depsMap = new Map();
   const reverseMap = new Map();
@@ -230,6 +286,7 @@ export default function App() {
 
   const versionDropdownRef = useRef(null);
   const searchRef = useRef(null);
+  const listBodyRef = useRef(null);
   const selectedVersionRef = useRef("latest");
   /** Skip one URL sync after applying ?type= from the address bar (avoids clearing the param before state catches up). */
   const skipNextUrlSyncRef = useRef(false);
@@ -374,10 +431,12 @@ export default function App() {
 
   const { depsMap, reverseMap } = useMemo(() => buildDepsMaps(raw), [raw]);
 
+  const hiddenTypes = useMemo(() => getHiddenResourceTypes(overrides), [overrides]);
+
   const allTypes = useMemo(() => {
     const s = new Set([...depsMap.keys(), ...reverseMap.keys()]);
-    return sortAlpha([...s]);
-  }, [depsMap, reverseMap]);
+    return sortAlpha([...s].filter((t) => !hiddenTypes.has(t)));
+  }, [depsMap, reverseMap, hiddenTypes]);
 
   const filteredTypes = useMemo(() => {
     const q = normalizeType(query).toLowerCase();
@@ -397,7 +456,6 @@ export default function App() {
     if (fromUrl && allTypes.includes(fromUrl)) {
       skipNextUrlSyncRef.current = true;
       setSelectedType(fromUrl);
-      setQuery(fromUrl);
     } else if (fromUrl) {
       replaceUrlForActiveType("");
       setSelectedType("");
@@ -424,6 +482,11 @@ export default function App() {
     [activeType, overrides]
   );
 
+  const guiMenuPath = useMemo(
+    () => resolveGuiMenuPath(activeType, overrides),
+    [activeType, overrides]
+  );
+
   const tfExportResourceName = useMemo(
     () => resolveTfExportResourceName(activeType, overrides),
     [activeType, overrides]
@@ -433,6 +496,11 @@ export default function App() {
     () =>
       activeType ? buildTfExportAttributes(activeType, dependsOn, tfExportResourceName) : "",
     [activeType, dependsOn, tfExportResourceName]
+  );
+
+  const terraformRegistryDocsUrl = useMemo(
+    () => (activeType ? buildTerraformRegistryDocsUrl(activeType, selectedVersion) : ""),
+    [activeType, selectedVersion]
   );
 
   const [copyState, setCopyState] = useState("idle");
@@ -476,6 +544,33 @@ export default function App() {
     searchRef.current?.focus();
   };
 
+  const handleResourceListKeyDown = useCallback(
+    (event) => {
+      if (!isResourceListNavKey(event.key) || !filteredTypes.length) return;
+
+      event.preventDefault();
+
+      let direction = "";
+      if (event.key === "ArrowDown") direction = "down";
+      else if (event.key === "ArrowUp") direction = "up";
+      else if (event.key === "Home") direction = "home";
+      else if (event.key === "End") direction = "end";
+
+      const nextType = moveResourceListSelection(filteredTypes, activeType, direction);
+      if (nextType) setSelectedType(nextType);
+    },
+    [activeType, filteredTypes]
+  );
+
+  useEffect(() => {
+    if (!activeType || !listBodyRef.current) return;
+
+    const row = listBodyRef.current.querySelector(
+      `[data-resource-type="${CSS.escape(activeType)}"]`
+    );
+    row?.scrollIntoView({ block: "nearest" });
+  }, [activeType, filteredTypes]);
+
   const copyTfExportTemplate = async () => {
     if (!tfExportTemplate) return;
 
@@ -489,18 +584,44 @@ export default function App() {
 
   const showInitialLoading = loadingData && raw === null;
 
+  const resourceListCountLabel = useMemo(() => {
+    if (error) return "";
+    if (showInitialLoading) return "Loading resource types…";
+
+    const total = allTypes.length;
+    const filtered = filteredTypes.length;
+    const hasSearch = Boolean(normalizeType(query));
+
+    if (!total) return "No resource types";
+
+    if (hasSearch) {
+      if (!filtered) return `No matches among ${total} resource types`;
+      if (filtered === total) {
+        return filtered === 1 ? "1 resource type" : `${filtered} resource types`;
+      }
+      return `${filtered} of ${total} resource types`;
+    }
+
+    return total === 1 ? "1 resource type" : `${total} resource types`;
+  }, [error, showInitialLoading, allTypes.length, filteredTypes.length, query]);
+
   return (
     <div className="gcShell">
       <div className="gcPageHeader">
         <div className="gcPageTitleRow">
-          <h1 className="gcPageTitle">CX as Code Dependency Explorer</h1>
+          <h1 className="gcPageTitle">CX as Code Explorer</h1>
 
           <div className="gcPageMeta">
             <div
               className={`gcRoleDownloads ${roleDownloadsSupported ? "isVisible" : "isHidden"}`}
               aria-hidden={!roleDownloadsSupported}
             >
-              <span className="gcMetaLabel">Role Download:</span>
+              <span
+                className="gcMetaLabel"
+                title="Starting-point roles — adjust permissions for your org before use."
+              >
+                Role Template Download:
+              </span>
 
               <div className="gcHeaderLinks">
                 <a
@@ -523,7 +644,9 @@ export default function App() {
             </div>
 
             <div className="gcVersionPicker">
-              <span className="gcMetaLabel">Version:</span>
+              <span className="gcMetaLabel" title={VERSION_PICKER_TOOLTIP}>
+                Version:
+              </span>
               <gux-dropdown ref={versionDropdownRef} disabled={loadingIndex}>
                 <gux-listbox>
                   <gux-option value="latest">
@@ -563,6 +686,7 @@ export default function App() {
                   setQuery(e.target.value);
                   setSelectedType("");
                 }}
+                onKeyDown={handleResourceListKeyDown}
                 disabled={showInitialLoading || !!error}
               />
 
@@ -576,7 +700,14 @@ export default function App() {
               </button>
             </div>
 
-            <div className="gcTable__body">
+            <div
+              ref={listBodyRef}
+              className="gcTable__body"
+              role="listbox"
+              aria-label="Resource types"
+              tabIndex={0}
+              onKeyDown={handleResourceListKeyDown}
+            >
               {showInitialLoading ? (
                 <div className="gcEmptyRow">Loading dependency data...</div>
               ) : null}
@@ -585,12 +716,16 @@ export default function App() {
                 filteredTypes.map((t) => (
                   <button
                     key={t}
+                    data-resource-type={t}
                     className={`gcTr ${t === activeType ? "isActive" : ""}`}
                     onClick={() => {
                       setSelectedType(t);
-                      setQuery(t);
+                      listBodyRef.current?.focus();
                     }}
+                    onKeyDown={handleResourceListKeyDown}
                     type="button"
+                    role="option"
+                    aria-selected={t === activeType}
                   >
                     <div className="gcTd gcMono">{t}</div>
                   </button>
@@ -600,14 +735,56 @@ export default function App() {
                 <div className="gcEmptyRow">No matches.</div>
               ) : null}
             </div>
+
+            {resourceListCountLabel ? (
+              <div className="gcListFooter" aria-live="polite">
+                <p className="gcListCount">{resourceListCountLabel}</p>
+              </div>
+            ) : null}
           </section>
 
           <section className="gcCard gcRightCard">
             <div className="gcCard__header">
-              <div className="gcCard__title">Dependency details</div>
-              <div className="gcCard__subtitle">
+              <div className="gcCard__titleRow">
+                <h2 className="gcCard__title">Resource Type Details</h2>
+                {activeType && terraformRegistryDocsUrl ? (
+                  <a
+                    className="gcDocsPill"
+                    href={terraformRegistryDocsUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`Open ${activeType} in the Terraform Registry (APIs and permissions)`}
+                  >
+                    Registry docs (APIs & permissions)
+                  </a>
+                ) : null}
+              </div>
+              <div className={`gcCard__subtitle ${activeType ? "gcCard__subtitle--hasResource" : ""}`}>
                 {activeType ? (
-                  <span className="gcMono">{activeType}</span>
+                  <div className="gcResourceHeader">
+                    <code className="gcResourceTypeName">{activeType}</code>
+                    <div className="gcMenuPathBlock" aria-label="Genesys Cloud admin menu path">
+                      <div className="gcMenuPath__label">Menu path</div>
+                      <div className="gcMenuPath__value">
+                        {guiMenuPath ? (
+                          <span className="gcMenuPath__crumbs">
+                            {guiMenuPath.split(">").map((segment, index) => (
+                              <React.Fragment key={`${segment}-${index}`}>
+                                {index > 0 ? (
+                                  <span className="gcMenuPath__sep" aria-hidden="true">
+                                    ›
+                                  </span>
+                                ) : null}
+                                <span>{segment.trim()}</span>
+                              </React.Fragment>
+                            ))}
+                          </span>
+                        ) : (
+                          <span className="gcMenuPath__empty">TBD</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 ) : (
                   "Pick a resource type"
                 )}
@@ -629,7 +806,6 @@ export default function App() {
                           className="gcPill"
                           onClick={() => {
                             setSelectedType(t);
-                            setQuery(t);
                           }}
                           type="button"
                         >
@@ -659,7 +835,6 @@ export default function App() {
                           className="gcPill"
                           onClick={() => {
                             setSelectedType(t);
-                            setQuery(t);
                           }}
                           type="button"
                         >
@@ -695,13 +870,7 @@ export default function App() {
                 </div>
                 <div className="gcPanel__body">
                   {activeType && tfExportTemplate ? (
-                    <>
-                      <p className="gcExportTemplate__hint">
-                        Paste into a{" "}
-                        <code className="gcMono">genesyscloud_tf_export</code> block.
-                      </p>
-                      <pre className="gcExportTemplate__code gcMono">{tfExportTemplate}</pre>
-                    </>
+                    <pre className="gcExportTemplate__code gcMono">{tfExportTemplate}</pre>
                   ) : (
                     <div className="gcMuted">
                       Select a type to generate export filters and datasource replacements.

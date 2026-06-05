@@ -1,4 +1,4 @@
-# CX as Code Dependency Explorer
+# CX as Code Explorer
 
 This is the source code for the https://cxascode.github.io website.
 
@@ -41,13 +41,21 @@ npm run dev
 
 - `addDependencies` / `replaceDependencies` — adjust dependency trees from the provider release JSON
 - `tfExportResourceNames` — per resource type, set the Genesys Cloud name used in `include_filter_resources` instead of the `<name>` placeholder
-- `dependencyNotes` — per resource type, Markdown note (GFM) shown at the bottom of Dependency details when that type is selected. Use `\n` in JSON for line breaks (not `\\n`).
+- `dependencyNotes` — per resource type, Markdown note (GFM) shown at the bottom of Resource Type Details when that type is selected. Use `\n` in JSON for line breaks (not `\\n`).
+- `guiMenuPaths` — per resource type, Genesys Cloud admin menu path shown in Resource Type Details (segments separated by ` > `)
+- `hiddenResourceTypes` — resource types omitted from the left-hand list (still appear in Depends on / Dependency for when referenced)
 
 Examples:
 
 ```json
+"hiddenResourceTypes": [
+  "genesyscloud_bcp_tf_exporter"
+],
 "tfExportResourceNames": {
   "genesyscloud_flow": "Customer Callback"
+},
+"guiMenuPaths": {
+  "genesyscloud_routing_language": "User Management > ACD Skills and Languages > Languages"
 },
 "dependencyNotes": {
   "genesyscloud_flow": "**Export tip:** one flow at a time.\n\n- Match the Architect name\n- Use `tfExportResourceNames` for the filter name"
