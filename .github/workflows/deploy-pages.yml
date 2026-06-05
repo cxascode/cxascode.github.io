@@ -253,7 +253,6 @@ jobs:
           cp "public/dependency-tree-json/${latest}.json" public/dependency-tree-json/latest.json
 
           node scripts/generate-resource-permissions-tf.mjs --latest="${latest}"
-          node scripts/generate-spreadsheet-template.mjs --latest="${latest}"
 
           echo "${latest}" > .cache-meta/latest.txt
           echo "true" > .cache-meta/bootstrapped.txt
@@ -329,7 +328,6 @@ jobs:
           cp "public/dependency-tree-json/${latest}.json" public/dependency-tree-json/latest.json
 
           node scripts/generate-resource-permissions-tf.mjs --latest="${latest}"
-          node scripts/generate-spreadsheet-template.mjs --latest="${latest}"
 
           echo "${latest}" > .cache-meta/latest.txt
 
@@ -341,6 +339,13 @@ jobs:
 
       - run: npm ci
         if: steps.check.outputs.needs_deploy == 'true'
+
+      - name: Generate spreadsheet templates
+        if: steps.check.outputs.needs_deploy == 'true'
+        run: |
+          set -euo pipefail
+          latest="$(cat .cache-meta/latest.txt)"
+          node scripts/generate-spreadsheet-template.mjs --latest="${latest}"
 
       - run: npm run build
         if: steps.check.outputs.needs_deploy == 'true'
