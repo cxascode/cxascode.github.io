@@ -2,7 +2,7 @@ export const RESOURCE_NAME_PLACEHOLDER = "<name>";
 
 /**
  * Resolve the Genesys Cloud resource name for include_filter_resources.
- * Uses overrides.json tfExportResourceNames when present for the type.
+ * Uses src/overrides.json tfExportResourceNames when present for the type.
  */
 export function resolveTfExportResourceName(resourceType, overrides) {
   const type = (resourceType || "").trim();

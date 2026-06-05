@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import DependencyNote from "./DependencyNote.jsx";
+import overrides from "./overrides.json";
 import {
   buildTfExportAttributes,
   resolveTfExportResourceName,
@@ -32,7 +33,6 @@ const SPREADSHEET_TEMPLATE_URL =
 const VERSIONED_SPREADSHEET_TEMPLATE_URL = (v) =>
   `${import.meta.env.BASE_URL}spreadsheet-templates/${v}-cx-as-code-template.xlsx`;
 
-const OVERRIDES_URL = `${import.meta.env.BASE_URL}overrides.json`;
 const MIN_DEPENDENCY_VERSION = "1.60.0";
 const MIN_ROLE_DOWNLOAD_VERSION = "1.76.0";
 
@@ -156,7 +156,7 @@ function firstReleaseVersionInIndex(versions) {
 /**
  * Apply optional overrides to a dependency tree JSON.
  *
- * overrides.json shape:
+ * overrides.json (src/overrides.json, bundled at build time) shape:
  * {
  *   "addDependencies": {
  *     "<resource_type>": ["other_type", ...]
@@ -169,6 +169,7 @@ function firstReleaseVersionInIndex(versions) {
  *   "tfExportResourceNames": {
  *     "<resource_type>": "Genesys Cloud resource name"
  *   },
+ *   "tfExportNote": "Markdown note shown in the genesyscloud_tf_export template panel when a type is selected",
  *   "dependencyNotes": {
  *     "<resource_type>": "Markdown note shown in Resource Type Details"
  *   },
@@ -229,6 +230,11 @@ function applyOverrides(raw, overrides) {
   }
 
   return patched;
+}
+
+function resolveTfExportNote(overrides) {
+  const note = overrides?.tfExportNote;
+  return typeof note === "string" ? note.trim() : "";
 }
 
 function resolveDependencyNote(resourceType, overrides) {
@@ -299,7 +305,6 @@ export default function App() {
   const [selectedVersion, setSelectedVersion] = useState("latest");
 
   const [raw, setRaw] = useState(null);
-  const [overrides, setOverrides] = useState(null);
 
   const [query, setQuery] = useState("");
   const [divisionFilter, setDivisionFilter] = useState(DIVISION_FILTER_ALL);
@@ -321,28 +326,6 @@ export default function App() {
   useEffect(() => {
     selectedVersionRef.current = selectedVersion;
   }, [selectedVersion]);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    (async () => {
-      try {
-        const res = await fetch(`${OVERRIDES_URL}?_=${Date.now()}`, { cache: "no-store" });
-        if (!res.ok) {
-          if (!cancelled) setOverrides(null);
-          return;
-        }
-        const json = await res.json();
-        if (!cancelled) setOverrides(json);
-      } catch {
-        if (!cancelled) setOverrides(null);
-      }
-    })();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -452,11 +435,11 @@ export default function App() {
     return () => {
       cancelled = true;
     };
-  }, [selectedVersion, overrides]);
+  }, [selectedVersion]);
 
   const { depsMap, reverseMap } = useMemo(() => buildDepsMaps(raw), [raw]);
 
-  const hiddenTypes = useMemo(() => getHiddenResourceTypes(overrides), [overrides]);
+  const hiddenTypes = useMemo(() => getHiddenResourceTypes(overrides), []);
 
   const allTypes = useMemo(() => {
     const s = new Set([...depsMap.keys(), ...reverseMap.keys()]);
@@ -523,18 +506,20 @@ export default function App() {
 
   const dependencyNote = useMemo(
     () => resolveDependencyNote(activeType, overrides),
-    [activeType, overrides]
+    [activeType]
   );
 
   const guiMenuPath = useMemo(
     () => resolveGuiMenuPath(activeType, overrides),
-    [activeType, overrides]
+    [activeType]
   );
 
   const tfExportResourceName = useMemo(
     () => resolveTfExportResourceName(activeType, overrides),
-    [activeType, overrides]
+    [activeType]
   );
+
+  const tfExportNote = useMemo(() => resolveTfExportNote(overrides), []);
 
   const tfExportTemplate = useMemo(
     () =>
@@ -1106,6 +1091,11 @@ export default function App() {
                       Select a type to generate export filters and datasource replacements.
                     </div>
                   )}
+                  {activeType && tfExportNote ? (
+                    <div className="gcExportTemplate__note">
+                      <DependencyNote content={tfExportNote} />
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </div>
