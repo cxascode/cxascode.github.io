@@ -9,6 +9,7 @@ const PUBLIC_DIR = path.resolve("public");
 const DEP_DIR = path.join(PUBLIC_DIR, "dependency-tree-json");
 const PERM_JSON_DIR = path.join(PUBLIC_DIR, "resource-permissions-json");
 const PERM_TF_DIR = path.join(PUBLIC_DIR, "resource-permissions-tf");
+const SPREADSHEET_DIR = path.join(PUBLIC_DIR, "spreadsheet-templates");
 
 const DEP_LATEST_PATH = path.join(DEP_DIR, "latest.json");
 const RW_LATEST_PATH = path.join(PERM_TF_DIR, "latest-read-write-role.tf");
@@ -109,21 +110,28 @@ async function writeIndexJson() {
   return versions;
 }
 
-async function runGenerator(latest) {
+async function runScript(scriptPath, args = []) {
   await new Promise((resolve, reject) => {
-    const child = spawn(
-      process.execPath,
-      ["scripts/generate-resource-permissions-tf.mjs", `--latest=${latest}`],
-      { stdio: "inherit" },
-    );
+    const child = spawn(process.execPath, [scriptPath, ...args], {
+      stdio: "inherit",
+    });
 
     child.on("exit", (code) => {
       if (code === 0) resolve();
-      else reject(new Error(`generate-resource-permissions-tf exited with code ${code}`));
+      else reject(new Error(`${scriptPath} exited with code ${code}`));
     });
 
     child.on("error", reject);
   });
+}
+
+async function runGenerator(latest) {
+  await runScript("scripts/generate-resource-permissions-tf.mjs", [
+    `--latest=${latest}`,
+  ]);
+  await runScript("scripts/generate-spreadsheet-template.mjs", [
+    `--latest=${latest}`,
+  ]);
 }
 
 async function main() {
@@ -134,6 +142,7 @@ async function main() {
   await ensureDir(DEP_DIR);
   await ensureDir(PERM_JSON_DIR);
   await ensureDir(PERM_TF_DIR);
+  await ensureDir(SPREADSHEET_DIR);
 
   // Clean up old top-level aliases if they still exist from previous layout.
   await removeIfExists(path.join(PUBLIC_DIR, "dependency_tree.json"));

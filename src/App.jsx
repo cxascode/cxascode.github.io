@@ -27,6 +27,11 @@ const VERSIONED_READ_WRITE_ROLE_URL = (v) =>
 const VERSIONED_READ_ONLY_ROLE_URL = (v) =>
   `${import.meta.env.BASE_URL}resource-permissions-tf/${v}-read-only-role.tf`;
 
+const SPREADSHEET_TEMPLATE_URL =
+  `${import.meta.env.BASE_URL}spreadsheet-templates/latest-cx-as-code-template.xlsx`;
+const VERSIONED_SPREADSHEET_TEMPLATE_URL = (v) =>
+  `${import.meta.env.BASE_URL}spreadsheet-templates/${v}-cx-as-code-template.xlsx`;
+
 const OVERRIDES_URL = `${import.meta.env.BASE_URL}overrides.json`;
 const MIN_DEPENDENCY_VERSION = "1.60.0";
 const MIN_ROLE_DOWNLOAD_VERSION = "1.76.0";
@@ -564,6 +569,21 @@ export default function App() {
   const downloadVersionLabel = effectiveVersion || selectedVersion || "unknown";
   const readWriteDownloadName = `read-write-role-${downloadVersionLabel}.tf`;
   const readOnlyDownloadName = `read-only-role-${downloadVersionLabel}.tf`;
+  const spreadsheetTemplateHref =
+    selectedVersion === "latest"
+      ? SPREADSHEET_TEMPLATE_URL
+      : VERSIONED_SPREADSHEET_TEMPLATE_URL(selectedVersion);
+  const spreadsheetDownloadName = `cx-as-code-template-${downloadVersionLabel}.xlsx`;
+
+  const downloadSpreadsheetTemplate = useCallback(() => {
+    const anchor = document.createElement("a");
+    anchor.href = spreadsheetTemplateHref;
+    anchor.download = spreadsheetDownloadName;
+    anchor.rel = "noopener";
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+  }, [spreadsheetDownloadName, spreadsheetTemplateHref]);
 
   const clearSearch = () => {
     setQuery("");
@@ -674,12 +694,15 @@ export default function App() {
               className={`gcRoleDownloads ${roleDownloadsSupported ? "isVisible" : "isHidden"}`}
               aria-hidden={!roleDownloadsSupported}
             >
-              <span
-                className="gcMetaLabel"
+              <button
+                type="button"
+                className="gcMetaLabel gcMetaLabelButton"
                 title="Starting-point roles — adjust permissions for your org before use."
+                onClick={downloadSpreadsheetTemplate}
+                tabIndex={roleDownloadsSupported ? 0 : -1}
               >
                 Role Template Download:
-              </span>
+              </button>
 
               <div className="gcHeaderLinks">
                 <a
