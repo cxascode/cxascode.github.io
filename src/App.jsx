@@ -5,6 +5,13 @@ import {
   resolveTfExportResourceName,
 } from "./tfExportTemplate.js";
 import { buildTerraformRegistryDocsUrl } from "./terraformRegistry.js";
+import {
+  DIVISION_FILTER_ALL,
+  DIVISION_FILTER_AWARE,
+  DIVISION_FILTER_NOT_AWARE,
+  isDivisionAwareByDependencies,
+  matchesDivisionFilter,
+} from "./divisionAware.js";
 
 const INDEX_URL = `${import.meta.env.BASE_URL}dependency-tree-json/index.json`;
 const LATEST_URL = `${import.meta.env.BASE_URL}dependency-tree-json/latest.json`;
@@ -278,6 +285,7 @@ export default function App() {
   const [overrides, setOverrides] = useState(null);
 
   const [query, setQuery] = useState("");
+  const [divisionFilter, setDivisionFilter] = useState(DIVISION_FILTER_ALL);
   const [selectedType, setSelectedType] = useState("");
 
   const [loadingIndex, setLoadingIndex] = useState(true);
@@ -438,15 +446,29 @@ export default function App() {
     return sortAlpha([...s].filter((t) => !hiddenTypes.has(t)));
   }, [depsMap, reverseMap, hiddenTypes]);
 
+  const divisionFilteredTypes = useMemo(
+    () => allTypes.filter((t) => matchesDivisionFilter(t, depsMap, divisionFilter)),
+    [allTypes, depsMap, divisionFilter]
+  );
+
   const filteredTypes = useMemo(() => {
     const q = normalizeType(query).toLowerCase();
-    return q ? allTypes.filter((t) => t.toLowerCase().includes(q)) : allTypes;
-  }, [allTypes, query]);
+    return q
+      ? divisionFilteredTypes.filter((t) => t.toLowerCase().includes(q))
+      : divisionFilteredTypes;
+  }, [divisionFilteredTypes, query]);
 
   const activeType = useMemo(() => {
     if (!selectedType) return "";
-    return allTypes.includes(selectedType) ? selectedType : "";
-  }, [allTypes, selectedType]);
+    return filteredTypes.includes(selectedType) ? selectedType : "";
+  }, [filteredTypes, selectedType]);
+
+  useEffect(() => {
+    if (!selectedType) return;
+    if (!filteredTypes.includes(selectedType)) {
+      setSelectedType("");
+    }
+  }, [filteredTypes, selectedType]);
 
   useEffect(() => {
     if (!allTypes.length || hydratedFromUrlRef.current) return;
@@ -475,6 +497,11 @@ export default function App() {
   const dependsOn = useMemo(
     () => (activeType ? sortAlpha([...(depsMap.get(activeType) || [])]) : []),
     [depsMap, activeType]
+  );
+
+  const isDivisionAware = useMemo(
+    () => isDivisionAwareByDependencies(dependsOn),
+    [dependsOn]
   );
 
   const dependencyNote = useMemo(
@@ -540,6 +567,7 @@ export default function App() {
 
   const clearSearch = () => {
     setQuery("");
+    setDivisionFilter(DIVISION_FILTER_ALL);
     setSelectedType("");
     searchRef.current?.focus();
   };
@@ -589,21 +617,51 @@ export default function App() {
     if (showInitialLoading) return "Loading resource types…";
 
     const total = allTypes.length;
+    const pool = divisionFilteredTypes.length;
     const filtered = filteredTypes.length;
     const hasSearch = Boolean(normalizeType(query));
+    const hasDivisionFilter = Boolean(divisionFilter);
 
     if (!total) return "No resource types";
 
+    const poolLabel =
+      divisionFilter === DIVISION_FILTER_AWARE
+        ? "division-aware resource types"
+        : divisionFilter === DIVISION_FILTER_NOT_AWARE
+          ? "non-division-aware resource types"
+          : "resource types";
+
     if (hasSearch) {
-      if (!filtered) return `No matches among ${total} resource types`;
-      if (filtered === total) {
-        return filtered === 1 ? "1 resource type" : `${filtered} resource types`;
+      if (!filtered) {
+        if (hasDivisionFilter) return `No matches among ${pool} ${poolLabel}`;
+        return `No matches among ${total} resource types`;
       }
-      return `${filtered} of ${total} resource types`;
+      if (hasDivisionFilter) {
+        return filtered === pool
+          ? `${filtered} ${poolLabel}`
+          : `${filtered} of ${pool} ${poolLabel}`;
+      }
+      return filtered === total
+        ? filtered === 1
+          ? "1 resource type"
+          : `${filtered} resource types`
+        : `${filtered} of ${total} resource types`;
+    }
+
+    if (hasDivisionFilter) {
+      return pool === 1 ? `1 ${poolLabel}` : `${pool} ${poolLabel}`;
     }
 
     return total === 1 ? "1 resource type" : `${total} resource types`;
-  }, [error, showInitialLoading, allTypes.length, filteredTypes.length, query]);
+  }, [
+    error,
+    showInitialLoading,
+    allTypes.length,
+    divisionFilteredTypes.length,
+    filteredTypes.length,
+    query,
+    divisionFilter,
+  ]);
 
   return (
     <div className="gcShell">
@@ -676,28 +734,34 @@ export default function App() {
         <div className="gcSplit">
           <section className="gcCard">
             <div className="gcCard__toolbar">
-              <input
-                ref={searchRef}
-                type="search"
-                className="gcSearchInput"
-                placeholder="Search resource types"
-                value={query}
-                onInput={(e) => {
-                  setQuery(e.target.value);
-                  setSelectedType("");
-                }}
-                onKeyDown={handleResourceListKeyDown}
-                disabled={showInitialLoading || !!error}
-              />
+              <div className="gcToolbarRow">
+                <input
+                  ref={searchRef}
+                  type="search"
+                  className="gcSearchInput"
+                  placeholder="Search resource types"
+                  value={query}
+                  onInput={(e) => {
+                    setQuery(e.target.value);
+                    setSelectedType("");
+                  }}
+                  onKeyDown={handleResourceListKeyDown}
+                  disabled={showInitialLoading || !!error}
+                />
 
-              <button
-                type="button"
-                className="gcClearButton"
-                onClick={clearSearch}
-                disabled={showInitialLoading || !!error || (!query && !selectedType)}
-              >
-                Clear
-              </button>
+                <button
+                  type="button"
+                  className="gcClearButton"
+                  onClick={clearSearch}
+                  disabled={
+                    showInitialLoading ||
+                    !!error ||
+                    (!query && !selectedType && !divisionFilter)
+                  }
+                >
+                  Clear
+                </button>
+              </div>
             </div>
 
             <div
@@ -736,9 +800,100 @@ export default function App() {
               ) : null}
             </div>
 
-            {resourceListCountLabel ? (
-              <div className="gcListFooter" aria-live="polite">
-                <p className="gcListCount">{resourceListCountLabel}</p>
+            {!error ? (
+              <div className="gcListFooter">
+                {resourceListCountLabel ? (
+                  <p className="gcListCount" aria-live="polite">
+                    {resourceListCountLabel}
+                  </p>
+                ) : (
+                  <span className="gcListCount" aria-hidden="true" />
+                )}
+                <div className="gcDivisionFilterBlock">
+                  <span className="gcDivisionFilterLabel" id="division-filter-label">
+                    Show Division-aware
+                  </span>
+                  <div
+                    className="gcSegmentedControl"
+                    role="radiogroup"
+                    aria-labelledby="division-filter-label"
+                    title="Filter by division-aware heuristic (genesyscloud_auth_division in Depends on)"
+                  >
+                    <button
+                      type="button"
+                      className="gcSegmentedControl__option"
+                      role="radio"
+                      aria-checked={divisionFilter === DIVISION_FILTER_NOT_AWARE}
+                      disabled={showInitialLoading || !!error}
+                      title="Non-division-aware only"
+                      onClick={() => {
+                        setDivisionFilter(DIVISION_FILTER_NOT_AWARE);
+                        setSelectedType("");
+                      }}
+                    >
+                      <svg
+                        className="gcSegmentedControl__icon"
+                        viewBox="0 0 16 16"
+                        width="14"
+                        height="14"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M4.2 4.2 11.8 11.8M11.8 4.2 4.2 11.8"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.6"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                      <span className="gcVisuallyHidden">Non-division-aware only</span>
+                    </button>
+                    <button
+                      type="button"
+                      className="gcSegmentedControl__option"
+                      role="radio"
+                      aria-checked={divisionFilter === DIVISION_FILTER_ALL}
+                      disabled={showInitialLoading || !!error}
+                      title="All resource types"
+                      onClick={() => {
+                        setDivisionFilter(DIVISION_FILTER_ALL);
+                        setSelectedType("");
+                      }}
+                    >
+                      <span className="gcVisuallyHidden">All resource types</span>
+                    </button>
+                    <button
+                      type="button"
+                      className="gcSegmentedControl__option"
+                      role="radio"
+                      aria-checked={divisionFilter === DIVISION_FILTER_AWARE}
+                      disabled={showInitialLoading || !!error}
+                      title="Division-aware only"
+                      onClick={() => {
+                        setDivisionFilter(DIVISION_FILTER_AWARE);
+                        setSelectedType("");
+                      }}
+                    >
+                      <svg
+                        className="gcSegmentedControl__icon"
+                        viewBox="0 0 16 16"
+                        width="14"
+                        height="14"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M3.5 8.2 6.6 11.3 12.5 5.4"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.6"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                      <span className="gcVisuallyHidden">Division-aware only</span>
+                    </button>
+                  </div>
+                </div>
               </div>
             ) : null}
           </section>
@@ -762,7 +917,17 @@ export default function App() {
               <div className={`gcCard__subtitle ${activeType ? "gcCard__subtitle--hasResource" : ""}`}>
                 {activeType ? (
                   <div className="gcResourceHeader">
-                    <code className="gcResourceTypeName">{activeType}</code>
+                    <div className="gcResourceTypeLine">
+                      <code className="gcResourceTypeName">{activeType}</code>
+                      {isDivisionAware ? (
+                        <span
+                          className="gcDivisionBadge"
+                          title="Depends on genesyscloud_auth_division — heuristic for division_id in Registry docs; confirm there if unsure."
+                        >
+                          Division aware
+                        </span>
+                      ) : null}
+                    </div>
                     <div className="gcMenuPathBlock" aria-label="Genesys Cloud admin menu path">
                       <div className="gcMenuPath__label">Menu path</div>
                       <div className="gcMenuPath__value">

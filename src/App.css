@@ -142,6 +142,15 @@
   min-width: 0;
 }
 
+.gcSplit > .gcCard:first-child {
+  display: flex;
+  flex-direction: column;
+}
+
+.gcSplit > .gcCard:first-child .gcTable__body {
+  flex: 1;
+}
+
 .gcRightCard {
   display: flex;
   flex-direction: column;
@@ -150,9 +159,82 @@
 .gcCard__toolbar {
   padding: 12px;
   border-bottom: 1px solid var(--gc-border2);
+}
+
+.gcToolbarRow {
   display: flex;
   align-items: center;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+}
+
+.gcDivisionFilterBlock {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.gcDivisionFilterLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gc-subtle);
+  white-space: nowrap;
+}
+
+.gcSegmentedControl {
+  display: inline-flex;
+  align-items: stretch;
+  padding: 3px;
+  border: 1px solid var(--gc-border);
+  border-radius: 999px;
+  background: #f0f3f6;
+  gap: 2px;
+}
+
+.gcSegmentedControl__option {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #8a97a6;
+  cursor: pointer;
+}
+
+.gcSegmentedControl__option:hover:not(:disabled) {
+  color: var(--gc-text);
+}
+
+.gcSegmentedControl__option[aria-checked="true"] {
+  background: var(--gc-surface);
+  color: var(--gc-blue);
+  box-shadow: 0 1px 2px rgba(31, 45, 61, 0.08);
+}
+
+.gcSegmentedControl__option:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.gcSegmentedControl__icon {
+  display: block;
+}
+
+.gcVisuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .gcSearchInput {
@@ -192,6 +274,10 @@
 }
 
 .gcListFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   padding: 10px 12px;
   border-top: 1px solid var(--gc-border2);
   background: var(--gc-surface);
@@ -201,7 +287,8 @@
   margin: 0;
   font-size: 12px;
   color: var(--gc-subtle);
-  text-align: center;
+  flex: 1;
+  min-width: 0;
 }
 
 .gcTable__body:focus {
@@ -296,7 +383,27 @@
   margin: 0;
   padding: 0;
   background: none;
-  display: block;
+}
+
+.gcResourceTypeLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.gcDivisionBadge {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  border: 1px solid var(--gc-border);
+  background: var(--gc-blue-weak);
+  color: var(--gc-blue);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 .gcDocsPill {
