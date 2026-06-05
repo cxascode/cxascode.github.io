@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import DependencyNote from "./DependencyNote.jsx";
+import OrderOfOperationsDialog from "./OrderOfOperationsDialog.jsx";
 import overrides from "./overrides.json";
 import {
   buildTfExportAttributes,
@@ -538,6 +539,7 @@ export default function App() {
   );
 
   const [copyState, setCopyState] = useState("idle");
+  const [orderDialogOpen, setOrderDialogOpen] = useState(false);
 
   const dependencyFor = useMemo(
     () => (activeType ? sortAlpha([...(reverseMap.get(activeType) || [])]) : []),
@@ -692,6 +694,16 @@ export default function App() {
           <h1 className="gcPageTitle">CX as Code Explorer</h1>
 
           <div className="gcPageMeta">
+            <button
+              type="button"
+              className="gcHeaderLink"
+              onClick={() => setOrderDialogOpen(true)}
+              disabled={showInitialLoading || !!error || !raw}
+              title="Suggested creation order of CX as Code resources"
+            >
+              Order of operations
+            </button>
+
             <div
               className={`gcRoleDownloads ${roleDownloadsSupported ? "isVisible" : "isHidden"}`}
               aria-hidden={!roleDownloadsSupported}
@@ -1126,6 +1138,18 @@ export default function App() {
           Made with <span role="img" aria-label="love">❤️</span> by Genesys Professional Services
         </a>
       </footer>
+
+      <OrderOfOperationsDialog
+        open={orderDialogOpen}
+        onClose={() => setOrderDialogOpen(false)}
+        depsMap={depsMap}
+        hiddenTypes={hiddenTypes}
+        onSelectType={(type) => {
+          setSelectedType(type);
+          setQuery("");
+          setDivisionFilter(DIVISION_FILTER_ALL);
+        }}
+      />
     </div>
   );
 }
