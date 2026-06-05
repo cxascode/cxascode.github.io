@@ -72,6 +72,7 @@ jobs:
             public/dependency-tree-json
             public/resource-permissions-json
             public/resource-permissions-tf
+            public/spreadsheet-templates
             .cache-meta
           key: versions-${{ runner.os }}-${{ github.ref_name }}-${{ github.run_id }}
           restore-keys: |
@@ -90,6 +91,8 @@ jobs:
           ls -la public/resource-permissions-json | head -n 20 || true
           echo "--- public/resource-permissions-tf (first 20) ---"
           ls -la public/resource-permissions-tf | head -n 20 || true
+          echo "--- public/spreadsheet-templates (first 20) ---"
+          ls -la public/spreadsheet-templates | head -n 20 || true
           echo "--- latest.txt ---"
           cat .cache-meta/latest.txt || true
           echo "--- bootstrapped.txt ---"
@@ -173,12 +176,13 @@ jobs:
           MIN_PERM_VERSION: "1.76.0"
         run: |
           set -euo pipefail
-          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf .cache-meta
+          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf public/spreadsheet-templates .cache-meta
           rm -f \
             public/dependency-tree-json/index.json \
             public/dependency-tree-json/latest.json \
             public/resource-permissions-tf/latest-read-write-role.tf \
             public/resource-permissions-tf/latest-read-only-role.tf \
+            public/spreadsheet-templates/latest-cx-as-code-template.xlsx \
             public/dependency_tree.json \
             public/read-write-role.tf \
             public/read-only-role.tf
@@ -248,6 +252,7 @@ jobs:
           cp "public/dependency-tree-json/${latest}.json" public/dependency-tree-json/latest.json
 
           node scripts/generate-resource-permissions-tf.mjs --latest="${latest}"
+          node scripts/generate-spreadsheet-template.mjs --latest="${latest}"
 
           echo "${latest}" > .cache-meta/latest.txt
           echo "true" > .cache-meta/bootstrapped.txt
@@ -260,12 +265,13 @@ jobs:
           REPO: terraform-provider-genesyscloud
         run: |
           set -euo pipefail
-          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf .cache-meta
+          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf public/spreadsheet-templates .cache-meta
           rm -f \
             public/dependency-tree-json/index.json \
             public/dependency-tree-json/latest.json \
             public/resource-permissions-tf/latest-read-write-role.tf \
             public/resource-permissions-tf/latest-read-only-role.tf \
+            public/spreadsheet-templates/latest-cx-as-code-template.xlsx \
             public/dependency_tree.json \
             public/read-write-role.tf \
             public/read-only-role.tf
@@ -322,6 +328,7 @@ jobs:
           cp "public/dependency-tree-json/${latest}.json" public/dependency-tree-json/latest.json
 
           node scripts/generate-resource-permissions-tf.mjs --latest="${latest}"
+          node scripts/generate-spreadsheet-template.mjs --latest="${latest}"
 
           echo "${latest}" > .cache-meta/latest.txt
 

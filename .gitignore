@@ -26,6 +26,7 @@ dist-ssr
 public/dependency-tree-json/
 public/resource-permissions-json/
 public/resource-permissions-tf/
+public/spreadsheet-templates/
 
 # Snyk Security Extension - AI Rules (auto-generated)
 .github/instructions/snyk_rules.instructions.md

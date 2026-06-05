@@ -74,6 +74,21 @@
   color: var(--gc-subtle);
 }
 
+.gcMetaLabelButton {
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  cursor: default;
+}
+
+.gcMetaLabelButton:hover,
+.gcMetaLabelButton:focus-visible {
+  color: var(--gc-subtle);
+  background: none;
+  outline: none;
+}
+
 .gcHeaderLinks {
   display: flex;
   align-items: center;
