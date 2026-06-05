@@ -407,6 +407,75 @@
   gap: 8px;
 }
 
+.gcResourceTypeGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.gcResourceTypeGroup .gcResourceTypeName {
+  min-width: 0;
+}
+
+.gcPermalinkAnchor {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  color: var(--gc-subtle);
+  text-decoration: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 120ms ease,
+    visibility 120ms ease,
+    color 120ms ease;
+}
+
+.gcResourceTypeGroup:hover .gcPermalinkAnchor,
+.gcResourceTypeGroup:focus-within .gcPermalinkAnchor {
+  opacity: 1;
+  visibility: visible;
+}
+
+.gcPermalinkAnchor:hover {
+  color: var(--gc-blue);
+}
+
+.gcPermalinkAnchor:focus-visible {
+  opacity: 1;
+  visibility: visible;
+  color: var(--gc-blue);
+  outline: 2px solid var(--gc-blue);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.gcPermalinkAnchor:visited {
+  color: var(--gc-subtle);
+}
+
+.gcPermalinkAnchor:visited:hover,
+.gcPermalinkAnchor:visited:focus-visible {
+  color: var(--gc-blue);
+}
+
+.gcPermalinkAnchor__icon {
+  display: block;
+  pointer-events: none;
+}
+
+@media (hover: none) {
+  .gcPermalinkAnchor {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
 .gcDivisionBadge {
   display: inline-flex;
   align-items: center;
