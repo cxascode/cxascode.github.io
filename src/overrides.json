@@ -251,6 +251,32 @@
     "genesyscloud_bcp_tf_exporter",
     "genesyscloud_tf_export"
   ],
+  "spreadsheetScopePrefixes": {
+    "out": [
+      "genesyscloud_externalcontacts_contact",
+      "genesyscloud_idp_adfs",
+      "genesyscloud_idp_generic",
+      "genesyscloud_idp_gsuite",
+      "genesyscloud_idp_okta",
+      "genesyscloud_idp_onelogin",
+      "genesyscloud_idp_ping",
+      "genesyscloud_idp_salesforce",
+      "genesyscloud_oauth_client",
+      "genesyscloud_orgauthorization_pairing",
+      "genesyscloud_outbound_contact_list_contact",
+      "genesyscloud_routing_sms_address",
+      "genesyscloud_telephony_providers_edges_did_pool",
+      "genesyscloud_telephony_providers_edges_edge_group",
+      "genesyscloud_telephony_providers_edges_extension_pool",
+      "genesyscloud_telephony_providers_edges_phone",
+      "genesyscloud_telephony_providers_edges_site",
+      "genesyscloud_telephony_providers_edges_site_outbound_route",
+      "genesyscloud_telephony_providers_edges_trunk",
+      "genesyscloud_telephony_providers_edges_trunkbasesettings",
+      "genesyscloud_user",
+      "genesyscloud_user_roles"
+    ]
+  },
   "addReadWritePermissions": {
     "genesyscloud_outbound_dnclist": [
       "outbound:dnc:add",
