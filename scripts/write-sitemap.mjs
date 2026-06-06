@@ -3,20 +3,61 @@ import path from "node:path";
 
 const SITE_ORIGIN = "https://cxascode.github.io";
 const PUBLIC_DIR = path.resolve("public");
+const ROOT_DIR = path.resolve(".");
 const lastmod = new Date().toISOString().slice(0, 10);
 
-const xml = `<?xml version="1.0" encoding="UTF-8"?>
+const DIALOG_PATHS = [
+  "/release-notes",
+  "/creation-order",
+  "/attribute-index",
+];
+
+async function loadResourcePaths() {
+  const [latestRaw, overridesRaw] = await Promise.all([
+    fs.readFile(path.join(PUBLIC_DIR, "dependency-tree-json/latest.json"), "utf8"),
+    fs.readFile(path.join(ROOT_DIR, "src/overrides.json"), "utf8"),
+  ]);
+
+  const latest = JSON.parse(latestRaw);
+  const overrides = JSON.parse(overridesRaw);
+  const hidden = new Set(
+    Array.isArray(overrides.hiddenResourceTypes) ? overrides.hiddenResourceTypes : []
+  );
+
+  return (latest.resources || [])
+    .map((resource) => resource?.type)
+    .filter((type) => typeof type === "string" && type.trim() && !hidden.has(type))
+    .sort()
+    .map((type) => `/${encodeURIComponent(type.trim())}`);
+}
+
+function buildSitemap(urls) {
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>${SITE_ORIGIN}/</loc>
+${urls
+  .map(
+    (loc) => `  <url>
+    <loc>${loc}</loc>
     <lastmod>${lastmod}</lastmod>
-  </url>
+  </url>`
+  )
+  .join("\n")}
 </urlset>
 `;
 
-const txt = `${SITE_ORIGIN}/\n`;
+  const txt = `${urls.join("\n")}\n`;
+  return { xml, txt };
+}
 
 async function write() {
+  const resourcePaths = await loadResourcePaths();
+  const urls = [
+    `${SITE_ORIGIN}/`,
+    ...DIALOG_PATHS.map((p) => `${SITE_ORIGIN}${p}`),
+    ...resourcePaths.map((p) => `${SITE_ORIGIN}${p}`),
+  ];
+  const { xml, txt } = buildSitemap(urls);
+
   await fs.mkdir(path.join(PUBLIC_DIR, "seo"), { recursive: true });
   await Promise.all([
     fs.writeFile(path.join(PUBLIC_DIR, "sitemap.xml"), xml, "utf8"),
@@ -24,7 +65,10 @@ async function write() {
     fs.writeFile(path.join(PUBLIC_DIR, "sitemap.txt"), txt, "utf8"),
     fs.writeFile(path.join(PUBLIC_DIR, ".nojekyll"), "", "utf8"),
   ]);
-  console.log(`Wrote sitemaps (lastmod=${lastmod})`);
+
+  console.log(
+    `Wrote sitemaps (lastmod=${lastmod}, urls=${urls.length}, resources=${resourcePaths.length})`
+  );
 }
 
 write();

@@ -6,7 +6,7 @@ import {
   fetchResourceAttributeIndex,
   fetchResourceAttributeIndexMarkdown,
   filterIndexEntries,
-  formatAttributeIndexIntroduced,
+  formatAttributeIndexIntroducedLabel,
   formatAttributeIndexLastChanged,
   formatAttributeIndexType,
   getIndexFilterOptions,
@@ -83,12 +83,15 @@ export default function AttributeIndexDialog({ open, onClose, onSelectResource, 
     [index, query, typeFilter, statusFilter]
   );
 
-  const handleClose = useCallback(() => {
-    setQuery("");
-    setTypeFilter("");
-    setStatusFilter("");
-    onClose?.();
-  }, [onClose]);
+  const handleClose = useCallback(
+    (nextResourceType) => {
+      setQuery("");
+      setTypeFilter("");
+      setStatusFilter("");
+      onClose?.(nextResourceType);
+    },
+    [onClose]
+  );
 
   const downloadAttributeIndex = useCallback(async () => {
     try {
@@ -114,7 +117,7 @@ export default function AttributeIndexDialog({ open, onClose, onSelectResource, 
     if (knownTypes instanceof Set && !knownTypes.has(resourceType)) return;
 
     onSelectResource?.(resourceType);
-    handleClose();
+    handleClose(resourceType);
   };
 
   return createPortal(
@@ -219,6 +222,11 @@ export default function AttributeIndexDialog({ open, onClose, onSelectResource, 
                 const canSelect =
                   entry.resource &&
                   (!(knownTypes instanceof Set) || knownTypes.has(entry.resource));
+                const introducedLabel = formatAttributeIndexIntroducedLabel(entry.introduced);
+                const lastChangedLabel = formatAttributeIndexLastChanged(
+                  entry.last_updated,
+                  entry.introduced
+                );
 
                 return (
                   <button
@@ -242,13 +250,11 @@ export default function AttributeIndexDialog({ open, onClose, onSelectResource, 
                         {formatAttributeIndexType(entry.type)}
                       </span>
                       <StatusBadge status={entry.status} />
-                      <span className="gcAttributeHistory__introduced">
-                        Introduced {formatAttributeIndexIntroduced(entry.introduced)}
-                      </span>
-                      {entry.last_updated ? (
-                        <span className="gcAttributeHistory__version">
-                          {formatAttributeIndexLastChanged(entry.last_updated)}
-                        </span>
+                      {introducedLabel ? (
+                        <span className="gcAttributeHistory__introduced">{introducedLabel}</span>
+                      ) : null}
+                      {lastChangedLabel ? (
+                        <span className="gcAttributeHistory__version">{lastChangedLabel}</span>
                       ) : null}
                     </div>
                     {entry.latest_summary ? (

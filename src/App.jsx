@@ -20,6 +20,17 @@ import {
   matchesDivisionFilter,
 } from "./divisionAware.js";
 import { toReleaseNotesVersion } from "./releaseNotes.js";
+import {
+  buildResourceTypePermalink,
+  DIALOG_ATTRIBUTE_INDEX,
+  DIALOG_CREATION_ORDER,
+  DIALOG_RELEASE_NOTES,
+  readDialogFromLocation,
+  readResourceTypeFromLocation,
+  replaceDialogInUrl,
+  replaceResourceInUrl,
+} from "./appPermalinks.js";
+import { applyPageSeo, resolvePageSeo } from "./pageSeo.js";
 
 const INDEX_URL = `${import.meta.env.BASE_URL}dependency-tree-json/index.json`;
 const LATEST_URL = `${import.meta.env.BASE_URL}dependency-tree-json/latest.json`;
@@ -47,46 +58,6 @@ const VERSION_PICKER_TOOLTIP = `Dependencies - v${MIN_DEPENDENCY_VERSION}+, Perm
 
 function normalizeType(s) {
   return (s || "").trim();
-}
-
-/** Query param used for shareable links to a selected resource type (?type=...) */
-const TYPE_QUERY_KEY = "type";
-
-function readTypeFromSearch() {
-  try {
-    const raw = new URLSearchParams(window.location.search).get(TYPE_QUERY_KEY);
-    return normalizeType(raw);
-  } catch {
-    return "";
-  }
-}
-
-function replaceUrlForActiveType(activeType) {
-  try {
-    const url = new URL(window.location.href);
-    const typed = normalizeType(activeType);
-    if (typed) url.searchParams.set(TYPE_QUERY_KEY, typed);
-    else url.searchParams.delete(TYPE_QUERY_KEY);
-    const next = `${url.pathname}${url.search}${url.hash}`;
-    const current = `${window.location.pathname}${window.location.search}${window.location.hash}`;
-    if (next !== current) {
-      history.replaceState(null, "", next);
-    }
-  } catch {
-    /* ignore invalid URLs */
-  }
-}
-
-function buildResourceTypePermalink(resourceType) {
-  try {
-    const url = new URL(window.location.href);
-    const typed = normalizeType(resourceType);
-    if (typed) url.searchParams.set(TYPE_QUERY_KEY, typed);
-    else url.searchParams.delete(TYPE_QUERY_KEY);
-    return url.toString();
-  } catch {
-    return "";
-  }
 }
 
 function sortAlpha(arr) {
@@ -328,9 +299,9 @@ export default function App() {
   const searchRef = useRef(null);
   const listBodyRef = useRef(null);
   const selectedVersionRef = useRef("latest");
-  /** Skip one URL sync after applying ?type= from the address bar (avoids clearing the param before state catches up). */
+  /** Skip one URL sync after applying a resource path from the address bar. */
   const skipNextUrlSyncRef = useRef(false);
-  /** Only merge ?type= from the URL once per mount so later clears/version changes are not overwritten. */
+  /** Only merge a resource path from the URL once per mount. */
   const hydratedFromUrlRef = useRef(false);
 
   useEffect(() => {
@@ -488,12 +459,12 @@ export default function App() {
     if (!allTypes.length || hydratedFromUrlRef.current) return;
     hydratedFromUrlRef.current = true;
 
-    const fromUrl = readTypeFromSearch();
+    const fromUrl = readResourceTypeFromLocation();
     if (fromUrl && allTypes.includes(fromUrl)) {
       skipNextUrlSyncRef.current = true;
       setSelectedType(fromUrl);
     } else if (fromUrl) {
-      replaceUrlForActiveType("");
+      replaceResourceInUrl("");
       setSelectedType("");
       setQuery("");
     }
@@ -505,7 +476,7 @@ export default function App() {
       skipNextUrlSyncRef.current = false;
       return;
     }
-    replaceUrlForActiveType(activeType);
+    replaceResourceInUrl(activeType);
   }, [activeType, allTypes]);
 
   const dependsOn = useMemo(
@@ -555,6 +526,77 @@ export default function App() {
   const [orderDialogOpen, setOrderDialogOpen] = useState(false);
   const [releaseNotesDialogOpen, setReleaseNotesDialogOpen] = useState(false);
   const [attributeIndexDialogOpen, setAttributeIndexDialogOpen] = useState(false);
+
+  const openDialog = useCallback((dialogId) => {
+    setOrderDialogOpen(dialogId === DIALOG_CREATION_ORDER);
+    setReleaseNotesDialogOpen(dialogId === DIALOG_RELEASE_NOTES);
+    setAttributeIndexDialogOpen(dialogId === DIALOG_ATTRIBUTE_INDEX);
+    replaceDialogInUrl(dialogId);
+  }, []);
+
+  const closeDialogs = useCallback(
+    (nextResourceType) => {
+      setOrderDialogOpen(false);
+      setReleaseNotesDialogOpen(false);
+      setAttributeIndexDialogOpen(false);
+
+      const resource =
+        typeof nextResourceType === "string" && nextResourceType.trim()
+          ? nextResourceType.trim()
+          : activeType;
+
+      replaceDialogInUrl("", resource);
+    },
+    [activeType]
+  );
+
+  useEffect(() => {
+    const dialog = readDialogFromLocation();
+    if (!dialog) return;
+
+    if (dialog === DIALOG_CREATION_ORDER && (showDependencyLoading || !raw || error)) {
+      return;
+    }
+
+    setOrderDialogOpen(dialog === DIALOG_CREATION_ORDER);
+    setReleaseNotesDialogOpen(dialog === DIALOG_RELEASE_NOTES);
+    setAttributeIndexDialogOpen(dialog === DIALOG_ATTRIBUTE_INDEX);
+  }, [raw, showDependencyLoading, error]);
+
+  useEffect(() => {
+    const syncFromLocation = () => {
+      const dialog = readDialogFromLocation();
+      setOrderDialogOpen(dialog === DIALOG_CREATION_ORDER);
+      setReleaseNotesDialogOpen(dialog === DIALOG_RELEASE_NOTES);
+      setAttributeIndexDialogOpen(dialog === DIALOG_ATTRIBUTE_INDEX);
+
+      if (dialog) return;
+
+      const typeFromUrl = readResourceTypeFromLocation();
+      if (typeFromUrl && allTypes.includes(typeFromUrl)) {
+        skipNextUrlSyncRef.current = true;
+        setSelectedType(typeFromUrl);
+        return;
+      }
+
+      skipNextUrlSyncRef.current = true;
+      setSelectedType("");
+    };
+
+    window.addEventListener("popstate", syncFromLocation);
+    return () => window.removeEventListener("popstate", syncFromLocation);
+  }, [allTypes]);
+
+  useEffect(() => {
+    applyPageSeo(
+      resolvePageSeo({
+        activeType,
+        releaseNotesOpen: releaseNotesDialogOpen,
+        creationOrderOpen: orderDialogOpen,
+        attributeIndexOpen: attributeIndexDialogOpen,
+      })
+    );
+  }, [activeType, releaseNotesDialogOpen, orderDialogOpen, attributeIndexDialogOpen]);
 
   const dependencyFor = useMemo(
     () => (activeType ? sortAlpha([...(reverseMap.get(activeType) || [])]) : []),
@@ -714,7 +756,7 @@ export default function App() {
             <button
               type="button"
               className="gcHeaderLink"
-              onClick={() => setReleaseNotesDialogOpen(true)}
+              onClick={() => openDialog(DIALOG_RELEASE_NOTES)}
               title="Full release notes for the selected provider version"
             >
               Release notes
@@ -723,7 +765,7 @@ export default function App() {
             <button
               type="button"
               className="gcHeaderLink"
-              onClick={() => setOrderDialogOpen(true)}
+              onClick={() => openDialog(DIALOG_CREATION_ORDER)}
               disabled={showDependencyLoading || !!error || !raw}
               title="Suggested creation order of CX as Code resources"
             >
@@ -1056,7 +1098,7 @@ export default function App() {
               <ResourceReleaseChanges
                 version={effectiveVersion}
                 resourceType={activeType}
-                onViewAll={() => setReleaseNotesDialogOpen(true)}
+                onViewAll={() => openDialog(DIALOG_RELEASE_NOTES)}
               />
             ) : null}
 
@@ -1170,7 +1212,7 @@ export default function App() {
             {activeType ? (
               <ResourceAttributeHistory
                 resourceType={activeType}
-                onViewAll={() => setAttributeIndexDialogOpen(true)}
+                onViewAll={() => openDialog(DIALOG_ATTRIBUTE_INDEX)}
               />
             ) : null}
               </>
@@ -1193,7 +1235,7 @@ export default function App() {
 
       <OrderOfOperationsDialog
         open={orderDialogOpen}
-        onClose={() => setOrderDialogOpen(false)}
+        onClose={closeDialogs}
         depsMap={depsMap}
         hiddenTypes={hiddenTypes}
         onSelectType={(type) => {
@@ -1205,7 +1247,7 @@ export default function App() {
 
       <ReleaseNotesDialog
         open={releaseNotesDialogOpen}
-        onClose={() => setReleaseNotesDialogOpen(false)}
+        onClose={closeDialogs}
         selectedVersion={selectedVersion}
         onVersionChange={setSelectedVersion}
         availableVersions={availableVersions}
@@ -1215,7 +1257,7 @@ export default function App() {
 
       <AttributeIndexDialog
         open={attributeIndexDialogOpen}
-        onClose={() => setAttributeIndexDialogOpen(false)}
+        onClose={closeDialogs}
         knownTypes={new Set(allTypes)}
         onSelectResource={(type) => {
           setSelectedType(type);

@@ -5,7 +5,7 @@ const BASE = import.meta.env.BASE_URL;
 export const ATTRIBUTE_INDEX_MIN_VERSION = "v1.60.0";
 
 export const ATTRIBUTE_INDEX_DESCRIPTION =
-  `This index is generated from the release notes available on this site. Introduced is Unknown when the item existed before ${ATTRIBUTE_INDEX_MIN_VERSION}.`;
+  `This index is generated from the release notes available on this site. Introduced is omitted when the item existed before ${ATTRIBUTE_INDEX_MIN_VERSION}.`;
 
 export const RESOURCE_ATTRIBUTE_INDEX_JSON_URL =
   `${BASE}release-notes/resource-attribute-index.json`;
@@ -100,15 +100,25 @@ export function formatAttributeIndexType(type) {
   return type || "Unknown";
 }
 
-export function formatAttributeIndexIntroduced(value) {
+export function formatAttributeIndexIntroducedLabel(value) {
   const normalized = (value || "").trim();
-  if (!normalized || normalized.toLowerCase() === "unknown") return "Unknown";
-  return toReleaseNotesVersion(normalized);
+  if (!normalized || normalized.toLowerCase() === "unknown") return "";
+  return `Introduced ${toReleaseNotesVersion(normalized)}`;
 }
 
-export function formatAttributeIndexLastChanged(value) {
-  const normalized = (value || "").trim();
-  return normalized ? `Changed ${toReleaseNotesVersion(normalized)}` : "";
+function normalizeVersionForCompare(value) {
+  const trimmed = (value || "").trim().toLowerCase();
+  if (!trimmed || trimmed === "unknown") return "";
+  return trimmed.startsWith("v") ? trimmed.slice(1) : trimmed;
+}
+
+export function formatAttributeIndexLastChanged(lastUpdated, introduced) {
+  const normalized = (lastUpdated || "").trim();
+  if (!normalized) return "";
+  if (normalizeVersionForCompare(normalized) === normalizeVersionForCompare(introduced)) {
+    return "";
+  }
+  return `Changed ${toReleaseNotesVersion(normalized)}`;
 }
 
 export function attributeIndexEntryKey(entry) {
