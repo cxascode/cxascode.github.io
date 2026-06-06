@@ -1,5 +1,7 @@
 const BASE = import.meta.env.BASE_URL;
 
+export const RELEASE_NOTES_DATA_PATH = "release-notes-data";
+
 export function toReleaseNotesVersion(version) {
   if (!version || version === "latest") return "";
   const trimmed = String(version).trim();
@@ -16,13 +18,13 @@ export function fromReleaseNotesVersion(version) {
 export function releaseNotesMarkdownUrl(version) {
   const v = toReleaseNotesVersion(version);
   if (!v) return "";
-  return `${BASE}release-notes/versions/${v}.md`;
+  return `${BASE}${RELEASE_NOTES_DATA_PATH}/versions/${v}.md`;
 }
 
 export function releaseNotesChangesUrl(version) {
   const v = toReleaseNotesVersion(version);
   if (!v) return "";
-  return `${BASE}release-notes/changes/${v}.json`;
+  return `${BASE}${RELEASE_NOTES_DATA_PATH}/changes/${v}.json`;
 }
 
 export async function fetchReleaseNotesMarkdown(version) {
