@@ -1,0 +1,279 @@
+{
+    "version": "v1.80.0",
+    "previous": "v1.79.2",
+    "changes": [
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_intents_customerintents",
+            "attribute": null,
+            "change": "added",
+            "summary": "New customer intent resource replacing genesyscloud_customer_intent."
+        },
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_intents_categories",
+            "attribute": null,
+            "change": "added",
+            "summary": "New intent category resource replacing genesyscloud_intent_category."
+        },
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_routing_queue_conditional_group_activation",
+            "attribute": null,
+            "change": "added",
+            "summary": "New standalone resource for routing queue conditional group activation."
+        },
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_learning_modules",
+            "attribute": null,
+            "change": "added",
+            "summary": "New learning modules resource."
+        },
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_users_rules",
+            "attribute": null,
+            "change": "added",
+            "summary": "New user rules resource."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_business_rules_decision_table",
+            "attribute": "rows.*.literal.value",
+            "change": "updated",
+            "summary": "Plan diffs for string literals ignore whitespace and invisible Unicode; stringList literals ignore comma-spacing differences; number literals still ignore formatting differences."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_business_rules_decision_table",
+            "attribute": "rows.*.literal.value",
+            "change": "updated",
+            "summary": "String and stringList literal values are trimmed when read from the API, reducing drift between orgs during export."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_journey_action_map",
+            "attribute": "trigger_with_outcome_probability_conditions",
+            "change": "updated",
+            "summary": "Deprecation message updated to indicate Journey Outcomes is being removed; remove this attribute from configuration."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_journey_action_map",
+            "attribute": "trigger_with_outcome_quantile_conditions",
+            "change": "updated",
+            "summary": "Now deprecated with Journey Outcomes removal notice."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_journey_action_map",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Outcome trigger condition blocks are omitted from export when outcome_id is missing."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_journey_outcome",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Resource deprecated; Journey Outcomes is being removed."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_journey_outcome_predictor",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Resource deprecated; Journey Outcomes is being removed."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaign",
+            "attribute": "diagnostics_settings",
+            "change": "added",
+            "summary": "Optional campaign diagnostics block; only valid when dialing_mode is power or predictive."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaign",
+            "attribute": "diagnostics_settings.report_low_max_calls_per_agent_alert",
+            "change": "added",
+            "summary": "Enables or disables the campaign health alert when Max Calls Per Agent is below the Outbound Settings threshold; defaults to true."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaign",
+            "attribute": "max_calls_per_agent",
+            "change": "updated",
+            "summary": "Type changed from integer to float; decimal values such as 1.5 and 2.3 are now supported."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_outbound_campaign",
+            "attribute": "diagnostics_settings",
+            "change": "updated",
+            "summary": "Plan validation rejects diagnostics_settings when dialing_mode is not power or predictive."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_outbound_contact_list",
+            "attribute": "phone_columns.callable_time_column",
+            "change": "updated",
+            "summary": "Read preserves existing state values when the API response omits them, reducing drift after refresh."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_responsemanagement_responseasset",
+            "attribute": "content_location",
+            "change": "added",
+            "summary": "Location URL of the response asset file content; optional, computed, and force-new."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "conditional_group_activation",
+            "change": "updated",
+            "summary": "No longer computed; when standalone conditional group activation mode is enabled, this attribute is not created, read, or exported on the queue resource."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "conditional_group_activation.rules.groups",
+            "change": "updated",
+            "summary": "Type changed from list to set."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "conditional_group_routing_rules",
+            "change": "updated",
+            "summary": "When ENABLE_STANDALONE_CGR is set, this attribute is not read or exported; use genesyscloud_routing_queue_conditional_group_routing instead."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "conditional_group_routing_rules.queue_id",
+            "change": "updated",
+            "summary": "Self-referencing queue IDs are removed during export."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "conditional_group_activation.pilot_rule.conditions.simple_metric.queue_id",
+            "change": "updated",
+            "summary": "Self-referencing queue IDs are removed during export."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "conditional_group_activation.rules.conditions.simple_metric.queue_id",
+            "change": "updated",
+            "summary": "Self-referencing queue IDs are removed during export."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "media_settings_message.inactivity_timeout_settings.flow_id",
+            "change": "updated",
+            "summary": "Export now resolves architect flow references."
+        },
+        {
+            "kind": "state_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": null,
+            "change": "updated",
+            "summary": "After partial failures updating queue members or wrap-up codes, state is refreshed from the API before returning errors."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "conditional_group_activation.pilot_rule",
+            "change": "updated",
+            "summary": "Empty pilot_rule blocks are no longer sent to the API."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_routing_queue_conditional_group_routing",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Description clarifies ENABLE_STANDALONE_CGR is required and that conditional_group_routing_rules on genesyscloud_routing_queue is not read or exported when standalone mode is enabled."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue_conditional_group_routing",
+            "attribute": "rules.evaluated_queue_id",
+            "change": "updated",
+            "summary": "Description clarifies that a null queue ID means the current queue."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_bcp_tf_exporter",
+            "attribute": "blockLabel",
+            "change": "added",
+            "summary": "Exported resource entries now include a blockLabel field with the Terraform resource block label."
+        },
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_customer_intent",
+            "attribute": null,
+            "change": "removed",
+            "summary": "Removed; replaced by genesyscloud_intents_customerintents."
+        },
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_intent_category",
+            "attribute": null,
+            "change": "removed",
+            "summary": "Removed; replaced by genesyscloud_intents_categories."
+        },
+        {
+            "kind": "data_source",
+            "resource": "genesyscloud_intents_customerintents",
+            "attribute": null,
+            "change": "added",
+            "summary": "New customer intent data source replacing genesyscloud_customer_intent."
+        },
+        {
+            "kind": "data_source",
+            "resource": "genesyscloud_intents_categories",
+            "attribute": null,
+            "change": "added",
+            "summary": "New intent category data source replacing genesyscloud_intent_category."
+        },
+        {
+            "kind": "data_source_behavior",
+            "resource": "genesyscloud_journey_outcome",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Data source deprecated; Journey Outcomes is being removed."
+        },
+        {
+            "kind": "data_source",
+            "resource": "genesyscloud_customer_intent",
+            "attribute": null,
+            "change": "removed",
+            "summary": "Removed; replaced by genesyscloud_intents_customerintents data source."
+        },
+        {
+            "kind": "data_source",
+            "resource": "genesyscloud_intent_category",
+            "attribute": null,
+            "change": "removed",
+            "summary": "Removed; replaced by genesyscloud_intents_categories data source."
+        },
+        {
+            "kind": "provider_configuration",
+            "resource": null,
+            "attribute": "sdk_debug",
+            "change": "updated",
+            "summary": "When enabled, request log hook output now includes the HTTP request body."
+        },
+        {
+            "kind": "provider_configuration",
+            "resource": null,
+            "attribute": "sdk_debug_file_path",
+            "change": "updated",
+            "summary": "HTTP 429 and 5xx responses are mirrored to the debug log file when SDK retries are exhausted; parent directory creation errors are now reported."
+        }
+    ]
+}

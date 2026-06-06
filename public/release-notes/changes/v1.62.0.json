@@ -1,0 +1,139 @@
+{
+    "version": "v1.62.0",
+    "previous": "v1.61.1",
+    "changes": [
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_architect_ivr",
+            "attribute": "dnis",
+            "change": "updated",
+            "summary": "No longer computed from the API; configure phone numbers explicitly if you want them managed in Terraform."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_journey_segment",
+            "attribute": "assignment_expiration_days",
+            "change": "added",
+            "summary": "Optional number of days after assignment before the segment is automatically unassigned."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_journey_segment",
+            "attribute": "scope",
+            "change": "updated",
+            "summary": "Deprecated as redundant; scheduled for removal in a future provider release."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "canned_response_libraries.library_ids",
+            "change": "updated",
+            "summary": "Attribute type changed from list to set; expect possible plan diffs on upgrade even when values are unchanged."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "media_settings_callback.mode",
+            "change": "updated",
+            "summary": "Now computed from the API when omitted from configuration."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "media_settings_callback.auto_answer_alert_tone_seconds",
+            "change": "added",
+            "summary": "Optional duration to play the alerting tone for auto-answer callback interactions."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "media_settings_callback.manual_answer_alert_tone_seconds",
+            "change": "added",
+            "summary": "Optional duration to play the alerting tone for manual-answer callback interactions."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "media_settings_callback.pacing_modifier",
+            "change": "added",
+            "summary": "Optional limit on concurrent outbound calls when callback mode is CustomerFirst (minimum value 1)."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "media_settings_callback.live_voice_reaction_type",
+            "change": "added",
+            "summary": "Optional action when a live voice is detected during a customer-first callback outbound call."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "media_settings_callback.live_voice_flow_id",
+            "change": "added",
+            "summary": "Optional inbound flow ID for live-voice handling when reaction type is TransferToFlow."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "media_settings_callback.answering_machine_reaction_type",
+            "change": "added",
+            "summary": "Optional action when an answering machine is detected during a customer-first callback outbound call."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "media_settings_callback.answering_machine_flow_id",
+            "change": "added",
+            "summary": "Optional inbound flow ID for answering-machine handling when reaction type is TransferToFlow."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "media_settings_callback.live_voice_flow_id",
+            "change": "updated",
+            "summary": "Bulk export now resolves live voice flow IDs to genesyscloud_architect_flow resource references."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "media_settings_callback.answering_machine_flow_id",
+            "change": "updated",
+            "summary": "Bulk export now resolves answering machine flow IDs to genesyscloud_architect_flow resource references."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Bulk export queue listing handles empty API responses without error."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_task_management_worktype",
+            "attribute": "default_script_id",
+            "change": "added",
+            "summary": "Optional default script applied to workitems created from the worktype."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_routing_email_route",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Destroy treats HTTP 404 responses as success when the route is already deleted."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_telephony_providers_edges_trunkbasesettings",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Destroy retries transient HTTP 400 responses for up to 50 seconds before failing."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_telephony_providers_edges_site",
+            "attribute": "outbound_routes.external_trunk_base_ids",
+            "change": "updated",
+            "summary": "Bulk export no longer resolves external trunk base IDs to genesyscloud_telephony_providers_edges_trunkbasesettings references."
+        }
+    ]
+}

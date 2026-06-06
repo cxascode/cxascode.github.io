@@ -1,0 +1,216 @@
+{
+    "version": "v1.64.0",
+    "previous": "v1.63.0",
+    "changes": [
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_organization_presence_definition",
+            "attribute": null,
+            "change": "added",
+            "summary": "New resource for managing organization presence definitions."
+        },
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": null,
+            "change": "added",
+            "summary": "New resource for managing quality evaluation forms."
+        },
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_quality_forms_survey",
+            "attribute": null,
+            "change": "added",
+            "summary": "New resource for managing quality survey forms."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_externalcontacts_organization",
+            "attribute": "primary_contact_id",
+            "change": "removed",
+            "summary": "No longer configurable on this resource."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_flow_outcome",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Create adopts an existing outcome with the same name instead of failing, then updates it."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_journey_segment",
+            "attribute": "scope",
+            "change": "removed",
+            "summary": "Deprecated attribute removed from the schema."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_callanalysisresponseset",
+            "attribute": "amd_speech_distinguish_enabled",
+            "change": "added",
+            "summary": "Optional flag to enable answering machine detection; defaults to true."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_callanalysisresponseset",
+            "attribute": "live_speaker_detection_mode",
+            "change": "added",
+            "summary": "Optional computed live speaker detection level (Disabled, Low, Medium, or High)."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaign",
+            "attribute": "caller_name",
+            "change": "updated",
+            "summary": "Now optional instead of required."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaign",
+            "attribute": "caller_address",
+            "change": "updated",
+            "summary": "Now optional instead of required; omitted values are no longer sent to the API as empty strings."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_recording_media_retention_policy",
+            "attribute": "actions.assign_metered_assignment_by_agent.time_interval",
+            "change": "updated",
+            "summary": "Nested interval block now accepts hours, days, weeks, and months instead of months, weeks, and days only."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_email_route",
+            "attribute": "from_email",
+            "change": "updated",
+            "summary": "Schema validation now conflicts with reply_email_address."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_email_route",
+            "attribute": "auto_bcc",
+            "change": "updated",
+            "summary": "Schema validation now conflicts with reply_email_address."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_email_route",
+            "attribute": "reply_email_address",
+            "change": "updated",
+            "summary": "Schema validation now conflicts with from_email and auto_bcc."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_email_route",
+            "attribute": "reply_email_address.domain_id",
+            "change": "updated",
+            "summary": "Now optional and computed; must be set together with route_id when not using self_reference_route."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_email_route",
+            "attribute": "reply_email_address.route_id",
+            "change": "updated",
+            "summary": "Must be set together with domain_id when not using self_reference_route."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_email_route",
+            "attribute": "reply_email_address.self_reference_route",
+            "change": "updated",
+            "summary": "Validation now requires either this flag or both domain_id and route_id."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_routing_email_route",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Reply email address updates now include the route pattern in API requests."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "ignore_members",
+            "change": "added",
+            "summary": "Optional flag to skip reading and updating queue members through Terraform; conflicts with members."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "members",
+            "change": "updated",
+            "summary": "Must use block syntax; attribute-style assignment is no longer supported. Diffs are suppressed when ignore_members is true."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "last_agent_routing_mode",
+            "change": "updated",
+            "summary": "Now computed in addition to optional."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When ignore_members is true, members are not read from the API or updated on apply."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_sms_address",
+            "attribute": "name",
+            "change": "updated",
+            "summary": "Now optional instead of required."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_routing_sms_address",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Create always sends address fields and sends name as an empty string when omitted."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_scripts",
+            "attribute": "division_id",
+            "change": "added",
+            "summary": "Optional computed division for the script."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_team",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Partial failures when adding team members now fail the apply with per-member error details."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_user",
+            "attribute": "addresses.phone_numbers.extension_pool_id",
+            "change": "added",
+            "summary": "Optional extension pool ID for phone extensions; populated on read when resolvable."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": null,
+            "attribute": null,
+            "change": "updated",
+            "summary": "Bulk export depends_on references to data sources now use the data. prefix."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_user",
+            "attribute": "addresses.phone_numbers.extension_pool_id",
+            "change": "updated",
+            "summary": "Bulk export resolves extension_pool_id to genesyscloud_telephony_providers_edges_extension_pool references."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_routing_sms_address",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Bulk export may use postal_code as the block label when name is absent."
+        }
+    ]
+}

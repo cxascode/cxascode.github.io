@@ -1,0 +1,132 @@
+{
+    "version": "v1.66.0",
+    "previous": "v1.65.0",
+    "changes": [
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_guide",
+            "attribute": null,
+            "change": "added",
+            "summary": "New resource for managing Genesys Cloud guides."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_architect_flow",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Bulk export block labels now use {type}_{name}."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_knowledge_document",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Bulk export block labels now use {parent knowledge base name}_{title}."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_knowledge_document_variation",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Bulk export block labels now use {parent knowledge base name}_{parent document title}_{knowledge_document_variation.name}."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_knowledge_label",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Bulk export block labels now use {parent knowledge base name}_{knowledge_label.name}."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_outbound_contact_list",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Bulk export contact download uses exponential backoff starting at 2 seconds and retries on HTTP 400 while waiting for the signed export URL."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_responsemanagement_responseasset",
+            "attribute": "filename",
+            "change": "updated",
+            "summary": "Bulk export filename values use forward slashes instead of backslashes."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_routing_email_domain",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Delete completes successfully when the domain is already absent (HTTP 404)."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_routing_email_route",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Read fetches the route directly by ID with up to a 7-minute retry window instead of listing all domain routes."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_script",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Bulk export excludes Genesys Cloud default scripts (Default Outbound Script, Default Inbound Script, Default Callback Script)."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_script",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Delete completes successfully when the script is already absent (HTTP 404)."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_script",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Read treats HTTP 404 as retryable."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_user",
+            "attribute": "addresses",
+            "change": "updated",
+            "summary": "Removing the addresses block from configuration triggers an update that clears user addresses in Genesys Cloud."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_user",
+            "attribute": "employer_info",
+            "change": "updated",
+            "summary": "No longer computed; values are not populated from the API on read unless explicitly configured."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_user",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Bulk export block labels now use {email}."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_user",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Post-delete verification waits up to 3 minutes for the user to appear in deleted state."
+        },
+        {
+            "kind": "data_source_behavior",
+            "resource": "genesyscloud_telephony_providers_edges_extension_pool",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Returns a retryable error when no extension pool matches the requested start and end numbers."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": null,
+            "attribute": null,
+            "change": "updated",
+            "summary": "Phone number validation requires a leading + and accepts any viable E.164 number instead of requiring an exact canonical format match; validation is skipped when BCP mode is enabled."
+        }
+    ]
+}

@@ -1,0 +1,13 @@
+{
+    "version": "v1.69.2",
+    "previous": "v1.69.0",
+    "changes": [
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_flow",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Error messages during flow update and publish failures now include the configured flow name alongside the job ID."
+        }
+    ]
+}

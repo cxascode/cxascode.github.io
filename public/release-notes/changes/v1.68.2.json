@@ -1,0 +1,111 @@
+{
+    "version": "v1.68.2",
+    "previous": "v1.68.1",
+    "changes": [
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_integration_action",
+            "attribute": "function_config",
+            "change": "added",
+            "summary": "Optional block for function-based integration actions whose category contains function data action."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_integration_action",
+            "attribute": "function_config.description",
+            "change": "added",
+            "summary": "Optional and computed description of the function."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_integration_action",
+            "attribute": "function_config.handler",
+            "change": "added",
+            "summary": "Optional and computed handler function name."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_integration_action",
+            "attribute": "function_config.runtime",
+            "change": "added",
+            "summary": "Optional and computed runtime environment for the function."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_integration_action",
+            "attribute": "function_config.timeout_seconds",
+            "change": "added",
+            "summary": "Optional and computed function execution timeout in seconds."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_integration_action",
+            "attribute": "function_config.zip_id",
+            "change": "added",
+            "summary": "Optional and computed ID of the uploaded zip file containing function code."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_integration_action",
+            "attribute": "function_config.file_path",
+            "change": "added",
+            "summary": "Required path to the zip file containing function code when using function_config for create or update."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_integration_action",
+            "attribute": "config_request.request_url_template",
+            "change": "updated",
+            "summary": "No longer required; now optional and computed."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_integration_action",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Function data action categories are created through a draft-and-publish workflow that uploads function_config.file_path, applies function settings, and publishes the draft; file_path is required for these actions."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_integration_action",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Function data action categories use the draft workflow on update to upload an updated zip and publish changes."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_integration_action",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Read refreshes function_config from the API when the action category is a function data action."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_integration_action",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Consistency state validation is no longer performed on refresh, which may surface plan diffs that were previously suppressed."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Create, read, update, and delete API calls honor a configurable delay when ROUTING_QUEUE_DELAY_MAX is set."
+        },
+        {
+            "kind": "data_source_behavior",
+            "resource": "genesyscloud_quality_forms_survey",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Lookup by name filters surveys by name through the provider proxy instead of paging all surveys, fixing incorrect name resolution."
+        },
+        {
+            "kind": "provider_configuration",
+            "resource": null,
+            "attribute": "ROUTING_QUEUE_DELAY_MAX",
+            "change": "added",
+            "summary": "Optional environment variable that sets a maximum delay in seconds before routing queue API operations."
+        }
+    ]
+}

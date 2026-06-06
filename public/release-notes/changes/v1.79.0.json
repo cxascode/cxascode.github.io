@@ -1,0 +1,237 @@
+{
+    "version": "v1.79.0",
+    "previous": "v1.78.0",
+    "changes": [
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_speechandtextanalytics_topic",
+            "attribute": null,
+            "change": "added",
+            "summary": "Manage speech and text analytics topics."
+        },
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_customer_intent",
+            "attribute": null,
+            "change": "added",
+            "summary": "Manage customer intents."
+        },
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_intent_category",
+            "attribute": null,
+            "change": "added",
+            "summary": "Manage intent categories."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_contact_list",
+            "attribute": "phone_columns.callable_time_column_name",
+            "change": "added",
+            "summary": "Column name that indicates the timezone to use when checking callable times; optional and computed."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_contact_list",
+            "attribute": "email_columns.contactable_time_column_name",
+            "change": "added",
+            "summary": "Column name that indicates the timezone to use when checking contactable times; optional and computed."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_contact_list",
+            "attribute": "phone_columns.callable_time_column",
+            "change": "updated",
+            "summary": "Deprecated in favor of callable_time_column_name; still accepted for backward compatibility."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_contact_list",
+            "attribute": "email_columns.contactable_time_column",
+            "change": "updated",
+            "summary": "Deprecated in favor of contactable_time_column_name; still accepted for backward compatibility."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_outbound_contact_list",
+            "attribute": "phone_columns.callable_time_column",
+            "change": "updated",
+            "summary": "Plan diffs are suppressed when automatic_time_zone_mapping is true because the API may omit these values."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_outbound_contact_list",
+            "attribute": "phone_columns",
+            "change": "updated",
+            "summary": "Read preserves timezone column names from the API response, reducing drift after UI edits or refresh."
+        },
+        {
+            "kind": "state_behavior",
+            "resource": "genesyscloud_outbound_contact_list",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Schema version 3 with automatic state migration copies legacy *_time_column values into the new *_time_column_name fields."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_outbound_contact_list",
+            "attribute": "phone_columns",
+            "change": "updated",
+            "summary": "Generated phone and email column blocks use callable_time_column_name and contactable_time_column_name."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_contact_list_template",
+            "attribute": "phone_columns.callable_time_column_name",
+            "change": "added",
+            "summary": "Column name that indicates the timezone to use when checking callable times; optional and computed."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_contact_list_template",
+            "attribute": "email_columns.contactable_time_column_name",
+            "change": "added",
+            "summary": "Column name that indicates the timezone to use when checking contactable times; optional and computed."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_contact_list_template",
+            "attribute": "phone_columns.callable_time_column",
+            "change": "updated",
+            "summary": "Deprecated in favor of callable_time_column_name; still accepted for backward compatibility."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_contact_list_template",
+            "attribute": "email_columns.contactable_time_column",
+            "change": "updated",
+            "summary": "Deprecated in favor of contactable_time_column_name; still accepted for backward compatibility."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_outbound_contact_list_template",
+            "attribute": "phone_columns.callable_time_column",
+            "change": "updated",
+            "summary": "Plan diffs are suppressed when automatic_time_zone_mapping is true."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_outbound_contact_list_template",
+            "attribute": "phone_columns",
+            "change": "updated",
+            "summary": "Read preserves timezone column names from the API and retains existing column settings when the API omits phone or email columns."
+        },
+        {
+            "kind": "state_behavior",
+            "resource": "genesyscloud_outbound_contact_list_template",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Schema version 2 with automatic state migration copies legacy *_time_column values into the new *_time_column_name fields."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_outbound_contact_list_template",
+            "attribute": "phone_columns",
+            "change": "updated",
+            "summary": "Generated phone and email column blocks use callable_time_column_name and contactable_time_column_name."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_architect_datatable",
+            "attribute": "properties",
+            "change": "updated",
+            "summary": "List order follows API response key order when display_order is not set; when display_order is present, properties are sorted by that value."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_task_management_worktype",
+            "attribute": "disable_default_status_creation",
+            "change": "updated",
+            "summary": "No longer computed; read keeps the configured value and plan diffs are suppressed because this flag is create-time only in Genesys Cloud."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_outbound_dnclist",
+            "attribute": "entries",
+            "change": "updated",
+            "summary": "Updating phone entries is rejected unless dnc_source_type is rds (internal DNC list)."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_outbound_dnclist",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Phone entries are deleted before removing the list only for internal (rds) DNC lists."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_knowledge_document_variation",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Deleting a variation publishes the parent knowledge document version using the correct knowledge base and document identifiers when other variations remain."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "question_groups.questions.answer_options.assistance_conditions.topic_ids",
+            "change": "updated",
+            "summary": "Resolves to genesyscloud_speechandtextanalytics_topic data source references instead of raw GUIDs."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "question_groups.questions.multiple_select_option_questions.answer_options.assistance_conditions.topic_ids",
+            "change": "updated",
+            "summary": "Resolves to genesyscloud_speechandtextanalytics_topic data source references instead of raw GUIDs."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_quality_forms_survey",
+            "attribute": "question_groups.questions.answer_options.assistance_conditions.topic_ids",
+            "change": "updated",
+            "summary": "Resolves to genesyscloud_speechandtextanalytics_topic data source references instead of raw GUIDs."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_routing_email_domain",
+            "attribute": "name",
+            "change": "updated",
+            "summary": "Data source lookup uses the full domain instance ID rather than the shortened domain_id attribute."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "exclude_attributes",
+            "change": "updated",
+            "summary": "Exclusions are applied when exporters are loaded, in addition to the final output pass."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Resource discovery retries transient failures up to three times with backoff."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Concurrent resource retrieval is limited to reduce API rate-limit errors."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Unresolved GUID references in list attributes can be mapped to data sources via custom resolvers."
+        },
+        {
+            "kind": "data_source_behavior",
+            "resource": "genesyscloud_routing_email_domain",
+            "attribute": "name",
+            "change": "updated",
+            "summary": "Lookup is case-insensitive; a short subdomain prefix can resolve to the full domain ID; ambiguous prefix matches return an error."
+        }
+    ]
+}

@@ -1,0 +1,146 @@
+{
+    "version": "v1.61.0",
+    "previous": "v1.60.0",
+    "changes": [
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "canned_response_library_mode",
+            "change": "updated",
+            "summary": "Now computed; Terraform populates the value from the API when it is not set in configuration."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "media_settings_callback.mode",
+            "change": "updated",
+            "summary": "No longer computed; set this explicitly in configuration if you need a specific callback mode."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "auto_end_delay_seconds",
+            "change": "removed",
+            "summary": "Removed from shared media settings blocks such as media_settings_chat, media_settings_message, and media_settings_email."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "auto_dial_delay_seconds",
+            "change": "removed",
+            "summary": "Removed from shared media settings blocks such as media_settings_chat, media_settings_message, and media_settings_email."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "enable_auto_dial_and_end",
+            "change": "removed",
+            "summary": "Removed from shared media settings blocks such as media_settings_chat, media_settings_message, and media_settings_email."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "media_settings_email",
+            "change": "updated",
+            "summary": "Now uses the shared media settings schema instead of an email-specific schema that included deprecated auto-dial fields."
+        },
+        {
+            "kind": "state_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": null,
+            "change": "updated",
+            "summary": "State schema upgraded to version 2 with an automatic upgrader from version 1."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_responsemanagement_response",
+            "attribute": "library_ids",
+            "change": "updated",
+            "summary": "Attribute type changed from list to set; order is no longer significant and duplicate values are not allowed."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_telephony_providers_edges_phonebasesettings",
+            "attribute": "line_base.station_persistent_webrtc_enabled",
+            "change": "added",
+            "summary": "Optional boolean (defaults to false) that controls station persistent WebRTC on line properties."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_telephony_providers_edges_site",
+            "attribute": "outbound_routes",
+            "change": "removed",
+            "summary": "Use genesyscloud_telephony_providers_edges_site_outbound_route resources to manage site outbound routes instead."
+        },
+        {
+            "kind": "state_behavior",
+            "resource": "genesyscloud_telephony_providers_edges_site",
+            "attribute": null,
+            "change": "updated",
+            "summary": "State schema upgraded to version 2 with an automatic upgrader that removes outbound_routes from stored state."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_telephony_providers_edges_site_outbound_route",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Resource operations no longer require the ENABLE_STANDALONE_OUTBOUND_ROUTES environment variable."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "use_legacy_architect_flow_exporter",
+            "change": "added",
+            "summary": "Optional boolean (defaults to true). When false, architect flow YAML files are downloaded as part of the export process."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Export can complete with warnings for non-fatal issues instead of treating all diagnostics as hard failures."
+        },
+        {
+            "kind": "data_source_attribute",
+            "resource": "genesyscloud_flow",
+            "attribute": "type",
+            "change": "updated",
+            "summary": "Terraform emits a warning when type is omitted, noting that it will become required in a future release."
+        },
+        {
+            "kind": "data_source_behavior",
+            "resource": "genesyscloud_flow",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When multiple flows share the same name, lookup uses type to select the matching flow."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_architect_flow",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When use_legacy_architect_flow_exporter is false on genesyscloud_tf_export, flow YAML files are downloaded into an architect_flows subdirectory with filenames based on flow name, type, and ID."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_organization_authentication_settings",
+            "attribute": "timeout_settings.idle_token_timeout_seconds",
+            "change": "updated",
+            "summary": "Export now preserves zero values for idle_token_timeout_seconds."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_user",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Bulk export skips users that lack an ID or email address."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": null,
+            "attribute": null,
+            "change": "updated",
+            "summary": "Export no longer substitutes unresolvable attributes on data source blocks with ${var...} placeholders."
+        }
+    ]
+}

@@ -1,0 +1,20 @@
+{
+    "version": "v1.79.1",
+    "previous": "v1.79.0",
+    "changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_speechandtextanalytics_topic",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Topics are exported as managed resource blocks instead of data source blocks."
+        },
+        {
+            "kind": "provider_configuration",
+            "resource": null,
+            "attribute": "custom_retry_timeout",
+            "change": "updated",
+            "summary": "The configured value is now applied consistently during parallel resource reads and exports."
+        }
+    ]
+}
