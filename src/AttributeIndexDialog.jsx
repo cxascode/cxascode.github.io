@@ -93,6 +93,14 @@ export default function AttributeIndexDialog({ open, onClose, onSelectResource, 
     [onClose]
   );
 
+  const clearFilters = () => {
+    setQuery("");
+    setTypeFilter("");
+    setStatusFilter("");
+  };
+
+  const hasActiveFilters = Boolean(query || typeFilter || statusFilter);
+
   const downloadAttributeIndex = useCallback(async () => {
     try {
       const markdown = await fetchResourceAttributeIndexMarkdown();
@@ -155,6 +163,14 @@ export default function AttributeIndexDialog({ open, onClose, onSelectResource, 
             onInput={(event) => setQuery(event.target.value)}
             disabled={loading || !!error}
           />
+          <button
+            type="button"
+            className="gcClearButton"
+            onClick={clearFilters}
+            disabled={loading || !!error || !hasActiveFilters}
+          >
+            Clear
+          </button>
           <select
             className="gcSelectInput"
             value={typeFilter}
@@ -185,7 +201,7 @@ export default function AttributeIndexDialog({ open, onClose, onSelectResource, 
           </select>
           <button
             type="button"
-            className="gcHeaderLink"
+            className="gcHeaderLink gcOrderDialog__toolbarEnd"
             onClick={downloadAttributeIndex}
             disabled={loading || !!error}
           >

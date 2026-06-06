@@ -150,13 +150,13 @@ export default function ReleaseNotesDialog({
         <div className="gcOrderDialog__toolbar">
           <button
             type="button"
-            className="gcHeaderLink"
+            className="gcHeaderLink gcOrderDialog__toolbarEnd"
             onClick={downloadReleaseNotes}
             disabled={!markdown || loading}
           >
             Download release notes
           </button>
-          <div className="gcVersionPicker gcOrderDialog__toolbarVersion">
+          <div className="gcVersionPicker">
             <span className="gcMetaLabel">Version:</span>
             <gux-dropdown ref={versionDropdownRef} disabled={loadingIndex}>
               <gux-listbox>
