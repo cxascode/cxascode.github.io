@@ -1,4 +1,4 @@
-import { toReleaseNotesVersion } from "./releaseNotes.js";
+import { RELEASE_NOTES_DATA_PATH, toReleaseNotesVersion } from "./releaseNotes.js";
 
 const BASE = import.meta.env.BASE_URL;
 
@@ -8,9 +8,9 @@ export const ATTRIBUTE_INDEX_DESCRIPTION =
   `This index is generated from the release notes available on this site. Introduced is omitted when the item existed before ${ATTRIBUTE_INDEX_MIN_VERSION}.`;
 
 export const RESOURCE_ATTRIBUTE_INDEX_JSON_URL =
-  `${BASE}release-notes/resource-attribute-index.json`;
+  `${BASE}${RELEASE_NOTES_DATA_PATH}/resource-attribute-index.json`;
 export const RESOURCE_ATTRIBUTE_INDEX_MD_URL =
-  `${BASE}release-notes/resource-attribute-index.md`;
+  `${BASE}${RELEASE_NOTES_DATA_PATH}/resource-attribute-index.md`;
 
 let indexCache = null;
 

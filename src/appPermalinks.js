@@ -21,7 +21,7 @@ const RESERVED_PATH_SEGMENTS = new Set([
   "resource-permissions-json",
   "resource-permissions-tf",
   "spreadsheet-templates",
-  "release-notes",
+  "release-notes-data",
   "seo",
   "assets",
 ]);

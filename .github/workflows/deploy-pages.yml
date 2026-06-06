@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths-ignore:
-      - "public/release-notes/**"
+      - "public/release-notes-data/**"
   workflow_dispatch:
   schedule:
     - cron: '17 22 * * *' # once per day, 40 minutes after release-notes job (UTC)
