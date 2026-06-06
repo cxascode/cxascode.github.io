@@ -80,59 +80,66 @@ export default function OrderOfOperationsDialog({
       onClose={handleClose}
     >
       <div className="gcOrderDialog__panel">
-        <div className="gcOrderDialog__header">
-          <div>
-            <h2 id="creation-order-title" className="gcOrderDialog__title">
-              Creation order
-            </h2>
-            <p className="gcOrderDialog__subtitle">
-              Suggested creation order of CX as Code resources. Earlier tiers should be created
-              before later tiers. Types in the same tier can be created in any order and are
-              listed alphabetically.
-            </p>
+        <div className="gcOrderDialog__chrome">
+          <div className="gcOrderDialog__header">
+            <div className="gcOrderDialog__headerMain">
+              <h2 id="creation-order-title" className="gcOrderDialog__title">
+                Creation order
+              </h2>
+              <p className="gcOrderDialog__subtitle">
+                Suggested creation order of CX as Code resources per{" "}
+                <a
+                  href="https://developer.genesys.cloud/devapps/cx-as-code/bestpractices"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  best practices
+                </a>
+                . Earlier tiers should be created before later tiers. Types in the same tier can be
+                created in any order and are listed alphabetically.
+              </p>
+              {order.cyclicTypes.size ? (
+                <div className="gcOrderDialog__notice" role="note">
+                  {order.cyclicTypes.size} resource type
+                  {order.cyclicTypes.size === 1 ? "" : "s"} share mutual dependencies and appear in
+                  the same tier. Terraform may still resolve these at apply time.
+                </div>
+              ) : null}
+            </div>
+            <button
+              type="button"
+              className="gcOrderDialog__close"
+              aria-label="Close creation order"
+              onClick={handleClose}
+            >
+              ×
+            </button>
           </div>
-          <button
-            type="button"
-            className="gcOrderDialog__close"
-            aria-label="Close creation order"
-            onClick={handleClose}
-          >
-            ×
-          </button>
-        </div>
 
-        {order.cyclicTypes.size ? (
-          <div className="gcOrderDialog__notice" role="note">
-            {order.cyclicTypes.size} resource type
-            {order.cyclicTypes.size === 1 ? "" : "s"} share mutual dependencies and appear in
-            the same tier. Terraform may still resolve these at apply time.
+          <div className="gcOrderDialog__toolbar">
+            <input
+              type="search"
+              className="gcSearchInput gcOrderDialog__search"
+              placeholder="Filter resource types"
+              value={query}
+              onInput={(event) => {
+                setQuery(event.target.value);
+              }}
+            />
+            <button
+              type="button"
+              className="gcClearButton"
+              onClick={clearFilter}
+              disabled={!query}
+            >
+              Clear
+            </button>
+            <div className="gcOrderDialog__toolbarMeta">
+              {normalizedQuery
+                ? `${visibleCount} of ${order.resourceCount} resource types in ${visibleTierGroups.length} tier${visibleTierGroups.length === 1 ? "" : "s"}`
+                : `${order.resourceCount} resource types in ${order.tierCount} tier${order.tierCount === 1 ? "" : "s"}`}
+            </div>
           </div>
-        ) : null}
-
-        <div className="gcOrderDialog__toolbar">
-          <input
-            type="search"
-            className="gcSearchInput gcOrderDialog__search"
-            placeholder="Filter resource types"
-            value={query}
-            onInput={(event) => {
-              setQuery(event.target.value);
-            }}
-          />
-          <button
-            type="button"
-            className="gcClearButton"
-            onClick={clearFilter}
-            disabled={!query}
-          >
-            Clear
-          </button>
-        </div>
-
-        <div className="gcOrderDialog__meta">
-          {normalizedQuery
-            ? `${visibleCount} of ${order.resourceCount} resource types in ${visibleTierGroups.length} tier${visibleTierGroups.length === 1 ? "" : "s"}`
-            : `${order.resourceCount} resource types in ${order.tierCount} tier${order.tierCount === 1 ? "" : "s"}`}
         </div>
 
         <div className="gcOrderDialog__body">

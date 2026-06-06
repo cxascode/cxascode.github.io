@@ -133,44 +133,46 @@ export default function ReleaseNotesDialog({
       onClose={handleClose}
     >
       <div className="gcOrderDialog__panel">
-        <div className="gcOrderDialog__header">
-          <h2 id="release-notes-title" className="gcOrderDialog__title">
-            Release notes
-          </h2>
-          <button
-            type="button"
-            className="gcOrderDialog__close"
-            aria-label="Close release notes"
-            onClick={handleClose}
-          >
-            ×
-          </button>
-        </div>
+        <div className="gcOrderDialog__chrome">
+          <div className="gcOrderDialog__header">
+            <h2 id="release-notes-title" className="gcOrderDialog__title">
+              Release notes
+            </h2>
+            <button
+              type="button"
+              className="gcOrderDialog__close"
+              aria-label="Close release notes"
+              onClick={handleClose}
+            >
+              ×
+            </button>
+          </div>
 
-        <div className="gcOrderDialog__toolbar">
-          <button
-            type="button"
-            className="gcHeaderLink gcOrderDialog__toolbarEnd"
-            onClick={downloadReleaseNotes}
-            disabled={!markdown || loading}
-          >
-            Download release notes
-          </button>
-          <div className="gcVersionPicker">
-            <span className="gcMetaLabel">Version:</span>
-            <gux-dropdown ref={versionDropdownRef} disabled={loadingIndex}>
-              <gux-listbox>
-                <gux-option value="latest">
-                  Latest {newestListedRelease ? `(${toReleaseNotesVersion(newestListedRelease)})` : ""}
-                </gux-option>
-
-                {availableVersions.map((v) => (
-                  <gux-option key={v} value={v}>
-                    {toReleaseNotesVersion(v)}
+          <div className="gcOrderDialog__toolbar">
+            <button
+              type="button"
+              className="gcHeaderLink gcOrderDialog__toolbarEnd"
+              onClick={downloadReleaseNotes}
+              disabled={!markdown || loading}
+            >
+              Download release notes
+            </button>
+            <div className="gcVersionPicker">
+              <span className="gcMetaLabel">Version:</span>
+              <gux-dropdown ref={versionDropdownRef} disabled={loadingIndex}>
+                <gux-listbox>
+                  <gux-option value="latest">
+                    Latest {newestListedRelease ? `(${toReleaseNotesVersion(newestListedRelease)})` : ""}
                   </gux-option>
-                ))}
-              </gux-listbox>
-            </gux-dropdown>
+
+                  {availableVersions.map((v) => (
+                    <gux-option key={v} value={v}>
+                      {toReleaseNotesVersion(v)}
+                    </gux-option>
+                  ))}
+                </gux-listbox>
+              </gux-dropdown>
+            </div>
           </div>
         </div>
 

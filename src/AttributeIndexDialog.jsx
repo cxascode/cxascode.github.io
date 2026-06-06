@@ -137,86 +137,89 @@ export default function AttributeIndexDialog({ open, onClose, onSelectResource, 
       onClose={handleClose}
     >
       <div className="gcOrderDialog__panel">
-        <div className="gcOrderDialog__header">
-          <div>
-            <h2 id="attribute-index-title" className="gcOrderDialog__title">
-              Attribute history
-            </h2>
-            <p className="gcOrderDialog__subtitle">{ATTRIBUTE_INDEX_DESCRIPTION}</p>
+        <div className="gcOrderDialog__chrome">
+          <div className="gcOrderDialog__header">
+            <div className="gcOrderDialog__headerMain">
+              <h2 id="attribute-index-title" className="gcOrderDialog__title">
+                Attribute history
+              </h2>
+              <p className="gcOrderDialog__subtitle">{ATTRIBUTE_INDEX_DESCRIPTION}</p>
+            </div>
+            <button
+              type="button"
+              className="gcOrderDialog__close"
+              aria-label="Close attribute history"
+              onClick={handleClose}
+            >
+              ×
+            </button>
           </div>
-          <button
-            type="button"
-            className="gcOrderDialog__close"
-            aria-label="Close attribute history"
-            onClick={handleClose}
-          >
-            ×
-          </button>
-        </div>
 
-        <div className="gcOrderDialog__toolbar">
-          <input
-            type="search"
-            className="gcSearchInput gcOrderDialog__search"
-            placeholder="Search resources, attributes, or notes"
-            value={query}
-            onInput={(event) => setQuery(event.target.value)}
-            disabled={loading || !!error}
-          />
-          <button
-            type="button"
-            className="gcClearButton"
-            onClick={clearFilters}
-            disabled={loading || !!error || !hasActiveFilters}
-          >
-            Clear
-          </button>
-          <select
-            className="gcSelectInput"
-            value={typeFilter}
-            onChange={(event) => setTypeFilter(event.target.value)}
-            disabled={loading || !!error}
-            aria-label="Filter by change type"
-          >
-            <option value="">All types</option>
-            {filterOptions.types.map((type) => (
-              <option key={type} value={type}>
-                {formatAttributeIndexType(type)}
-              </option>
-            ))}
-          </select>
-          <select
-            className="gcSelectInput"
-            value={statusFilter}
-            onChange={(event) => setStatusFilter(event.target.value)}
-            disabled={loading || !!error}
-            aria-label="Filter by status"
-          >
-            <option value="">All statuses</option>
-            {filterOptions.statuses.map((status) => (
-              <option key={status} value={status}>
-                {status}
-              </option>
-            ))}
-          </select>
-          <button
-            type="button"
-            className="gcHeaderLink gcOrderDialog__toolbarEnd"
-            onClick={downloadAttributeIndex}
-            disabled={loading || !!error}
-          >
-            Download attribute index
-          </button>
-        </div>
-
-        <div className="gcOrderDialog__meta">
-          {loading
-            ? "Loading attribute index…"
-            : error
-              ? "Could not load attribute index."
-              : query || typeFilter || statusFilter
-                ? `${visibleEntries.length} of ${index.length} entries`
-                : `${index.length} entries`}
+          <div className="gcOrderDialog__toolbar gcOrderDialog__toolbar--attributeIndex">
+            <input
+              type="search"
+              className="gcSearchInput gcOrderDialog__search"
+              placeholder="Search resources, attributes"
+              value={query}
+              onInput={(event) => setQuery(event.target.value)}
+              disabled={loading || !!error}
+            />
+            <button
+              type="button"
+              className="gcClearButton"
+              onClick={clearFilters}
+              disabled={loading || !!error || !hasActiveFilters}
+            >
+              Clear
+            </button>
+            <select
+              className="gcSelectInput"
+              value={typeFilter}
+              onChange={(event) => setTypeFilter(event.target.value)}
+              disabled={loading || !!error}
+              aria-label="Filter by change type"
+            >
+              <option value="">All types</option>
+              {filterOptions.types.map((type) => (
+                <option key={type} value={type}>
+                  {formatAttributeIndexType(type)}
+                </option>
+              ))}
+            </select>
+            <select
+              className="gcSelectInput"
+              value={statusFilter}
+              onChange={(event) => setStatusFilter(event.target.value)}
+              disabled={loading || !!error}
+              aria-label="Filter by status"
+            >
+              <option value="">All statuses</option>
+              {filterOptions.statuses.map((status) => (
+                <option key={status} value={status}>
+                  {status}
+                </option>
+              ))}
+            </select>
+            <div className="gcOrderDialog__toolbarActions">
+              <div className="gcOrderDialog__toolbarMeta">
+                {loading
+                  ? "Loading attribute index…"
+                  : error
+                    ? "Could not load attribute index."
+                    : query || typeFilter || statusFilter
+                      ? `${visibleEntries.length} of ${index.length} entries`
+                      : `${index.length} entries`}
+              </div>
+              <button
+                type="button"
+                className="gcHeaderLink"
+                onClick={downloadAttributeIndex}
+                disabled={loading || !!error}
+              >
+                Download attribute index
+              </button>
+            </div>
+          </div>
         </div>
 
         <div className="gcOrderDialog__body">

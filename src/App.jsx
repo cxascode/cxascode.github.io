@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import AboutCxAsCode from "./AboutCxAsCode.jsx";
+import PageTitle from "./PageTitle.jsx";
 import DependencyNote from "./DependencyNote.jsx";
 import OrderOfOperationsDialog from "./OrderOfOperationsDialog.jsx";
 import AttributeIndexDialog from "./AttributeIndexDialog.jsx";
@@ -747,10 +747,7 @@ export default function App() {
     <div className="gcShell">
       <div className="gcPageHeader">
         <div className="gcPageTitleRow">
-          <div className="gcPageTitleGroup">
-            <h1 className="gcPageTitle">CX as Code Explorer</h1>
-            <AboutCxAsCode />
-          </div>
+          <PageTitle />
 
           <div className="gcPageMeta">
             <button
