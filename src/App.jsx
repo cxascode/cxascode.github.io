@@ -19,6 +19,7 @@ import {
   isDivisionAwareByDependencies,
   matchesDivisionFilter,
 } from "./divisionAware.js";
+import { toReleaseNotesVersion } from "./releaseNotes.js";
 
 const INDEX_URL = `${import.meta.env.BASE_URL}dependency-tree-json/index.json`;
 const LATEST_URL = `${import.meta.env.BASE_URL}dependency-tree-json/latest.json`;
@@ -413,6 +414,7 @@ export default function App() {
     (async () => {
       try {
         setLoadingData(true);
+        setRaw(null);
         setError("");
 
         const depsUrl =
@@ -469,15 +471,18 @@ export default function App() {
 
   const activeType = useMemo(() => {
     if (!selectedType) return "";
-    return filteredTypes.includes(selectedType) ? selectedType : "";
-  }, [filteredTypes, selectedType]);
+    return allTypes.includes(selectedType) ? selectedType : "";
+  }, [allTypes, selectedType]);
+
+  const showDependencyLoading = loadingData && raw === null;
+  const detailType = activeType || (showDependencyLoading ? selectedType : "");
 
   useEffect(() => {
-    if (!selectedType) return;
-    if (!filteredTypes.includes(selectedType)) {
+    if (!selectedType || !allTypes.length) return;
+    if (!allTypes.includes(selectedType)) {
       setSelectedType("");
     }
-  }, [filteredTypes, selectedType]);
+  }, [allTypes, selectedType]);
 
   useEffect(() => {
     if (!allTypes.length || hydratedFromUrlRef.current) return;
@@ -518,11 +523,6 @@ export default function App() {
     [activeType]
   );
 
-  const guiMenuPath = useMemo(
-    () => resolveGuiMenuPath(activeType, overrides),
-    [activeType]
-  );
-
   const tfExportResourceName = useMemo(
     () => resolveTfExportResourceName(activeType, overrides),
     [activeType]
@@ -537,13 +537,18 @@ export default function App() {
   );
 
   const terraformRegistryDocsUrl = useMemo(
-    () => (activeType ? buildTerraformRegistryDocsUrl(activeType, selectedVersion) : ""),
-    [activeType, selectedVersion]
+    () => (detailType ? buildTerraformRegistryDocsUrl(detailType, selectedVersion) : ""),
+    [detailType, selectedVersion]
   );
 
   const resourceTypePermalink = useMemo(
-    () => (activeType ? buildResourceTypePermalink(activeType) : ""),
-    [activeType]
+    () => (detailType ? buildResourceTypePermalink(detailType) : ""),
+    [detailType]
+  );
+
+  const detailGuiMenuPath = useMemo(
+    () => resolveGuiMenuPath(detailType, overrides),
+    [detailType]
   );
 
   const [copyState, setCopyState] = useState("idle");
@@ -576,7 +581,8 @@ export default function App() {
       ? READ_ONLY_ROLE_URL
       : VERSIONED_READ_ONLY_ROLE_URL(selectedVersion);
 
-  const downloadVersionLabel = effectiveVersion || selectedVersion || "unknown";
+  const downloadVersionLabel =
+    toReleaseNotesVersion(effectiveVersion || selectedVersion) || "unknown";
   const readWriteDownloadName = `cx-as-code-read-write-role-${downloadVersionLabel}.tf`;
   const readOnlyDownloadName = `cx-as-code-read-only-role-${downloadVersionLabel}.tf`;
   const spreadsheetTemplateHref =
@@ -614,20 +620,20 @@ export default function App() {
       else if (event.key === "Home") direction = "home";
       else if (event.key === "End") direction = "end";
 
-      const nextType = moveResourceListSelection(filteredTypes, activeType, direction);
+      const nextType = moveResourceListSelection(filteredTypes, selectedType, direction);
       if (nextType) setSelectedType(nextType);
     },
-    [activeType, filteredTypes]
+    [filteredTypes, selectedType]
   );
 
   useEffect(() => {
-    if (!activeType || !listBodyRef.current) return;
+    if (!selectedType || !listBodyRef.current) return;
 
     const row = listBodyRef.current.querySelector(
-      `[data-resource-type="${CSS.escape(activeType)}"]`
+      `[data-resource-type="${CSS.escape(selectedType)}"]`
     );
     row?.scrollIntoView({ block: "nearest" });
-  }, [activeType, filteredTypes]);
+  }, [selectedType, filteredTypes]);
 
   useEffect(() => {
     setCopyState("idle");
@@ -644,11 +650,9 @@ export default function App() {
     }
   };
 
-  const showInitialLoading = loadingData && raw === null;
-
   const resourceListCountLabel = useMemo(() => {
     if (error) return "";
-    if (showInitialLoading) return "Loading resource types…";
+    if (showDependencyLoading) return "Loading resource types…";
 
     const total = allTypes.length;
     const pool = divisionFilteredTypes.length;
@@ -689,7 +693,7 @@ export default function App() {
     return total === 1 ? "1 resource type" : `${total} resource types`;
   }, [
     error,
-    showInitialLoading,
+    showDependencyLoading,
     allTypes.length,
     divisionFilteredTypes.length,
     filteredTypes.length,
@@ -720,7 +724,7 @@ export default function App() {
               type="button"
               className="gcHeaderLink"
               onClick={() => setOrderDialogOpen(true)}
-              disabled={showInitialLoading || !!error || !raw}
+              disabled={showDependencyLoading || !!error || !raw}
               title="Suggested creation order of CX as Code resources"
             >
               Creation order
@@ -764,15 +768,15 @@ export default function App() {
               <span className="gcMetaLabel" title={VERSION_PICKER_TOOLTIP}>
                 Version:
               </span>
-              <gux-dropdown ref={versionDropdownRef} disabled={loadingIndex}>
+              <gux-dropdown ref={versionDropdownRef} disabled={loadingIndex || loadingData}>
                 <gux-listbox>
                   <gux-option value="latest">
-                    Latest {newestListedRelease ? `(${newestListedRelease})` : ""}
+                    Latest {newestListedRelease ? `(${toReleaseNotesVersion(newestListedRelease)})` : ""}
                   </gux-option>
 
                   {availableVersions.map((v) => (
                     <gux-option key={v} value={v}>
-                      {v}
+                      {toReleaseNotesVersion(v)}
                     </gux-option>
                   ))}
                 </gux-listbox>
@@ -802,10 +806,9 @@ export default function App() {
                   value={query}
                   onInput={(e) => {
                     setQuery(e.target.value);
-                    setSelectedType("");
                   }}
                   onKeyDown={handleResourceListKeyDown}
-                  disabled={showInitialLoading || !!error}
+                  disabled={showDependencyLoading || !!error}
                 />
 
                 <button
@@ -813,7 +816,7 @@ export default function App() {
                   className="gcClearButton"
                   onClick={clearSearch}
                   disabled={
-                    showInitialLoading ||
+                    showDependencyLoading ||
                     !!error ||
                     (!query && !selectedType && !divisionFilter)
                   }
@@ -831,16 +834,16 @@ export default function App() {
               tabIndex={0}
               onKeyDown={handleResourceListKeyDown}
             >
-              {showInitialLoading ? (
+              {showDependencyLoading ? (
                 <div className="gcEmptyRow">Loading dependency data...</div>
               ) : null}
 
-              {!showInitialLoading &&
+              {!showDependencyLoading &&
                 filteredTypes.map((t) => (
                   <button
                     key={t}
                     data-resource-type={t}
-                    className={`gcTr ${t === activeType ? "isActive" : ""}`}
+                    className={`gcTr ${t === selectedType ? "isActive" : ""}`}
                     onClick={() => {
                       setSelectedType(t);
                       listBodyRef.current?.focus();
@@ -848,13 +851,13 @@ export default function App() {
                     onKeyDown={handleResourceListKeyDown}
                     type="button"
                     role="option"
-                    aria-selected={t === activeType}
+                    aria-selected={t === selectedType}
                   >
                     <div className="gcTd gcMono">{t}</div>
                   </button>
                 ))}
 
-              {!showInitialLoading && filteredTypes.length === 0 ? (
+              {!showDependencyLoading && filteredTypes.length === 0 ? (
                 <div className="gcEmptyRow">No matches.</div>
               ) : null}
             </div>
@@ -883,7 +886,7 @@ export default function App() {
                       className="gcSegmentedControl__option"
                       role="radio"
                       aria-checked={divisionFilter === DIVISION_FILTER_NOT_AWARE}
-                      disabled={showInitialLoading || !!error}
+                      disabled={showDependencyLoading || !!error}
                       title="Non-division-aware only"
                       onClick={() => {
                         setDivisionFilter(DIVISION_FILTER_NOT_AWARE);
@@ -912,7 +915,7 @@ export default function App() {
                       className="gcSegmentedControl__option"
                       role="radio"
                       aria-checked={divisionFilter === DIVISION_FILTER_ALL}
-                      disabled={showInitialLoading || !!error}
+                      disabled={showDependencyLoading || !!error}
                       title="All resource types"
                       onClick={() => {
                         setDivisionFilter(DIVISION_FILTER_ALL);
@@ -926,7 +929,7 @@ export default function App() {
                       className="gcSegmentedControl__option"
                       role="radio"
                       aria-checked={divisionFilter === DIVISION_FILTER_AWARE}
-                      disabled={showInitialLoading || !!error}
+                      disabled={showDependencyLoading || !!error}
                       title="Division-aware only"
                       onClick={() => {
                         setDivisionFilter(DIVISION_FILTER_AWARE);
@@ -961,24 +964,25 @@ export default function App() {
             <div className="gcCard__header">
               <div className="gcCard__titleRow">
                 <h2 className="gcCard__title">Resource Type Details</h2>
-                {activeType && terraformRegistryDocsUrl ? (
+                {detailType && terraformRegistryDocsUrl ? (
                   <a
                     className="gcDocsPill"
                     href={terraformRegistryDocsUrl}
                     target="_blank"
                     rel="noreferrer"
-                    aria-label={`Open ${activeType} in the Terraform Registry (APIs and permissions)`}
+                    aria-label={`Open ${detailType} in the Terraform Registry (APIs and permissions)`}
                   >
                     Registry docs (APIs & permissions)
                   </a>
                 ) : null}
               </div>
-              <div className={`gcCard__subtitle ${activeType ? "gcCard__subtitle--hasResource" : ""}`}>
-                {activeType ? (
+              <div className={`gcCard__subtitle ${detailType ? "gcCard__subtitle--hasResource" : ""}`}>
+                {detailType ? (
                   <div className="gcResourceHeader">
                     <div className="gcResourceTypeLine">
                       <span className="gcResourceTypeGroup">
-                        <code className="gcResourceTypeName">{activeType}</code>
+                        <code className="gcResourceTypeName">{detailType}</code>
+                        {activeType ? (
                         <a
                           className="gcPermalinkAnchor"
                           href={resourceTypePermalink}
@@ -1002,8 +1006,9 @@ export default function App() {
                             />
                           </svg>
                         </a>
+                        ) : null}
                       </span>
-                      {isDivisionAware ? (
+                      {activeType && isDivisionAware ? (
                         <span
                           className="gcDivisionBadge"
                           title="Depends on genesyscloud_auth_division — heuristic for division_id in Registry docs; confirm there if unsure."
@@ -1015,9 +1020,9 @@ export default function App() {
                     <div className="gcMenuPathBlock" aria-label="Genesys Cloud GUI menu path">
                       <div className="gcMenuPath__label">GUI menu path</div>
                       <div className="gcMenuPath__value">
-                        {guiMenuPath ? (
+                        {activeType && detailGuiMenuPath ? (
                           <span className="gcMenuPath__crumbs">
-                            {guiMenuPath.split(">").map((segment, index) => (
+                            {detailGuiMenuPath.split(">").map((segment, index) => (
                               <React.Fragment key={`${segment}-${index}`}>
                                 {index > 0 ? (
                                   <span className="gcMenuPath__sep" aria-hidden="true">
@@ -1029,7 +1034,9 @@ export default function App() {
                             ))}
                           </span>
                         ) : (
-                          <span className="gcMenuPath__empty">TBD</span>
+                          <span className="gcMenuPath__empty">
+                            {showDependencyLoading ? "Loading…" : "TBD"}
+                          </span>
                         )}
                       </div>
                     </div>
@@ -1041,6 +1048,10 @@ export default function App() {
             </div>
 
             <div className="gcRightCard__sections">
+            {showDependencyLoading && detailType && !activeType ? (
+              <div className="gcMuted">Loading dependency data for this version…</div>
+            ) : (
+              <>
             {activeType && effectiveVersion ? (
               <ResourceReleaseChanges
                 version={effectiveVersion}
@@ -1162,6 +1173,8 @@ export default function App() {
                 onViewAll={() => setAttributeIndexDialogOpen(true)}
               />
             ) : null}
+              </>
+            )}
             </div>
           </section>
         </div>

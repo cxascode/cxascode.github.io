@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { toReleaseNotesVersion } from "./releaseNotes.js";
 import {
   attributeIndexEntryKey,
   ATTRIBUTE_INDEX_DESCRIPTION,
@@ -52,7 +53,9 @@ function AttributeHistoryEntry({ entry }) {
           <ul className="gcAttributeHistory__historyList">
             {entry.history.map((item) => (
               <li key={`${item.version}-${item.change}-${item.summary}`}>
-                <span className="gcAttributeHistory__historyVersion">{item.version}</span>
+                <span className="gcAttributeHistory__historyVersion">
+                  {toReleaseNotesVersion(item.version)}
+                </span>
                 <span className="gcAttributeHistory__historyChange">{item.change}</span>
                 <span>{item.summary}</span>
               </li>

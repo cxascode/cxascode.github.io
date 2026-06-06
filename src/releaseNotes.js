@@ -6,6 +6,9 @@ export function toReleaseNotesVersion(version) {
   return trimmed.startsWith("v") ? trimmed : `v${trimmed}`;
 }
 
+/** Display label for provider semver values in the UI. */
+export const formatProviderVersion = toReleaseNotesVersion;
+
 export function fromReleaseNotesVersion(version) {
   return String(version).trim().replace(/^v/i, "");
 }

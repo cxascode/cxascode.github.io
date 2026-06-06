@@ -161,12 +161,12 @@ export default function ReleaseNotesDialog({
             <gux-dropdown ref={versionDropdownRef} disabled={loadingIndex}>
               <gux-listbox>
                 <gux-option value="latest">
-                  Latest {newestListedRelease ? `(${newestListedRelease})` : ""}
+                  Latest {newestListedRelease ? `(${toReleaseNotesVersion(newestListedRelease)})` : ""}
                 </gux-option>
 
                 {availableVersions.map((v) => (
                   <gux-option key={v} value={v}>
-                    {v}
+                    {toReleaseNotesVersion(v)}
                   </gux-option>
                 ))}
               </gux-listbox>
