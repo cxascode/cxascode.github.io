@@ -710,6 +710,15 @@ export default function App() {
             <button
               type="button"
               className="gcHeaderLink"
+              onClick={() => setReleaseNotesDialogOpen(true)}
+              title="Full release notes for the selected provider version"
+            >
+              Release notes
+            </button>
+
+            <button
+              type="button"
+              className="gcHeaderLink"
               onClick={() => setOrderDialogOpen(true)}
               disabled={showInitialLoading || !!error || !raw}
               title="Suggested creation order of CX as Code resources"
