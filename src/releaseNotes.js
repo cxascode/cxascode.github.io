@@ -16,6 +16,12 @@ export function releaseNotesMarkdownUrl(version) {
   return `${BASE}release-notes/versions/${v}.md`;
 }
 
+export function releaseNotesChangesUrl(version) {
+  const v = toReleaseNotesVersion(version);
+  if (!v) return "";
+  return `${BASE}release-notes/changes/${v}.json`;
+}
+
 export async function fetchReleaseNotesMarkdown(version) {
   const url = releaseNotesMarkdownUrl(version);
   if (!url) return "";
@@ -29,56 +35,37 @@ export async function fetchReleaseNotesMarkdown(version) {
   return res.text();
 }
 
-export function extractResourceReleaseNotesMarkdown(markdown, resourceType) {
-  const type = (resourceType || "").trim();
-  if (!type || !markdown) return "";
+export async function fetchReleaseNotesChanges(version) {
+  const url = releaseNotesChangesUrl(version);
+  if (!url) return null;
 
-  const lines = markdown.split("\n");
-  const sections = [];
-  let currentH3 = "";
-  let i = 0;
-
-  while (i < lines.length) {
-    const line = lines[i];
-
-    if (line.startsWith("### ")) {
-      currentH3 = line;
-      i += 1;
-      continue;
-    }
-
-    if (line.startsWith("#### ")) {
-      const headerType = line.slice(5).trim();
-
-      if (headerType === type) {
-        const blockLines = [currentH3, "", line];
-        i += 1;
-
-        while (i < lines.length && !lines[i].startsWith("#### ") && !lines[i].startsWith("### ")) {
-          blockLines.push(lines[i]);
-          i += 1;
-        }
-
-        sections.push(blockLines.join("\n").trimEnd());
-        continue;
-      }
-
-      i += 1;
-      while (i < lines.length && !lines[i].startsWith("#### ") && !lines[i].startsWith("### ")) {
-        i += 1;
-      }
-      continue;
-    }
-
-    if (currentH3 && line.startsWith("- ")) {
-      const match = line.match(/^- `([^`]+)`/);
-      if (match?.[1] === type) {
-        sections.push(`${currentH3}\n\n${line}`);
-      }
-    }
-
-    i += 1;
+  const res = await fetch(url, { cache: "no-store" });
+  if (res.status === 404) return null;
+  if (!res.ok) {
+    throw new Error(`Failed to fetch release changes: ${res.status} ${res.statusText}`);
   }
 
-  return sections.join("\n\n");
+  const json = await res.json();
+  return json && Array.isArray(json.changes) ? json : null;
+}
+
+export function filterChangesForResource(changesPayload, resourceType) {
+  const type = (resourceType || "").trim();
+  if (!type || !changesPayload?.changes) return [];
+
+  return changesPayload.changes.filter((entry) => entry?.resource === type);
+}
+
+export function formatReleaseChangeLabel(change) {
+  if (change === "added") return "Added";
+  if (change === "removed") return "Removed";
+  if (change === "updated") return "Changed";
+  return change || "Changed";
+}
+
+export function formatReleaseChangeKind(kind) {
+  if (kind === "resource_behavior") return "Resource behavior";
+  if (kind === "state_behavior") return "State behavior";
+  if (kind === "attribute") return "Attribute";
+  return kind || "";
 }

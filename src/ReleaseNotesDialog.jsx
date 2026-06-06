@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import DependencyNote from "./DependencyNote.jsx";
 import { fetchReleaseNotesMarkdown, toReleaseNotesVersion } from "./releaseNotes.js";
 
@@ -123,7 +124,7 @@ export default function ReleaseNotesDialog({
     URL.revokeObjectURL(url);
   }, [markdown, effectiveVersion]);
 
-  return (
+  return createPortal(
     <dialog
       ref={dialogRef}
       className="gcOrderDialog"
@@ -196,6 +197,7 @@ export default function ReleaseNotesDialog({
           ) : null}
         </div>
       </div>
-    </dialog>
+    </dialog>,
+    document.body
   );
 }

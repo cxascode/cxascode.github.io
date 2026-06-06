@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { computeCreationOrder, formatCreationOrderText } from "./dependencyOrder.js";
 
 export default function OrderOfOperationsDialog({
@@ -86,19 +87,19 @@ export default function OrderOfOperationsDialog({
     handleClose();
   };
 
-  return (
+  return createPortal(
     <dialog
       ref={dialogRef}
       className="gcOrderDialog"
-      aria-labelledby="order-of-operations-title"
+      aria-labelledby="creation-order-title"
       onCancel={handleClose}
       onClose={handleClose}
     >
       <div className="gcOrderDialog__panel">
         <div className="gcOrderDialog__header">
           <div>
-            <h2 id="order-of-operations-title" className="gcOrderDialog__title">
-              Order of operations
+            <h2 id="creation-order-title" className="gcOrderDialog__title">
+              Creation order
             </h2>
             <p className="gcOrderDialog__subtitle">
               Suggested creation order of CX as Code resources. Earlier tiers should be created
@@ -109,7 +110,7 @@ export default function OrderOfOperationsDialog({
           <button
             type="button"
             className="gcOrderDialog__close"
-            aria-label="Close order of operations"
+            aria-label="Close creation order"
             onClick={handleClose}
           >
             ×
@@ -194,6 +195,7 @@ export default function OrderOfOperationsDialog({
           )}
         </div>
       </div>
-    </dialog>
+    </dialog>,
+    document.body
   );
 }

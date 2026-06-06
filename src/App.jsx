@@ -2,7 +2,9 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import AboutCxAsCode from "./AboutCxAsCode.jsx";
 import DependencyNote from "./DependencyNote.jsx";
 import OrderOfOperationsDialog from "./OrderOfOperationsDialog.jsx";
+import AttributeIndexDialog from "./AttributeIndexDialog.jsx";
 import ReleaseNotesDialog from "./ReleaseNotesDialog.jsx";
+import ResourceAttributeHistory from "./ResourceAttributeHistory.jsx";
 import ResourceReleaseChanges from "./ResourceReleaseChanges.jsx";
 import overrides from "./overrides.json";
 import {
@@ -547,6 +549,7 @@ export default function App() {
   const [copyState, setCopyState] = useState("idle");
   const [orderDialogOpen, setOrderDialogOpen] = useState(false);
   const [releaseNotesDialogOpen, setReleaseNotesDialogOpen] = useState(false);
+  const [attributeIndexDialogOpen, setAttributeIndexDialogOpen] = useState(false);
 
   const dependencyFor = useMemo(
     () => (activeType ? sortAlpha([...(reverseMap.get(activeType) || [])]) : []),
@@ -707,21 +710,11 @@ export default function App() {
             <button
               type="button"
               className="gcHeaderLink"
-              onClick={() => setReleaseNotesDialogOpen(true)}
-              disabled={loadingIndex || !!error}
-              title="Provider release notes for the selected version"
-            >
-              Release notes
-            </button>
-
-            <button
-              type="button"
-              className="gcHeaderLink"
               onClick={() => setOrderDialogOpen(true)}
               disabled={showInitialLoading || !!error || !raw}
               title="Suggested creation order of CX as Code resources"
             >
-              Order of operations
+              Creation order
             </button>
 
             <div
@@ -1010,8 +1003,8 @@ export default function App() {
                         </span>
                       ) : null}
                     </div>
-                    <div className="gcMenuPathBlock" aria-label="Genesys Cloud admin menu path">
-                      <div className="gcMenuPath__label">Menu path</div>
+                    <div className="gcMenuPathBlock" aria-label="Genesys Cloud GUI menu path">
+                      <div className="gcMenuPath__label">GUI menu path</div>
                       <div className="gcMenuPath__value">
                         {guiMenuPath ? (
                           <span className="gcMenuPath__crumbs">
@@ -1038,6 +1031,7 @@ export default function App() {
               </div>
             </div>
 
+            <div className="gcRightCard__sections">
             {activeType && effectiveVersion ? (
               <ResourceReleaseChanges
                 version={effectiveVersion}
@@ -1152,6 +1146,14 @@ export default function App() {
                 </div>
               </div>
             ) : null}
+
+            {activeType ? (
+              <ResourceAttributeHistory
+                resourceType={activeType}
+                onViewAll={() => setAttributeIndexDialogOpen(true)}
+              />
+            ) : null}
+            </div>
           </section>
         </div>
       </main>
@@ -1187,6 +1189,17 @@ export default function App() {
         availableVersions={availableVersions}
         newestListedRelease={newestListedRelease}
         loadingIndex={loadingIndex}
+      />
+
+      <AttributeIndexDialog
+        open={attributeIndexDialogOpen}
+        onClose={() => setAttributeIndexDialogOpen(false)}
+        knownTypes={new Set(allTypes)}
+        onSelectResource={(type) => {
+          setSelectedType(type);
+          setQuery("");
+          setDivisionFilter(DIVISION_FILTER_ALL);
+        }}
       />
     </div>
   );
