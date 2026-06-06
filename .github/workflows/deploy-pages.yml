@@ -3,6 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - "public/release-notes/**"
   workflow_dispatch:
   schedule:
     - cron: "23 6 * * *" # once per day (UTC)
