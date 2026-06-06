@@ -1,3 +1,5 @@
+import { toReleaseNotesVersion } from "./releaseNotes.js";
+
 const BASE = import.meta.env.BASE_URL;
 
 export const ATTRIBUTE_INDEX_MIN_VERSION = "v1.60.0";
@@ -100,12 +102,13 @@ export function formatAttributeIndexType(type) {
 
 export function formatAttributeIndexIntroduced(value) {
   const normalized = (value || "").trim();
-  return normalized || "Unknown";
+  if (!normalized || normalized.toLowerCase() === "unknown") return "Unknown";
+  return toReleaseNotesVersion(normalized);
 }
 
 export function formatAttributeIndexLastChanged(value) {
   const normalized = (value || "").trim();
-  return normalized ? `Changed ${normalized}` : "";
+  return normalized ? `Changed ${toReleaseNotesVersion(normalized)}` : "";
 }
 
 export function attributeIndexEntryKey(entry) {
