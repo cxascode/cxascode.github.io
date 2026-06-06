@@ -65,11 +65,14 @@ export default function OrderOfOperationsDialog({
     }
   }, [open]);
 
-  const handleClose = useCallback(() => {
-    setQuery("");
-    setCopyState("idle");
-    onClose?.();
-  }, [onClose]);
+  const handleClose = useCallback(
+    (nextResourceType) => {
+      setQuery("");
+      setCopyState("idle");
+      onClose?.(nextResourceType);
+    },
+    [onClose]
+  );
 
   const handleCopy = async () => {
     if (!exportText) return;
@@ -84,7 +87,7 @@ export default function OrderOfOperationsDialog({
 
   const handleSelectType = (type) => {
     onSelectType?.(type);
-    handleClose();
+    handleClose(type);
   };
 
   return createPortal(

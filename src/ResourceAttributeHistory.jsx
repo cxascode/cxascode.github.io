@@ -5,7 +5,7 @@ import {
   ATTRIBUTE_INDEX_DESCRIPTION,
   fetchResourceAttributeIndex,
   filterIndexForResource,
-  formatAttributeIndexIntroduced,
+  formatAttributeIndexIntroducedLabel,
   formatAttributeIndexLastChanged,
   formatAttributeIndexType,
 } from "./resourceAttributeIndex.js";
@@ -22,6 +22,11 @@ function StatusBadge({ status }) {
 
 function AttributeHistoryEntry({ entry }) {
   const showType = entry.type && entry.type !== "resource";
+  const introducedLabel = formatAttributeIndexIntroducedLabel(entry.introduced);
+  const lastChangedLabel = formatAttributeIndexLastChanged(
+    entry.last_updated,
+    entry.introduced
+  );
 
   return (
     <article className="gcAttributeHistory__item">
@@ -32,13 +37,11 @@ function AttributeHistoryEntry({ entry }) {
             <span className="gcAttributeHistory__type">{formatAttributeIndexType(entry.type)}</span>
           ) : null}
           <StatusBadge status={entry.status} />
-          <span className="gcAttributeHistory__introduced">
-            Introduced {formatAttributeIndexIntroduced(entry.introduced)}
-          </span>
-          {entry.last_updated ? (
-            <span className="gcAttributeHistory__version">
-              {formatAttributeIndexLastChanged(entry.last_updated)}
-            </span>
+          {introducedLabel ? (
+            <span className="gcAttributeHistory__introduced">{introducedLabel}</span>
+          ) : null}
+          {lastChangedLabel ? (
+            <span className="gcAttributeHistory__version">{lastChangedLabel}</span>
           ) : null}
         </div>
       </div>
