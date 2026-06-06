@@ -1,6 +1,6 @@
 # CX as Code Terraform Provider Resource Attribute Index
 
-This index is generated from per-release provider diffs. `Introduced` is `Unknown` when the item existed before the generated history starts.
+This index is generated from the release notes available on this site. `Introduced` is `Unknown` when the item existed before `v1.60.0`.
 
 | Type | Resource / Data Source | Attribute | Introduced | Last Updated | Status | Notes |
 |---|---|---|---:|---:|---|---|
@@ -17,7 +17,7 @@ This index is generated from per-release provider diffs. `Introduced` is `Unknow
 | `data_source` | `genesyscloud_knowledge_document` | `knowledge_base_name` | `v1.77.4` | `v1.77.4` | Active | Required knowledge base name used to scope the document lookup. |
 | `data_source` | `genesyscloud_knowledge_document` | `title` | `v1.77.4` | `v1.77.4` | Active | Required knowledge document title used to select the document. |
 | `data_source` | `genesyscloud_knowledge_document_variation` | `(resource-level behavior)` | `v1.63.0` | `v1.63.0` | Active | New data source for looking up knowledge document variations. |
-| `data_source` | `genesyscloud_quality_forms_survey` | `(resource-level behavior)` | `Unknown` | `v1.68.2` | Active | Lookup by name filters surveys by name through the provider proxy instead of paging all surveys, fixing incorrect name resolution. |
+| `data_source` | `genesyscloud_quality_forms_survey` | `(resource-level behavior)` | `Unknown` | `1.68.2` | Active | Lookup by name filters surveys by name through the provider proxy instead of paging all surveys, fixing incorrect name resolution. |
 | `data_source` | `genesyscloud_routing_email_domain` | `name` | `Unknown` | `v1.79.0` | Active | Lookup is case-insensitive; a short subdomain prefix can resolve to the full domain ID; ambiguous prefix matches return an error. |
 | `data_source` | `genesyscloud_routing_wrapupcode` | `(resource-level behavior)` | `Unknown` | `v1.67.0` | Active | Lookup failures surface the API error message in diagnostics instead of a separate generic not-found retry message. |
 | `data_source` | `genesyscloud_speechandtextanalytics_dictionaryfeedback` | `(resource-level behavior)` | `v1.75.0` | `v1.75.0` | Active | New Terraform data source for speech and text analytics dictionary feedback. |
@@ -57,6 +57,7 @@ This index is generated from per-release provider diffs. `Introduced` is `Unknow
 | `export_behavior` | `genesyscloud_integration` | `config.properties` | `Unknown` | `v1.67.0` | Active | Bulk export resolves createTimeOffRequests, timeOffBalances, timeOffTypes, updateTimeOffRequests, and userAccountIds as genesyscloud_flow references. |
 | `export_behavior` | `genesyscloud_integration` | `general export behavior` | `Unknown` | `v1.63.0` | Active | Bulk export block labels may include uniqueness hashes when names collide. |
 | `export_behavior` | `genesyscloud_integration_action` | `config_response.translation_map_defaults` | `Unknown` | `v1.60.0` | Active | Export now preserves zero-value entries in translation_map_defaults. |
+| `export_behavior` | `genesyscloud_integration_action` | `function_config.file_path` | `Unknown` | `1.68.2` | Active | Export writes the zip file name only, not the full local path. |
 | `export_behavior` | `genesyscloud_integration_action` | `general export behavior` | `Unknown` | `v1.78.0` | Active | Exported block labels use category_name instead of the action name alone. |
 | `export_behavior` | `genesyscloud_integration_credential` | `general export behavior` | `Unknown` | `v1.60.0` | Active | Exported block labels now use the format Integration-{integration_name} instead of {integration_name}_{credential_name}. |
 | `export_behavior` | `genesyscloud_integration_credential` | `name` | `Unknown` | `v1.77.4` | Active | No longer resolved to a genesyscloud_integration reference; exported values retain the raw Integration-prefixed name. |
@@ -149,7 +150,7 @@ This index is generated from per-release provider diffs. `Introduced` is `Unknow
 | `export_behavior` | `genesyscloud_webdeployments_deployment` | `supported_content_id` | `Unknown` | `v1.78.0` | Active | Resolved as a Terraform reference during export. |
 | `export_behavior` | `provider export` | `general export behavior` | `Unknown` | `v1.64.0` | Active | Bulk export depends_on references to data sources now use the data. prefix. |
 | `import_behavior` | `genesyscloud_telephony_providers_edges_site_outbound_route` | `general import behavior` | `Unknown` | `v1.72.2` | Active | When a site ID is provided, lookup searches outbound routes within that site first instead of scanning all sites. |
-| `provider_configuration` | `provider` | `ROUTING_QUEUE_DELAY_MAX` | `v1.68.2` | `v1.68.2` | Active | Optional environment variable that sets a maximum delay in seconds before routing queue API operations. |
+| `provider_configuration` | `provider` | `ROUTING_QUEUE_DELAY_MAX` | `1.68.2` | `1.68.2` | Active | Optional environment variable that sets a maximum delay in seconds before routing queue API operations. |
 | `provider_configuration` | `provider` | `custom_retry_timeout` | `v1.77.0` | `v1.79.1` | Active | The configured value is now applied consistently during parallel resource reads and exports. |
 | `provider_configuration` | `provider` | `region` | `v1.68.5` | `v1.68.5` | Active | Added support for the ap-southeast-1 region (maps to apse1.pure.cloud). |
 | `provider_configuration` | `provider` | `sdk_debug` | `Unknown` | `v1.80.0` | Active | When enabled, request log hook output now includes the HTTP request body. |
@@ -224,14 +225,14 @@ This index is generated from per-release provider diffs. `Introduced` is `Unknow
 | `resource` | `genesyscloud_idp_salesforce` | `sign_authn_requests` | `v1.72.2` | `v1.72.2` | Active | Optional boolean to sign Genesys Cloud authentication requests; defaults to false. |
 | `resource` | `genesyscloud_integration_action` | `(resource-level behavior)` | `Unknown` | `v1.68.3` | Active | Retrieves the latest draft version before publishing, reducing version-mismatch errors during apply. |
 | `resource` | `genesyscloud_integration_action` | `category` | `Unknown` | `v1.77.0` | Active | Categories containing function data action (case-insensitive, with underscores and hyphens treated as spaces) are recognized as function data actions and require function_config. |
-| `resource` | `genesyscloud_integration_action` | `config_request.request_url_template` | `Unknown` | `v1.68.2` | Active | No longer required; now optional and computed. |
-| `resource` | `genesyscloud_integration_action` | `function_config` | `v1.68.2` | `v1.68.2` | Active | Optional block for function-based integration actions whose category contains function data action. |
-| `resource` | `genesyscloud_integration_action` | `function_config.description` | `v1.68.2` | `v1.68.2` | Active | Optional and computed description of the function. |
-| `resource` | `genesyscloud_integration_action` | `function_config.file_path` | `v1.68.2` | `v1.68.3` | Active | Function zip uploads send an explicit content length instead of chunked transfer encoding, improving upload reliability. |
-| `resource` | `genesyscloud_integration_action` | `function_config.handler` | `v1.68.2` | `v1.68.2` | Active | Optional and computed handler function name. |
-| `resource` | `genesyscloud_integration_action` | `function_config.runtime` | `v1.68.2` | `v1.68.2` | Active | Optional and computed runtime environment for the function. |
-| `resource` | `genesyscloud_integration_action` | `function_config.timeout_seconds` | `v1.68.2` | `v1.68.2` | Active | Optional and computed function execution timeout in seconds. |
-| `resource` | `genesyscloud_integration_action` | `function_config.zip_id` | `v1.68.2` | `v1.68.2` | Active | Optional and computed ID of the uploaded zip file containing function code. |
+| `resource` | `genesyscloud_integration_action` | `config_request.request_url_template` | `Unknown` | `1.68.2` | Active | No longer required; now optional and computed. |
+| `resource` | `genesyscloud_integration_action` | `function_config` | `1.68.2` | `1.68.2` | Active | Optional block for function-based integration actions whose category contains function data action. |
+| `resource` | `genesyscloud_integration_action` | `function_config.description` | `1.68.2` | `1.68.2` | Active | Optional and computed description of the function. |
+| `resource` | `genesyscloud_integration_action` | `function_config.file_path` | `1.68.2` | `v1.68.3` | Active | Function zip uploads send an explicit content length instead of chunked transfer encoding, improving upload reliability. |
+| `resource` | `genesyscloud_integration_action` | `function_config.handler` | `1.68.2` | `1.68.2` | Active | Optional and computed handler function name. |
+| `resource` | `genesyscloud_integration_action` | `function_config.runtime` | `1.68.2` | `1.68.2` | Active | Optional and computed runtime environment for the function. |
+| `resource` | `genesyscloud_integration_action` | `function_config.timeout_seconds` | `1.68.2` | `1.68.2` | Active | Optional and computed function execution timeout in seconds. |
+| `resource` | `genesyscloud_integration_action` | `function_config.zip_id` | `1.68.2` | `1.68.2` | Active | Optional and computed ID of the uploaded zip file containing function code. |
 | `resource` | `genesyscloud_integration_action_draft` | `(resource-level behavior)` | `v1.65.0` | `v1.65.0` | Active | New resource for managing draft integration actions. |
 | `resource` | `genesyscloud_integration_credential` | `(resource-level behavior)` | `Unknown` | `v1.63.0` | Active | For pureCloudOAuthClient credentials without clientSecret in fields, the provider attempts to populate the secret from a matching OAuth client or provider metadata cache. |
 | `resource` | `genesyscloud_intent_category` | `(resource-level behavior)` | `v1.79.0` | `v1.80.0` | Removed | Removed; replaced by genesyscloud_intents_categories. |
