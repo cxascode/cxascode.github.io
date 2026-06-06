@@ -1,6 +1,6 @@
 {
     "version": "v1.68.3",
-    "previous": "1.68.2",
+    "previous": "v1.68.2",
     "changes": [
         {
             "kind": "resource_behavior",

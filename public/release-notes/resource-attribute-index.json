@@ -225,13 +225,13 @@
     "resource": "genesyscloud_quality_forms_survey",
     "attribute": "(resource-level behavior)",
     "introduced": "Unknown",
-    "last_updated": "1.68.2",
+    "last_updated": "v1.68.2",
     "removed": null,
     "status": "Active",
     "latest_summary": "Lookup by name filters surveys by name through the provider proxy instead of paging all surveys, fixing incorrect name resolution.",
     "history": [
       {
-        "version": "1.68.2",
+        "version": "v1.68.2",
         "change": "updated",
         "summary": "Lookup by name filters surveys by name through the provider proxy instead of paging all surveys, fixing incorrect name resolution."
       }
@@ -2703,14 +2703,14 @@
     "type": "provider_configuration",
     "resource": "provider",
     "attribute": "ROUTING_QUEUE_DELAY_MAX",
-    "introduced": "1.68.2",
-    "last_updated": "1.68.2",
+    "introduced": "v1.68.2",
+    "last_updated": "v1.68.2",
     "removed": null,
     "status": "Active",
     "latest_summary": "Optional environment variable that sets a maximum delay in seconds before routing queue API operations.",
     "history": [
       {
-        "version": "1.68.2",
+        "version": "v1.68.2",
         "change": "added",
         "summary": "Optional environment variable that sets a maximum delay in seconds before routing queue API operations."
       }
@@ -4081,22 +4081,22 @@
     "latest_summary": "Retrieves the latest draft version before publishing, reducing version-mismatch errors during apply.",
     "history": [
       {
-        "version": "1.68.2",
+        "version": "v1.68.2",
         "change": "updated",
         "summary": "Function data action categories are created through a draft-and-publish workflow that uploads function_config.file_path, applies function settings, and publishes the draft; file_path is required for these actions."
       },
       {
-        "version": "1.68.2",
+        "version": "v1.68.2",
         "change": "updated",
         "summary": "Function data action categories use the draft workflow on update to upload an updated zip and publish changes."
       },
       {
-        "version": "1.68.2",
+        "version": "v1.68.2",
         "change": "updated",
         "summary": "Read refreshes function_config from the API when the action category is a function data action."
       },
       {
-        "version": "1.68.2",
+        "version": "v1.68.2",
         "change": "updated",
         "summary": "Consistency state validation is no longer performed on refresh, which may surface plan diffs that were previously suppressed."
       },
@@ -4139,13 +4139,13 @@
     "resource": "genesyscloud_integration_action",
     "attribute": "config_request.request_url_template",
     "introduced": "Unknown",
-    "last_updated": "1.68.2",
+    "last_updated": "v1.68.2",
     "removed": null,
     "status": "Active",
     "latest_summary": "No longer required; now optional and computed.",
     "history": [
       {
-        "version": "1.68.2",
+        "version": "v1.68.2",
         "change": "updated",
         "summary": "No longer required; now optional and computed."
       }
@@ -4155,14 +4155,14 @@
     "type": "resource",
     "resource": "genesyscloud_integration_action",
     "attribute": "function_config",
-    "introduced": "1.68.2",
-    "last_updated": "1.68.2",
+    "introduced": "v1.68.2",
+    "last_updated": "v1.68.2",
     "removed": null,
     "status": "Active",
     "latest_summary": "Optional block for function-based integration actions whose category contains function data action.",
     "history": [
       {
-        "version": "1.68.2",
+        "version": "v1.68.2",
         "change": "added",
         "summary": "Optional block for function-based integration actions whose category contains function data action."
       }
@@ -4172,14 +4172,14 @@
     "type": "resource",
     "resource": "genesyscloud_integration_action",
     "attribute": "function_config.description",
-    "introduced": "1.68.2",
-    "last_updated": "1.68.2",
+    "introduced": "v1.68.2",
+    "last_updated": "v1.68.2",
     "removed": null,
     "status": "Active",
     "latest_summary": "Optional and computed description of the function.",
     "history": [
       {
-        "version": "1.68.2",
+        "version": "v1.68.2",
         "change": "added",
         "summary": "Optional and computed description of the function."
       }
@@ -4189,14 +4189,14 @@
     "type": "resource",
     "resource": "genesyscloud_integration_action",
     "attribute": "function_config.file_path",
-    "introduced": "1.68.2",
+    "introduced": "v1.68.2",
     "last_updated": "v1.68.3",
     "removed": null,
     "status": "Active",
     "latest_summary": "Function zip uploads send an explicit content length instead of chunked transfer encoding, improving upload reliability.",
     "history": [
       {
-        "version": "1.68.2",
+        "version": "v1.68.2",
         "change": "added",
         "summary": "Required path to the zip file containing function code when using function_config for create or update."
       },
@@ -4211,14 +4211,14 @@
     "type": "resource",
     "resource": "genesyscloud_integration_action",
     "attribute": "function_config.handler",
-    "introduced": "1.68.2",
-    "last_updated": "1.68.2",
+    "introduced": "v1.68.2",
+    "last_updated": "v1.68.2",
     "removed": null,
     "status": "Active",
     "latest_summary": "Optional and computed handler function name.",
     "history": [
       {
-        "version": "1.68.2",
+        "version": "v1.68.2",
         "change": "added",
         "summary": "Optional and computed handler function name."
       }
@@ -4228,14 +4228,14 @@
     "type": "resource",
     "resource": "genesyscloud_integration_action",
     "attribute": "function_config.runtime",
-    "introduced": "1.68.2",
-    "last_updated": "1.68.2",
+    "introduced": "v1.68.2",
+    "last_updated": "v1.68.2",
     "removed": null,
     "status": "Active",
     "latest_summary": "Optional and computed runtime environment for the function.",
     "history": [
       {
-        "version": "1.68.2",
+        "version": "v1.68.2",
         "change": "added",
         "summary": "Optional and computed runtime environment for the function."
       }
@@ -4245,14 +4245,14 @@
     "type": "resource",
     "resource": "genesyscloud_integration_action",
     "attribute": "function_config.timeout_seconds",
-    "introduced": "1.68.2",
-    "last_updated": "1.68.2",
+    "introduced": "v1.68.2",
+    "last_updated": "v1.68.2",
     "removed": null,
     "status": "Active",
     "latest_summary": "Optional and computed function execution timeout in seconds.",
     "history": [
       {
-        "version": "1.68.2",
+        "version": "v1.68.2",
         "change": "added",
         "summary": "Optional and computed function execution timeout in seconds."
       }
@@ -4262,14 +4262,14 @@
     "type": "resource",
     "resource": "genesyscloud_integration_action",
     "attribute": "function_config.zip_id",
-    "introduced": "1.68.2",
-    "last_updated": "1.68.2",
+    "introduced": "v1.68.2",
+    "last_updated": "v1.68.2",
     "removed": null,
     "status": "Active",
     "latest_summary": "Optional and computed ID of the uploaded zip file containing function code.",
     "history": [
       {
-        "version": "1.68.2",
+        "version": "v1.68.2",
         "change": "added",
         "summary": "Optional and computed ID of the uploaded zip file containing function code."
       }
@@ -8347,7 +8347,7 @@
         "summary": "When ignore_members is true, members are not read from the API or updated on apply."
       },
       {
-        "version": "1.68.2",
+        "version": "v1.68.2",
         "change": "updated",
         "summary": "Create, read, update, and delete API calls honor a configurable delay when ROUTING_QUEUE_DELAY_MAX is set."
       },
