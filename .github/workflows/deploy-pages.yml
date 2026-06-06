@@ -7,7 +7,7 @@ on:
       - "public/release-notes/**"
   workflow_dispatch:
   schedule:
-    - cron: "23 6 * * *" # once per day (UTC)
+    - cron: '17 22 * * *' # once per day, 40 minutes after release-notes job (UTC)
 
 concurrency:
   group: pages
