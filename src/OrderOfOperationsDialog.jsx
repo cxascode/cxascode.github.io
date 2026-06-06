@@ -135,7 +135,7 @@ export default function OrderOfOperationsDialog({
               setCopyState("idle");
             }}
           />
-          <button type="button" className="gcCopyButton" onClick={handleCopy} disabled={!exportText}>
+          <button type="button" className="gcHeaderLink" onClick={handleCopy} disabled={!exportText}>
             {copyState === "copied"
               ? "Copied"
               : copyState === "failed"

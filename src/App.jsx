@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import AboutCxAsCode from "./AboutCxAsCode.jsx";
 import DependencyNote from "./DependencyNote.jsx";
 import OrderOfOperationsDialog from "./OrderOfOperationsDialog.jsx";
+import ReleaseNotesDialog from "./ReleaseNotesDialog.jsx";
+import ResourceReleaseChanges from "./ResourceReleaseChanges.jsx";
 import overrides from "./overrides.json";
 import {
   buildTfExportAttributes,
@@ -544,6 +546,7 @@ export default function App() {
 
   const [copyState, setCopyState] = useState("idle");
   const [orderDialogOpen, setOrderDialogOpen] = useState(false);
+  const [releaseNotesDialogOpen, setReleaseNotesDialogOpen] = useState(false);
 
   const dependencyFor = useMemo(
     () => (activeType ? sortAlpha([...(reverseMap.get(activeType) || [])]) : []),
@@ -571,8 +574,8 @@ export default function App() {
       : VERSIONED_READ_ONLY_ROLE_URL(selectedVersion);
 
   const downloadVersionLabel = effectiveVersion || selectedVersion || "unknown";
-  const readWriteDownloadName = `read-write-role-${downloadVersionLabel}.tf`;
-  const readOnlyDownloadName = `read-only-role-${downloadVersionLabel}.tf`;
+  const readWriteDownloadName = `cx-as-code-read-write-role-${downloadVersionLabel}.tf`;
+  const readOnlyDownloadName = `cx-as-code-read-only-role-${downloadVersionLabel}.tf`;
   const spreadsheetTemplateHref =
     selectedVersion === "latest"
       ? SPREADSHEET_TEMPLATE_URL
@@ -701,6 +704,16 @@ export default function App() {
           </div>
 
           <div className="gcPageMeta">
+            <button
+              type="button"
+              className="gcHeaderLink"
+              onClick={() => setReleaseNotesDialogOpen(true)}
+              disabled={loadingIndex || !!error}
+              title="Provider release notes for the selected version"
+            >
+              Release notes
+            </button>
+
             <button
               type="button"
               className="gcHeaderLink"
@@ -1025,6 +1038,14 @@ export default function App() {
               </div>
             </div>
 
+            {activeType && effectiveVersion ? (
+              <ResourceReleaseChanges
+                version={effectiveVersion}
+                resourceType={activeType}
+                onViewAll={() => setReleaseNotesDialogOpen(true)}
+              />
+            ) : null}
+
             <div className="gcDetailsGrid">
               <div className="gcPanel">
                 <div className="gcPanel__header">
@@ -1156,6 +1177,16 @@ export default function App() {
           setQuery("");
           setDivisionFilter(DIVISION_FILTER_ALL);
         }}
+      />
+
+      <ReleaseNotesDialog
+        open={releaseNotesDialogOpen}
+        onClose={() => setReleaseNotesDialogOpen(false)}
+        selectedVersion={selectedVersion}
+        onVersionChange={setSelectedVersion}
+        availableVersions={availableVersions}
+        newestListedRelease={newestListedRelease}
+        loadingIndex={loadingIndex}
       />
     </div>
   );
