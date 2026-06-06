@@ -1,0 +1,432 @@
+[
+  {
+    "type": "data_source",
+    "resource": "genesyscloud_flow",
+    "attribute": "(resource-level behavior)",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When multiple flows share the same name, lookup uses type to select the matching flow.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "When multiple flows share the same name, lookup uses type to select the matching flow."
+      }
+    ]
+  },
+  {
+    "type": "data_source",
+    "resource": "genesyscloud_flow",
+    "attribute": "type",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Terraform emits a warning when type is omitted, noting that it will become required in a future release.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "Terraform emits a warning when type is omitted, noting that it will become required in a future release."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_architect_flow",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When use_legacy_architect_flow_exporter is false on genesyscloud_tf_export, flow YAML files are downloaded into an architect_flows subdirectory with filenames based on flow name, type, and ID.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "When use_legacy_architect_flow_exporter is false on genesyscloud_tf_export, flow YAML files are downloaded into an architect_flows subdirectory with filenames based on flow name, type, and ID."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_integration_action",
+    "attribute": "config_response.translation_map_defaults",
+    "introduced": "Unknown",
+    "last_updated": "v1.60.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Export now preserves zero-value entries in translation_map_defaults.",
+    "history": [
+      {
+        "version": "v1.60.0",
+        "change": "updated",
+        "summary": "Export now preserves zero-value entries in translation_map_defaults."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_integration_credential",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.60.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Exported block labels now use the format Integration-{integration_name} instead of {integration_name}_{credential_name}.",
+    "history": [
+      {
+        "version": "v1.60.0",
+        "change": "updated",
+        "summary": "Exported block labels now use the format Integration-{integration_name} instead of {integration_name}_{credential_name}."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_organization_authentication_settings",
+    "attribute": "timeout_settings.idle_token_timeout_seconds",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Export now preserves zero values for idle_token_timeout_seconds.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "Export now preserves zero values for idle_token_timeout_seconds."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_user",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Bulk export skips users that lack an ID or email address.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "Bulk export skips users that lack an ID or email address."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "provider export",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Export no longer substitutes unresolvable attributes on data source blocks with ${var...} placeholders.",
+    "history": [
+      {
+        "version": "v1.60.0",
+        "change": "updated",
+        "summary": "Bulk resource export limits concurrent API operations to the configured token_pool_size."
+      },
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "Export no longer substitutes unresolvable attributes on data source blocks with ${var...} placeholders."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_group",
+    "attribute": "calls_enabled",
+    "introduced": "v1.60.0",
+    "last_updated": "v1.60.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional boolean (defaults to true) that controls whether calls can be placed to the group.",
+    "history": [
+      {
+        "version": "v1.60.0",
+        "change": "added",
+        "summary": "Optional boolean (defaults to true) that controls whether calls can be placed to the group."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_responsemanagement_response",
+    "attribute": "library_ids",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Attribute type changed from list to set; order is no longer significant and duplicate values are not allowed.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "Attribute type changed from list to set; order is no longer significant and duplicate values are not allowed."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_routing_email_route",
+    "attribute": "(resource-level behavior)",
+    "introduced": "Unknown",
+    "last_updated": "v1.60.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Read and refresh retries when the API returns empty or missing route lists instead of clearing the resource from state.",
+    "history": [
+      {
+        "version": "v1.60.0",
+        "change": "updated",
+        "summary": "Read and refresh retries when the API returns empty or missing route lists instead of clearing the resource from state."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "auto_dial_delay_seconds",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": "v1.61.0",
+    "status": "Removed",
+    "latest_summary": "Removed from shared media settings blocks such as media_settings_chat, media_settings_message, and media_settings_email.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "removed",
+        "summary": "Removed from shared media settings blocks such as media_settings_chat, media_settings_message, and media_settings_email."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "auto_end_delay_seconds",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": "v1.61.0",
+    "status": "Removed",
+    "latest_summary": "Removed from shared media settings blocks such as media_settings_chat, media_settings_message, and media_settings_email.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "removed",
+        "summary": "Removed from shared media settings blocks such as media_settings_chat, media_settings_message, and media_settings_email."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "canned_response_library_mode",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Now computed; Terraform populates the value from the API when it is not set in configuration.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "Now computed; Terraform populates the value from the API when it is not set in configuration."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "enable_auto_dial_and_end",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": "v1.61.0",
+    "status": "Removed",
+    "latest_summary": "Removed from shared media settings blocks such as media_settings_chat, media_settings_message, and media_settings_email.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "removed",
+        "summary": "Removed from shared media settings blocks such as media_settings_chat, media_settings_message, and media_settings_email."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "media_settings_callback.mode",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "No longer computed; set this explicitly in configuration if you need a specific callback mode.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "No longer computed; set this explicitly in configuration if you need a specific callback mode."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "media_settings_email",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Now uses the shared media settings schema instead of an email-specific schema that included deprecated auto-dial fields.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "Now uses the shared media settings schema instead of an email-specific schema that included deprecated auto-dial fields."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "media_settings_message",
+    "introduced": "Unknown",
+    "last_updated": "v1.60.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Message media settings are now mapped with message-specific read and write logic, including sub_type_settings and service-level fields.",
+    "history": [
+      {
+        "version": "v1.60.0",
+        "change": "updated",
+        "summary": "Message media settings are now mapped with message-specific read and write logic, including sub_type_settings and service-level fields."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_telephony_providers_edges_phonebasesettings",
+    "attribute": "line_base.station_persistent_webrtc_enabled",
+    "introduced": "v1.61.0",
+    "last_updated": "v1.61.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional boolean (defaults to false) that controls station persistent WebRTC on line properties.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "added",
+        "summary": "Optional boolean (defaults to false) that controls station persistent WebRTC on line properties."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_telephony_providers_edges_site",
+    "attribute": "outbound_routes",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": "v1.61.0",
+    "status": "Removed",
+    "latest_summary": "Use genesyscloud_telephony_providers_edges_site_outbound_route resources to manage site outbound routes instead.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "removed",
+        "summary": "Use genesyscloud_telephony_providers_edges_site_outbound_route resources to manage site outbound routes instead."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_telephony_providers_edges_site_outbound_route",
+    "attribute": "(resource-level behavior)",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Resource operations no longer require the ENABLE_STANDALONE_OUTBOUND_ROUTES environment variable.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "Resource operations no longer require the ENABLE_STANDALONE_OUTBOUND_ROUTES environment variable."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_tf_export",
+    "attribute": "(resource-level behavior)",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Export can complete with warnings for non-fatal issues instead of treating all diagnostics as hard failures.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "Export can complete with warnings for non-fatal issues instead of treating all diagnostics as hard failures."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_tf_export",
+    "attribute": "use_legacy_architect_flow_exporter",
+    "introduced": "v1.61.0",
+    "last_updated": "v1.61.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional boolean (defaults to true). When false, architect flow YAML files are downloaded as part of the export process.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "added",
+        "summary": "Optional boolean (defaults to true). When false, architect flow YAML files are downloaded as part of the export process."
+      }
+    ]
+  },
+  {
+    "type": "state_behavior",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "general state behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "State schema upgraded to version 2 with an automatic upgrader from version 1.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "State schema upgraded to version 2 with an automatic upgrader from version 1."
+      }
+    ]
+  },
+  {
+    "type": "state_behavior",
+    "resource": "genesyscloud_telephony_providers_edges_site",
+    "attribute": "general state behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "State schema upgraded to version 2 with an automatic upgrader that removes outbound_routes from stored state.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "State schema upgraded to version 2 with an automatic upgrader that removes outbound_routes from stored state."
+      }
+    ]
+  }
+]

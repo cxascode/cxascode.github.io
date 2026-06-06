@@ -1,0 +1,108 @@
+## v1.61.0
+
+### Resources added
+None detected.
+
+### Resources changed
+
+#### genesyscloud_routing_queue
+
+Added:
+- None detected.
+
+Removed:
+- `auto_end_delay_seconds` — removed from shared media settings blocks (`media_settings_chat`, `media_settings_message`, `media_settings_email`, and other blocks using the shared schema).
+- `auto_dial_delay_seconds` — removed from shared media settings blocks.
+- `enable_auto_dial_and_end` — removed from shared media settings blocks.
+
+Changed:
+- `canned_response_library_mode` — now computed; Terraform populates the value from the API when it is not set in configuration.
+- `media_settings_callback.mode` — no longer computed; set this explicitly in configuration if you need a specific callback mode.
+- `media_settings_email` — now uses the shared media settings schema instead of an email-specific schema that included deprecated auto-dial fields.
+- State schema — upgraded to version 2 with an automatic state upgrader from version 1.
+
+#### genesyscloud_responsemanagement_response
+
+Added:
+- None detected.
+
+Removed:
+- None detected.
+
+Changed:
+- `library_ids` — attribute type changed from list to set; order is no longer significant and duplicate values are not allowed.
+
+#### genesyscloud_telephony_providers_edges_phonebasesettings
+
+Added:
+- `line_base.station_persistent_webrtc_enabled` — optional boolean (defaults to `false`) that controls station persistent WebRTC on line properties.
+
+Removed:
+- None detected.
+
+Changed:
+- None detected.
+
+#### genesyscloud_telephony_providers_edges_site
+
+Added:
+- None detected.
+
+Removed:
+- `outbound_routes` — use `genesyscloud_telephony_providers_edges_site_outbound_route` resources to manage site outbound routes instead.
+
+Changed:
+- State schema — upgraded to version 2 with an automatic state upgrader that removes `outbound_routes` from stored state.
+
+#### genesyscloud_telephony_providers_edges_site_outbound_route
+
+Added:
+- None detected.
+
+Removed:
+- None detected.
+
+Changed:
+- Resource operations no longer require the `ENABLE_STANDALONE_OUTBOUND_ROUTES` environment variable for create, read, update, delete, export, or data source lookup.
+
+#### genesyscloud_tf_export
+
+Added:
+- `use_legacy_architect_flow_exporter` — optional boolean (defaults to `true`). When set to `false`, architect flow YAML files are downloaded as part of the export process.
+
+Removed:
+- None detected.
+
+Changed:
+- Export can complete with warnings for non-fatal issues (such as architect flow file download failures) instead of treating all diagnostics as hard failures.
+
+### Resources removed
+None detected.
+
+### Data sources added
+None detected.
+
+### Data sources changed
+
+#### genesyscloud_flow
+
+Changed:
+- `type` — Terraform now emits a warning when this argument is omitted, noting that it will become required in a future release.
+- Flow lookup — when multiple flows share the same name, the data source uses `type` to select the matching flow; if multiple matches exist and none match the requested type, lookup fails with an error.
+
+### Data sources removed
+None detected.
+
+### Provider configuration changes
+None detected.
+
+### Upgrade impact
+- `genesyscloud_telephony_providers_edges_site` no longer supports inline `outbound_routes`. Move outbound route configuration to `genesyscloud_telephony_providers_edges_site_outbound_route` resources. Existing state is migrated automatically, but HCL that still sets `outbound_routes` on a site must be updated.
+- `genesyscloud_telephony_providers_edges_site_outbound_route` works without setting `ENABLE_STANDALONE_OUTBOUND_ROUTES`. Remove that environment variable from CI, export jobs, and local workflows if you added it solely for this resource.
+- `genesyscloud_routing_queue` removes auto-dial and auto-end arguments from non-callback media settings blocks. Configurations that set `auto_end_delay_seconds`, `auto_dial_delay_seconds`, or `enable_auto_dial_and_end` under `media_settings_chat`, `media_settings_message`, or `media_settings_email` must drop those arguments. Callback settings under `media_settings_callback` still support the auto-dial fields. State is migrated to schema version 2 automatically; plan diffs are possible where removed arguments were previously in state.
+- `genesyscloud_responsemanagement_response` configurations must treat `library_ids` as a set rather than an ordered list.
+- `genesyscloud_flow` data source lookups should include `type` to avoid warnings and to disambiguate flows with duplicate names.
+- `genesyscloud_tf_export` gains `use_legacy_architect_flow_exporter` (default `true`). Set it to `false` to download architect flow YAML files into an `architect_flows/` subdirectory during export, with filenames based on flow name, type, and ID.
+- Exporting `genesyscloud_organization_authentication_settings` now preserves zero values for `timeout_settings.idle_token_timeout_seconds`.
+- Bulk export skips `genesyscloud_user` entries that lack an ID or email address.
+- Export no longer substitutes unresolvable attributes on data source blocks with `${var...}` placeholders.
