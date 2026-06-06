@@ -252,11 +252,11 @@
     "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.68.3/docs"
   },
   {
-    "version": "1.68.2",
+    "version": "v1.68.2",
     "previous": "v1.68.1",
-    "title": "1.68.2",
-    "path": "/release-notes/versions/1.68.2.md",
-    "changes_path": "/release-notes/changes/1.68.2.json",
+    "title": "v1.68.2",
+    "path": "/release-notes/versions/v1.68.2.md",
+    "changes_path": "/release-notes/changes/v1.68.2.json",
     "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/1.68.2",
     "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.68.2/docs"
   },
