@@ -14,15 +14,20 @@ html {
 }
 
 .gcShell {
-  min-height: 100vh;
+  height: 100dvh;
+  min-height: 100dvh;
   background: var(--gc-bg);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .gcPageHeader {
+  flex-shrink: 0;
   padding: 14px 18px 0 18px;
   border-bottom: 1px solid var(--gc-border);
+  background: var(--gc-bg);
+  z-index: 10;
 }
 
 .gcPageTitleRow {
@@ -111,6 +116,66 @@ html {
   margin: 0;
   font-size: 22px;
   color: var(--gc-text);
+}
+
+.gcPageTitleEgg {
+  cursor: default;
+}
+
+.gcPageTitleEgg:hover .gcPageTitle {
+  animation: gcPageTitleColorShift 6s linear infinite;
+  animation-delay: var(--gc-page-title-color-delay, 0s);
+}
+
+@keyframes gcPageTitleColorShift {
+  0% {
+    color: #ef4444;
+  }
+  12.5% {
+    color: #f97316;
+  }
+  25% {
+    color: #eab308;
+  }
+  37.5% {
+    color: #22c55e;
+  }
+  50% {
+    color: #06b6d4;
+  }
+  62.5% {
+    color: #2a60ff;
+  }
+  75% {
+    color: #8b5cf6;
+  }
+  87.5% {
+    color: #ec4899;
+  }
+  100% {
+    color: #ef4444;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gcPageTitleEgg:hover .gcPageTitle {
+    animation: none;
+    color: var(--gc-blue);
+  }
+}
+
+.gcPageTitleEgg__quip {
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 32rem;
+  font-size: 12px;
+  font-style: italic;
+  line-height: 1.35;
+  color: var(--gc-subtle);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .gcPageMeta {
@@ -220,9 +285,12 @@ button.gcHeaderLink:disabled {
 }
 
 .gcContentArea {
-  padding: 16px 18px;
-  flex: 1;
+  flex: 1 1 auto;
   min-height: 0;
+  padding: 16px 18px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .gcAlert {
@@ -245,9 +313,11 @@ button.gcHeaderLink:disabled {
 .gcSplit {
   display: grid;
   grid-template-columns: 520px 1fr;
+  grid-template-rows: minmax(0, 1fr);
   gap: 16px;
+  flex: 1 1 auto;
   min-height: 0;
-  align-items: start;
+  align-items: stretch;
 }
 
 .gcSplit > .gcCard {
@@ -259,19 +329,23 @@ button.gcHeaderLink:disabled {
   border: 1px solid var(--gc-border);
   border-radius: 10px;
   overflow: hidden;
-  min-height: 520px;
   min-width: 0;
 }
 
 .gcSplit > .gcCard:first-child {
   display: flex;
   flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
 }
 
 .gcRightCard {
   display: flex;
   flex-direction: column;
   min-height: 0;
+  height: 100%;
+  overflow: hidden;
 }
 
 .gcRightCard__sections {
@@ -279,6 +353,11 @@ button.gcHeaderLink:disabled {
   flex-direction: column;
   gap: 14px;
   padding: 14px;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .gcRightCard__section {
@@ -294,6 +373,7 @@ button.gcHeaderLink:disabled {
 .gcCard__toolbar {
   padding: 12px;
   border-bottom: 1px solid var(--gc-border2);
+  flex-shrink: 0;
 }
 
 .gcToolbarRow {
@@ -419,9 +499,11 @@ button.gcHeaderLink:disabled {
 }
 
 .gcTable__body {
-  max-height: calc(100vh - 300px);
-  overflow: auto;
+  flex: 1 1 auto;
   min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .gcListFooter {
@@ -432,6 +514,7 @@ button.gcHeaderLink:disabled {
   padding: 10px 12px;
   border-top: 1px solid var(--gc-border2);
   background: var(--gc-surface);
+  flex-shrink: 0;
 }
 
 .gcListCount {
@@ -491,6 +574,7 @@ button.gcHeaderLink:disabled {
 .gcCard__header {
   padding: 14px;
   border-bottom: 1px solid var(--gc-border2);
+  flex-shrink: 0;
 }
 
 .gcCard__titleRow {
@@ -931,17 +1015,17 @@ button.gcHeaderLink:disabled {
   transform: translateX(-50%);
   width: min(920px, calc(100% - 32px));
   max-width: calc(100% - 32px);
+  max-height: calc(100dvh - 32px);
   margin: 0;
-}
-
-.gcOrderDialog::backdrop {
-  background: rgba(15, 23, 42, 0.45);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .gcOrderDialog__panel {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex: 1 1 auto;
   min-height: 0;
   background: var(--gc-surface);
   border: 1px solid var(--gc-border);
@@ -950,14 +1034,28 @@ button.gcHeaderLink:disabled {
   overflow: hidden;
 }
 
+.gcOrderDialog::backdrop {
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.gcOrderDialog__chrome {
+  flex-shrink: 0;
+  background: var(--gc-surface);
+}
+
 .gcOrderDialog__header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
   flex-shrink: 0;
-  padding: 14px;
+  padding: 12px 14px;
   border-bottom: 1px solid var(--gc-border2);
+}
+
+.gcOrderDialog__headerMain {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .gcOrderDialog__toolbarEnd {
@@ -972,11 +1070,22 @@ button.gcHeaderLink:disabled {
 }
 
 .gcOrderDialog__subtitle {
-  margin: 6px 0 0;
+  margin: 4px 0 0;
   font-size: 13px;
-  line-height: 1.5;
+  line-height: 1.45;
   color: var(--gc-subtle);
-  max-width: 52rem;
+}
+
+.gcOrderDialog__subtitle a {
+  color: var(--gc-blue);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.gcOrderDialog__subtitle a:hover,
+.gcOrderDialog__subtitle a:focus-visible {
+  color: var(--gc-blue);
+  outline: none;
 }
 
 .gcOrderDialog__close {
@@ -1000,9 +1109,8 @@ button.gcHeaderLink:disabled {
 }
 
 .gcOrderDialog__notice {
-  flex-shrink: 0;
-  margin: 0 14px;
-  padding: 10px 12px;
+  margin: 8px 0 0;
+  padding: 8px 10px;
   border: 1px solid rgba(42, 96, 255, 0.25);
   border-radius: 8px;
   background: var(--gc-blue-weak);
@@ -1017,8 +1125,46 @@ button.gcHeaderLink:disabled {
   gap: 10px 12px;
   flex-wrap: wrap;
   flex-shrink: 0;
-  padding: 12px;
+  padding: 10px 14px;
   border-bottom: 1px solid var(--gc-border2);
+}
+
+.gcOrderDialog__toolbarMeta {
+  flex: 1 1 auto;
+  min-width: 12rem;
+  margin-left: auto;
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--gc-subtle);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.gcOrderDialog__toolbar--attributeIndex {
+  flex-wrap: nowrap;
+}
+
+.gcOrderDialog__toolbar--attributeIndex .gcOrderDialog__search {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+
+.gcOrderDialog__toolbar--attributeIndex .gcSelectInput {
+  flex: 0 0 auto;
+}
+
+.gcOrderDialog__toolbarActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+.gcOrderDialog__toolbarActions .gcOrderDialog__toolbarMeta {
+  flex: 0 1 auto;
+  min-width: 0;
+  margin-left: 0;
 }
 
 .gcOrderDialog__search {
@@ -1036,8 +1182,10 @@ button.gcHeaderLink:disabled {
 .gcOrderDialog__body {
   flex: 1 1 auto;
   min-height: 0;
-  padding: 12px 14px 14px;
+  padding: 10px 14px 14px;
   overflow: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .gcOrderDialog__tier + .gcOrderDialog__tier {
@@ -1306,16 +1454,41 @@ button.gcHeaderLink:disabled {
 }
 
 @media (max-width: 1100px) {
-  .gcSplit {
-    grid-template-columns: 1fr;
+  .gcContentArea {
+    overflow: auto;
+    display: block;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
   }
 
-  .gcDetailsGrid {
+  .gcSplit {
     grid-template-columns: 1fr;
+    flex: none;
+    min-height: auto;
+  }
+
+  .gcSplit > .gcCard:first-child {
+    height: auto;
+    overflow: visible;
   }
 
   .gcTable__body {
     max-height: 45vh;
+    flex: none;
+  }
+
+  .gcRightCard {
+    height: auto;
+    overflow: visible;
+  }
+
+  .gcRightCard__sections {
+    flex: none;
+    overflow: visible;
+  }
+
+  .gcDetailsGrid {
+    grid-template-columns: 1fr;
   }
 
   .gcPageTitleRow {
