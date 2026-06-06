@@ -6,7 +6,8 @@ export const ABOUT_CX_AS_CODE_TEXT = (
     configuration — queues, flows, users, and more — as version-controlled Terraform.{" "}
     <strong>CX as Code Explorer</strong> maps <code>genesyscloud</code> provider resource types,
     dependencies, division-aware resources, Registry documentation, and{" "}
-    <code>genesyscloud_tf_export</code> templates.
+    <code>genesyscloud_tf_export</code> templates. It also includes provider release notes,
+    attribute change history, and a suggested resource creation order by dependency tier.
   </>
 );
 

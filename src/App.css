@@ -129,9 +129,7 @@ html {
 }
 
 .gcRoleDownloads.isHidden {
-  visibility: hidden;
-  opacity: 0;
-  pointer-events: none;
+  display: none;
 }
 
 .gcRoleDownloads.isVisible {
