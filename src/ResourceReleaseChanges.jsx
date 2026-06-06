@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import DependencyNote from "./DependencyNote.jsx";
 import {
-  extractResourceReleaseNotesMarkdown,
-  fetchReleaseNotesMarkdown,
+  fetchReleaseNotesChanges,
+  filterChangesForResource,
+  formatReleaseChangeKind,
+  formatReleaseChangeLabel,
   toReleaseNotesVersion,
 } from "./releaseNotes.js";
 
@@ -11,13 +12,13 @@ export default function ResourceReleaseChanges({
   resourceType,
   onViewAll,
 }) {
-  const [content, setContent] = useState("");
+  const [changes, setChanges] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
     if (!version || !resourceType) {
-      setContent("");
+      setChanges([]);
       setError("");
       return undefined;
     }
@@ -28,12 +29,12 @@ export default function ResourceReleaseChanges({
       try {
         setLoading(true);
         setError("");
-        const markdown = await fetchReleaseNotesMarkdown(version);
-        const extracted = extractResourceReleaseNotesMarkdown(markdown, resourceType);
-        if (!cancelled) setContent(extracted);
+        const payload = await fetchReleaseNotesChanges(version);
+        const filtered = filterChangesForResource(payload, resourceType);
+        if (!cancelled) setChanges(filtered);
       } catch (e) {
         if (!cancelled) {
-          setContent("");
+          setChanges([]);
           setError(String(e));
         }
       } finally {
@@ -51,35 +52,59 @@ export default function ResourceReleaseChanges({
   const versionLabel = toReleaseNotesVersion(version);
 
   return (
-    <div className="gcResourceReleaseChanges">
+    <div className="gcRightCard__section">
       <div className="gcPanel">
         <div className="gcPanel__header">
           <div className="gcPanel__title">Changes in {versionLabel}</div>
+          {changes.length ? <gux-badge>{changes.length}</gux-badge> : null}
         </div>
         <div className="gcPanel__body">
           {loading ? <div className="gcMuted">Loading changes…</div> : null}
 
           {error ? (
             <div className="gcMuted" role="alert">
-              Could not load release notes.
+              Could not load release changes.
             </div>
           ) : null}
 
-          {!loading && !error && !content ? (
+          {!loading && !error && !changes.length ? (
             <div className="gcMuted">No provider changes for this resource in {versionLabel}.</div>
           ) : null}
 
-          {!loading && !error && content ? (
-            <div className="gcDependencyNote__body">
-              <DependencyNote content={content} />
-            </div>
-          ) : null}
+          {!loading && !error && changes.length ? (
+            <ul className="gcReleaseChanges__list">
+              {changes.map((entry, index) => {
+                const kindLabel = formatReleaseChangeKind(entry.kind);
 
-          <button type="button" className="gcHeaderLink gcResourceReleaseChanges__link" onClick={onViewAll}>
-            View full release notes
-          </button>
+                return (
+                  <li
+                    key={`${entry.attribute || "resource"}-${entry.change}-${index}`}
+                    className="gcReleaseChanges__item"
+                  >
+                    <div className="gcReleaseChanges__itemHeader">
+                      <span className="gcAttributeHistory__status gcAttributeHistory__status--active">
+                        {formatReleaseChangeLabel(entry.change)}
+                      </span>
+                      {entry.attribute ? (
+                        <code className="gcAttributeHistory__attribute">{entry.attribute}</code>
+                      ) : null}
+                      {kindLabel ? (
+                        <span className="gcAttributeHistory__type">{kindLabel}</span>
+                      ) : null}
+                    </div>
+                    {entry.summary ? (
+                      <p className="gcAttributeHistory__summary">{entry.summary}</p>
+                    ) : null}
+                  </li>
+                );
+              })}
+            </ul>
+          ) : null}
         </div>
       </div>
+      <button type="button" className="gcHeaderLink gcSectionLink" onClick={onViewAll}>
+        View full release notes
+      </button>
     </div>
   );
 }
