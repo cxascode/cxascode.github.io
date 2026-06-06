@@ -200,20 +200,3 @@ function topologicalSortComponents(components, componentEdges) {
 
   return order;
 }
-
-export function formatCreationOrderText({ tiers, cyclicTypes }) {
-  const lines = [];
-
-  tiers.forEach((tier, index) => {
-    lines.push(
-      `Tier ${index + 1}${index === 0 ? " (create first)" : ""}${index === tiers.length - 1 ? " (create last)" : ""}`
-    );
-    for (const type of tier) {
-      const suffix = cyclicTypes.has(type) ? " [mutual dependency]" : "";
-      lines.push(`  ${type}${suffix}`);
-    }
-    if (index < tiers.length - 1) lines.push("");
-  });
-
-  return lines.join("\n");
-}

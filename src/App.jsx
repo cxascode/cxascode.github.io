@@ -783,7 +783,7 @@ export default function App() {
                 onClick={downloadSpreadsheetTemplate}
                 tabIndex={roleDownloadsSupported ? 0 : -1}
               >
-                Role Template Download:
+                Download Role Template:
               </button>
 
               <div className="gcHeaderLinks">

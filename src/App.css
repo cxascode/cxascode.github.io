@@ -172,6 +172,18 @@ html {
   flex-wrap: wrap;
 }
 
+.gcRoleDownloads .gcHeaderLink:visited,
+.gcRoleDownloads .gcHeaderLink:active {
+  color: var(--gc-blue);
+  background: #fff;
+}
+
+.gcRoleDownloads .gcHeaderLink:visited:hover,
+.gcRoleDownloads .gcHeaderLink:visited:focus-visible {
+  color: var(--gc-blue);
+  background: var(--gc-blue-weak);
+}
+
 .gcHeaderLink {
   display: inline-flex;
   align-items: center;
@@ -948,7 +960,7 @@ button.gcHeaderLink:disabled {
   border-bottom: 1px solid var(--gc-border2);
 }
 
-.gcOrderDialog__toolbarVersion {
+.gcOrderDialog__toolbarEnd {
   margin-left: auto;
 }
 

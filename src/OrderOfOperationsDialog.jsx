@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { computeCreationOrder, formatCreationOrderText } from "./dependencyOrder.js";
+import { computeCreationOrder } from "./dependencyOrder.js";
 
 export default function OrderOfOperationsDialog({
   open,
@@ -11,7 +11,6 @@ export default function OrderOfOperationsDialog({
 }) {
   const dialogRef = useRef(null);
   const [query, setQuery] = useState("");
-  const [copyState, setCopyState] = useState("idle");
 
   const order = useMemo(
     () => computeCreationOrder(depsMap, { hiddenTypes }),
@@ -41,16 +40,6 @@ export default function OrderOfOperationsDialog({
     [visibleTierGroups]
   );
 
-  const exportText = useMemo(() => {
-    const filtered = normalizedQuery
-      ? {
-          tiers: visibleTierGroups.map(({ tier }) => tier),
-          cyclicTypes: order.cyclicTypes,
-        }
-      : order;
-    return formatCreationOrderText(filtered);
-  }, [normalizedQuery, order, visibleTierGroups]);
-
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
@@ -68,21 +57,13 @@ export default function OrderOfOperationsDialog({
   const handleClose = useCallback(
     (nextResourceType) => {
       setQuery("");
-      setCopyState("idle");
       onClose?.(nextResourceType);
     },
     [onClose]
   );
 
-  const handleCopy = async () => {
-    if (!exportText) return;
-
-    try {
-      await navigator.clipboard.writeText(exportText);
-      setCopyState("copied");
-    } catch {
-      setCopyState("failed");
-    }
+  const clearFilter = () => {
+    setQuery("");
   };
 
   const handleSelectType = (type) => {
@@ -136,15 +117,15 @@ export default function OrderOfOperationsDialog({
             value={query}
             onInput={(event) => {
               setQuery(event.target.value);
-              setCopyState("idle");
             }}
           />
-          <button type="button" className="gcHeaderLink" onClick={handleCopy} disabled={!exportText}>
-            {copyState === "copied"
-              ? "Copied"
-              : copyState === "failed"
-                ? "Copy failed"
-                : "Copy list"}
+          <button
+            type="button"
+            className="gcClearButton"
+            onClick={clearFilter}
+            disabled={!query}
+          >
+            Clear
           </button>
         </div>
 
