@@ -1,0 +1,48 @@
+{
+    "version": "v1.68.6",
+    "previous": "v1.68.5",
+    "changes": [
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_group",
+            "attribute": "addresses",
+            "change": "updated",
+            "summary": "Setting an empty list clears existing group addresses on update instead of leaving them unchanged."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_group",
+            "attribute": "addresses",
+            "change": "updated",
+            "summary": "Exported configurations preserve empty addresses arrays instead of omitting them."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_group",
+            "attribute": "owner_ids",
+            "change": "updated",
+            "summary": "Exported configurations preserve empty owner_ids arrays instead of omitting them."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_journey_segment",
+            "attribute": "assignment_expiration_days",
+            "change": "updated",
+            "summary": "Changes to assignment_expiration_days are now applied during resource updates."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_knowledge_document_variation",
+            "attribute": "document_version",
+            "change": "updated",
+            "summary": "No longer settable in configuration; now computed only (was previously optional)."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "direct_routing.backup_queue_id",
+            "change": "updated",
+            "summary": "Omitted from export output when its value matches the queue's own ID."
+        }
+    ]
+}

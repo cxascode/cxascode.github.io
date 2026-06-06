@@ -1,0 +1,76 @@
+{
+    "version": "v1.81.0",
+    "previous": "v1.80.0",
+    "changes": [
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_auth_role",
+            "attribute": "permission_policies.action_set",
+            "change": "updated",
+            "summary": "When configuration uses \"*\", refresh and read preserve the wildcard in state instead of replacing it with the API expanded permission list, reducing perpetual plan diffs."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_auth_role",
+            "attribute": "permission_policies.entity_name",
+            "change": "updated",
+            "summary": "When configuration uses \"*\" for a domain, refresh and read collapse multiple per-entity API policies back into a single wildcard policy to match configuration."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_auth_role",
+            "attribute": "default_role_id",
+            "change": "updated",
+            "summary": "Updates no longer send default_role_id to the API; changing it in Terraform configuration will not apply to existing roles."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_oauth_client",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When linked to an integration credential and the API returns an empty secret, cascade update now restores the secret from the shared cache before updating the credential."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_oauth_client",
+            "attribute": "integration_credential_id",
+            "change": "updated",
+            "summary": "Creating or updating linked integration credentials now skips writing a nil client secret and logs a warning instead of failing."
+        },
+        {
+            "kind": "state_behavior",
+            "resource": "genesyscloud_oauth_client",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Shared OAuth cache lookups now use clientId and clientSecret keys instead of client_id and client_secret; existing cache entries from earlier provider versions may not be found until secrets are refreshed."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_webdeployments_configuration",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Export now paginates through all web deployment configurations instead of returning only the first API page."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_webdeployments_configuration",
+            "attribute": "version",
+            "change": "updated",
+            "summary": "Determining the latest configuration version now paginates through all versions, improving accuracy for configurations with many versions."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_webdeployments_deployment",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Export now paginates through all web deployments instead of returning only the first API page."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_webdeployments_deployment",
+            "attribute": "version",
+            "change": "updated",
+            "summary": "Resolving the latest configuration version for a deployment now paginates through all versions, improving accuracy for configurations with many versions."
+        }
+    ]
+}

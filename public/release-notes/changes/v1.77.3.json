@@ -1,0 +1,76 @@
+{
+    "version": "v1.77.3",
+    "previous": "v1.77.2",
+    "changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_integration_credential",
+            "attribute": "name",
+            "change": "updated",
+            "summary": "Name values prefixed with Integration- are now exported as Terraform references to genesyscloud_integration resources instead of raw prefixed strings."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_integration_custom_auth_action",
+            "attribute": "parent_integration_id",
+            "change": "updated",
+            "summary": "parent_integration_id is now resolved as a reference to genesyscloud_integration, using integration_id when needed during export."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_webdeployments_configuration",
+            "attribute": "messenger.apps.knowledge.knowledge_base_id",
+            "change": "updated",
+            "summary": "Export reference resolution now targets messenger.apps.knowledge.knowledge_base_id instead of the prior apps.knowledge.knowlege_base_id path."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_webdeployments_configuration",
+            "attribute": "support_center.enabled_categories.category_id",
+            "change": "updated",
+            "summary": "Export reference resolution now targets support_center.enabled_categories.category_id instead of the prior enabled_categories.category_id path."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_webdeployments_configuration",
+            "attribute": "support_center.knowledge_base_id",
+            "change": "updated",
+            "summary": "Export now resolves support_center.knowledge_base_id as a reference to genesyscloud_knowledge_knowledgebase."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_webdeployments_configuration",
+            "attribute": "support_center.label_filter.label_ids",
+            "change": "updated",
+            "summary": "Export now resolves support_center.label_filter.label_ids as references to genesyscloud_knowledge_label."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "enable_dependency_resolution",
+            "change": "updated",
+            "summary": "When using include_filter_resources or include_filter_resources_by_id, enable_dependency_resolution now controls depends_on generation without requiring a non-empty resource-type filter list."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "enable_dependency_resolution",
+            "change": "updated",
+            "summary": "When using exclude_filter_resources or the default export mode, enable_dependency_resolution no longer adds depends_on blocks even when set to true."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Failures in custom file writers for exported resources are reported as errors instead of warnings, causing the export to fail."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Permission errors encountered while listing resources during export are collected and reported at the end of the export run."
+        }
+    ]
+}

@@ -1,0 +1,167 @@
+{
+    "version": "v1.65.0",
+    "previous": "v1.64.1",
+    "changes": [
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_integration_action_draft",
+            "attribute": null,
+            "change": "added",
+            "summary": "New resource for managing draft integration actions."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_architect_ivr",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Bulk export block labels now use the IVR name only instead of combining the open-hours flow name with the IVR name."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_flow_loglevel",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Bulk export is now supported for this resource type."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_group",
+            "attribute": "include_owners",
+            "change": "added",
+            "summary": "Optional flag to allow group owners to be included as members; defaults to true."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_knowledge_document_variation",
+            "attribute": null,
+            "change": "updated",
+            "summary": "ordered_type and unordered_type in variation body list block properties are now read into state correctly."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_organization_authentication_settings",
+            "attribute": "timeout_settings",
+            "change": "updated",
+            "summary": "Now computed in addition to optional so API values are populated on read."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_organization_presence_definition",
+            "attribute": "language_labels",
+            "change": "updated",
+            "summary": "Map key validation at plan time was removed; pt was added to the documented valid label list."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_organization_presence_definition",
+            "attribute": "system_presence",
+            "change": "updated",
+            "summary": "OnQueue, Offline, and Idle are now accepted values."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_outbound_messagingcampaign",
+            "attribute": "email_config",
+            "change": "updated",
+            "summary": "email_config is now created, read, and updated through the API; previously ignored by the provider."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_messagingcampaign",
+            "attribute": "email_config",
+            "change": "updated",
+            "summary": "Exactly one of email_config or sms_config must be configured."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_messagingcampaign",
+            "attribute": "sms_config",
+            "change": "updated",
+            "summary": "Exactly one of email_config or sms_config must be configured; validation runs only when the block is present."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_outbound_messagingcampaign",
+            "attribute": "email_config.reply_to_address",
+            "change": "updated",
+            "summary": "Bulk export resolves reply_to_address route_id and domain_id to routing email references instead of from_address paths."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "context_id",
+            "change": "added",
+            "summary": "Computed ID that groups all versions of the evaluation form."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "published_id",
+            "change": "added",
+            "summary": "Computed ID of the published evaluation form version."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "published",
+            "change": "updated",
+            "summary": "On normal read, published is no longer synced from the API Published flag; during bulk export it is set from published-version lookup."
+        },
+        {
+            "kind": "state_behavior",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Setting published to true on create or update stores the published form ID in published_id and changes the Terraform resource ID to the new draft form ID."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_responsemanagement_response",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Bulk export block labels now prefix the response name with its library name(s)."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "outbound_messaging_sms_address_id",
+            "change": "updated",
+            "summary": "Bulk export no longer resolves this attribute to genesyscloud_routing_sms_address references."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_task_management_workitem_schema",
+            "attribute": "version",
+            "change": "added",
+            "summary": "Computed schema version number incremented when the schema is modified."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_task_management_worktype",
+            "attribute": "disable_default_status_creation",
+            "change": "updated",
+            "summary": "Bulk export always emits disable_default_status_creation = true."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_webdeployments_configuration",
+            "attribute": "custom_i18n_labels.localized_labels.key",
+            "change": "updated",
+            "summary": "PushNotificationTitle and PushNotificationBody are now accepted localized label keys."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_webdeployments_configuration",
+            "attribute": "messenger.styles.primary_color",
+            "change": "updated",
+            "summary": "Must be a valid hexadecimal color when set."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_webdeployments_configuration",
+            "attribute": "cobrowse.pause_criteria.condition",
+            "change": "updated",
+            "summary": "Plan diffs ignore case differences for operator values such as Includes and DoesNotInclude."
+        }
+    ]
+}

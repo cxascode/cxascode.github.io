@@ -1,0 +1,265 @@
+{
+    "version": "v1.69.0",
+    "previous": "v1.68.6",
+    "changes": [
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_architect_grammar_language",
+            "attribute": "voice_file_data.file_name",
+            "change": "updated",
+            "summary": "S3 paths are supported for grammar language files; changes to files stored in S3 are not detected by Terraform."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_architect_grammar_language",
+            "attribute": "dtmf_file_data.file_name",
+            "change": "updated",
+            "summary": "S3 paths are supported for grammar language files; changes to files stored in S3 are not detected by Terraform."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_architect_grammar_language",
+            "attribute": "voice_file_data.file_content_hash",
+            "change": "updated",
+            "summary": "Optional in configuration; still required at apply time when the corresponding file_name is not an S3 path."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_architect_grammar_language",
+            "attribute": "dtmf_file_data.file_content_hash",
+            "change": "updated",
+            "summary": "Optional in configuration; still required at apply time when the corresponding file_name is not an S3 path."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_architect_user_prompt",
+            "attribute": "resources.filename",
+            "change": "updated",
+            "summary": "S3 paths are supported for prompt audio files; changes to prompts stored in S3 are not detected by Terraform."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_externalcontacts_contact",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exported resource block labels use organization name, last name, and first name, falling back to external_system_url or the contact ID."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_externalcontacts_external_source",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exported resource block labels use the external source name when available, otherwise the source ID."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_externalcontacts_organization",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exported resource block labels use the organization name, then external_system_url, otherwise the organization ID."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_flow",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exported flow YAML filenames replace additional invalid filename characters with underscores."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_flow",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Flow dependency resolution avoids re-processing flows already exported in the same run."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_organization_authentication_settings",
+            "attribute": "password_requirements.minimum_length",
+            "change": "updated",
+            "summary": "Default is now 8; values below 8 are rejected at plan time."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_organization_authentication_settings",
+            "attribute": "password_requirements.minimum_digits",
+            "change": "updated",
+            "summary": "Default is now 1; values below 1 are rejected at plan time."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_organization_authentication_settings",
+            "attribute": "password_requirements.minimum_letters",
+            "change": "updated",
+            "summary": "Default is now 0; values below 0 are rejected at plan time."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_organization_authentication_settings",
+            "attribute": "password_requirements.minimum_upper",
+            "change": "updated",
+            "summary": "Default is now 1; values below 1 are rejected at plan time."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_organization_authentication_settings",
+            "attribute": "password_requirements.minimum_lower",
+            "change": "updated",
+            "summary": "Default is now 1; values below 1 are rejected at plan time."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_organization_authentication_settings",
+            "attribute": "password_requirements.minimum_specials",
+            "change": "updated",
+            "summary": "Default is now 1; values below 1 are rejected at plan time."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_outbound_contact_list",
+            "attribute": "contacts_filepath",
+            "change": "updated",
+            "summary": "S3 paths are supported for bulk contact CSV uploads; local CSV column validation is skipped for S3 paths."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_outbound_contact_list",
+            "attribute": "contacts_file_content_hash",
+            "change": "updated",
+            "summary": "File change detection supports S3 paths."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_outbound_contact_list",
+            "attribute": "contacts_filepath",
+            "change": "updated",
+            "summary": "Bulk contact upload runs only when contacts_filepath is set; existing contacts are cleared only when the list already has contacts; zero-row uploads are skipped; apply waits for import completion after upload."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_digitalruleset",
+            "attribute": "rules.conditions.contact_column_condition_settings.value",
+            "change": "updated",
+            "summary": "Optional when value_type is String or DateTime; required when value_type is Numeric or Period."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_digitalruleset",
+            "attribute": "rules.conditions.contact_column_condition_settings.value_type",
+            "change": "updated",
+            "summary": "Restricted to String, Numeric, Period, or DateTime."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_outbound_digitalruleset",
+            "attribute": "rules.order",
+            "change": "updated",
+            "summary": "Values of 0 are preserved in export output."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_ruleset",
+            "attribute": "rules.dialer_actions.action_type_name",
+            "change": "updated",
+            "summary": "APPEND_CUSTOM_ENTRY_TO_DNC_LIST is now an accepted dialer action type."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_responsemanagement_responseasset",
+            "attribute": "filename",
+            "change": "updated",
+            "summary": "S3 paths are supported; S3 files are downloaded to temporary storage for upload. Local filename character restrictions do not apply to S3 paths."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_responsemanagement_responseasset",
+            "attribute": "file_content_hash",
+            "change": "updated",
+            "summary": "Optional and computed; the provider sets the hash on create and update. File content changes trigger resource replacement. Manual setting emits a future read-only warning."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_responsemanagement_responseasset",
+            "attribute": "file_content_hash",
+            "change": "updated",
+            "summary": "Exported configurations omit file_content_hash."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "conditional_group_activation",
+            "change": "added",
+            "summary": "Optional block to configure Conditional Group Activation with pilot_rule and rules containing conditions and groups to activate."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "conditional_group_activation.pilot_rule.conditions.simple_metric.queue_id",
+            "change": "updated",
+            "summary": "Queue references in conditional group activation pilot rules are resolved during export."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "conditional_group_activation.rules.conditions.simple_metric.queue_id",
+            "change": "updated",
+            "summary": "Queue references in conditional group activation rules are resolved during export."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_script",
+            "attribute": "filepath",
+            "change": "updated",
+            "summary": "S3 paths are supported for script files."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_script",
+            "attribute": "file_content_hash",
+            "change": "updated",
+            "summary": "Optional and computed; the provider sets the hash on create and update. Manual setting emits a future read-only warning."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_script",
+            "attribute": "file_content_hash",
+            "change": "updated",
+            "summary": "Exported configurations omit file_content_hash."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_user",
+            "attribute": "routing_utilization.call.maximum_capacity",
+            "change": "updated",
+            "summary": "Values of 0 are preserved in export output."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_user",
+            "attribute": "routing_utilization.callback.maximum_capacity",
+            "change": "updated",
+            "summary": "Values of 0 are preserved in export output."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_user",
+            "attribute": "routing_utilization.chat.maximum_capacity",
+            "change": "updated",
+            "summary": "Values of 0 are preserved in export output."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_user",
+            "attribute": "routing_utilization.email.maximum_capacity",
+            "change": "updated",
+            "summary": "Values of 0 are preserved in export output."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_user",
+            "attribute": "routing_utilization.message.maximum_capacity",
+            "change": "updated",
+            "summary": "Values of 0 are preserved in export output."
+        }
+    ]
+}

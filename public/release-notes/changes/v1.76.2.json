@@ -1,0 +1,20 @@
+{
+    "version": "v1.76.2",
+    "previous": "v1.76.1",
+    "changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_flow",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Dependency pagination metadata is handled safely; export no longer fails when the consumed-resources API response omits PageCount."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_flow",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Consumed resource dependencies missing a name are skipped during export dependency resolution."
+        }
+    ]
+}

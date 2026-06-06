@@ -1,0 +1,293 @@
+{
+    "version": "v1.73.0",
+    "previous": "v1.72.2",
+    "changes": [
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_idp_adfs",
+            "attribute": "certificates",
+            "change": "updated",
+            "summary": "Plan diffs now ignore formatting-only differences in PEM/DER certificate values."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_idp_generic",
+            "attribute": "certificates",
+            "change": "updated",
+            "summary": "Plan diffs now ignore formatting-only differences in PEM/DER certificate values."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_idp_gsuite",
+            "attribute": "certificates",
+            "change": "updated",
+            "summary": "Plan diffs now ignore formatting-only differences in PEM/DER certificate values."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_idp_okta",
+            "attribute": "certificates",
+            "change": "updated",
+            "summary": "Plan diffs now ignore formatting-only differences in PEM/DER certificate values."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_idp_onelogin",
+            "attribute": "certificates",
+            "change": "updated",
+            "summary": "Plan diffs now ignore formatting-only differences in PEM/DER certificate values."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_idp_ping",
+            "attribute": "certificates",
+            "change": "updated",
+            "summary": "Plan diffs now ignore formatting-only differences in PEM/DER certificate values."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_idp_salesforce",
+            "attribute": "certificates",
+            "change": "updated",
+            "summary": "Plan diffs now ignore formatting-only differences in PEM/DER certificate values."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_knowledge_category",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When deletion fails with a bot-flow dependency tracking error, the provider rebuilds dependency tracking, waits, and retries the delete."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_knowledge_document",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When deletion fails with a bot-flow dependency tracking error, the provider rebuilds dependency tracking, waits, and retries the delete."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_knowledge_document_variation",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When deletion fails with a bot-flow dependency tracking error, the provider rebuilds dependency tracking, waits, and retries the delete."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_knowledge_knowledgebase",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Dependency tracking is no longer rebuilt before every delete; rebuild and retry occur only when deletion fails with a bot-flow dependency tracking error."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_knowledge_knowledgebase",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Dependency tracking rebuild now fails on status or polling errors instead of proceeding with deletion."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_knowledge_label",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When deletion fails with a bot-flow dependency tracking error, the provider rebuilds dependency tracking, waits, and retries the delete."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_entities.sms_campaign_ids",
+            "change": "added",
+            "summary": "Optional list of SMS campaign IDs to monitor; changing this value forces resource replacement."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_entities.email_campaign_ids",
+            "change": "added",
+            "summary": "Optional list of email campaign IDs to monitor; changing this value forces resource replacement."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_actions.campaign_rule_action_entities.sms_campaign_ids",
+            "change": "added",
+            "summary": "Optional list of SMS campaign IDs for the action to target; changing this value forces resource replacement."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_actions.campaign_rule_action_entities.email_campaign_ids",
+            "change": "added",
+            "summary": "Optional list of email campaign IDs for the action to target; changing this value forces resource replacement."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_actions.parameters.abandon_rate",
+            "change": "added",
+            "summary": "Compliance abandon rate (float greater than 0.1); required for the setCampaignAbandonRate action."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_actions.parameters.outbound_line_count",
+            "change": "added",
+            "summary": "Number of outbound lines (non-negative integer); required for the setCampaignNumberOfLines action."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_actions.parameters.relative_weight",
+            "change": "added",
+            "summary": "Relative weight (integer 0\u2013100); required for the setCampaignWeight action."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_actions.parameters.max_calls_per_agent",
+            "change": "added",
+            "summary": "Maximum calls per agent (float greater than 1.0); optional for the setCampaignMaxCallsPerAgent action."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_actions.parameters.queue_id",
+            "change": "added",
+            "summary": "Queue ID; required for the changeCampaignQueue action."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_actions.parameters.messages_per_minute",
+            "change": "added",
+            "summary": "Messaging rate (positive integer)."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_actions.parameters.sms_messages_per_minute",
+            "change": "added",
+            "summary": "SMS messaging rate (positive integer)."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_actions.parameters.email_messages_per_minute",
+            "change": "added",
+            "summary": "Email messaging rate (positive integer)."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_actions.parameters.sms_content_template_id",
+            "change": "added",
+            "summary": "Content template ID for SMS campaigns."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_actions.parameters.email_content_template_id",
+            "change": "added",
+            "summary": "Content template ID for email campaigns."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_conditions.parameters.abandon_rate",
+            "change": "added",
+            "summary": "Compliance abandon rate (float greater than 0.1)."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_conditions.parameters.outbound_line_count",
+            "change": "added",
+            "summary": "Number of outbound lines (non-negative integer)."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_conditions.parameters.relative_weight",
+            "change": "added",
+            "summary": "Relative weight (integer 0\u2013100)."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_conditions.parameters.max_calls_per_agent",
+            "change": "added",
+            "summary": "Maximum calls per agent (float greater than 1.0)."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_conditions.parameters.queue_id",
+            "change": "added",
+            "summary": "Queue ID."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_conditions.parameters.messages_per_minute",
+            "change": "added",
+            "summary": "Messaging rate (positive integer)."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_conditions.parameters.sms_messages_per_minute",
+            "change": "added",
+            "summary": "SMS messaging rate (positive integer)."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_conditions.parameters.email_messages_per_minute",
+            "change": "added",
+            "summary": "Email messaging rate (positive integer)."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_conditions.parameters.sms_content_template_id",
+            "change": "added",
+            "summary": "Content template ID for SMS campaigns."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_conditions.parameters.email_content_template_id",
+            "change": "added",
+            "summary": "Content template ID for email campaigns."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_conditions.condition_type",
+            "change": "updated",
+            "summary": "Accepts additional condition types: campaignRecordsAttempted, campaignContactsMessaged, campaignBusinessSuccess, campaignBusinessNeutral, campaignBusinessFailure, campaignValidAttempts, and campaignRightPartyContacts."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_actions.action_type",
+            "change": "updated",
+            "summary": "Accepts additional action types: setCampaignAbandonRate, setCampaignNumberOfLines, setCampaignWeight, setCampaignMaxCallsPerAgent, changeCampaignQueue, changeCampaignTemplate, and setCampaignMessagesPerMinute."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_responsemanagement_response",
+            "attribute": "namespace",
+            "change": "updated",
+            "summary": "Now optional instead of required."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Flow dependency resolution is more reliable when exporting resources with add_depends_on enabled, including improved depends_on generation and duplicate-flow handling."
+        }
+    ]
+}

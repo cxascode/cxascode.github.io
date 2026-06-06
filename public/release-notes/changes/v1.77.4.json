@@ -1,0 +1,202 @@
+{
+    "version": "v1.77.4",
+    "previous": "v1.77.3",
+    "changes": [
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_messagingcampaign",
+            "attribute": "whats_app_config",
+            "change": "added",
+            "summary": "Optional block to configure WhatsApp messaging for the campaign; exactly one of email_config, sms_config, or whats_app_config must be set."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_messagingcampaign",
+            "attribute": "whats_app_config.whats_app_columns",
+            "change": "added",
+            "summary": "Contact list columns that specify the WhatsApp address(es) for each contact."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_messagingcampaign",
+            "attribute": "whats_app_config.whats_app_integration_id",
+            "change": "added",
+            "summary": "WhatsApp integration used to send messages to contacts."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_messagingcampaign",
+            "attribute": "whats_app_config.content_template_id",
+            "change": "added",
+            "summary": "Content template used to formulate the WhatsApp message sent to contacts."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_outbound_messagingcampaign",
+            "attribute": "email_config",
+            "change": "updated",
+            "summary": "Exactly-one validation now requires exactly one of email_config, sms_config, or whats_app_config."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_outbound_messagingcampaign",
+            "attribute": "sms_config",
+            "change": "updated",
+            "summary": "Exactly-one validation now requires exactly one of email_config, sms_config, or whats_app_config."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_outbound_messagingcampaign",
+            "attribute": "whats_app_config",
+            "change": "updated",
+            "summary": "Populated from the Genesys Cloud API during read, plan, and apply refresh."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_outbound_messagingcampaign",
+            "attribute": "whats_app_config.content_template_id",
+            "change": "updated",
+            "summary": "Resolved as a Terraform reference during export."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_outbound_messagingcampaign",
+            "attribute": "whats_app_config.whats_app_integration_id",
+            "change": "updated",
+            "summary": "Resolved as a Terraform reference during export."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_integration_credential",
+            "attribute": "name",
+            "change": "updated",
+            "summary": "No longer resolved to a genesyscloud_integration reference; exported values retain the raw Integration-prefixed name."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_knowledge_category",
+            "attribute": "knowledge_base_name",
+            "change": "updated",
+            "summary": "Resolved from knowledge_base_id during export."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_knowledge_category",
+            "attribute": "name",
+            "change": "updated",
+            "summary": "Maps to a data source lookup attribute when exporting as data sources."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_knowledge_category",
+            "attribute": "knowledge_base_name",
+            "change": "updated",
+            "summary": "Maps to a data source lookup attribute when exporting as data sources."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_knowledge_document",
+            "attribute": "knowledge_base_name",
+            "change": "updated",
+            "summary": "Resolved from knowledge_base_id during export."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_knowledge_document",
+            "attribute": "category_name",
+            "change": "updated",
+            "summary": "Maps to a data source lookup attribute when exporting as data sources."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_knowledge_document",
+            "attribute": "title",
+            "change": "updated",
+            "summary": "Maps to a data source lookup attribute when exporting as data sources."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_knowledge_document",
+            "attribute": "knowledge_base_name",
+            "change": "updated",
+            "summary": "Maps to a data source lookup attribute when exporting as data sources."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_knowledge_document_variation",
+            "attribute": "name",
+            "change": "updated",
+            "summary": "Maps to a data source lookup attribute when exporting as data sources."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_knowledge_knowledgebase",
+            "attribute": "core_language",
+            "change": "updated",
+            "summary": "Maps to a data source lookup attribute when exporting as data sources."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_knowledge_label",
+            "attribute": "knowledge_base_name",
+            "change": "updated",
+            "summary": "Resolved from knowledge_base_id during export."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_knowledge_label",
+            "attribute": "name",
+            "change": "updated",
+            "summary": "Maps to a data source lookup attribute when exporting as data sources."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_knowledge_label",
+            "attribute": "knowledge_base_name",
+            "change": "updated",
+            "summary": "Maps to a data source lookup attribute when exporting as data sources."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_responsemanagement_response",
+            "attribute": "library_id",
+            "change": "updated",
+            "summary": "Resolved as a reference to genesyscloud_responsemanagement_library during export."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_responsemanagement_response",
+            "attribute": "library_id",
+            "change": "updated",
+            "summary": "Maps to library_ids data source lookup attributes when exporting as data sources."
+        },
+        {
+            "kind": "data_source",
+            "resource": "genesyscloud_knowledge_document",
+            "attribute": null,
+            "change": "added",
+            "summary": "Look up a knowledge document by title and knowledge_base_name, with optional category_name to disambiguate documents that share the same title."
+        },
+        {
+            "kind": "data_source_attribute",
+            "resource": "genesyscloud_knowledge_document",
+            "attribute": "title",
+            "change": "added",
+            "summary": "Required knowledge document title used to select the document."
+        },
+        {
+            "kind": "data_source_attribute",
+            "resource": "genesyscloud_knowledge_document",
+            "attribute": "knowledge_base_name",
+            "change": "added",
+            "summary": "Required knowledge base name used to scope the document lookup."
+        },
+        {
+            "kind": "data_source_attribute",
+            "resource": "genesyscloud_knowledge_document",
+            "attribute": "category_name",
+            "change": "added",
+            "summary": "Optional category name to disambiguate documents that share the same title."
+        }
+    ]
+}

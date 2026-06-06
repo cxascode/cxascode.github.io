@@ -1,0 +1,258 @@
+{
+    "version": "v1.63.0",
+    "previous": "v1.62.0",
+    "changes": [
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_conversations_messaging_integrations_whatsapp",
+            "attribute": null,
+            "change": "added",
+            "summary": "New resource for managing WhatsApp messaging integrations."
+        },
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_task_management_worktype_status_transition",
+            "attribute": null,
+            "change": "added",
+            "summary": "New resource for managing worktype status transition rules."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_architect_ivr",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Create and update retry transient HTTP 400 responses before failing."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_integration_credential",
+            "attribute": null,
+            "change": "updated",
+            "summary": "For pureCloudOAuthClient credentials without clientSecret in fields, the provider attempts to populate the secret from a matching OAuth client or provider metadata cache."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_knowledge_document",
+            "attribute": "published",
+            "change": "updated",
+            "summary": "Now optional, computed, and deprecated; documents are created as drafts, no longer auto-published on create, and the value is no longer synced from the API on read."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_knowledge_document",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Publishing is no longer performed through this resource; use genesyscloud_knowledge_document_variation to publish documents."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_oauth_client",
+            "attribute": "client_id",
+            "change": "added",
+            "summary": "Computed placeholder that can be referenced from genesyscloud_integration_credential fields."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_oauth_client",
+            "attribute": "client_secret",
+            "change": "added",
+            "summary": "Optional computed sensitive placeholder for integration credential references; the value is not stored in Terraform state."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_oauth_client",
+            "attribute": "directory_client_secret",
+            "change": "added",
+            "summary": "Optional directory path where the client secret is written to a file on create."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_oauth_client",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When creating or updating a linked integration credential, client_id is written to state and client_secret is cleared from state."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaign",
+            "attribute": "dynamic_contact_queueing_settings.filter",
+            "change": "added",
+            "summary": "Optional flag for dynamic contact filtering; changing the value forces resource replacement."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaign",
+            "attribute": "dynamic_contact_queueing_settings.sort",
+            "change": "updated",
+            "summary": "Now optional and computed; changing the value forces resource replacement with a new campaign ID."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaign",
+            "attribute": "dynamic_contact_queueing_settings",
+            "change": "updated",
+            "summary": "When omitted, default dynamic contact queue settings are applied."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_recording_media_retention_policy",
+            "attribute": "conditions.team_ids",
+            "change": "added",
+            "summary": "Optional set of team IDs to match conversations against."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_recording_media_retention_policy",
+            "attribute": "media_policies.call_policy.conditions.team_ids",
+            "change": "added",
+            "summary": "Optional team filter for call media policy conditions."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_recording_media_retention_policy",
+            "attribute": "media_policies.chat_policy.conditions.team_ids",
+            "change": "added",
+            "summary": "Optional team filter for chat media policy conditions."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_recording_media_retention_policy",
+            "attribute": "media_policies.email_policy.conditions.team_ids",
+            "change": "added",
+            "summary": "Optional team filter for email media policy conditions."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_recording_media_retention_policy",
+            "attribute": "media_policies.message_policy.conditions.team_ids",
+            "change": "added",
+            "summary": "Optional team filter for message media policy conditions."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "last_agent_routing_mode",
+            "change": "added",
+            "summary": "Optional last-agent routing mode (Disabled, QueueMembersOnly, or AnyAgent)."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "users",
+            "change": "updated",
+            "summary": "No longer computed; omit this attribute to manage queue members outside Terraform without plan diffs."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Queue member ring number updates retry transient HTTP 404 responses before failing."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_task_management_worktype",
+            "attribute": "disable_default_status_creation",
+            "change": "added",
+            "summary": "Optional flag to disable automatic default status creation for the worktype."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_task_management_worktype_status",
+            "attribute": "category",
+            "change": "updated",
+            "summary": "Unknown is no longer an accepted value."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_task_management_worktype_status",
+            "attribute": "destination_status_ids",
+            "change": "updated",
+            "summary": "Deprecated and computed; manage transitions with genesyscloud_task_management_worktype_status_transition instead."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_task_management_worktype_status",
+            "attribute": "default_destination_status_id",
+            "change": "updated",
+            "summary": "Deprecated and computed; use genesyscloud_task_management_worktype_status_transition instead."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_task_management_worktype_status",
+            "attribute": "status_transition_delay_seconds",
+            "change": "updated",
+            "summary": "Deprecated and computed; use genesyscloud_task_management_worktype_status_transition instead."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_task_management_worktype_status",
+            "attribute": "status_transition_time",
+            "change": "updated",
+            "summary": "Deprecated and computed; use genesyscloud_task_management_worktype_status_transition instead."
+        },
+        {
+            "kind": "data_source",
+            "resource": "genesyscloud_knowledge_document_variation",
+            "attribute": null,
+            "change": "added",
+            "summary": "New data source for looking up knowledge document variations."
+        },
+        {
+            "kind": "data_source_behavior",
+            "resource": "genesyscloud_task_management_worktype_status",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Data source ID format is now worktype_id/status_id instead of the status ID alone."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_flow",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Bulk export block labels may include uniqueness hashes when names collide."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_integration",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Bulk export block labels may include uniqueness hashes when names collide."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_integration_action",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Bulk export block labels may include uniqueness hashes when names collide."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_knowledge_document",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Bulk export block labels may include category-based uniqueness hashes."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_user",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Bulk export block labels may include uniqueness hashes when names collide."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_outbound_contact_list",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Bulk export for contacts waits longer with exponential backoff before retrieving signed export URLs."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_recording_media_retention_policy",
+            "attribute": "conditions.team_ids",
+            "change": "updated",
+            "summary": "Bulk export resolves team_ids to genesyscloud_team resource references."
+        }
+    ]
+}

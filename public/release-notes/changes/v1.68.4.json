@@ -1,0 +1,111 @@
+{
+    "version": "v1.68.4",
+    "previous": "v1.68.3",
+    "changes": [
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_guide",
+            "attribute": "source",
+            "change": "removed",
+            "summary": "Removed required attribute that selected how guide content was generated (Manual, Prompt, or Document)."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_guide",
+            "attribute": "prompt",
+            "change": "removed",
+            "summary": "Removed optional prompt used when source was Prompt."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_guide",
+            "attribute": "url",
+            "change": "removed",
+            "summary": "Removed optional URL used when source was Prompt."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_guide",
+            "attribute": "status",
+            "change": "removed",
+            "summary": "Removed computed guide status (Draft or ProductionReady)."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_guide",
+            "attribute": "latest_saved_version",
+            "change": "removed",
+            "summary": "Removed computed latest saved version identifier."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_guide",
+            "attribute": "latest_production_ready_version",
+            "change": "removed",
+            "summary": "Removed computed latest production-ready version identifier."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_guide",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Create always uses a Manual source; source, prompt, and url are no longer read from configuration."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_guide",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Create no longer runs prompt-based content generation or automatically creates an initial guide version; manage versions with genesyscloud_guide_version separately."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_guide_version",
+            "attribute": "state",
+            "change": "removed",
+            "summary": "Removed optional attribute that controlled draft vs publish workflow (Draft, ProductionReady, or TestReady)."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_guide_version",
+            "attribute": null,
+            "change": "updated",
+            "summary": "After create, the provider always attempts to publish the version to ProductionReady; draft-only creation via state is no longer supported."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_guide_version",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When the parent guide already has a production-ready version, update creates a new version instead of patching the existing one; otherwise it updates the latest saved version."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_guide_version",
+            "attribute": null,
+            "change": "updated",
+            "summary": "After update, the provider always attempts to publish the version to ProductionReady."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_guide_version",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Export includes only each guide's latest saved version, no longer exporting a separate production-ready version when it differs."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_guide_version",
+            "attribute": "resources.data_action.data_action_id",
+            "change": "updated",
+            "summary": "Export resolves resources.data_action.data_action_id references to genesyscloud_integration_action resources."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_guide_version",
+            "attribute": "generate_content",
+            "change": "updated",
+            "summary": "Export omits generate_content from generated configuration."
+        }
+    ]
+}
