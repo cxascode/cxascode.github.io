@@ -758,16 +758,6 @@ export default function App() {
             <button
               type="button"
               className="gcHeaderLink"
-              onClick={() => openDialog(DIALOG_CREATION_ORDER)}
-              disabled={showDependencyLoading || !!error || !raw}
-              title="Suggested creation order of CX as Code resources"
-            >
-              Creation order
-            </button>
-
-            <button
-              type="button"
-              className="gcHeaderLink"
               onClick={() => openDialog(DIALOG_RELEASE_NOTES)}
             >
               Release notes
@@ -779,6 +769,16 @@ export default function App() {
               onClick={() => openDialog(DIALOG_ATTRIBUTE_INDEX)}
             >
               Attribute history
+            </button>
+
+            <button
+              type="button"
+              className="gcHeaderLink"
+              onClick={() => openDialog(DIALOG_CREATION_ORDER)}
+              disabled={showDependencyLoading || !!error || !raw}
+              title="Suggested creation order of CX as Code resources"
+            >
+              Creation order
             </button>
 
             <div
