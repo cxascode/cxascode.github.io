@@ -45,13 +45,6 @@
             "summary": "Phone entries are removed from the list before the DNC list itself is deleted."
         },
         {
-            "kind": "resource_behavior",
-            "resource": "genesyscloud_bcp_tf_exporter",
-            "attribute": null,
-            "change": "updated",
-            "summary": "The output directory for BCP export no longer has to be under the provider process current working directory."
-        },
-        {
             "kind": "export_behavior",
             "resource": "genesyscloud_externalusers_identity",
             "attribute": null,

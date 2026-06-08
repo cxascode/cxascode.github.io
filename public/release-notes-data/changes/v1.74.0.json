@@ -71,20 +71,6 @@
             "attribute": "member_ids",
             "change": "updated",
             "summary": "Teams with no members now return an empty list in state instead of null."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_tf_export",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Flow exports that generate output files use the archy export service to download flow configuration; exports without output files use the legacy flow exporter."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_tf_export",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Exported teams with no members include member_ids = [] instead of omitting the attribute."
         }
     ]
 }

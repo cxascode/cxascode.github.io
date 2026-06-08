@@ -1,0 +1,15 @@
+{
+    "version": "v1.75.1",
+    "previous": "v1.75.0",
+    "resource": "genesyscloud_tf_export",
+    "changes": [],
+    "related_export_changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_knowledge_document_variation",
+            "attribute": "knowledge_document_variation.document_version",
+            "change": "updated",
+            "summary": "Excluded from genesyscloud_tf_export output for this resource."
+        }
+    ]
+}

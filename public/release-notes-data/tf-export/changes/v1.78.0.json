@@ -1,0 +1,29 @@
+{
+    "version": "v1.78.0",
+    "previous": "v1.77.4",
+    "resource": "genesyscloud_tf_export",
+    "changes": [
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "exclude_attributes",
+            "change": "updated",
+            "summary": "Invalid entries are skipped with a warning instead of failing the export; exclusions are applied in a final pass so they work for resource types discovered during dependency resolution."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "replace_with_datasource",
+            "change": "updated",
+            "summary": "Accepts a resource type without a label suffix (equivalent to type::) to replace all exported instances of that type with data sources."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Per-resource JSON files are named data_<resource_type>.json instead of <resource_type>.json."
+        }
+    ],
+    "related_export_changes": []
+}

@@ -199,34 +199,6 @@
             "summary": "Data source lookup uses the full domain instance ID rather than the shortened domain_id attribute."
         },
         {
-            "kind": "resource_behavior",
-            "resource": "genesyscloud_tf_export",
-            "attribute": "exclude_attributes",
-            "change": "updated",
-            "summary": "Exclusions are applied when exporters are loaded, in addition to the final output pass."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_tf_export",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Resource discovery retries transient failures up to three times with backoff."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_tf_export",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Concurrent resource retrieval is limited to reduce API rate-limit errors."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_tf_export",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Unresolved GUID references in list attributes can be mapped to data sources via custom resolvers."
-        },
-        {
             "kind": "data_source_behavior",
             "resource": "genesyscloud_routing_email_domain",
             "attribute": "name",

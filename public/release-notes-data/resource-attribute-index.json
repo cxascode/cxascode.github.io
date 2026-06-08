@@ -401,11 +401,6 @@
     "latest_summary": "Export retries rate-limited API responses (HTTP 429) when listing flows and creating export jobs, and retries transient export-job failures that can occur under heavy API load.",
     "history": [
       {
-        "version": "v1.61.0",
-        "change": "updated",
-        "summary": "When use_legacy_architect_flow_exporter is false on genesyscloud_tf_export, flow YAML files are downloaded into an architect_flows subdirectory with filenames based on flow name, type, and ID."
-      },
-      {
         "version": "v1.66.0",
         "change": "updated",
         "summary": "Bulk export block labels now use {type}_{name}."
@@ -436,40 +431,6 @@
         "version": "v1.65.0",
         "change": "updated",
         "summary": "Bulk export block labels now use the IVR name only instead of combining the open-hours flow name with the IVR name."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
-    "resource": "genesyscloud_bcp_tf_exporter",
-    "attribute": "blockLabel",
-    "introduced": "v1.80.0",
-    "last_updated": "v1.80.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Exported resource entries now include a blockLabel field with the Terraform resource block label.",
-    "history": [
-      {
-        "version": "v1.80.0",
-        "change": "added",
-        "summary": "Exported resource entries now include a blockLabel field with the Terraform resource block label."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
-    "resource": "genesyscloud_bcp_tf_exporter",
-    "attribute": "general export behavior",
-    "introduced": "Unknown",
-    "last_updated": "v1.77.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Exported resource names prefer the Terraform name attribute when available; dependency resolution reads live resource state and produces deterministically sorted output.",
-    "history": [
-      {
-        "version": "v1.77.0",
-        "change": "updated",
-        "summary": "Exported resource names prefer the Terraform name attribute when available; dependency resolution reads live resource state and produces deterministically sorted output."
       }
     ]
   },
@@ -1213,23 +1174,6 @@
         "version": "v1.66.0",
         "change": "updated",
         "summary": "Bulk export block labels now use {parent knowledge base name}_{parent document title}_{knowledge_document_variation.name}."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
-    "resource": "genesyscloud_knowledge_document_variation",
-    "attribute": "knowledge_document_variation.document_version",
-    "introduced": "Unknown",
-    "last_updated": "v1.75.1",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Excluded from genesyscloud_tf_export output for this resource.",
-    "history": [
-      {
-        "version": "v1.75.1",
-        "change": "updated",
-        "summary": "Excluded from genesyscloud_tf_export output for this resource."
       }
     ]
   },
@@ -2227,110 +2171,6 @@
   },
   {
     "type": "export_behavior",
-    "resource": "genesyscloud_tf_export",
-    "attribute": "enable_dependency_resolution",
-    "introduced": "Unknown",
-    "last_updated": "v1.77.3",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "When using exclude_filter_resources or the default export mode, enable_dependency_resolution no longer adds depends_on blocks even when set to true.",
-    "history": [
-      {
-        "version": "v1.77.3",
-        "change": "updated",
-        "summary": "When using include_filter_resources or include_filter_resources_by_id, enable_dependency_resolution now controls depends_on generation without requiring a non-empty resource-type filter list."
-      },
-      {
-        "version": "v1.77.3",
-        "change": "updated",
-        "summary": "When using exclude_filter_resources or the default export mode, enable_dependency_resolution no longer adds depends_on blocks even when set to true."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
-    "resource": "genesyscloud_tf_export",
-    "attribute": "general export behavior",
-    "introduced": "Unknown",
-    "last_updated": "v1.79.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Unresolved GUID references in list attributes can be mapped to data sources via custom resolvers.",
-    "history": [
-      {
-        "version": "v1.67.0",
-        "change": "updated",
-        "summary": "Bulk export limits concurrent resource reads to 10 by default, or to the provider max_clients setting when configured."
-      },
-      {
-        "version": "v1.67.0",
-        "change": "updated",
-        "summary": "Bulk export writes export_errors.json in the export directory when individual resources fail to export."
-      },
-      {
-        "version": "v1.70.0",
-        "change": "updated",
-        "summary": "When not using the legacy architect flow exporter, exported flow configurations may be more complete because sanitized flow data is preserved during export."
-      },
-      {
-        "version": "v1.71.0",
-        "change": "updated",
-        "summary": "Export work runs concurrently using the configured max_concurrent_threads limit."
-      },
-      {
-        "version": "v1.73.0",
-        "change": "updated",
-        "summary": "Flow dependency resolution is more reliable when exporting resources with add_depends_on enabled, including improved depends_on generation and duplicate-flow handling."
-      },
-      {
-        "version": "v1.74.0",
-        "change": "updated",
-        "summary": "Flow exports that generate output files use the archy export service to download flow configuration; exports without output files use the legacy flow exporter."
-      },
-      {
-        "version": "v1.74.0",
-        "change": "updated",
-        "summary": "Exported teams with no members include member_ids = [] instead of omitting the attribute."
-      },
-      {
-        "version": "v1.75.0",
-        "change": "updated",
-        "summary": "Routing queue exports resolve conditional_group_activation.rules.groups.member_group_id references."
-      },
-      {
-        "version": "v1.77.3",
-        "change": "updated",
-        "summary": "Failures in custom file writers for exported resources are reported as errors instead of warnings, causing the export to fail."
-      },
-      {
-        "version": "v1.77.3",
-        "change": "updated",
-        "summary": "Permission errors encountered while listing resources during export are collected and reported at the end of the export run."
-      },
-      {
-        "version": "v1.78.0",
-        "change": "updated",
-        "summary": "Per-resource JSON files are named data_<resource_type>.json instead of <resource_type>.json."
-      },
-      {
-        "version": "v1.79.0",
-        "change": "updated",
-        "summary": "Resource discovery retries transient failures up to three times with backoff."
-      },
-      {
-        "version": "v1.79.0",
-        "change": "updated",
-        "summary": "Concurrent resource retrieval is limited to reduce API rate-limit errors."
-      },
-      {
-        "version": "v1.79.0",
-        "change": "updated",
-        "summary": "Unresolved GUID references in list attributes can be mapped to data sources via custom resolvers."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
     "resource": "genesyscloud_user",
     "attribute": "addresses.phone_numbers.extension_pool_id",
     "introduced": "Unknown",
@@ -3051,23 +2891,6 @@
         "version": "v1.81.0",
         "change": "updated",
         "summary": "When configuration uses \"*\" for a domain, refresh and read collapse multiple per-entity API policies back into a single wildcard policy to match configuration."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_bcp_tf_exporter",
-    "attribute": "(resource-level behavior)",
-    "introduced": "Unknown",
-    "last_updated": "v1.76.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "The output directory for BCP export no longer has to be under the provider process current working directory.",
-    "history": [
-      {
-        "version": "v1.76.0",
-        "change": "updated",
-        "summary": "The output directory for BCP export no longer has to be under the provider process current working directory."
       }
     ]
   },
@@ -9656,123 +9479,6 @@
         "version": "v1.62.0",
         "change": "updated",
         "summary": "Destroy retries transient HTTP 400 responses for up to 50 seconds before failing."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_tf_export",
-    "attribute": "(resource-level behavior)",
-    "introduced": "Unknown",
-    "last_updated": "v1.72.2",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Filter attributes resource_types, include_filter_resources, exclude_filter_resources, and include_filter_resources_by_id are mutually exclusive.",
-    "history": [
-      {
-        "version": "v1.61.0",
-        "change": "updated",
-        "summary": "Export can complete with warnings for non-fatal issues instead of treating all diagnostics as hard failures."
-      },
-      {
-        "version": "v1.72.2",
-        "change": "updated",
-        "summary": "Filter attributes resource_types, include_filter_resources, exclude_filter_resources, and include_filter_resources_by_id are mutually exclusive."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_tf_export",
-    "attribute": "exclude_attributes",
-    "introduced": "Unknown",
-    "last_updated": "v1.79.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Exclusions are applied when exporters are loaded, in addition to the final output pass.",
-    "history": [
-      {
-        "version": "v1.78.0",
-        "change": "updated",
-        "summary": "Invalid entries are skipped with a warning instead of failing the export; exclusions are applied in a final pass so they work for resource types discovered during dependency resolution."
-      },
-      {
-        "version": "v1.79.0",
-        "change": "updated",
-        "summary": "Exclusions are applied when exporters are loaded, in addition to the final output pass."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_tf_export",
-    "attribute": "include_filter_resources_by_id",
-    "introduced": "v1.72.2",
-    "last_updated": "v1.72.2",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Optional list of {resourceType}::{resourceId} values to export only specific resources by ID.",
-    "history": [
-      {
-        "version": "v1.72.2",
-        "change": "added",
-        "summary": "Optional list of {resourceType}::{resourceId} values to export only specific resources by ID."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_tf_export",
-    "attribute": "max_concurrent_threads",
-    "introduced": "v1.71.0",
-    "last_updated": "v1.77.2",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "The value set in configuration is now honored; provider max_clients is used only as a fallback when max_concurrent_threads is not explicitly set.",
-    "history": [
-      {
-        "version": "v1.71.0",
-        "change": "added",
-        "summary": "Optional maximum number of concurrent export threads (default 10). Changing this value forces replacement of the export resource."
-      },
-      {
-        "version": "v1.77.2",
-        "change": "updated",
-        "summary": "The value set in configuration is now honored; provider max_clients is used only as a fallback when max_concurrent_threads is not explicitly set."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_tf_export",
-    "attribute": "replace_with_datasource",
-    "introduced": "Unknown",
-    "last_updated": "v1.78.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Accepts a resource type without a label suffix (equivalent to type::) to replace all exported instances of that type with data sources.",
-    "history": [
-      {
-        "version": "v1.78.0",
-        "change": "updated",
-        "summary": "Accepts a resource type without a label suffix (equivalent to type::) to replace all exported instances of that type with data sources."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_tf_export",
-    "attribute": "use_legacy_architect_flow_exporter",
-    "introduced": "v1.61.0",
-    "last_updated": "v1.61.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Optional boolean (defaults to true). When false, architect flow YAML files are downloaded as part of the export process.",
-    "history": [
-      {
-        "version": "v1.61.0",
-        "change": "added",
-        "summary": "Optional boolean (defaults to true). When false, architect flow YAML files are downloaded as part of the export process."
       }
     ]
   },

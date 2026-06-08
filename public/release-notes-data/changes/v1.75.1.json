@@ -533,13 +533,6 @@
             "attribute": null,
             "change": "updated",
             "summary": "Create, update, and read fail when list nesting exceeds 9 levels or table nesting exceeds the allowed depth (1 level by default; up to 3 levels when the ENABLE_NESTED_TABLES environment variable is set for the provider process)."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_knowledge_document_variation",
-            "attribute": "knowledge_document_variation.document_version",
-            "change": "updated",
-            "summary": "Excluded from genesyscloud_tf_export output for this resource."
         }
     ]
 }

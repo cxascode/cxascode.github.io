@@ -1,0 +1,15 @@
+{
+    "version": "v1.70.0",
+    "previous": "v1.69.3",
+    "resource": "genesyscloud_tf_export",
+    "changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When not using the legacy architect flow exporter, exported flow configurations may be more complete because sanitized flow data is preserved during export."
+        }
+    ],
+    "related_export_changes": []
+}

@@ -99,20 +99,6 @@
             "attribute": null,
             "change": "updated",
             "summary": "Updates read the current site from the API and merge configured attributes onto that object, preserving fields not managed in Terraform."
-        },
-        {
-            "kind": "resource_attribute",
-            "resource": "genesyscloud_tf_export",
-            "attribute": "max_concurrent_threads",
-            "change": "added",
-            "summary": "Optional maximum number of concurrent export threads (default 10). Changing this value forces replacement of the export resource."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_tf_export",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Export work runs concurrently using the configured max_concurrent_threads limit."
         }
     ]
 }

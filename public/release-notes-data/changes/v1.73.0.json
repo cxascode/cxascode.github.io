@@ -281,13 +281,6 @@
             "attribute": "namespace",
             "change": "updated",
             "summary": "Now optional instead of required."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_tf_export",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Flow dependency resolution is more reliable when exporting resources with add_depends_on enabled, including improved depends_on generation and duplicate-flow handling."
         }
     ]
 }

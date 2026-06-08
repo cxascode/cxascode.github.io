@@ -1,6 +1,7 @@
 ## CX as Code v1.81.0
 
 [View release changelog](https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.81.0)
+
 ### Resources added
 None detected.
 
@@ -29,7 +30,7 @@ Removed:
 
 Changed:
 - Cascade update behavior — When an OAuth client is linked to an integration credential and the API returns an empty secret, the provider now restores the secret from the shared cache before updating the credential.
-- Integration credential behavior — Creating or updating linked integration credentials now skips writing a nil client secret and logs a warning instead of failing.
+- `integration_credential_id` — Creating or updating linked integration credentials now skips writing a nil client secret and logs a warning instead of failing.
 - Shared OAuth cache — Cache lookups now use `clientId` and `clientSecret` keys instead of `client_id` and `client_secret`; existing cache entries written by earlier provider versions may not be found until secrets are refreshed.
 
 #### genesyscloud_webdeployments_configuration
@@ -42,7 +43,7 @@ Removed:
 
 Changed:
 - Export behavior — Export now paginates through all web deployment configurations instead of returning only the first API page.
-- Version resolution — Determining the latest configuration version now paginates through all versions, improving accuracy for configurations with many versions.
+- `version` — Determining the latest configuration version now paginates through all versions, improving accuracy for configurations with many versions.
 
 #### genesyscloud_webdeployments_deployment
 
@@ -54,7 +55,7 @@ Removed:
 
 Changed:
 - Export behavior — Export now paginates through all web deployments instead of returning only the first API page.
-- Version resolution — Resolving the latest configuration version for a deployment now paginates through all versions, improving accuracy for configurations with many versions.
+- `version` — Resolving the latest configuration version for a deployment now paginates through all versions, improving accuracy for configurations with many versions.
 
 ### Resources removed
 None detected.

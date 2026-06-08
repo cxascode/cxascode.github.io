@@ -246,13 +246,6 @@
             "attribute": "address",
             "change": "updated",
             "summary": "Updates omit the address from API requests when an emergency number is assigned unless the address itself changed."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_tf_export",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Routing queue exports resolve conditional_group_activation.rules.groups.member_group_id references."
         }
     ]
 }

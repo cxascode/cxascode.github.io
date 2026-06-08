@@ -57,13 +57,6 @@
             "attribute": null,
             "change": "updated",
             "summary": "Export retries rate-limited API responses (HTTP 429) when listing flows and creating export jobs, and retries transient export-job failures that can occur under heavy API load."
-        },
-        {
-            "kind": "resource_behavior",
-            "resource": "genesyscloud_tf_export",
-            "attribute": "max_concurrent_threads",
-            "change": "updated",
-            "summary": "The value set in configuration is now honored; provider max_clients is used only as a fallback when max_concurrent_threads is not explicitly set."
         }
     ]
 }

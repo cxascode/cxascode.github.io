@@ -206,13 +206,6 @@
             "summary": "Description clarifies that a null queue ID means the current queue."
         },
         {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_bcp_tf_exporter",
-            "attribute": "blockLabel",
-            "change": "added",
-            "summary": "Exported resource entries now include a blockLabel field with the Terraform resource block label."
-        },
-        {
             "kind": "resource",
             "resource": "genesyscloud_customer_intent",
             "attribute": null,

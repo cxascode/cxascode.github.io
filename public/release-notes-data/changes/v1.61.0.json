@@ -87,20 +87,6 @@
             "summary": "Resource operations no longer require the ENABLE_STANDALONE_OUTBOUND_ROUTES environment variable."
         },
         {
-            "kind": "resource_attribute",
-            "resource": "genesyscloud_tf_export",
-            "attribute": "use_legacy_architect_flow_exporter",
-            "change": "added",
-            "summary": "Optional boolean (defaults to true). When false, architect flow YAML files are downloaded as part of the export process."
-        },
-        {
-            "kind": "resource_behavior",
-            "resource": "genesyscloud_tf_export",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Export can complete with warnings for non-fatal issues instead of treating all diagnostics as hard failures."
-        },
-        {
             "kind": "data_source_attribute",
             "resource": "genesyscloud_flow",
             "attribute": "type",
@@ -113,13 +99,6 @@
             "attribute": null,
             "change": "updated",
             "summary": "When multiple flows share the same name, lookup uses type to select the matching flow."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_architect_flow",
-            "attribute": null,
-            "change": "updated",
-            "summary": "When use_legacy_architect_flow_exporter is false on genesyscloud_tf_export, flow YAML files are downloaded into an architect_flows subdirectory with filenames based on flow name, type, and ID."
         },
         {
             "kind": "export_behavior",

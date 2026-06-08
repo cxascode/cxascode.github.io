@@ -1,0 +1,15 @@
+{
+    "version": "v1.77.2",
+    "previous": "v1.77.0",
+    "resource": "genesyscloud_tf_export",
+    "changes": [
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "max_concurrent_threads",
+            "change": "updated",
+            "summary": "The value set in configuration is now honored; provider max_clients is used only as a fallback when max_concurrent_threads is not explicitly set."
+        }
+    ],
+    "related_export_changes": []
+}

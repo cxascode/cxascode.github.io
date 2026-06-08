@@ -1,0 +1,36 @@
+{
+    "version": "v1.77.3",
+    "previous": "v1.77.2",
+    "resource": "genesyscloud_tf_export",
+    "changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "enable_dependency_resolution",
+            "change": "updated",
+            "summary": "When using include_filter_resources or include_filter_resources_by_id, enable_dependency_resolution now controls depends_on generation without requiring a non-empty resource-type filter list."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "enable_dependency_resolution",
+            "change": "updated",
+            "summary": "When using exclude_filter_resources or the default export mode, enable_dependency_resolution no longer adds depends_on blocks even when set to true."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Failures in custom file writers for exported resources are reported as errors instead of warnings, causing the export to fail."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Permission errors encountered while listing resources during export are collected and reported at the end of the export run."
+        }
+    ],
+    "related_export_changes": []
+}

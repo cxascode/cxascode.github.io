@@ -1,0 +1,30 @@
+{
+    "version": "v1.61.0",
+    "previous": "v1.60.0",
+    "resource": "genesyscloud_tf_export",
+    "changes": [
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "use_legacy_architect_flow_exporter",
+            "change": "added",
+            "summary": "Optional boolean (defaults to true). When false, architect flow YAML files are downloaded as part of the export process."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Export can complete with warnings for non-fatal issues instead of treating all diagnostics as hard failures."
+        }
+    ],
+    "related_export_changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_architect_flow",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When use_legacy_architect_flow_exporter is false on genesyscloud_tf_export, flow YAML files are downloaded into an architect_flows subdirectory with filenames based on flow name, type, and ID."
+        }
+    ]
+}

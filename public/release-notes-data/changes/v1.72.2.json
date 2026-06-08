@@ -171,20 +171,6 @@
             "summary": "When a site ID is provided, lookup searches outbound routes within that site first instead of scanning all sites."
         },
         {
-            "kind": "resource_attribute",
-            "resource": "genesyscloud_tf_export",
-            "attribute": "include_filter_resources_by_id",
-            "change": "added",
-            "summary": "Optional list of {resourceType}::{resourceId} values to export only specific resources by ID."
-        },
-        {
-            "kind": "resource_behavior",
-            "resource": "genesyscloud_tf_export",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Filter attributes resource_types, include_filter_resources, exclude_filter_resources, and include_filter_resources_by_id are mutually exclusive."
-        },
-        {
             "kind": "resource_behavior",
             "resource": "genesyscloud_user",
             "attribute": null,

@@ -88,13 +88,6 @@
         },
         {
             "kind": "export_behavior",
-            "resource": "genesyscloud_bcp_tf_exporter",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Exported resource names prefer the Terraform name attribute when available; dependency resolution reads live resource state and produces deterministically sorted output."
-        },
-        {
-            "kind": "export_behavior",
             "resource": "genesyscloud_flow",
             "attribute": null,
             "change": "updated",
