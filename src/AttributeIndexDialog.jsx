@@ -3,14 +3,24 @@ import { createPortal } from "react-dom";
 import {
   attributeIndexEntryKey,
   ATTRIBUTE_INDEX_DESCRIPTION,
+  ATTRIBUTE_INDEX_SCOPE_EXPORT,
+  ATTRIBUTE_INDEX_SCOPE_PROVIDER,
   fetchResourceAttributeIndex,
-  fetchResourceAttributeIndexMarkdown,
   filterIndexEntries,
   formatAttributeIndexIntroducedLabel,
   formatAttributeIndexLastChanged,
+  formatAttributeIndexRowSummary,
   formatAttributeIndexType,
+  formatAttributeIndexVersionEventLabel,
   getIndexFilterOptions,
+  getIndexVersionOptions,
 } from "./resourceAttributeIndex.js";
+import { TF_EXPORT_RESOURCE, toReleaseNotesVersion } from "./releaseNotes.js";
+
+const SCOPE_OPTIONS = [
+  { id: ATTRIBUTE_INDEX_SCOPE_PROVIDER, label: "All resources" },
+  { id: ATTRIBUTE_INDEX_SCOPE_EXPORT, label: "Export" },
+];
 
 function StatusBadge({ status }) {
   const normalized = (status || "").trim();
@@ -24,12 +34,15 @@ function StatusBadge({ status }) {
 
 export default function AttributeIndexDialog({ open, onClose, onSelectResource, knownTypes }) {
   const dialogRef = useRef(null);
+  const [scope, setScope] = useState(ATTRIBUTE_INDEX_SCOPE_PROVIDER);
   const [index, setIndex] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
+  const [versionFilter, setVersionFilter] = useState("");
+
+  const isExportScope = scope === ATTRIBUTE_INDEX_SCOPE_EXPORT;
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -46,6 +59,17 @@ export default function AttributeIndexDialog({ open, onClose, onSelectResource, 
   }, [open]);
 
   useEffect(() => {
+    if (!open) {
+      setScope(ATTRIBUTE_INDEX_SCOPE_PROVIDER);
+      return;
+    }
+
+    setQuery("");
+    setTypeFilter("");
+    setVersionFilter("");
+  }, [open]);
+
+  useEffect(() => {
     if (!open) return undefined;
 
     let cancelled = false;
@@ -54,7 +78,7 @@ export default function AttributeIndexDialog({ open, onClose, onSelectResource, 
       try {
         setLoading(true);
         setError("");
-        const data = await fetchResourceAttributeIndex();
+        const data = await fetchResourceAttributeIndex(scope);
         if (!cancelled) setIndex(data);
       } catch (e) {
         if (!cancelled) {
@@ -69,25 +93,36 @@ export default function AttributeIndexDialog({ open, onClose, onSelectResource, 
     return () => {
       cancelled = true;
     };
-  }, [open]);
+  }, [open, scope]);
 
   const filterOptions = useMemo(() => getIndexFilterOptions(index), [index]);
+  const versionOptions = useMemo(() => getIndexVersionOptions(index), [index]);
 
   const visibleEntries = useMemo(
     () =>
       filterIndexEntries(index, {
         query,
         typeFilter,
-        statusFilter,
+        versionFilter,
       }),
-    [index, query, typeFilter, statusFilter]
+    [index, query, typeFilter, versionFilter]
   );
+
+  const hasActiveFilters = Boolean(query || typeFilter || versionFilter);
+
+  const entryCountLabel = loading
+    ? "Loading attribute index…"
+    : error
+      ? "Could not load attribute index."
+      : hasActiveFilters
+        ? `${visibleEntries.length} of ${index.length} entries`
+        : `${index.length} entries`;
 
   const handleClose = useCallback(
     (nextResourceType) => {
       setQuery("");
       setTypeFilter("");
-      setStatusFilter("");
+      setVersionFilter("");
       onClose?.(nextResourceType);
     },
     [onClose]
@@ -96,29 +131,8 @@ export default function AttributeIndexDialog({ open, onClose, onSelectResource, 
   const clearFilters = () => {
     setQuery("");
     setTypeFilter("");
-    setStatusFilter("");
+    setVersionFilter("");
   };
-
-  const hasActiveFilters = Boolean(query || typeFilter || statusFilter);
-
-  const downloadAttributeIndex = useCallback(async () => {
-    try {
-      const markdown = await fetchResourceAttributeIndexMarkdown();
-      const blob = new Blob([markdown], { type: "text/markdown;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-
-      const anchor = document.createElement("a");
-      anchor.href = url;
-      anchor.download = "cx-as-code-resource-attribute-index.md";
-      anchor.rel = "noopener";
-      document.body.appendChild(anchor);
-      anchor.click();
-      anchor.remove();
-      URL.revokeObjectURL(url);
-    } catch {
-      /* download failures are non-fatal */
-    }
-  }, []);
 
   const handleSelectResource = (resourceType) => {
     if (!resourceType) return;
@@ -156,22 +170,36 @@ export default function AttributeIndexDialog({ open, onClose, onSelectResource, 
           </div>
 
           <div className="gcOrderDialog__toolbar gcOrderDialog__toolbar--attributeIndex">
+            <div
+              className="gcSegmentedControl gcSegmentedControl--text"
+              role="radiogroup"
+              aria-label="Attribute index scope"
+            >
+              {SCOPE_OPTIONS.map((option) => (
+                <button
+                  key={option.id}
+                  type="button"
+                  className="gcSegmentedControl__option"
+                  role="radio"
+                  aria-checked={scope === option.id}
+                  onClick={() => setScope(option.id)}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
             <input
               type="search"
               className="gcSearchInput gcOrderDialog__search"
-              placeholder="Search resources, attributes"
+              placeholder={
+                isExportScope
+                  ? "Search export attributes"
+                  : "Search resources, attributes"
+              }
               value={query}
               onInput={(event) => setQuery(event.target.value)}
               disabled={loading || !!error}
             />
-            <button
-              type="button"
-              className="gcClearButton"
-              onClick={clearFilters}
-              disabled={loading || !!error || !hasActiveFilters}
-            >
-              Clear
-            </button>
             <select
               className="gcSelectInput"
               value={typeFilter}
@@ -188,37 +216,26 @@ export default function AttributeIndexDialog({ open, onClose, onSelectResource, 
             </select>
             <select
               className="gcSelectInput"
-              value={statusFilter}
-              onChange={(event) => setStatusFilter(event.target.value)}
+              value={versionFilter}
+              onChange={(event) => setVersionFilter(event.target.value)}
               disabled={loading || !!error}
-              aria-label="Filter by status"
+              aria-label="Filter by version"
             >
-              <option value="">All statuses</option>
-              {filterOptions.statuses.map((status) => (
-                <option key={status} value={status}>
-                  {status}
+              <option value="">All versions</option>
+              {versionOptions.map((version) => (
+                <option key={version} value={version}>
+                  {toReleaseNotesVersion(version)}
                 </option>
               ))}
             </select>
-            <div className="gcOrderDialog__toolbarActions">
-              <div className="gcOrderDialog__toolbarMeta">
-                {loading
-                  ? "Loading attribute index…"
-                  : error
-                    ? "Could not load attribute index."
-                    : query || typeFilter || statusFilter
-                      ? `${visibleEntries.length} of ${index.length} entries`
-                      : `${index.length} entries`}
-              </div>
-              <button
-                type="button"
-                className="gcHeaderLink"
-                onClick={downloadAttributeIndex}
-                disabled={loading || !!error}
-              >
-                Download attribute index
-              </button>
-            </div>
+            <button
+              type="button"
+              className="gcClearButton gcClearButton--toolbarEnd"
+              onClick={clearFilters}
+              disabled={loading || !!error || !hasActiveFilters}
+            >
+              Clear
+            </button>
           </div>
         </div>
 
@@ -239,6 +256,7 @@ export default function AttributeIndexDialog({ open, onClose, onSelectResource, 
             <div className="gcAttributeIndex__list">
               {visibleEntries.map((entry) => {
                 const canSelect =
+                  !isExportScope &&
                   entry.resource &&
                   (!(knownTypes instanceof Set) || knownTypes.has(entry.resource));
                 const introducedLabel = formatAttributeIndexIntroducedLabel(entry.introduced);
@@ -246,6 +264,11 @@ export default function AttributeIndexDialog({ open, onClose, onSelectResource, 
                   entry.last_updated,
                   entry.introduced
                 );
+                const versionEventLabel = formatAttributeIndexVersionEventLabel(
+                  entry,
+                  versionFilter
+                );
+                const summary = formatAttributeIndexRowSummary(entry, versionFilter);
 
                 return (
                   <button
@@ -257,7 +280,9 @@ export default function AttributeIndexDialog({ open, onClose, onSelectResource, 
                     title={
                       canSelect
                         ? `Open ${entry.resource} in the explorer`
-                        : `${entry.resource} is not in the dependency explorer`
+                        : isExportScope
+                          ? `${TF_EXPORT_RESOURCE} attribute history`
+                          : `${entry.resource} is not in the dependency explorer`
                     }
                   >
                     <div className="gcAttributeIndex__rowMain">
@@ -269,21 +294,35 @@ export default function AttributeIndexDialog({ open, onClose, onSelectResource, 
                         {formatAttributeIndexType(entry.type)}
                       </span>
                       <StatusBadge status={entry.status} />
-                      {introducedLabel ? (
-                        <span className="gcAttributeHistory__introduced">{introducedLabel}</span>
-                      ) : null}
-                      {lastChangedLabel ? (
-                        <span className="gcAttributeHistory__version">{lastChangedLabel}</span>
-                      ) : null}
+                      {versionFilter ? (
+                        versionEventLabel ? (
+                          <span className="gcAttributeHistory__version">{versionEventLabel}</span>
+                        ) : null
+                      ) : (
+                        <>
+                          {introducedLabel ? (
+                            <span className="gcAttributeHistory__introduced">{introducedLabel}</span>
+                          ) : null}
+                          {lastChangedLabel ? (
+                            <span className="gcAttributeHistory__version">{lastChangedLabel}</span>
+                          ) : null}
+                        </>
+                      )}
                     </div>
-                    {entry.latest_summary ? (
-                      <p className="gcAttributeIndex__summary">{entry.latest_summary}</p>
+                    {summary ? (
+                      <p className="gcAttributeIndex__summary">{summary}</p>
                     ) : null}
                   </button>
                 );
               })}
             </div>
           ) : null}
+        </div>
+
+        <div className="gcListFooter">
+          <p className="gcListCount" aria-live="polite">
+            {entryCountLabel}
+          </p>
         </div>
       </div>
     </dialog>,

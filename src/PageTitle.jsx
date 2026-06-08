@@ -56,13 +56,15 @@ export default function PageTitle() {
   }, []);
 
   return (
-    <div
-      className="gcPageTitleGroup gcPageTitleEgg"
-      style={{ "--gc-page-title-color-delay": colorCycleDelay(colorPhase) }}
-      onMouseEnter={handleEnter}
-      onMouseLeave={handleLeave}
-    >
-      <h1 className="gcPageTitle">CX as Code Explorer</h1>
+    <div className="gcPageTitleGroup">
+      <h1
+        className="gcPageTitle gcPageTitleEgg"
+        style={{ "--gc-page-title-color-delay": colorCycleDelay(colorPhase) }}
+        onMouseEnter={handleEnter}
+        onMouseLeave={handleLeave}
+      >
+        CX as Code Explorer
+      </h1>
       <AboutCxAsCode />
       {quip ? (
         <p className="gcPageTitleEgg__quip" aria-hidden="true">

@@ -7,11 +7,7 @@ import {
   toReleaseNotesVersion,
 } from "./releaseNotes.js";
 
-export default function ResourceReleaseChanges({
-  version,
-  resourceType,
-  onViewAll,
-}) {
+export default function ResourceReleaseChanges({ version, resourceType }) {
   const [changes, setChanges] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -47,7 +43,7 @@ export default function ResourceReleaseChanges({
     };
   }, [version, resourceType]);
 
-  if (!resourceType || !version) return null;
+  if (!version) return null;
 
   const versionLabel = toReleaseNotesVersion(version);
 
@@ -56,22 +52,26 @@ export default function ResourceReleaseChanges({
       <div className="gcPanel">
         <div className="gcPanel__header">
           <div className="gcPanel__title">Changes in {versionLabel}</div>
-          {changes.length ? <gux-badge>{changes.length}</gux-badge> : null}
+          {resourceType && changes.length ? <gux-badge>{changes.length}</gux-badge> : null}
         </div>
         <div className="gcPanel__body">
-          {loading ? <div className="gcMuted">Loading changes…</div> : null}
+          {!resourceType ? (
+            <div className="gcMuted">Select a type to view release changes.</div>
+          ) : null}
 
-          {error ? (
+          {resourceType && loading ? <div className="gcMuted">Loading changes…</div> : null}
+
+          {resourceType && error ? (
             <div className="gcMuted" role="alert">
               Could not load release changes.
             </div>
           ) : null}
 
-          {!loading && !error && !changes.length ? (
+          {resourceType && !loading && !error && !changes.length ? (
             <div className="gcMuted">No provider changes for this resource in {versionLabel}.</div>
           ) : null}
 
-          {!loading && !error && changes.length ? (
+          {resourceType && !loading && !error && changes.length ? (
             <ul className="gcReleaseChanges__list">
               {changes.map((entry, index) => {
                 const kindLabel = formatReleaseChangeKind(entry.kind);
@@ -102,9 +102,6 @@ export default function ResourceReleaseChanges({
           ) : null}
         </div>
       </div>
-      <button type="button" className="gcHeaderLink gcSectionLink" onClick={onViewAll}>
-        View full release notes
-      </button>
     </div>
   );
 }
