@@ -90,13 +90,14 @@ function getHiddenResourceTypes(overrides) {
 
 function resolveGuiMenuPath(resourceType, overrides) {
   const type = (resourceType || "").trim();
-  if (!type) return "";
+  if (!type) return "TBD";
 
   const paths = overrides?.guiMenuPaths;
-  if (!paths || typeof paths !== "object") return "";
+  if (!paths || typeof paths !== "object") return "TBD";
 
   const menuPath = paths[type];
-  return typeof menuPath === "string" ? menuPath.trim() : "";
+  const trimmed = typeof menuPath === "string" ? menuPath.trim() : "";
+  return trimmed || "TBD";
 }
 
 function resolveSpreadsheetScopePrefix(resourceType, overrides) {
