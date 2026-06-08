@@ -1,0 +1,7 @@
+{
+    "version": "v0.7.0",
+    "previous": "v0.6.1",
+    "resource": "genesyscloud_tf_export",
+    "changes": [],
+    "related_export_changes": []
+}

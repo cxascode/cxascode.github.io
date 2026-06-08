@@ -391,12 +391,1122 @@
   },
   {
     "version": "v1.60.0",
-    "previous": null,
+    "previous": "v1.59.1",
     "title": "v1.60.0 \u2014 genesyscloud_tf_export",
     "path": "/release-notes-data/tf-export/versions/v1.60.0.md",
     "changes_path": "/release-notes-data/tf-export/changes/v1.60.0.json",
     "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.60.0",
     "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.60.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.59.1",
+    "previous": "v1.59.0",
+    "title": "v1.59.1 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.59.1.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.59.1.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.59.1",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.59.1/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.59.0",
+    "previous": "v1.58.3",
+    "title": "v1.59.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.59.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.59.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.59.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.59.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.58.3",
+    "previous": "v1.58.2",
+    "title": "v1.58.3 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.58.3.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.58.3.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.58.3",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.58.3/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.58.2",
+    "previous": "v1.58.1",
+    "title": "v1.58.2 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.58.2.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.58.2.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.58.2",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.58.2/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.58.1",
+    "previous": "v1.58.0",
+    "title": "v1.58.1 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.58.1.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.58.1.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.58.1",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.58.1/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.58.0",
+    "previous": "v1.57.1",
+    "title": "v1.58.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.58.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.58.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.58.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.58.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.57.1",
+    "previous": "v1.57.0",
+    "title": "v1.57.1 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.57.1.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.57.1.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.57.1",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.57.1/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.57.0",
+    "previous": "v1.56.1",
+    "title": "v1.57.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.57.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.57.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.57.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.57.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.56.1",
+    "previous": "v1.56.0",
+    "title": "v1.56.1 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.56.1.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.56.1.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.56.1",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.56.1/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.56.0",
+    "previous": "v1.55.1",
+    "title": "v1.56.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.56.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.56.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.56.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.56.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.55.1",
+    "previous": "v1.55.0",
+    "title": "v1.55.1 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.55.1.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.55.1.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.55.1",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.55.1/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.55.0",
+    "previous": "v1.54.0",
+    "title": "v1.55.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.55.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.55.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.55.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.55.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.54.0",
+    "previous": "v1.53.0",
+    "title": "v1.54.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.54.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.54.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.54.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.54.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.53.0",
+    "previous": "v1.52.0",
+    "title": "v1.53.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.53.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.53.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.53.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.53.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.52.0",
+    "previous": "v1.51.0",
+    "title": "v1.52.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.52.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.52.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.52.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.52.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.51.0",
+    "previous": "v1.50.1",
+    "title": "v1.51.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.51.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.51.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.51.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.51.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.50.1",
+    "previous": "v1.50.0",
+    "title": "v1.50.1 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.50.1.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.50.1.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.50.1",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.50.1/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.50.0",
+    "previous": "v1.49.2",
+    "title": "v1.50.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.50.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.50.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.50.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.50.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.49.2",
+    "previous": "v1.49.1",
+    "title": "v1.49.2 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.49.2.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.49.2.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.49.2",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.49.2/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.49.1",
+    "previous": "v1.49.0",
+    "title": "v1.49.1 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.49.1.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.49.1.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.49.1",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.49.1/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.49.0",
+    "previous": "v1.48.3",
+    "title": "v1.49.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.49.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.49.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.49.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.49.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.48.3",
+    "previous": "v1.48.2",
+    "title": "v1.48.3 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.48.3.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.48.3.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.48.3",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.48.3/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.48.2",
+    "previous": "v1.48.1",
+    "title": "v1.48.2 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.48.2.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.48.2.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.48.2",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.48.2/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.48.1",
+    "previous": "v1.48.0",
+    "title": "v1.48.1 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.48.1.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.48.1.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.48.1",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.48.1/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.48.0",
+    "previous": "v1.47.0",
+    "title": "v1.48.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.48.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.48.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.48.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.48.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.47.0",
+    "previous": "v1.46.0",
+    "title": "v1.47.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.47.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.47.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.47.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.47.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.46.0",
+    "previous": "v1.45.0",
+    "title": "v1.46.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.46.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.46.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.46.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.46.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.45.0",
+    "previous": "v1.44.1",
+    "title": "v1.45.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.45.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.45.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.45.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.45.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.44.1",
+    "previous": "v1.44.0",
+    "title": "v1.44.1 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.44.1.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.44.1.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.44.1",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.44.1/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.44.0",
+    "previous": "v1.43.1",
+    "title": "v1.44.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.44.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.44.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.44.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.44.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.43.1",
+    "previous": "v1.43.0",
+    "title": "v1.43.1 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.43.1.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.43.1.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.43.1",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.43.1/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.43.0",
+    "previous": "v1.42.0",
+    "title": "v1.43.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.43.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.43.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.43.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.43.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.42.0",
+    "previous": "v1.41.0",
+    "title": "v1.42.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.42.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.42.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.42.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.42.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.41.0",
+    "previous": "v1.40.1",
+    "title": "v1.41.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.41.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.41.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.41.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.41.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.40.1",
+    "previous": "v1.40.0",
+    "title": "v1.40.1 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.40.1.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.40.1.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.40.1",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.40.1/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.40.0",
+    "previous": "v1.39.0",
+    "title": "v1.40.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.40.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.40.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.40.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.40.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.39.0",
+    "previous": "v1.38.1",
+    "title": "v1.39.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.39.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.39.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.39.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.39.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.38.1",
+    "previous": "v1.38.0",
+    "title": "v1.38.1 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.38.1.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.38.1.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.38.1",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.38.1/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.38.0",
+    "previous": "v1.37.0",
+    "title": "v1.38.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.38.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.38.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.38.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.38.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.37.0",
+    "previous": "v1.36.1",
+    "title": "v1.37.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.37.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.37.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.37.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.37.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.36.1",
+    "previous": "v1.36.0",
+    "title": "v1.36.1 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.36.1.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.36.1.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.36.1",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.36.1/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.36.0",
+    "previous": "v1.35.0",
+    "title": "v1.36.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.36.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.36.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.36.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.36.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.35.0",
+    "previous": "v1.34.0",
+    "title": "v1.35.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.35.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.35.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.35.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.35.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.34.0",
+    "previous": "v1.33.0",
+    "title": "v1.34.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.34.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.34.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.34.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.34.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.33.0",
+    "previous": "v1.32.1",
+    "title": "v1.33.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.33.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.33.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.33.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.33.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.32.1",
+    "previous": "v1.32.0",
+    "title": "v1.32.1 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.32.1.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.32.1.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.32.1",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.32.1/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.32.0",
+    "previous": "v1.31.0",
+    "title": "v1.32.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.32.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.32.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.32.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.32.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.31.0",
+    "previous": "v1.30.2",
+    "title": "v1.31.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.31.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.31.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.31.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.31.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.30.2",
+    "previous": "v1.30.0",
+    "title": "v1.30.2 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.30.2.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.30.2.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.30.2",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.30.2/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.30.0",
+    "previous": "v1.29.0",
+    "title": "v1.30.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.30.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.30.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.30.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.30.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.29.0",
+    "previous": "v1.28.0",
+    "title": "v1.29.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.29.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.29.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.29.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.29.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.28.0",
+    "previous": "v1.27.0",
+    "title": "v1.28.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.28.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.28.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.28.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.28.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.27.0",
+    "previous": "v1.26.0",
+    "title": "v1.27.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.27.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.27.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.27.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.27.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.26.0",
+    "previous": "v1.25.1",
+    "title": "v1.26.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.26.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.26.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.26.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.26.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.25.1",
+    "previous": "v1.25.0",
+    "title": "v1.25.1 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.25.1.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.25.1.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.25.1",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.25.1/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.25.0",
+    "previous": "v1.24.0",
+    "title": "v1.25.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.25.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.25.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.25.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.25.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.24.0",
+    "previous": "v1.23.0",
+    "title": "v1.24.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.24.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.24.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.24.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.24.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.23.0",
+    "previous": "v1.22.0",
+    "title": "v1.23.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.23.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.23.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.23.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.23.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.22.0",
+    "previous": "v1.21.0",
+    "title": "v1.22.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.22.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.22.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.22.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.22.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.21.0",
+    "previous": "v1.20.0",
+    "title": "v1.21.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.21.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.21.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.21.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.21.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.20.0",
+    "previous": "v1.19.0",
+    "title": "v1.20.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.20.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.20.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.20.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.20.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.19.0",
+    "previous": "v1.18.0",
+    "title": "v1.19.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.19.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.19.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.19.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.19.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.18.0",
+    "previous": "v1.17.0",
+    "title": "v1.18.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.18.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.18.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.18.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.18.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.17.0",
+    "previous": "v1.16.0",
+    "title": "v1.17.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.17.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.17.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.17.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.17.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.16.0",
+    "previous": "v1.15.0",
+    "title": "v1.16.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.16.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.16.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.16.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.16.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.15.0",
+    "previous": "v1.14.0",
+    "title": "v1.15.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.15.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.15.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.15.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.15.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.14.0",
+    "previous": "v1.13.0",
+    "title": "v1.14.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.14.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.14.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.14.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.14.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.13.0",
+    "previous": "v1.12.0",
+    "title": "v1.13.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.13.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.13.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.13.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.13.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.12.0",
+    "previous": "v1.11.1",
+    "title": "v1.12.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.12.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.12.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.12.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.12.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.11.1",
+    "previous": "v1.11.0",
+    "title": "v1.11.1 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.11.1.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.11.1.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.11.1",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.11.1/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.11.0",
+    "previous": "v1.10.0",
+    "title": "v1.11.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.11.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.11.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.11.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.11.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.10.0",
+    "previous": "v1.9.0",
+    "title": "v1.10.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.10.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.10.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.10.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.10.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.9.0",
+    "previous": "v1.8.0",
+    "title": "v1.9.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.9.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.9.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.9.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.9.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.8.0",
+    "previous": "v1.7.0",
+    "title": "v1.8.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.8.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.8.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.8.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.8.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.7.0",
+    "previous": "v1.6.0",
+    "title": "v1.7.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.7.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.7.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.7.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.7.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.6.0",
+    "previous": "v1.5.0",
+    "title": "v1.6.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.6.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.6.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.6.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.6.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.5.0",
+    "previous": "v1.4.0",
+    "title": "v1.5.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.5.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.5.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.5.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.5.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.4.0",
+    "previous": "v1.3.0",
+    "title": "v1.4.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.4.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.4.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.4.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.4.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.3.0",
+    "previous": "v1.2.0",
+    "title": "v1.3.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.3.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.3.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.3.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.3.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.2.0",
+    "previous": "v1.1.3",
+    "title": "v1.2.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.2.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.2.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.2.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.2.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.1.3",
+    "previous": "v1.1.2",
+    "title": "v1.1.3 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.1.3.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.1.3.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.1.3",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.1.3/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.1.2",
+    "previous": "v1.1.1",
+    "title": "v1.1.2 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.1.2.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.1.2.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.1.2",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.1.2/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.1.1",
+    "previous": "v1.1.0",
+    "title": "v1.1.1 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.1.1.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.1.1.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.1.1",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.1.1/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.1.0",
+    "previous": "v1.0.2",
+    "title": "v1.1.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.1.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.1.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.1.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.1.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.0.2",
+    "previous": "v1.0.1",
+    "title": "v1.0.2 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.0.2.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.0.2.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.0.2",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.0.2/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.0.1",
+    "previous": "v1.0.0",
+    "title": "v1.0.1 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.0.1.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.0.1.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.0.1",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.0.1/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v1.0.0",
+    "previous": "v0.14.2",
+    "title": "v1.0.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.0.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.0.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.0.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.0.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v0.14.2",
+    "previous": "v0.14.1",
+    "title": "v0.14.2 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v0.14.2.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v0.14.2.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v0.14.2",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/0.14.2/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v0.14.1",
+    "previous": "v0.14.0",
+    "title": "v0.14.1 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v0.14.1.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v0.14.1.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v0.14.1",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/0.14.1/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v0.14.0",
+    "previous": "v0.13.3",
+    "title": "v0.14.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v0.14.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v0.14.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v0.14.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/0.14.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v0.13.3",
+    "previous": "v0.13.2",
+    "title": "v0.13.3 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v0.13.3.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v0.13.3.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v0.13.3",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/0.13.3/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v0.13.2",
+    "previous": "v0.13.1",
+    "title": "v0.13.2 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v0.13.2.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v0.13.2.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v0.13.2",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/0.13.2/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v0.13.1",
+    "previous": "v0.13.0",
+    "title": "v0.13.1 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v0.13.1.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v0.13.1.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v0.13.1",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/0.13.1/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v0.13.0",
+    "previous": "v0.12.0",
+    "title": "v0.13.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v0.13.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v0.13.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v0.13.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/0.13.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v0.12.0",
+    "previous": "v0.11.2",
+    "title": "v0.12.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v0.12.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v0.12.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v0.12.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/0.12.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v0.11.2",
+    "previous": "v0.11.1",
+    "title": "v0.11.2 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v0.11.2.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v0.11.2.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v0.11.2",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/0.11.2/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v0.11.1",
+    "previous": "v0.11.0",
+    "title": "v0.11.1 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v0.11.1.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v0.11.1.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v0.11.1",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/0.11.1/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v0.11.0",
+    "previous": "v0.10.0",
+    "title": "v0.11.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v0.11.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v0.11.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v0.11.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/0.11.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v0.10.0",
+    "previous": "v0.9.0",
+    "title": "v0.10.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v0.10.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v0.10.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v0.10.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/0.10.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v0.9.0",
+    "previous": "v0.8.0",
+    "title": "v0.9.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v0.9.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v0.9.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v0.9.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/0.9.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v0.8.0",
+    "previous": "v0.7.0",
+    "title": "v0.8.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v0.8.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v0.8.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v0.8.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/0.8.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v0.7.0",
+    "previous": "v0.6.1",
+    "title": "v0.7.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v0.7.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v0.7.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v0.7.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/0.7.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v0.6.1",
+    "previous": "v0.6.0",
+    "title": "v0.6.1 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v0.6.1.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v0.6.1.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v0.6.1",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/0.6.1/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v0.6.0",
+    "previous": "v0.5.1",
+    "title": "v0.6.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v0.6.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v0.6.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v0.6.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/0.6.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v0.5.1",
+    "previous": "v0.5.0",
+    "title": "v0.5.1 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v0.5.1.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v0.5.1.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v0.5.1",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/0.5.1/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v0.5.0",
+    "previous": "v0.4.1",
+    "title": "v0.5.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v0.5.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v0.5.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v0.5.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/0.5.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v0.4.1",
+    "previous": "v0.4.0",
+    "title": "v0.4.1 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v0.4.1.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v0.4.1.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v0.4.1",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/0.4.1/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v0.4.0",
+    "previous": "v0.3.0",
+    "title": "v0.4.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v0.4.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v0.4.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v0.4.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/0.4.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v0.3.0",
+    "previous": "v0.2.0",
+    "title": "v0.3.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v0.3.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v0.3.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v0.3.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/0.3.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v0.2.0",
+    "previous": "v0.1.1",
+    "title": "v0.2.0 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v0.2.0.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v0.2.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v0.2.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/0.2.0/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
+    "version": "v0.1.1",
+    "previous": null,
+    "title": "v0.1.1 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v0.1.1.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v0.1.1.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v0.1.1",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/0.1.1/docs",
     "resource": "genesyscloud_tf_export"
   }
 ]
