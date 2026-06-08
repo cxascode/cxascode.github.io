@@ -1,6 +1,11 @@
 const BASE = import.meta.env.BASE_URL;
 
 export const RELEASE_NOTES_DATA_PATH = "release-notes-data";
+export const TF_EXPORT_DATA_PATH = `${RELEASE_NOTES_DATA_PATH}/tf-export`;
+export const TF_EXPORT_RESOURCE = "genesyscloud_tf_export";
+
+export const RELEASE_NOTES_SCOPE_PROVIDER = "provider";
+export const RELEASE_NOTES_SCOPE_EXPORT = "export";
 
 export function toReleaseNotesVersion(version) {
   if (!version || version === "latest") return "";
@@ -15,29 +20,75 @@ export function fromReleaseNotesVersion(version) {
   return String(version).trim().replace(/^v/i, "");
 }
 
-export function releaseNotesMarkdownUrl(version) {
+function releaseNotesMarkdownUrlForRoot(root, version) {
   const v = toReleaseNotesVersion(version);
   if (!v) return "";
-  return `${BASE}${RELEASE_NOTES_DATA_PATH}/versions/${v}.md`;
+  return `${BASE}${root}/versions/${v}.md`;
+}
+
+function releaseNotesChangesUrlForRoot(root, version) {
+  const v = toReleaseNotesVersion(version);
+  if (!v) return "";
+  return `${BASE}${root}/changes/${v}.json`;
+}
+
+export function releaseNotesMarkdownUrl(version) {
+  return releaseNotesMarkdownUrlForRoot(RELEASE_NOTES_DATA_PATH, version);
 }
 
 export function releaseNotesChangesUrl(version) {
-  const v = toReleaseNotesVersion(version);
-  if (!v) return "";
-  return `${BASE}${RELEASE_NOTES_DATA_PATH}/changes/${v}.json`;
+  return releaseNotesChangesUrlForRoot(RELEASE_NOTES_DATA_PATH, version);
 }
 
-export async function fetchReleaseNotesMarkdown(version) {
-  const url = releaseNotesMarkdownUrl(version);
+export function tfExportMarkdownUrl(version) {
+  return releaseNotesMarkdownUrlForRoot(TF_EXPORT_DATA_PATH, version);
+}
+
+export function releaseNotesIndexUrl(scope = RELEASE_NOTES_SCOPE_PROVIDER) {
+  const root =
+    scope === RELEASE_NOTES_SCOPE_EXPORT ? TF_EXPORT_DATA_PATH : RELEASE_NOTES_DATA_PATH;
+  return `${BASE}${root}/index.json`;
+}
+
+async function fetchReleaseNotesMarkdownFromUrl(url, label = "release notes") {
   if (!url) return "";
 
   const res = await fetch(url, { cache: "no-store" });
   if (res.status === 404) return "";
   if (!res.ok) {
-    throw new Error(`Failed to fetch release notes: ${res.status} ${res.statusText}`);
+    throw new Error(`Failed to fetch ${label}: ${res.status} ${res.statusText}`);
   }
 
   return res.text();
+}
+
+export async function fetchReleaseNotesMarkdown(version, scope = RELEASE_NOTES_SCOPE_PROVIDER) {
+  const url =
+    scope === RELEASE_NOTES_SCOPE_EXPORT
+      ? tfExportMarkdownUrl(version)
+      : releaseNotesMarkdownUrl(version);
+  const label = scope === RELEASE_NOTES_SCOPE_EXPORT ? "export release notes" : "release notes";
+  return fetchReleaseNotesMarkdownFromUrl(url, label);
+}
+
+export function releaseNotesDownloadFilename(
+  version,
+  scope = RELEASE_NOTES_SCOPE_PROVIDER
+) {
+  const versionLabel = toReleaseNotesVersion(version);
+  if (!versionLabel) return "cx-as-code-release-notes.md";
+
+  if (scope === RELEASE_NOTES_SCOPE_EXPORT) {
+    return `cx-as-code-export-release-notes-${versionLabel}.md`;
+  }
+
+  return `cx-as-code-release-notes-${versionLabel}.md`;
+}
+
+export function releaseNotesDownloadLabel(scope = RELEASE_NOTES_SCOPE_PROVIDER) {
+  return scope === RELEASE_NOTES_SCOPE_EXPORT
+    ? "Download export release notes"
+    : "Download release notes";
 }
 
 export async function fetchReleaseNotesChanges(version) {
@@ -52,6 +103,30 @@ export async function fetchReleaseNotesChanges(version) {
 
   const json = await res.json();
   return json && Array.isArray(json.changes) ? json : null;
+}
+
+let releaseNotesIndexCache = new Map();
+
+export async function fetchReleaseNotesIndex(scope = RELEASE_NOTES_SCOPE_PROVIDER) {
+  if (releaseNotesIndexCache.has(scope)) {
+    return releaseNotesIndexCache.get(scope);
+  }
+
+  const url = releaseNotesIndexUrl(scope);
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch release notes index: ${res.status} ${res.statusText}`);
+  }
+
+  const json = await res.json();
+  const entries = Array.isArray(json) ? json : [];
+  releaseNotesIndexCache.set(scope, entries);
+  return entries;
+}
+
+export function releaseNotesVersionsFromIndex(index) {
+  if (!Array.isArray(index)) return [];
+  return index.map((entry) => fromReleaseNotesVersion(entry?.version)).filter(Boolean);
 }
 
 export function filterChangesForResource(changesPayload, resourceType) {

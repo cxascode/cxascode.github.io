@@ -118,11 +118,11 @@ html {
   color: var(--gc-text);
 }
 
-.gcPageTitleEgg {
+.gcPageTitle.gcPageTitleEgg {
   cursor: default;
 }
 
-.gcPageTitleEgg:hover .gcPageTitle {
+.gcPageTitle.gcPageTitleEgg:hover {
   animation: gcPageTitleColorShift 6s linear infinite;
   animation-delay: var(--gc-page-title-color-delay, 0s);
 }
@@ -158,7 +158,7 @@ html {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .gcPageTitleEgg:hover .gcPageTitle {
+  .gcPageTitle.gcPageTitleEgg:hover {
     animation: none;
     color: var(--gc-blue);
   }
@@ -440,6 +440,20 @@ button.gcHeaderLink:disabled {
   display: block;
 }
 
+.gcSegmentedControl--text .gcSegmentedControl__option {
+  width: auto;
+  min-width: 0;
+  height: 30px;
+  padding: 0 12px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.gcExportTemplate {
+  padding: 0;
+}
+
 .gcVisuallyHidden {
   position: absolute;
   width: 1px;
@@ -583,6 +597,14 @@ button.gcHeaderLink:disabled {
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
+}
+
+.gcCard__titleActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-left: auto;
 }
 
 .gcCard__title {
@@ -735,6 +757,11 @@ button.gcHeaderLink:disabled {
 
 .gcDocsPill:visited {
   color: var(--gc-blue);
+}
+
+button.gcDocsPill {
+  cursor: pointer;
+  font-family: inherit;
 }
 
 .gcMenuPathBlock {
@@ -1141,7 +1168,20 @@ button.gcHeaderLink:disabled {
 }
 
 .gcOrderDialog__toolbar--attributeIndex {
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
+}
+
+.gcOrderDialog__toolbar--releaseNotes {
+  align-items: center;
+}
+
+.gcOrderDialog__toolbar--releaseNotes .gcOrderDialog__toolbarActions {
+  margin-left: auto;
+}
+
+.gcOrderDialog__toolbar--attributeIndex .gcSegmentedControl--text,
+.gcOrderDialog__toolbar--releaseNotes .gcSegmentedControl--text {
+  flex: 0 0 auto;
 }
 
 .gcOrderDialog__toolbar--attributeIndex .gcOrderDialog__search {
@@ -1151,6 +1191,10 @@ button.gcHeaderLink:disabled {
 
 .gcOrderDialog__toolbar--attributeIndex .gcSelectInput {
   flex: 0 0 auto;
+}
+
+.gcOrderDialog__toolbar--attributeIndex .gcClearButton--toolbarEnd {
+  margin-left: auto;
 }
 
 .gcOrderDialog__toolbarActions {

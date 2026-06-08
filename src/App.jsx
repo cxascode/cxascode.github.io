@@ -4,14 +4,16 @@ import DependencyNote from "./DependencyNote.jsx";
 import OrderOfOperationsDialog from "./OrderOfOperationsDialog.jsx";
 import AttributeIndexDialog from "./AttributeIndexDialog.jsx";
 import ReleaseNotesDialog from "./ReleaseNotesDialog.jsx";
-import ResourceAttributeHistory from "./ResourceAttributeHistory.jsx";
 import ResourceReleaseChanges from "./ResourceReleaseChanges.jsx";
 import overrides from "./overrides.json";
 import {
   buildTfExportAttributes,
   resolveTfExportResourceName,
 } from "./tfExportTemplate.js";
-import { buildTerraformRegistryDocsUrl } from "./terraformRegistry.js";
+import {
+  buildTerraformRegistryDocsUrl,
+  buildTerraformRegistryProviderDocsUrl,
+} from "./terraformRegistry.js";
 import {
   DIVISION_FILTER_ALL,
   DIVISION_FILTER_AWARE,
@@ -508,7 +510,10 @@ export default function App() {
   );
 
   const terraformRegistryDocsUrl = useMemo(
-    () => (detailType ? buildTerraformRegistryDocsUrl(detailType, selectedVersion) : ""),
+    () =>
+      detailType
+        ? buildTerraformRegistryDocsUrl(detailType, selectedVersion)
+        : buildTerraformRegistryProviderDocsUrl(selectedVersion),
     [detailType, selectedVersion]
   );
 
@@ -753,8 +758,17 @@ export default function App() {
             <button
               type="button"
               className="gcHeaderLink"
+              onClick={() => openDialog(DIALOG_CREATION_ORDER)}
+              disabled={showDependencyLoading || !!error || !raw}
+              title="Suggested creation order of CX as Code resources"
+            >
+              Creation order
+            </button>
+
+            <button
+              type="button"
+              className="gcHeaderLink"
               onClick={() => openDialog(DIALOG_RELEASE_NOTES)}
-              title="Full release notes for the selected provider version"
             >
               Release notes
             </button>
@@ -762,11 +776,9 @@ export default function App() {
             <button
               type="button"
               className="gcHeaderLink"
-              onClick={() => openDialog(DIALOG_CREATION_ORDER)}
-              disabled={showDependencyLoading || !!error || !raw}
-              title="Suggested creation order of CX as Code resources"
+              onClick={() => openDialog(DIALOG_ATTRIBUTE_INDEX)}
             >
-              Creation order
+              Attribute history
             </button>
 
             <div
@@ -1003,17 +1015,23 @@ export default function App() {
             <div className="gcCard__header">
               <div className="gcCard__titleRow">
                 <h2 className="gcCard__title">Resource Type Details</h2>
-                {detailType && terraformRegistryDocsUrl ? (
-                  <a
-                    className="gcDocsPill"
-                    href={terraformRegistryDocsUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={`Open ${detailType} in the Terraform Registry (APIs and permissions)`}
-                  >
-                    Registry docs (APIs & permissions)
-                  </a>
-                ) : null}
+                <div className="gcCard__titleActions">
+                  {terraformRegistryDocsUrl ? (
+                    <a
+                      className="gcDocsPill"
+                      href={terraformRegistryDocsUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={
+                        detailType
+                          ? `Open ${detailType} in the Terraform Registry (APIs and permissions)`
+                          : "Open Genesys Cloud provider documentation in the Terraform Registry"
+                      }
+                    >
+                      Registry docs (APIs & permissions)
+                    </a>
+                  ) : null}
+                </div>
               </div>
               <div className={`gcCard__subtitle ${detailType ? "gcCard__subtitle--hasResource" : ""}`}>
                 {detailType ? (
@@ -1091,11 +1109,10 @@ export default function App() {
               <div className="gcMuted">Loading dependency data for this version…</div>
             ) : (
               <>
-            {activeType && effectiveVersion ? (
+            {effectiveVersion ? (
               <ResourceReleaseChanges
                 version={effectiveVersion}
                 resourceType={activeType}
-                onViewAll={() => openDialog(DIALOG_RELEASE_NOTES)}
               />
             ) : null}
 
@@ -1181,7 +1198,7 @@ export default function App() {
                     <pre className="gcExportTemplate__code gcMono">{tfExportTemplate}</pre>
                   ) : (
                     <div className="gcMuted">
-                      Select a type to generate export filters and datasource replacements.
+                      Select a type to view an export template.
                     </div>
                   )}
                   {activeType && tfExportNote ? (
@@ -1204,13 +1221,6 @@ export default function App() {
                   </div>
                 </div>
               </div>
-            ) : null}
-
-            {activeType ? (
-              <ResourceAttributeHistory
-                resourceType={activeType}
-                onViewAll={() => openDialog(DIALOG_ATTRIBUTE_INDEX)}
-              />
             ) : null}
               </>
             )}
