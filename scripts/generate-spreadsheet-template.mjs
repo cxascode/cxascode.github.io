@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import ExcelJS from "exceljs";
 import { computeCreationOrder } from "../src/dependencyOrder.js";
+import { effectiveDependencies } from "../src/tfExportTemplate.js";
 
 const INPUT_DIR = path.resolve("public/dependency-tree-json");
 const OUTPUT_DIR = path.resolve("public/spreadsheet-templates");
@@ -183,14 +184,15 @@ function buildResourceRows(raw, overrides) {
 
   return orderedTypes.map((type) => {
     const resource = byType.get(type);
-    const dependencies = Array.isArray(resource?.dependencies)
+    const allDependencies = Array.isArray(resource?.dependencies)
       ? resource.dependencies.filter((d) => typeof d === "string")
       : [];
+    const dependencies = effectiveDependencies(type, allDependencies);
 
     return {
       menuPath: resolveGuiMenuPath(type, overrides),
       resourceType: type,
-      divisionAware: isDivisionAware(dependencies) ? "Yes" : "No",
+      divisionAware: isDivisionAware(allDependencies) ? "Yes" : "No",
       dependencyCount: dependencies.length,
       scopePrefix: resolveSpreadsheetScopePrefix(type, overrides),
       priority: tierByType.get(type) ?? null,

@@ -1,6 +1,19 @@
 export const RESOURCE_NAME_PLACEHOLDER = "<name>";
 
 /**
+ * Dependencies that apply for export replace_with_datasource and spreadsheet
+ * "possible dependencies" counts — excludes self-referential entries.
+ */
+export function effectiveDependencies(resourceType, dependencies) {
+  const type = (resourceType || "").trim();
+  if (!type) return [];
+
+  return (Array.isArray(dependencies) ? dependencies : []).filter(
+    (d) => typeof d === "string" && d.trim() && d.trim() !== type
+  );
+}
+
+/**
  * Resolve the Genesys Cloud resource name for include_filter_resources.
  * Uses src/overrides.json tfExportResourceNames when present for the type.
  */
@@ -38,10 +51,9 @@ export function buildTfExportAttributes(resourceType, dependencies, resourceName
       ? resourceName.trim()
       : RESOURCE_NAME_PLACEHOLDER;
 
-  const deps = Array.isArray(dependencies) ? dependencies : [];
-  const replaceEntries = deps
-    .filter((d) => typeof d === "string" && d.trim() && d.trim() !== type)
-    .map((d) => `${d.trim()}::.*`);
+  const replaceEntries = effectiveDependencies(type, dependencies).map(
+    (d) => `${d.trim()}::.*`
+  );
 
   const includeFilter = `["${type}::^${name}$"]`;
   const replaceWith = `[${replaceEntries.map((e) => JSON.stringify(e)).join(", ")}]`;
