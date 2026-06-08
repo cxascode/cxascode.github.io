@@ -26,6 +26,8 @@ const RESERVED_PATH_SEGMENTS = new Set([
   "assets",
 ]);
 
+const VERSION_PATH_RE = /^v?(\d+\.\d+\.\d+)$/i;
+
 function normalizePathname(pathname) {
   if (!pathname || pathname === "/") return "/";
   return pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
@@ -33,6 +35,26 @@ function normalizePathname(pathname) {
 
 function normalizeResourceType(value) {
   return (value || "").trim();
+}
+
+function normalizeVersion(version) {
+  const trimmed = String(version || "").trim();
+  if (!trimmed || trimmed === "latest") return "";
+  return trimmed.replace(/^v/i, "");
+}
+
+export function isVersionPathSegment(segment) {
+  return VERSION_PATH_RE.test((segment || "").trim());
+}
+
+export function fromVersionPathSegment(segment) {
+  const match = (segment || "").trim().match(VERSION_PATH_RE);
+  return match ? match[1] : "";
+}
+
+export function toVersionPathSegment(version) {
+  const bare = normalizeVersion(version);
+  return bare ? `v${bare}` : "";
 }
 
 function stripLegacyQueryParams(url) {
@@ -61,22 +83,30 @@ function pathSegments(pathname) {
   return remainder.split("/").filter(Boolean);
 }
 
-export function dialogPathname(dialogId) {
+function appendVersionSegment(pathname, version) {
+  const versionSegment = toVersionPathSegment(version);
+  if (!versionSegment) return normalizePathname(pathname);
+  return normalizePathname(`${normalizePathname(pathname)}/${versionSegment}`);
+}
+
+export function dialogPathname(dialogId, version = "latest") {
   const segment = DIALOG_PATH_SEGMENT[dialogId];
   if (!segment) return appRootPathname();
 
   const root = BASE.endsWith("/") ? BASE : `${BASE}/`;
-  return normalizePathname(new URL(segment, new URL(root, "http://local")).pathname);
+  const base = normalizePathname(new URL(segment, new URL(root, "http://local")).pathname);
+  return appendVersionSegment(base, version);
 }
 
-export function resourcePathname(resourceType) {
+export function resourcePathname(resourceType, version = "latest") {
   const typed = normalizeResourceType(resourceType);
   if (!typed) return appRootPathname();
 
   const root = BASE.endsWith("/") ? BASE : `${BASE}/`;
-  return normalizePathname(
+  const base = normalizePathname(
     new URL(encodeURIComponent(typed), new URL(root, "http://local")).pathname
   );
+  return appendVersionSegment(base, version);
 }
 
 export function readDialogFromLocation() {
@@ -88,10 +118,13 @@ export function readDialogFromLocation() {
 }
 
 function readDialogFromPathname(pathname) {
-  const normalized = normalizePathname(pathname);
+  const segments = pathSegments(pathname);
+  if (segments.length === 0 || segments.length > 2) return "";
+  if (segments.length === 2 && !isVersionPathSegment(segments[1])) return "";
 
+  const first = segments[0];
   for (const dialogId of VALID_DIALOGS) {
-    if (normalized === dialogPathname(dialogId)) {
+    if (DIALOG_PATH_SEGMENT[dialogId] === first) {
       return dialogId;
     }
   }
@@ -99,12 +132,24 @@ function readDialogFromPathname(pathname) {
   return "";
 }
 
+export function readVersionFromLocation() {
+  try {
+    const segments = pathSegments(window.location.pathname);
+    if (segments.length !== 2) return "";
+    if (!isVersionPathSegment(segments[1])) return "";
+    return fromVersionPathSegment(segments[1]);
+  } catch {
+    return "";
+  }
+}
+
 export function readResourceTypeFromLocation() {
   try {
     if (readDialogFromLocation()) return "";
 
     const segments = pathSegments(window.location.pathname);
-    if (segments.length !== 1) return "";
+    if (segments.length === 0 || segments.length > 2) return "";
+    if (segments.length === 2 && !isVersionPathSegment(segments[1])) return "";
 
     const segment = decodeURIComponent(segments[0]);
     if (!segment || RESERVED_PATH_SEGMENTS.has(segment)) return "";
@@ -115,16 +160,16 @@ export function readResourceTypeFromLocation() {
   }
 }
 
-export function replaceDialogInUrl(dialogId, resourceType = "") {
+export function replaceDialogInUrl(dialogId, resourceType = "", version = "latest") {
   try {
     const url = new URL(window.location.href);
     stripLegacyQueryParams(url);
 
     if (dialogId && VALID_DIALOGS.has(dialogId)) {
-      url.pathname = dialogPathname(dialogId);
+      url.pathname = dialogPathname(dialogId, version);
     } else {
       const typed = normalizeResourceType(resourceType);
-      url.pathname = typed ? resourcePathname(typed) : appRootPathname();
+      url.pathname = typed ? resourcePathname(typed, version) : appRootPathname();
     }
 
     replaceIfChanged(url);
@@ -133,7 +178,7 @@ export function replaceDialogInUrl(dialogId, resourceType = "") {
   }
 }
 
-export function replaceResourceInUrl(resourceType) {
+export function replaceResourceInUrl(resourceType, version = "latest") {
   if (readDialogFromLocation()) return;
 
   try {
@@ -141,7 +186,7 @@ export function replaceResourceInUrl(resourceType) {
     stripLegacyQueryParams(url);
 
     const typed = normalizeResourceType(resourceType);
-    url.pathname = typed ? resourcePathname(typed) : appRootPathname();
+    url.pathname = typed ? resourcePathname(typed, version) : appRootPathname();
 
     replaceIfChanged(url);
   } catch {
@@ -157,25 +202,25 @@ function replaceIfChanged(url) {
   }
 }
 
-export function buildDialogPermalink(dialogId) {
+export function buildDialogPermalink(dialogId, version = "latest") {
   if (!VALID_DIALOGS.has(dialogId)) return "";
 
   try {
     const url = new URL(window.location.href);
     stripLegacyQueryParams(url);
-    url.pathname = dialogPathname(dialogId);
+    url.pathname = dialogPathname(dialogId, version);
     return url.toString();
   } catch {
     return "";
   }
 }
 
-export function buildResourceTypePermalink(resourceType) {
+export function buildResourceTypePermalink(resourceType, version = "latest") {
   const typed = normalizeResourceType(resourceType);
   if (!typed) return "";
 
   try {
-    return new URL(resourcePathname(typed), window.location.origin).toString();
+    return new URL(resourcePathname(typed, version), window.location.origin).toString();
   } catch {
     return "";
   }

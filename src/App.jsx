@@ -29,6 +29,7 @@ import {
   DIALOG_RELEASE_NOTES,
   readDialogFromLocation,
   readResourceTypeFromLocation,
+  readVersionFromLocation,
   replaceDialogInUrl,
   replaceResourceInUrl,
 } from "./appPermalinks.js";
@@ -303,7 +304,7 @@ export default function App() {
   const selectedVersionRef = useRef("latest");
   /** Skip one URL sync after applying a resource path from the address bar. */
   const skipNextUrlSyncRef = useRef(false);
-  /** Only merge a resource path from the URL once per mount. */
+  /** Only merge resource and version paths from the URL once per mount. */
   const hydratedFromUrlRef = useRef(false);
 
   useEffect(() => {
@@ -458,19 +459,27 @@ export default function App() {
   }, [allTypes, selectedType]);
 
   useEffect(() => {
-    if (!allTypes.length || hydratedFromUrlRef.current) return;
+    if (!allTypes.length || !availableVersions.length || hydratedFromUrlRef.current) return;
     hydratedFromUrlRef.current = true;
+
+    const versionFromUrl = readVersionFromLocation();
+    if (versionFromUrl) {
+      skipNextUrlSyncRef.current = true;
+      setSelectedVersion(
+        availableVersions.includes(versionFromUrl) ? versionFromUrl : "latest"
+      );
+    }
 
     const fromUrl = readResourceTypeFromLocation();
     if (fromUrl && allTypes.includes(fromUrl)) {
       skipNextUrlSyncRef.current = true;
       setSelectedType(fromUrl);
     } else if (fromUrl) {
-      replaceResourceInUrl("");
+      replaceResourceInUrl("", versionFromUrl || "latest");
       setSelectedType("");
       setQuery("");
     }
-  }, [allTypes]);
+  }, [allTypes, availableVersions]);
 
   useEffect(() => {
     if (!allTypes.length) return;
@@ -478,8 +487,15 @@ export default function App() {
       skipNextUrlSyncRef.current = false;
       return;
     }
-    replaceResourceInUrl(activeType);
-  }, [activeType, allTypes]);
+
+    const dialog = readDialogFromLocation();
+    if (dialog) {
+      replaceDialogInUrl(dialog, activeType, selectedVersion);
+      return;
+    }
+
+    replaceResourceInUrl(activeType, selectedVersion);
+  }, [activeType, selectedVersion, allTypes]);
 
   const dependsOn = useMemo(
     () => (activeType ? sortAlpha([...(depsMap.get(activeType) || [])]) : []),
@@ -518,8 +534,8 @@ export default function App() {
   );
 
   const resourceTypePermalink = useMemo(
-    () => (detailType ? buildResourceTypePermalink(detailType) : ""),
-    [detailType]
+    () => (detailType ? buildResourceTypePermalink(detailType, selectedVersion) : ""),
+    [detailType, selectedVersion]
   );
 
   const detailGuiMenuPath = useMemo(
@@ -536,7 +552,7 @@ export default function App() {
     setOrderDialogOpen(dialogId === DIALOG_CREATION_ORDER);
     setReleaseNotesDialogOpen(dialogId === DIALOG_RELEASE_NOTES);
     setAttributeIndexDialogOpen(dialogId === DIALOG_ATTRIBUTE_INDEX);
-    replaceDialogInUrl(dialogId);
+    replaceDialogInUrl(dialogId, "", selectedVersionRef.current);
   }, []);
 
   const closeDialogs = useCallback(
@@ -550,7 +566,7 @@ export default function App() {
           ? nextResourceType.trim()
           : activeType;
 
-      replaceDialogInUrl("", resource);
+      replaceDialogInUrl("", resource, selectedVersionRef.current);
     },
     [activeType]
   );
@@ -575,6 +591,14 @@ export default function App() {
       setReleaseNotesDialogOpen(dialog === DIALOG_RELEASE_NOTES);
       setAttributeIndexDialogOpen(dialog === DIALOG_ATTRIBUTE_INDEX);
 
+      const versionFromUrl = readVersionFromLocation();
+      skipNextUrlSyncRef.current = true;
+      if (versionFromUrl && availableVersions.includes(versionFromUrl)) {
+        setSelectedVersion(versionFromUrl);
+      } else {
+        setSelectedVersion("latest");
+      }
+
       if (dialog) return;
 
       const typeFromUrl = readResourceTypeFromLocation();
@@ -590,18 +614,25 @@ export default function App() {
 
     window.addEventListener("popstate", syncFromLocation);
     return () => window.removeEventListener("popstate", syncFromLocation);
-  }, [allTypes]);
+  }, [allTypes, availableVersions]);
 
   useEffect(() => {
     applyPageSeo(
       resolvePageSeo({
         activeType,
+        selectedVersion,
         releaseNotesOpen: releaseNotesDialogOpen,
         creationOrderOpen: orderDialogOpen,
         attributeIndexOpen: attributeIndexDialogOpen,
       })
     );
-  }, [activeType, releaseNotesDialogOpen, orderDialogOpen, attributeIndexDialogOpen]);
+  }, [
+    activeType,
+    selectedVersion,
+    releaseNotesDialogOpen,
+    orderDialogOpen,
+    attributeIndexDialogOpen,
+  ]);
 
   const dependencyFor = useMemo(
     () => (activeType ? sortAlpha([...(reverseMap.get(activeType) || [])]) : []),
@@ -1245,6 +1276,12 @@ export default function App() {
         onClose={closeDialogs}
         depsMap={depsMap}
         hiddenTypes={hiddenTypes}
+        selectedVersion={selectedVersion}
+        onVersionChange={setSelectedVersion}
+        availableVersions={availableVersions}
+        newestListedRelease={newestListedRelease}
+        loadingIndex={loadingIndex}
+        loadingData={loadingData}
         onSelectType={(type) => {
           setSelectedType(type);
           setQuery("");
