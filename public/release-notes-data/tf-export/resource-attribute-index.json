@@ -2,28 +2,6 @@
   {
     "type": "export_behavior",
     "resource": "genesyscloud_tf_export",
-    "attribute": "enable_dependency_resolution",
-    "introduced": "Unknown",
-    "last_updated": "v1.77.3",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "When using exclude_filter_resources or the default export mode, enable_dependency_resolution no longer adds depends_on blocks even when set to true.",
-    "history": [
-      {
-        "version": "v1.77.3",
-        "change": "updated",
-        "summary": "When using include_filter_resources or include_filter_resources_by_id, enable_dependency_resolution now controls depends_on generation without requiring a non-empty resource-type filter list."
-      },
-      {
-        "version": "v1.77.3",
-        "change": "updated",
-        "summary": "When using exclude_filter_resources or the default export mode, enable_dependency_resolution no longer adds depends_on blocks even when set to true."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
-    "resource": "genesyscloud_tf_export",
     "attribute": "general export behavior",
     "introduced": "Unknown",
     "last_updated": "v1.79.0",
@@ -106,28 +84,6 @@
   {
     "type": "resource",
     "resource": "genesyscloud_tf_export",
-    "attribute": "(resource-level behavior)",
-    "introduced": "Unknown",
-    "last_updated": "v1.72.2",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Filter attributes resource_types, include_filter_resources, exclude_filter_resources, and include_filter_resources_by_id are mutually exclusive.",
-    "history": [
-      {
-        "version": "v1.61.0",
-        "change": "updated",
-        "summary": "Export can complete with warnings for non-fatal issues instead of treating all diagnostics as hard failures."
-      },
-      {
-        "version": "v1.72.2",
-        "change": "updated",
-        "summary": "Filter attributes resource_types, include_filter_resources, exclude_filter_resources, and include_filter_resources_by_id are mutually exclusive."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_tf_export",
     "attribute": "exclude_attributes",
     "introduced": "Unknown",
     "last_updated": "v1.79.0",
@@ -150,17 +106,39 @@
   {
     "type": "resource",
     "resource": "genesyscloud_tf_export",
-    "attribute": "include_filter_resources_by_id",
-    "introduced": "v1.72.2",
-    "last_updated": "v1.72.2",
+    "attribute": "replace_with_datasource",
+    "introduced": "Unknown",
+    "last_updated": "v1.78.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Optional list of {resourceType}::{resourceId} values to export only specific resources by ID.",
+    "latest_summary": "Accepts a resource type without a label suffix (equivalent to type::) to replace all exported instances of that type with data sources.",
     "history": [
       {
-        "version": "v1.72.2",
-        "change": "added",
-        "summary": "Optional list of {resourceType}::{resourceId} values to export only specific resources by ID."
+        "version": "v1.78.0",
+        "change": "updated",
+        "summary": "Accepts a resource type without a label suffix (equivalent to type::) to replace all exported instances of that type with data sources."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_tf_export",
+    "attribute": "enable_dependency_resolution",
+    "introduced": "Unknown",
+    "last_updated": "v1.77.3",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When using exclude_filter_resources or the default export mode, enable_dependency_resolution no longer adds depends_on blocks even when set to true.",
+    "history": [
+      {
+        "version": "v1.77.3",
+        "change": "updated",
+        "summary": "When using include_filter_resources or include_filter_resources_by_id, enable_dependency_resolution now controls depends_on generation without requiring a non-empty resource-type filter list."
+      },
+      {
+        "version": "v1.77.3",
+        "change": "updated",
+        "summary": "When using exclude_filter_resources or the default export mode, enable_dependency_resolution no longer adds depends_on blocks even when set to true."
       }
     ]
   },
@@ -189,17 +167,39 @@
   {
     "type": "resource",
     "resource": "genesyscloud_tf_export",
-    "attribute": "replace_with_datasource",
+    "attribute": "(resource-level behavior)",
     "introduced": "Unknown",
-    "last_updated": "v1.78.0",
+    "last_updated": "v1.72.2",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Accepts a resource type without a label suffix (equivalent to type::) to replace all exported instances of that type with data sources.",
+    "latest_summary": "Filter attributes resource_types, include_filter_resources, exclude_filter_resources, and include_filter_resources_by_id are mutually exclusive.",
     "history": [
       {
-        "version": "v1.78.0",
+        "version": "v1.61.0",
         "change": "updated",
-        "summary": "Accepts a resource type without a label suffix (equivalent to type::) to replace all exported instances of that type with data sources."
+        "summary": "Export can complete with warnings for non-fatal issues instead of treating all diagnostics as hard failures."
+      },
+      {
+        "version": "v1.72.2",
+        "change": "updated",
+        "summary": "Filter attributes resource_types, include_filter_resources, exclude_filter_resources, and include_filter_resources_by_id are mutually exclusive."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_tf_export",
+    "attribute": "include_filter_resources_by_id",
+    "introduced": "v1.72.2",
+    "last_updated": "v1.72.2",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional list of {resourceType}::{resourceId} values to export only specific resources by ID.",
+    "history": [
+      {
+        "version": "v1.72.2",
+        "change": "added",
+        "summary": "Optional list of {resourceType}::{resourceId} values to export only specific resources by ID."
       }
     ]
   },
