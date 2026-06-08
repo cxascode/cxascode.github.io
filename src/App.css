@@ -1171,12 +1171,27 @@ button.gcDocsPill {
   flex-wrap: wrap;
 }
 
-.gcOrderDialog__toolbar--releaseNotes {
+.gcOrderDialog__toolbar--releaseNotes,
+.gcOrderDialog__toolbar--creationOrder {
   align-items: center;
 }
 
 .gcOrderDialog__toolbar--releaseNotes .gcOrderDialog__toolbarActions {
   margin-left: auto;
+}
+
+.gcOrderDialog__toolbar--creationOrder .gcOrderDialog__search {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+
+.gcOrderDialog__toolbar--creationOrder .gcOrderDialog__toolbarActions {
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+.gcOrderDialog__toolbar--creationOrder .gcClearButton--toolbarEnd {
+  margin-left: 0;
 }
 
 .gcOrderDialog__toolbar--attributeIndex .gcSegmentedControl--text,

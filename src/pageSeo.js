@@ -6,7 +6,9 @@ import {
   dialogPathname,
   readDialogFromLocation,
   readResourceTypeFromLocation,
+  readVersionFromLocation,
   resourcePathname,
+  toVersionPathSegment,
 } from "./appPermalinks.js";
 
 const PRODUCTION_ORIGIN = "https://cxascode.github.io";
@@ -44,49 +46,82 @@ function pageOrigin() {
   return window.location.origin;
 }
 
-function buildResourceDescription(resourceType) {
-  return `Dependencies, export templates, and attribute history for ${resourceType} in the Genesys Cloud Terraform provider.`;
+function resolveVersion(version) {
+  const trimmed = (version || "").trim();
+  if (trimmed && trimmed !== "latest") return trimmed.replace(/^v/i, "");
+  return readVersionFromLocation();
 }
 
-function buildResourceTitle(resourceType) {
-  return `${resourceType} — CX as Code Explorer`;
+function versionLabel(version) {
+  return toVersionPathSegment(version) || "";
 }
 
-export function resolvePageSeo({ activeType, releaseNotesOpen, creationOrderOpen, attributeIndexOpen }) {
+function buildResourceDescription(resourceType, version) {
+  const label = versionLabel(version);
+  const suffix = label ? ` (${label})` : "";
+  return `Dependencies, export templates, and attribute history for ${resourceType}${suffix} in the Genesys Cloud Terraform provider.`;
+}
+
+function buildResourceTitle(resourceType, version) {
+  const label = versionLabel(version);
+  const suffix = label ? ` (${label})` : "";
+  return `${resourceType}${suffix} — CX as Code Explorer`;
+}
+
+function buildDialogTitle(dialogId, version) {
+  const label = versionLabel(version);
+  const suffix = label ? ` (${label})` : "";
+  const base = DIALOG_SEO[dialogId]?.title?.replace(" — CX as Code Explorer", "") || "";
+  return `${base}${suffix} — CX as Code Explorer`;
+}
+
+export function resolvePageSeo({
+  activeType,
+  selectedVersion,
+  releaseNotesOpen,
+  creationOrderOpen,
+  attributeIndexOpen,
+}) {
+  const version = resolveVersion(selectedVersion);
+
   if (releaseNotesOpen) {
-    return { dialogId: DIALOG_RELEASE_NOTES, resourceType: "" };
+    return { dialogId: DIALOG_RELEASE_NOTES, resourceType: "", version };
   }
   if (creationOrderOpen) {
-    return { dialogId: DIALOG_CREATION_ORDER, resourceType: "" };
+    return { dialogId: DIALOG_CREATION_ORDER, resourceType: "", version };
   }
   if (attributeIndexOpen) {
-    return { dialogId: DIALOG_ATTRIBUTE_INDEX, resourceType: "" };
+    return { dialogId: DIALOG_ATTRIBUTE_INDEX, resourceType: "", version };
   }
 
   const dialogFromUrl = readDialogFromLocation();
   if (dialogFromUrl) {
-    return { dialogId: dialogFromUrl, resourceType: "" };
+    return { dialogId: dialogFromUrl, resourceType: "", version };
   }
 
   return {
     dialogId: "",
     resourceType: activeType || readResourceTypeFromLocation(),
+    version,
   };
 }
 
-export function pageSeoForState({ dialogId, resourceType }) {
+export function pageSeoForState({ dialogId, resourceType, version = "" }) {
   if (dialogId && DIALOG_SEO[dialogId]) {
-    const { title, description } = DIALOG_SEO[dialogId];
-    const pathname = dialogPathname(dialogId);
-    return { title, description, pathname };
+    const { description } = DIALOG_SEO[dialogId];
+    return {
+      title: buildDialogTitle(dialogId, version),
+      description,
+      pathname: dialogPathname(dialogId, version),
+    };
   }
 
   const typed = (resourceType || "").trim();
   if (typed) {
     return {
-      title: buildResourceTitle(typed),
-      description: buildResourceDescription(typed),
-      pathname: resourcePathname(typed),
+      title: buildResourceTitle(typed, version),
+      description: buildResourceDescription(typed, version),
+      pathname: resourcePathname(typed, version),
     };
   }
 
