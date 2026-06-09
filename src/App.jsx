@@ -1261,14 +1261,51 @@ export default function App() {
       </main>
 
       <footer className="gcFooter" role="contentinfo">
-        <a
-          className="gcFooterLink"
-          href="https://www.genesys.com/customer-success/professional-services"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Made with <span role="img" aria-label="love">❤️</span> by Genesys Professional Services
-        </a>
+        <p className="gcFooterDisclaimer">
+          Unofficial reference tool. Not official Genesys Cloud documentation and not reviewed,
+          approved, or endorsed as official guidance.
+        </p>
+        <p className="gcFooterDisclaimer">
+          For authoritative information, refer to the{" "}
+          <a
+            className="gcFooterLink"
+            href="https://developer.genesys.cloud/devapps/cx-as-code/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Genesys Cloud Developer Center
+          </a>
+          ,{" "}
+          <a
+            className="gcFooterLink"
+            href="https://github.com/MyPureCloud/terraform-provider-genesyscloud"
+            target="_blank"
+            rel="noreferrer"
+          >
+            GitHub Repository
+          </a>
+          , and{" "}
+          <a
+            className="gcFooterLink"
+            href="https://registry.terraform.io/providers/MyPureCloud/genesyscloud"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Terraform Registry
+          </a>
+          .
+        </p>
+        <p className="gcFooterCredit">
+          Made with <span role="img" aria-label="love">❤️</span> by members of{" "}
+          <a
+            className="gcFooterLink"
+            href="https://www.genesys.com/customer-success/professional-services"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Genesys Professional Services
+          </a>
+        </p>
       </footer>
 
       <OrderOfOperationsDialog

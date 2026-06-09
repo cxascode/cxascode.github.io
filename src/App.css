@@ -1009,22 +1009,36 @@ button.gcDocsPill {
 }
 
 .gcFooter {
-  padding: 12px 18px;
+  padding: 10px 18px;
   border-top: 1px solid var(--gc-border);
   text-align: center;
   font-size: 12px;
   color: var(--gc-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gcFooterDisclaimer {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.gcFooterCredit {
+  margin: 0;
+  line-height: 1.4;
 }
 
 .gcFooterLink {
-  color: inherit;
+  color: var(--gc-blue);
   text-decoration: none;
 }
 
 .gcFooterLink:hover,
 .gcFooterLink:focus-visible {
-  color: var(--gc-blue);
   text-decoration: underline;
+  text-underline-offset: 2px;
+  outline: none;
 }
 
 .gcOrderDialog {
