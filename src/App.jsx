@@ -1262,8 +1262,8 @@ export default function App() {
 
       <footer className="gcFooter" role="contentinfo">
         <p className="gcFooterDisclaimer">
-          Unofficial reference tool. Not official Genesys Cloud documentation and not reviewed,
-          approved, or endorsed as official guidance.
+          This is an unofficial reference guide and is not reviewed, approved or endorsed by
+          Genesys.
         </p>
         <p className="gcFooterDisclaimer">
           For authoritative information, refer to the{" "}
