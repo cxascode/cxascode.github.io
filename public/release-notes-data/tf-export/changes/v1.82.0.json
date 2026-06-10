@@ -1,0 +1,51 @@
+{
+    "version": "v1.82.0",
+    "previous": "v1.81.0",
+    "resource": "genesyscloud_tf_export",
+    "changes": [
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "export_deprecated",
+            "change": "added",
+            "summary": "Optional boolean (defaults to true). When false, attributes marked as deprecated in the provider schema are omitted from exported configuration. Changing this value forces replacement of the export resource."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "export_deprecated",
+            "change": "updated",
+            "summary": "Changing export_deprecated forces replacement of the genesyscloud_tf_export resource."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "export_deprecated",
+            "change": "updated",
+            "summary": "When export_deprecated is false, deprecated schema attributes are omitted from exported configuration; the default true preserves prior behavior that included deprecated attributes."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Schema-based exclusions for computed, read-only computed, and deprecated attributes now apply recursively to nested block attributes and run before output sanitization."
+        }
+    ],
+    "related_export_changes": [
+        {
+            "kind": "export_behavior",
+            "resource": null,
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exported configuration for any resource type may omit nested block attributes that are computed, read-only computed, or deprecated, where those nested fields were previously left in place."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": null,
+            "attribute": null,
+            "change": "updated",
+            "summary": "When export_deprecated is set to false, deprecated attributes are omitted from exported configuration across all exported resource types that define them."
+        }
+    ]
+}

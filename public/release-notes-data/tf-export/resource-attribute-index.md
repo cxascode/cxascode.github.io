@@ -4,7 +4,9 @@ This index is generated from the release notes available on this site. `Introduc
 
 | Type | Resource / Data Source | Attribute | Introduced | Last Updated | Status | Notes |
 |---|---|---|---:|---:|---|---|
-| `export_behavior` | `genesyscloud_tf_export` | `general export behavior` | `Unknown` | `v1.79.0` | Active | Unresolved GUID references in list attributes can be mapped to data sources via custom resolvers. |
+| `export_behavior` | `genesyscloud_tf_export` | `export_deprecated` | `Unknown` | `v1.82.0` | Active | When export_deprecated is false, deprecated schema attributes are omitted from exported configuration; the default true preserves prior behavior that included deprecated attributes. |
+| `export_behavior` | `genesyscloud_tf_export` | `general export behavior` | `Unknown` | `v1.82.0` | Active | Schema-based exclusions for computed, read-only computed, and deprecated attributes now apply recursively to nested block attributes and run before output sanitization. |
+| `resource` | `genesyscloud_tf_export` | `export_deprecated` | `v1.82.0` | `v1.82.0` | Active | Changing export_deprecated forces replacement of the genesyscloud_tf_export resource. |
 | `resource` | `genesyscloud_tf_export` | `exclude_attributes` | `Unknown` | `v1.79.0` | Active | Exclusions are applied when exporters are loaded, in addition to the final output pass. |
 | `resource` | `genesyscloud_tf_export` | `replace_with_datasource` | `Unknown` | `v1.78.0` | Active | Accepts a resource type without a label suffix (equivalent to type::) to replace all exported instances of that type with data sources. |
 | `export_behavior` | `genesyscloud_tf_export` | `enable_dependency_resolution` | `Unknown` | `v1.77.3` | Active | When using exclude_filter_resources or the default export mode, enable_dependency_resolution no longer adds depends_on blocks even when set to true. |
