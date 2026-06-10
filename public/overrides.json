@@ -42,10 +42,16 @@
     ],
     "genesyscloud_script": [
       "genesyscloud_auth_division",
+      "genesyscloud_outbound_campaign",
+      "genesyscloud_outbound_contact_list",
+      "genesyscloud_outbound_dnclist",
       "genesyscloud_flow",
       "genesyscloud_integration_action",
       "genesyscloud_routing_queue",
-      "genesyscloud_script",
+      "genesyscloud_task_management_workbin",
+      "genesyscloud_task_management_workitem",
+      "genesyscloud_task_management_worktype_status",
+      "genesyscloud_task_management_worktype",
       "genesyscloud_user"
     ],
     "genesyscloud_user": [
@@ -250,6 +256,11 @@
   "hiddenResourceTypes": [
     "genesyscloud_bcp_tf_exporter",
     "genesyscloud_tf_export"
+  ],
+  "deprecatedResourceTypes": [
+    "genesyscloud_journey_outcome",
+    "genesyscloud_journey_outcome_predictor",
+    "genesyscloud_outbound_contact_list_contact"
   ],
   "spreadsheetScopePrefixes": {
     "out": [

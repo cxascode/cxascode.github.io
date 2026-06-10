@@ -5,6 +5,7 @@ import OrderOfOperationsDialog from "./OrderOfOperationsDialog.jsx";
 import AttributeIndexDialog from "./AttributeIndexDialog.jsx";
 import ReleaseNotesDialog from "./ReleaseNotesDialog.jsx";
 import ResourceReleaseChanges from "./ResourceReleaseChanges.jsx";
+import overrides from "../public/overrides.json";
 import {
   buildTfExportAttributes,
   resolveTfExportResourceName,
@@ -53,7 +54,6 @@ const SPREADSHEET_TEMPLATE_URL =
 const VERSIONED_SPREADSHEET_TEMPLATE_URL = (v) =>
   `${import.meta.env.BASE_URL}spreadsheet-templates/${v}-cx-as-code-template.xlsx`;
 
-const OVERRIDES_URL = `${import.meta.env.BASE_URL}overrides.json`;
 const MIN_DEPENDENCY_VERSION = "1.60.0";
 const MIN_ROLE_DOWNLOAD_VERSION = "1.76.0";
 
@@ -137,7 +137,7 @@ function firstReleaseVersionInIndex(versions) {
 /**
  * Apply optional overrides to a dependency tree JSON.
  *
- * overrides.json shape:
+ * overrides.json (public/overrides.json, bundled at build time) shape:
  * {
  *   "addDependencies": {
  *     "<resource_type>": ["other_type", ...]
@@ -158,6 +158,7 @@ function firstReleaseVersionInIndex(versions) {
  *     "<resource_type>": "Admin > Menu > Path"
  *   },
  *   "hiddenResourceTypes": ["genesyscloud_bcp_tf_exporter", ...]
+ *   "deprecatedResourceTypes": ["genesyscloud_journey_outcome", ...]
  *   "spreadsheetScopePrefixes": {
  *     "In scope - ": ["genesyscloud_flow", "genesyscloud_script"]
  *   }
@@ -255,6 +256,18 @@ function getHiddenResourceTypes(overrides) {
   );
 }
 
+function getDeprecatedResourceTypes(overrides) {
+  const deprecated = overrides?.deprecatedResourceTypes;
+  if (!Array.isArray(deprecated)) return new Set();
+
+  return new Set(
+    deprecated
+      .filter((t) => typeof t === "string")
+      .map((t) => t.trim())
+      .filter(Boolean)
+  );
+}
+
 function buildDepsMaps(raw) {
   const depsMap = new Map();
   const reverseMap = new Map();
@@ -289,7 +302,6 @@ export default function App() {
   const [selectedVersion, setSelectedVersion] = useState("latest");
 
   const [raw, setRaw] = useState(null);
-  const [overrides, setOverrides] = useState(null);
 
   const [query, setQuery] = useState("");
   const [divisionFilter, setDivisionFilter] = useState(DIVISION_FILTER_ALL);
@@ -311,28 +323,6 @@ export default function App() {
   useEffect(() => {
     selectedVersionRef.current = selectedVersion;
   }, [selectedVersion]);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    (async () => {
-      try {
-        const res = await fetch(`${OVERRIDES_URL}?_=${Date.now()}`, { cache: "no-store" });
-        if (!res.ok) {
-          if (!cancelled) setOverrides(null);
-          return;
-        }
-        const json = await res.json();
-        if (!cancelled) setOverrides(json);
-      } catch {
-        if (!cancelled) setOverrides(null);
-      }
-    })();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -443,11 +433,12 @@ export default function App() {
     return () => {
       cancelled = true;
     };
-  }, [selectedVersion, overrides]);
+  }, [selectedVersion]);
 
   const { depsMap, reverseMap } = useMemo(() => buildDepsMaps(raw), [raw]);
 
-  const hiddenTypes = useMemo(() => getHiddenResourceTypes(overrides), [overrides]);
+  const hiddenTypes = useMemo(() => getHiddenResourceTypes(overrides), []);
+  const deprecatedTypes = useMemo(() => getDeprecatedResourceTypes(overrides), []);
 
   const allTypes = useMemo(() => {
     const s = new Set([...depsMap.keys(), ...reverseMap.keys()]);
@@ -530,17 +521,22 @@ export default function App() {
     [dependsOn]
   );
 
+  const isDeprecated = useMemo(
+    () => (activeType ? deprecatedTypes.has(activeType) : false),
+    [activeType, deprecatedTypes]
+  );
+
   const dependencyNote = useMemo(
     () => resolveDependencyNote(activeType, overrides),
-    [activeType, overrides]
+    [activeType]
   );
 
   const tfExportResourceName = useMemo(
     () => resolveTfExportResourceName(activeType, overrides),
-    [activeType, overrides]
+    [activeType]
   );
 
-  const tfExportNote = useMemo(() => resolveTfExportNote(overrides), [overrides]);
+  const tfExportNote = useMemo(() => resolveTfExportNote(overrides), []);
 
   const tfExportTemplate = useMemo(
     () =>
@@ -563,7 +559,7 @@ export default function App() {
 
   const detailGuiMenuPath = useMemo(
     () => resolveGuiMenuPath(detailType, overrides),
-    [detailType, overrides]
+    [detailType]
   );
 
   const [copyState, setCopyState] = useState("idle");
@@ -1126,6 +1122,9 @@ export default function App() {
                         >
                           Division aware
                         </span>
+                      ) : null}
+                      {activeType && isDeprecated ? (
+                        <span className="gcDeprecatedBadge">Deprecated</span>
                       ) : null}
                     </div>
                     <div className="gcMenuPathBlock" aria-label="Genesys Cloud GUI menu path">
