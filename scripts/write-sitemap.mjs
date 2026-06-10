@@ -15,7 +15,7 @@ const DIALOG_PATHS = [
 async function loadResourcePaths() {
   const [latestRaw, overridesRaw] = await Promise.all([
     fs.readFile(path.join(PUBLIC_DIR, "dependency-tree-json/latest.json"), "utf8"),
-    fs.readFile(path.join(ROOT_DIR, "src/overrides.json"), "utf8"),
+    fs.readFile(path.join(PUBLIC_DIR, "overrides.json"), "utf8"),
   ]);
 
   const latest = JSON.parse(latestRaw);

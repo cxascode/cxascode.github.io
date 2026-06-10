@@ -3,7 +3,7 @@ import path from "node:path";
 
 const INPUT_DIR = path.resolve("public/resource-permissions-json");
 const OUTPUT_DIR = path.resolve("public/resource-permissions-tf");
-const DEFAULT_OVERRIDES_PATH = path.resolve("src/overrides.json");
+const DEFAULT_OVERRIDES_PATH = path.resolve("public/overrides.json");
 
 const READ_ONLY_ACTIONS = new Set(["view", "search"]);
 const ACTION_ORDER = ["add", "assign", "delete", "edit", "view", "search", "manage"];
