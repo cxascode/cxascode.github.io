@@ -37,7 +37,7 @@ npm run dev
 
 ## overrides.json
 
-`src/overrides.json` patches release data and export templates. It is imported at build time and bundled into the app (not served as a separate download). Rebuild and redeploy after editing it.
+`public/overrides.json` patches release data and export templates served by the site:
 
 - `addDependencies` / `replaceDependencies` — adjust dependency trees from the provider release JSON
 - `tfExportResourceNames` — per resource type, set the Genesys Cloud name used in `include_filter_resources` instead of the `<name>` placeholder
