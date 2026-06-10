@@ -257,6 +257,11 @@
     "genesyscloud_bcp_tf_exporter",
     "genesyscloud_tf_export"
   ],
+  "deprecatedResourceTypes": [
+    "genesyscloud_journey_outcome",
+    "genesyscloud_journey_outcome_predictor",
+    "genesyscloud_outbound_contact_list_contact"
+  ],
   "spreadsheetScopePrefixes": {
     "out": [
       "genesyscloud_externalcontacts_contact",

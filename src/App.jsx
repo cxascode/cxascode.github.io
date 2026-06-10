@@ -5,7 +5,7 @@ import OrderOfOperationsDialog from "./OrderOfOperationsDialog.jsx";
 import AttributeIndexDialog from "./AttributeIndexDialog.jsx";
 import ReleaseNotesDialog from "./ReleaseNotesDialog.jsx";
 import ResourceReleaseChanges from "./ResourceReleaseChanges.jsx";
-import overrides from "./overrides.json";
+import overrides from "../public/overrides.json";
 import {
   buildTfExportAttributes,
   resolveTfExportResourceName,
@@ -21,7 +21,6 @@ import {
   isDivisionAwareByDependencies,
   matchesDivisionFilter,
 } from "./divisionAware.js";
-import { isDeprecatedResourceType } from "./deprecatedResources.js";
 import { toReleaseNotesVersion } from "./releaseNotes.js";
 import {
   buildResourceTypePermalink,
@@ -138,7 +137,7 @@ function firstReleaseVersionInIndex(versions) {
 /**
  * Apply optional overrides to a dependency tree JSON.
  *
- * overrides.json (src/overrides.json, bundled at build time) shape:
+ * overrides.json (public/overrides.json, bundled at build time) shape:
  * {
  *   "addDependencies": {
  *     "<resource_type>": ["other_type", ...]
@@ -159,6 +158,7 @@ function firstReleaseVersionInIndex(versions) {
  *     "<resource_type>": "Admin > Menu > Path"
  *   },
  *   "hiddenResourceTypes": ["genesyscloud_bcp_tf_exporter", ...]
+ *   "deprecatedResourceTypes": ["genesyscloud_journey_outcome", ...]
  *   "spreadsheetScopePrefixes": {
  *     "In scope - ": ["genesyscloud_flow", "genesyscloud_script"]
  *   }
@@ -250,6 +250,18 @@ function getHiddenResourceTypes(overrides) {
 
   return new Set(
     hidden
+      .filter((t) => typeof t === "string")
+      .map((t) => t.trim())
+      .filter(Boolean)
+  );
+}
+
+function getDeprecatedResourceTypes(overrides) {
+  const deprecated = overrides?.deprecatedResourceTypes;
+  if (!Array.isArray(deprecated)) return new Set();
+
+  return new Set(
+    deprecated
       .filter((t) => typeof t === "string")
       .map((t) => t.trim())
       .filter(Boolean)
@@ -426,6 +438,7 @@ export default function App() {
   const { depsMap, reverseMap } = useMemo(() => buildDepsMaps(raw), [raw]);
 
   const hiddenTypes = useMemo(() => getHiddenResourceTypes(overrides), []);
+  const deprecatedTypes = useMemo(() => getDeprecatedResourceTypes(overrides), []);
 
   const allTypes = useMemo(() => {
     const s = new Set([...depsMap.keys(), ...reverseMap.keys()]);
@@ -509,8 +522,8 @@ export default function App() {
   );
 
   const isDeprecated = useMemo(
-    () => (activeType ? isDeprecatedResourceType(activeType) : false),
-    [activeType]
+    () => (activeType ? deprecatedTypes.has(activeType) : false),
+    [activeType, deprecatedTypes]
   );
 
   const dependencyNote = useMemo(
