@@ -21,6 +21,7 @@ import {
   isDivisionAwareByDependencies,
   matchesDivisionFilter,
 } from "./divisionAware.js";
+import { isDeprecatedResourceType } from "./deprecatedResources.js";
 import { toReleaseNotesVersion } from "./releaseNotes.js";
 import {
   buildResourceTypePermalink,
@@ -505,6 +506,11 @@ export default function App() {
   const isDivisionAware = useMemo(
     () => isDivisionAwareByDependencies(dependsOn),
     [dependsOn]
+  );
+
+  const isDeprecated = useMemo(
+    () => (activeType ? isDeprecatedResourceType(activeType) : false),
+    [activeType]
   );
 
   const dependencyNote = useMemo(
@@ -1103,6 +1109,9 @@ export default function App() {
                         >
                           Division aware
                         </span>
+                      ) : null}
+                      {activeType && isDeprecated ? (
+                        <span className="gcDeprecatedBadge">Deprecated</span>
                       ) : null}
                     </div>
                     <div className="gcMenuPathBlock" aria-label="Genesys Cloud GUI menu path">

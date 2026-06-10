@@ -7,7 +7,6 @@
       "genesyscloud_architect_schedules",
       "genesyscloud_architect_user_prompt",
       "genesyscloud_externalcontacts_contact",
-      "genesyscloud_externalcontacts_organization",
       "genesyscloud_auth_division",
       "genesyscloud_flow",
       "genesyscloud_flow_milestone",
@@ -42,10 +41,16 @@
     ],
     "genesyscloud_script": [
       "genesyscloud_auth_division",
+      "genesyscloud_outbound_campaign",
+      "genesyscloud_outbound_contact_list",
+      "genesyscloud_outbound_dnclist",
       "genesyscloud_flow",
       "genesyscloud_integration_action",
       "genesyscloud_routing_queue",
-      "genesyscloud_script",
+      "genesyscloud_task_management_workbin",
+      "genesyscloud_task_management_workitem",
+      "genesyscloud_task_management_worktype_status",
+      "genesyscloud_task_management_worktype",
       "genesyscloud_user"
     ],
     "genesyscloud_user": [
