@@ -10,13 +10,54 @@ export const PROVIDER_REPO = "terraform-provider-genesyscloud";
 
 const REPO_ROOT = path.resolve(import.meta.dirname, "../..");
 const DEFAULT_CACHE_ROOT = path.resolve(REPO_ROOT, ".cache/provider-source");
+const RELEASE_NOTES_INDEX = path.join(
+  REPO_ROOT,
+  "public/release-notes-data/index.json"
+);
 
-export function versionToTag(version) {
-  return `v${String(version).trim().replace(/^v/, "")}`;
+let releaseTagByVersionPromise;
+
+function normalizeVersion(version) {
+  return String(version).trim().replace(/^v/, "");
 }
 
-export function providerSourceUrl(version) {
-  const tag = versionToTag(version);
+async function loadReleaseTagByVersion() {
+  if (!releaseTagByVersionPromise) {
+    releaseTagByVersionPromise = (async () => {
+      const map = new Map();
+
+      try {
+        const index = JSON.parse(await fs.readFile(RELEASE_NOTES_INDEX, "utf8"));
+        for (const entry of index) {
+          const version = normalizeVersion(entry?.version);
+          const releaseUrl = String(entry?.release_url || "");
+          const match = releaseUrl.match(/\/releases\/tag\/([^/?#]+)$/);
+          if (version && match?.[1]) {
+            map.set(version, match[1]);
+          }
+        }
+      } catch {
+        // Release notes index is optional during early bootstrap.
+      }
+
+      return map;
+    })();
+  }
+
+  return releaseTagByVersionPromise;
+}
+
+export async function resolveProviderReleaseTag(version) {
+  const normalizedVersion = normalizeVersion(version);
+  if (!normalizedVersion) {
+    throw new Error("Provider version is required");
+  }
+
+  const releaseTags = await loadReleaseTagByVersion();
+  return releaseTags.get(normalizedVersion) || `v${normalizedVersion}`;
+}
+
+export function providerSourceUrl(tag) {
   return `https://github.com/${PROVIDER_OWNER}/${PROVIDER_REPO}/archive/refs/tags/${tag}.tar.gz`;
 }
 
@@ -29,15 +70,6 @@ export async function pathExists(filePath) {
   }
 }
 
-export class ProviderSourceUnavailableError extends Error {
-  constructor(version, status, statusText) {
-    super(`Provider source unavailable for v${version}: ${status} ${statusText}`);
-    this.name = "ProviderSourceUnavailableError";
-    this.version = version;
-    this.status = status;
-  }
-}
-
 /**
  * Return genesyscloud/ source for a provider release version.
  * Downloads and extracts the release .tar.gz once, then reuses the cache.
@@ -47,7 +79,7 @@ export async function ensureProviderSource(
   cacheRoot = process.env.TF_EXPORT_PROVIDER_CACHE ||
     DEFAULT_CACHE_ROOT
 ) {
-  const normalizedVersion = String(version).trim().replace(/^v/, "");
+  const normalizedVersion = normalizeVersion(version);
   if (!normalizedVersion) {
     throw new Error("Provider version is required");
   }
@@ -57,8 +89,8 @@ export async function ensureProviderSource(
     return providerRoot;
   }
 
-  const tag = versionToTag(normalizedVersion);
-  const url = providerSourceUrl(normalizedVersion);
+  const tag = await resolveProviderReleaseTag(normalizedVersion);
+  const url = providerSourceUrl(tag);
   await fs.mkdir(cacheRoot, { recursive: true });
 
   const tarball = path.join(cacheRoot, `${tag}.tar.gz`);
@@ -66,10 +98,8 @@ export async function ensureProviderSource(
     console.log(`Downloading provider source ${tag}...`);
     const response = await fetch(url, { redirect: "follow" });
     if (!response.ok) {
-      throw new ProviderSourceUnavailableError(
-        normalizedVersion,
-        response.status,
-        response.statusText
+      throw new Error(
+        `Failed to download provider source ${tag}: ${response.status} ${response.statusText}`
       );
     }
     const arrayBuffer = await response.arrayBuffer();
