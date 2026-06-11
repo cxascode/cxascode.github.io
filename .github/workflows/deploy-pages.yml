@@ -8,7 +8,11 @@ on:
   workflow_dispatch:
     inputs:
       force_deploy:
-        description: Run full deploy even when provider version is unchanged (bypasses scheduled skip)
+        description: Deploy when provider version is unchanged; regenerate outputs from cached upstream assets
+        type: boolean
+        default: false
+      force_refresh_upstream:
+        description: Re-download release JSON assets and provider source, then deploy (implies force_deploy)
         type: boolean
         default: false
   schedule:
@@ -115,6 +119,7 @@ jobs:
           REPO: terraform-provider-genesyscloud
           EVENT_NAME: ${{ github.event_name }}
           FORCE_DEPLOY: ${{ github.event_name == 'workflow_dispatch' && inputs.force_deploy && 'true' || 'false' }}
+          FORCE_REFRESH: ${{ github.event_name == 'workflow_dispatch' && inputs.force_refresh_upstream && 'true' || 'false' }}
         run: |
           set -euo pipefail
           mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf public/tf-export-resource-names .cache-meta
@@ -151,6 +156,8 @@ jobs:
 
           if [ "${EVENT_NAME}" = "push" ]; then
             echo "Push to main: forcing deploy (code changes may exist)."
+          elif [ "${FORCE_REFRESH}" = "true" ]; then
+            echo "Manual force refresh requested; bypassing no-change skip and re-downloading upstream assets."
           elif [ "${FORCE_DEPLOY}" = "true" ]; then
             echo "Manual force deploy requested; bypassing no-change skip."
           elif [ "${no_change}" = "true" ]; then
@@ -158,7 +165,7 @@ jobs:
             if [ "${EVENT_NAME}" = "schedule" ]; then
               echo "Scheduled run: no change (latest still ${latest_ver} and JSON present). Skipping."
             else
-              echo "Manual run: no change (latest still ${latest_ver} and JSON present). Skipping. Check 'force_deploy' to run anyway."
+              echo "Manual run: no change (latest still ${latest_ver} and JSON present). Skipping. Check 'force_deploy' or 'force_refresh_upstream' to run anyway."
             fi
           else
             echo "Work needed. bootstrapped=${bootstrapped}, prev_ver='${prev_ver}', latest_ver='${latest_ver}', have_latest_json=${have_latest_json}"
@@ -169,6 +176,7 @@ jobs:
             echo "latest_tag=${latest_tag}"
             echo "bootstrapped=${bootstrapped}"
             echo "needs_deploy=${needs_deploy}"
+            echo "force_refresh=${FORCE_REFRESH}"
           } >> "${GITHUB_OUTPUT}"
 
       - name: Show deploy decision
@@ -176,7 +184,9 @@ jobs:
           set -euo pipefail
           echo "event=${{ github.event_name }}"
           echo "force_deploy=${{ github.event_name == 'workflow_dispatch' && inputs.force_deploy || 'n/a' }}"
+          echo "force_refresh_upstream=${{ github.event_name == 'workflow_dispatch' && inputs.force_refresh_upstream || 'n/a' }}"
           echo "needs_deploy=${{ steps.check.outputs.needs_deploy }}"
+          echo "force_refresh=${{ steps.check.outputs.force_refresh }}"
           echo "bootstrapped=${{ steps.check.outputs.bootstrapped }}"
           echo "latest_tag=${{ steps.check.outputs.latest_tag }}"
           echo "latest_ver=${{ steps.check.outputs.latest_ver }}"
@@ -185,14 +195,22 @@ jobs:
         if: steps.check.outputs.needs_deploy == 'true'
         uses: actions/configure-pages@v5
 
+      - name: Clear provider source cache
+        if: steps.check.outputs.needs_deploy == 'true' && steps.check.outputs.force_refresh == 'true'
+        run: |
+          set -euo pipefail
+          echo "Clearing cached provider source tarballs..."
+          rm -rf .cache/provider-source
+
       - name: Bootstrap dependency and permissions history
-        if: steps.check.outputs.needs_deploy == 'true' && steps.check.outputs.bootstrapped != 'true'
+        if: steps.check.outputs.needs_deploy == 'true' && (steps.check.outputs.bootstrapped != 'true' || steps.check.outputs.force_refresh == 'true')
         env:
           GH_TOKEN: ${{ github.token }}
           OWNER: MyPureCloud
           REPO: terraform-provider-genesyscloud
           MIN_DEP_VERSION: "1.60.0"
           MIN_PERM_VERSION: "1.76.0"
+          FORCE_REFRESH: ${{ steps.check.outputs.force_refresh }}
         run: |
           set -euo pipefail
           mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf public/spreadsheet-templates public/tf-export-resource-names .cache-meta
@@ -209,8 +227,13 @@ jobs:
           api_base="https://api.github.com/repos/${OWNER}/${REPO}"
           page=1
 
-          echo "BOOTSTRAP: downloading dependency_tree JSONs >= ${MIN_DEP_VERSION}..."
-          echo "BOOTSTRAP: downloading resource_permissions JSONs >= ${MIN_PERM_VERSION}..."
+          if [ "${FORCE_REFRESH}" = "true" ]; then
+            echo "REFRESH: re-downloading dependency_tree JSONs >= ${MIN_DEP_VERSION}..."
+            echo "REFRESH: re-downloading resource_permissions JSONs >= ${MIN_PERM_VERSION}..."
+          else
+            echo "BOOTSTRAP: downloading dependency_tree JSONs >= ${MIN_DEP_VERSION}..."
+            echo "BOOTSTRAP: downloading resource_permissions JSONs >= ${MIN_PERM_VERSION}..."
+          fi
 
           while true; do
             releases_json="$(curl -fsSL \
@@ -242,7 +265,7 @@ jobs:
 
               if [ -n "${dep_url}" ] && [ "${dep_first}" = "${MIN_DEP_VERSION}" ]; then
                 dep_out="public/dependency-tree-json/${ver}.json"
-                if [ ! -f "${dep_out}" ]; then
+                if [ "${FORCE_REFRESH}" = "true" ] || [ ! -f "${dep_out}" ]; then
                   echo "Downloading dependency tree ${ver} -> ${dep_out}"
                   curl -fsSL -L "${dep_url}" -o "${dep_out}"
                 fi
@@ -250,7 +273,7 @@ jobs:
 
               if [ -n "${perm_url}" ] && [ "${perm_first}" = "${MIN_PERM_VERSION}" ]; then
                 perm_out="public/resource-permissions-json/${ver}.json"
-                if [ ! -f "${perm_out}" ]; then
+                if [ "${FORCE_REFRESH}" = "true" ] || [ ! -f "${perm_out}" ]; then
                   echo "Downloading resource permissions ${ver} -> ${perm_out}"
                   curl -fsSL -L "${perm_url}" -o "${perm_out}"
                 fi
@@ -278,7 +301,7 @@ jobs:
           echo "true" > .cache-meta/bootstrapped.txt
 
       - name: Update latest version only
-        if: steps.check.outputs.needs_deploy == 'true' && steps.check.outputs.bootstrapped == 'true'
+        if: steps.check.outputs.needs_deploy == 'true' && steps.check.outputs.bootstrapped == 'true' && steps.check.outputs.force_refresh != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           OWNER: MyPureCloud
