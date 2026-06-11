@@ -93,9 +93,54 @@ export function dialogPathname(dialogId, version = "latest") {
   const segment = DIALOG_PATH_SEGMENT[dialogId];
   if (!segment) return appRootPathname();
 
+  if (dialogId === DIALOG_ATTRIBUTE_INDEX) {
+    return attributeIndexPathname("", version);
+  }
+
   const root = BASE.endsWith("/") ? BASE : `${BASE}/`;
   const base = normalizePathname(new URL(segment, new URL(root, "http://local")).pathname);
   return appendVersionSegment(base, version);
+}
+
+export function attributeIndexPathname(resourceType = "", version = "latest") {
+  const root = BASE.endsWith("/") ? BASE : `${BASE}/`;
+  const base = normalizePathname(
+    new URL(
+      DIALOG_PATH_SEGMENT[DIALOG_ATTRIBUTE_INDEX],
+      new URL(root, "http://local")
+    ).pathname
+  );
+  const typed = normalizeResourceType(resourceType);
+
+  if (typed) {
+    const withResource = normalizePathname(`${base}/${encodeURIComponent(typed)}`);
+    return appendVersionSegment(withResource, version);
+  }
+
+  return appendVersionSegment(base, version);
+}
+
+function parseAttributeIndexPathname(pathname) {
+  const segments = pathSegments(pathname);
+  if (segments[0] !== DIALOG_PATH_SEGMENT[DIALOG_ATTRIBUTE_INDEX]) return null;
+  if (segments.length > 3) return null;
+  if (segments.length === 3 && !isVersionPathSegment(segments[2])) return null;
+
+  let resource = "";
+  let version = "";
+
+  if (segments.length === 2) {
+    if (isVersionPathSegment(segments[1])) {
+      version = fromVersionPathSegment(segments[1]);
+    } else {
+      resource = normalizeResourceType(decodeURIComponent(segments[1]));
+    }
+  } else if (segments.length === 3) {
+    resource = normalizeResourceType(decodeURIComponent(segments[1]));
+    version = fromVersionPathSegment(segments[2]);
+  }
+
+  return { resource, version };
 }
 
 export function resourcePathname(resourceType, version = "latest") {
@@ -119,14 +164,19 @@ export function readDialogFromLocation() {
 
 function readDialogFromPathname(pathname) {
   const segments = pathSegments(pathname);
-  if (segments.length === 0 || segments.length > 2) return "";
-  if (segments.length === 2 && !isVersionPathSegment(segments[1])) return "";
+  if (segments.length === 0) return "";
 
   const first = segments[0];
   for (const dialogId of VALID_DIALOGS) {
-    if (DIALOG_PATH_SEGMENT[dialogId] === first) {
-      return dialogId;
+    if (DIALOG_PATH_SEGMENT[dialogId] !== first) continue;
+
+    if (dialogId === DIALOG_ATTRIBUTE_INDEX) {
+      return parseAttributeIndexPathname(pathname) ? dialogId : "";
     }
+
+    if (segments.length > 2) return "";
+    if (segments.length === 2 && !isVersionPathSegment(segments[1])) return "";
+    return dialogId;
   }
 
   return "";
@@ -134,10 +184,21 @@ function readDialogFromPathname(pathname) {
 
 export function readVersionFromLocation() {
   try {
+    const attributeIndex = parseAttributeIndexPathname(window.location.pathname);
+    if (attributeIndex) return attributeIndex.version;
+
     const segments = pathSegments(window.location.pathname);
     if (segments.length !== 2) return "";
     if (!isVersionPathSegment(segments[1])) return "";
     return fromVersionPathSegment(segments[1]);
+  } catch {
+    return "";
+  }
+}
+
+export function readAttributeIndexResourceFromLocation() {
+  try {
+    return parseAttributeIndexPathname(window.location.pathname)?.resource || "";
   } catch {
     return "";
   }
@@ -160,13 +221,22 @@ export function readResourceTypeFromLocation() {
   }
 }
 
-export function replaceDialogInUrl(dialogId, resourceType = "", version = "latest") {
+export function replaceDialogInUrl(
+  dialogId,
+  resourceType = "",
+  version = "latest",
+  { attributeIndexResource = "" } = {}
+) {
   try {
     const url = new URL(window.location.href);
     stripLegacyQueryParams(url);
 
     if (dialogId && VALID_DIALOGS.has(dialogId)) {
-      url.pathname = dialogPathname(dialogId, version);
+      if (dialogId === DIALOG_ATTRIBUTE_INDEX) {
+        url.pathname = attributeIndexPathname(attributeIndexResource, version);
+      } else {
+        url.pathname = dialogPathname(dialogId, version);
+      }
     } else {
       const typed = normalizeResourceType(resourceType);
       url.pathname = typed ? resourcePathname(typed, version) : appRootPathname();
@@ -176,6 +246,12 @@ export function replaceDialogInUrl(dialogId, resourceType = "", version = "lates
   } catch {
     /* ignore invalid URLs */
   }
+}
+
+export function replaceAttributeIndexInUrl(resourceFilter = "", version = "latest") {
+  replaceDialogInUrl(DIALOG_ATTRIBUTE_INDEX, "", version, {
+    attributeIndexResource: resourceFilter,
+  });
 }
 
 export function replaceResourceInUrl(resourceType, version = "latest") {
@@ -202,14 +278,29 @@ function replaceIfChanged(url) {
   }
 }
 
-export function buildDialogPermalink(dialogId, version = "latest") {
+export function buildDialogPermalink(dialogId, version = "latest", resourceFilter = "") {
   if (!VALID_DIALOGS.has(dialogId)) return "";
 
   try {
     const url = new URL(window.location.href);
     stripLegacyQueryParams(url);
-    url.pathname = dialogPathname(dialogId, version);
+    if (dialogId === DIALOG_ATTRIBUTE_INDEX) {
+      url.pathname = attributeIndexPathname(resourceFilter, version);
+    } else {
+      url.pathname = dialogPathname(dialogId, version);
+    }
     return url.toString();
+  } catch {
+    return "";
+  }
+}
+
+export function buildAttributeIndexPermalink(resourceType = "", version = "latest") {
+  try {
+    return new URL(
+      attributeIndexPathname(resourceType, version),
+      window.location.origin
+    ).toString();
   } catch {
     return "";
   }

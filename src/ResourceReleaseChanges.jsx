@@ -7,7 +7,11 @@ import {
   toReleaseNotesVersion,
 } from "./releaseNotes.js";
 
-export default function ResourceReleaseChanges({ version, resourceType }) {
+export default function ResourceReleaseChanges({
+  version,
+  resourceType,
+  onViewAttributeHistory,
+}) {
   const [changes, setChanges] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -51,8 +55,20 @@ export default function ResourceReleaseChanges({ version, resourceType }) {
     <div className="gcRightCard__section">
       <div className="gcPanel">
         <div className="gcPanel__header">
-          <div className="gcPanel__title">Changes in {versionLabel}</div>
-          {resourceType && changes.length ? <gux-badge>{changes.length}</gux-badge> : null}
+          <div className="gcPanel__headerStart">
+            <div className="gcPanel__title">Changes in {versionLabel}</div>
+            {resourceType && changes.length ? <gux-badge>{changes.length}</gux-badge> : null}
+          </div>
+          {resourceType && onViewAttributeHistory ? (
+            <button
+              type="button"
+              className="gcCopyButton"
+              onClick={() => onViewAttributeHistory(resourceType)}
+              title={`View attribute history for ${resourceType}`}
+            >
+              Attribute history
+            </button>
+          ) : null}
         </div>
         <div className="gcPanel__body">
           {!resourceType ? (

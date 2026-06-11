@@ -1,9 +1,11 @@
 import {
   appRootPathname,
+  attributeIndexPathname,
   DIALOG_ATTRIBUTE_INDEX,
   DIALOG_CREATION_ORDER,
   DIALOG_RELEASE_NOTES,
   dialogPathname,
+  readAttributeIndexResourceFromLocation,
   readDialogFromLocation,
   readResourceTypeFromLocation,
   readVersionFromLocation,
@@ -81,8 +83,11 @@ export function resolvePageSeo({
   releaseNotesOpen,
   creationOrderOpen,
   attributeIndexOpen,
+  attributeIndexResource = "",
 }) {
   const version = resolveVersion(selectedVersion);
+  const attributeIndexFilter =
+    (attributeIndexResource || "").trim() || readAttributeIndexResourceFromLocation();
 
   if (releaseNotesOpen) {
     return { dialogId: DIALOG_RELEASE_NOTES, resourceType: "", version };
@@ -91,12 +96,21 @@ export function resolvePageSeo({
     return { dialogId: DIALOG_CREATION_ORDER, resourceType: "", version };
   }
   if (attributeIndexOpen) {
-    return { dialogId: DIALOG_ATTRIBUTE_INDEX, resourceType: "", version };
+    return {
+      dialogId: DIALOG_ATTRIBUTE_INDEX,
+      resourceType: attributeIndexFilter,
+      version,
+    };
   }
 
   const dialogFromUrl = readDialogFromLocation();
   if (dialogFromUrl) {
-    return { dialogId: dialogFromUrl, resourceType: "", version };
+    return {
+      dialogId: dialogFromUrl,
+      resourceType:
+        dialogFromUrl === DIALOG_ATTRIBUTE_INDEX ? readAttributeIndexResourceFromLocation() : "",
+      version,
+    };
   }
 
   return {
@@ -106,7 +120,35 @@ export function resolvePageSeo({
   };
 }
 
+function buildAttributeIndexDescription(resourceType, version) {
+  const label = versionLabel(version);
+  const suffix = label ? ` (${label})` : "";
+  const typed = (resourceType || "").trim();
+  if (typed) {
+    return `Attribute change history for ${typed}${suffix} in the Genesys Cloud Terraform provider.`;
+  }
+  return DIALOG_SEO[DIALOG_ATTRIBUTE_INDEX].description;
+}
+
+function buildAttributeIndexTitle(resourceType, version) {
+  const label = versionLabel(version);
+  const suffix = label ? ` (${label})` : "";
+  const typed = (resourceType || "").trim();
+  if (typed) {
+    return `${typed} attribute history${suffix} — CX as Code Explorer`;
+  }
+  return buildDialogTitle(DIALOG_ATTRIBUTE_INDEX, version);
+}
+
 export function pageSeoForState({ dialogId, resourceType, version = "" }) {
+  if (dialogId === DIALOG_ATTRIBUTE_INDEX) {
+    return {
+      title: buildAttributeIndexTitle(resourceType, version),
+      description: buildAttributeIndexDescription(resourceType, version),
+      pathname: attributeIndexPathname(resourceType, version),
+    };
+  }
+
   if (dialogId && DIALOG_SEO[dialogId]) {
     const { description } = DIALOG_SEO[dialogId];
     return {

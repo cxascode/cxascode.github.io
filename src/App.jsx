@@ -27,9 +27,11 @@ import {
   DIALOG_ATTRIBUTE_INDEX,
   DIALOG_CREATION_ORDER,
   DIALOG_RELEASE_NOTES,
+  readAttributeIndexResourceFromLocation,
   readDialogFromLocation,
   readResourceTypeFromLocation,
   readVersionFromLocation,
+  replaceAttributeIndexInUrl,
   replaceDialogInUrl,
   replaceResourceInUrl,
 } from "./appPermalinks.js";
@@ -608,12 +610,35 @@ export default function App() {
   const [orderDialogOpen, setOrderDialogOpen] = useState(false);
   const [releaseNotesDialogOpen, setReleaseNotesDialogOpen] = useState(false);
   const [attributeIndexDialogOpen, setAttributeIndexDialogOpen] = useState(false);
+  const [attributeIndexResourceFilter, setAttributeIndexResourceFilter] = useState(() =>
+    readAttributeIndexResourceFromLocation()
+  );
 
   const openDialog = useCallback((dialogId) => {
     setOrderDialogOpen(dialogId === DIALOG_CREATION_ORDER);
     setReleaseNotesDialogOpen(dialogId === DIALOG_RELEASE_NOTES);
     setAttributeIndexDialogOpen(dialogId === DIALOG_ATTRIBUTE_INDEX);
+    if (dialogId === DIALOG_ATTRIBUTE_INDEX) {
+      setAttributeIndexResourceFilter("");
+    }
     replaceDialogInUrl(dialogId, "", selectedVersionRef.current);
+  }, []);
+
+  const handleAttributeIndexResourceFilterChange = useCallback((nextFilter) => {
+    const normalized = (nextFilter || "").trim();
+    setAttributeIndexResourceFilter(normalized);
+    replaceAttributeIndexInUrl(normalized, selectedVersionRef.current);
+  }, []);
+
+  const openAttributeIndexForResource = useCallback((resourceType) => {
+    const normalized = (resourceType || "").trim();
+    if (!normalized) return;
+
+    setOrderDialogOpen(false);
+    setReleaseNotesDialogOpen(false);
+    setAttributeIndexDialogOpen(true);
+    setAttributeIndexResourceFilter(normalized);
+    replaceAttributeIndexInUrl(normalized, selectedVersionRef.current);
   }, []);
 
   const closeDialogs = useCallback(
@@ -621,6 +646,7 @@ export default function App() {
       setOrderDialogOpen(false);
       setReleaseNotesDialogOpen(false);
       setAttributeIndexDialogOpen(false);
+      setAttributeIndexResourceFilter("");
 
       const resource =
         typeof nextResourceType === "string" && nextResourceType.trim()
@@ -643,6 +669,9 @@ export default function App() {
     setOrderDialogOpen(dialog === DIALOG_CREATION_ORDER);
     setReleaseNotesDialogOpen(dialog === DIALOG_RELEASE_NOTES);
     setAttributeIndexDialogOpen(dialog === DIALOG_ATTRIBUTE_INDEX);
+    if (dialog === DIALOG_ATTRIBUTE_INDEX) {
+      setAttributeIndexResourceFilter(readAttributeIndexResourceFromLocation());
+    }
   }, [raw, showDependencyLoading, error]);
 
   useEffect(() => {
@@ -651,6 +680,7 @@ export default function App() {
       setOrderDialogOpen(dialog === DIALOG_CREATION_ORDER);
       setReleaseNotesDialogOpen(dialog === DIALOG_RELEASE_NOTES);
       setAttributeIndexDialogOpen(dialog === DIALOG_ATTRIBUTE_INDEX);
+      setAttributeIndexResourceFilter(readAttributeIndexResourceFromLocation());
 
       const versionFromUrl = readVersionFromLocation();
       skipNextUrlSyncRef.current = true;
@@ -685,6 +715,7 @@ export default function App() {
         releaseNotesOpen: releaseNotesDialogOpen,
         creationOrderOpen: orderDialogOpen,
         attributeIndexOpen: attributeIndexDialogOpen,
+        attributeIndexResource: attributeIndexResourceFilter,
       })
     );
   }, [
@@ -693,6 +724,7 @@ export default function App() {
     releaseNotesDialogOpen,
     orderDialogOpen,
     attributeIndexDialogOpen,
+    attributeIndexResourceFilter,
   ]);
 
   const dependencyFor = useMemo(
@@ -1208,6 +1240,7 @@ export default function App() {
               <ResourceReleaseChanges
                 version={effectiveVersion}
                 resourceType={activeType}
+                onViewAttributeHistory={openAttributeIndexForResource}
               />
             ) : null}
 
@@ -1404,6 +1437,8 @@ export default function App() {
         open={attributeIndexDialogOpen}
         onClose={closeDialogs}
         knownTypes={new Set(allTypes)}
+        resourceFilter={attributeIndexResourceFilter}
+        onResourceFilterChange={handleAttributeIndexResourceFilterChange}
         onSelectResource={(type) => {
           setSelectedType(type);
           setQuery("");

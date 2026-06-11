@@ -994,6 +994,14 @@ button.gcDocsPill {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 8px;
+}
+
+.gcPanel__headerStart {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
 }
 
 .gcPanel__title {
@@ -1230,6 +1238,11 @@ button.gcDocsPill {
 }
 
 .gcOrderDialog__toolbar--attributeIndex .gcOrderDialog__search {
+  flex: 1 1 10rem;
+  min-width: 0;
+}
+
+.gcOrderDialog__toolbar--attributeIndex .gcOrderDialog__resourceFilter {
   flex: 1 1 12rem;
   min-width: 0;
 }

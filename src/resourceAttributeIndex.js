@@ -169,13 +169,21 @@ function entryMatchesVersionFilter(entry, versionFilter) {
 
 export function filterIndexEntries(
   index,
-  { query = "", typeFilter = "", statusFilter = "", versionFilter = "" } = {}
+  {
+    query = "",
+    resourceFilter = "",
+    typeFilter = "",
+    statusFilter = "",
+    versionFilter = "",
+  } = {}
 ) {
   if (!Array.isArray(index)) return [];
 
   const normalizedQuery = query.trim().toLowerCase();
+  const normalizedResource = resourceFilter.trim();
 
   const filtered = index.filter((entry) => {
+    if (normalizedResource && entry?.resource !== normalizedResource) return false;
     if (typeFilter && entry?.type !== typeFilter) return false;
     if (statusFilter && entry?.status !== statusFilter) return false;
     if (!entryMatchesVersionFilter(entry, versionFilter)) return false;
