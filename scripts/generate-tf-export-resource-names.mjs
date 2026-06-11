@@ -1,6 +1,12 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { ensureProviderSource, pathExists } from "./lib/provider-source.mjs";
+import {
+  computeTfExportGeneratorHash,
+  noteTfExportGeneratorHash,
+  readStoredTfExportGeneratorHash,
+  shouldForceTfExportRegeneration,
+} from "./lib/tf-export-generator-version.mjs";
 import { scanProviderBlockLabels } from "./lib/tf-export-block-label.mjs";
 
 const REPO_ROOT = path.resolve(import.meta.dirname, "..");
@@ -91,10 +97,25 @@ async function writeIndexAndLatest(versions) {
   return latest;
 }
 
+function shouldForceRegeneration() {
+  return hasFlag("force") || process.env.TF_EXPORT_FORCE === "1";
+}
+
+async function clearGeneratedOutputs() {
+  if (!(await pathExists(OUTPUT_DIR))) return;
+
+  const entries = await fs.readdir(OUTPUT_DIR, { withFileTypes: true });
+  for (const entry of entries) {
+    if (entry.isFile() && entry.name.endsWith(".json")) {
+      await fs.rm(path.join(OUTPUT_DIR, entry.name));
+    }
+  }
+}
+
 async function generateForVersion(version, { providerRoot, skipExisting = true }) {
   const outputPath = path.join(OUTPUT_DIR, `${version}.json`);
 
-  if (skipExisting && !hasFlag("force") && (await pathExists(outputPath))) {
+  if (skipExisting && !shouldForceRegeneration() && (await pathExists(outputPath))) {
     console.log(`Skipping ${version}; ${path.relative(REPO_ROOT, outputPath)} already exists`);
     return outputPath;
   }
@@ -136,13 +157,33 @@ async function generateAllMissing() {
     );
   }
 
+  const manualForce = shouldForceRegeneration();
+  const generatorChanged = shouldForceTfExportRegeneration();
+  const force = manualForce || generatorChanged;
+
+  if (force) {
+    const reason = manualForce
+      ? "manual force requested"
+      : "generator scripts changed since last run";
+    console.log(`Force regenerating tf-export resource names (${reason})...`);
+    await clearGeneratedOutputs();
+  } else {
+    const storedHash = readStoredTfExportGeneratorHash();
+    if (!storedHash) {
+      console.log(
+        `Recording tf-export generator hash (${computeTfExportGeneratorHash().slice(0, 12)}...)`
+      );
+    }
+  }
+
   console.log(`Checking tf-export resource names for ${versions.length} provider version(s)...`);
 
   for (const version of versions) {
-    await generateForVersion(version, { skipExisting: true });
+    await generateForVersion(version, { skipExisting: !force });
   }
 
   const latest = await writeIndexAndLatest(versions);
+  noteTfExportGeneratorHash();
   console.log(
     `tf-export-resource-names index updated (${versions.length} versions, latest ${latest})`
   );

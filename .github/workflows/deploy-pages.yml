@@ -6,6 +6,11 @@ on:
     paths-ignore:
       - "public/release-notes-data/**"
   workflow_dispatch:
+    inputs:
+      force_regenerate_tf_export:
+        description: Regenerate all tf-export-resource-names from provider source
+        type: boolean
+        default: false
   schedule:
     - cron: '17 22 * * *' # once per day, 40 minutes after release-notes job (UTC)
 
@@ -257,7 +262,8 @@ jobs:
           cp "public/dependency-tree-json/${latest}.json" public/dependency-tree-json/latest.json
 
           node scripts/generate-resource-permissions-tf.mjs --latest="${latest}"
-          node scripts/generate-tf-export-resource-names.mjs --all-missing
+          TF_EXPORT_FORCE="${{ github.event_name == 'workflow_dispatch' && inputs.force_regenerate_tf_export && '1' || '' }}" \
+            node scripts/generate-tf-export-resource-names.mjs --all-missing
 
           echo "${latest}" > .cache-meta/latest.txt
           echo "true" > .cache-meta/bootstrapped.txt
@@ -333,7 +339,8 @@ jobs:
           cp "public/dependency-tree-json/${latest}.json" public/dependency-tree-json/latest.json
 
           node scripts/generate-resource-permissions-tf.mjs --latest="${latest}"
-          node scripts/generate-tf-export-resource-names.mjs --all-missing
+          TF_EXPORT_FORCE="${{ github.event_name == 'workflow_dispatch' && inputs.force_regenerate_tf_export && '1' || '' }}" \
+            node scripts/generate-tf-export-resource-names.mjs --all-missing
 
           echo "${latest}" > .cache-meta/latest.txt
 
