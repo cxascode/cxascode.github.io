@@ -1,12 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { ensureProviderSource, pathExists } from "./lib/provider-source.mjs";
-import {
-  computeTfExportGeneratorHash,
-  noteTfExportGeneratorHash,
-  readStoredTfExportGeneratorHash,
-  shouldForceTfExportRegeneration,
-} from "./lib/tf-export-generator-version.mjs";
 import { scanProviderBlockLabels } from "./lib/tf-export-block-label.mjs";
 
 const REPO_ROOT = path.resolve(import.meta.dirname, "..");
@@ -97,28 +91,8 @@ async function writeIndexAndLatest(versions) {
   return latest;
 }
 
-function shouldForceRegeneration() {
-  return hasFlag("force") || process.env.TF_EXPORT_FORCE === "1";
-}
-
-async function clearGeneratedOutputs() {
-  if (!(await pathExists(OUTPUT_DIR))) return;
-
-  const entries = await fs.readdir(OUTPUT_DIR, { withFileTypes: true });
-  for (const entry of entries) {
-    if (entry.isFile() && entry.name.endsWith(".json")) {
-      await fs.rm(path.join(OUTPUT_DIR, entry.name));
-    }
-  }
-}
-
-async function generateForVersion(version, { providerRoot, skipExisting = true }) {
+async function generateForVersion(version, { providerRoot } = {}) {
   const outputPath = path.join(OUTPUT_DIR, `${version}.json`);
-
-  if (skipExisting && !shouldForceRegeneration() && (await pathExists(outputPath))) {
-    console.log(`Skipping ${version}; ${path.relative(REPO_ROOT, outputPath)} already exists`);
-    return outputPath;
-  }
 
   const resolvedProviderRoot =
     providerRoot ||
@@ -147,7 +121,7 @@ async function generateForVersion(version, { providerRoot, skipExisting = true }
   return outputPath;
 }
 
-async function generateAllMissing() {
+async function generateAll() {
   await ensureDir(OUTPUT_DIR);
   const versions = await listDependencyVersions();
 
@@ -157,58 +131,32 @@ async function generateAllMissing() {
     );
   }
 
-  const manualForce = shouldForceRegeneration();
-  const generatorChanged = shouldForceTfExportRegeneration();
-  const force = manualForce || generatorChanged;
-
-  if (force) {
-    const reason = manualForce
-      ? "manual force requested"
-      : "generator scripts changed since last run";
-    console.log(`Force regenerating tf-export resource names (${reason})...`);
-    await clearGeneratedOutputs();
-  } else {
-    const storedHash = readStoredTfExportGeneratorHash();
-    if (!storedHash) {
-      console.log(
-        `Recording tf-export generator hash (${computeTfExportGeneratorHash().slice(0, 12)}...)`
-      );
-    }
-  }
-
-  console.log(`Checking tf-export resource names for ${versions.length} provider version(s)...`);
+  console.log(`Generating tf-export resource names for ${versions.length} provider version(s)...`);
 
   for (const version of versions) {
-    await generateForVersion(version, { skipExisting: !force });
+    await generateForVersion(version);
   }
 
   const latest = await writeIndexAndLatest(versions);
-  noteTfExportGeneratorHash();
   console.log(
     `tf-export-resource-names index updated (${versions.length} versions, latest ${latest})`
   );
 }
 
 async function main() {
-  if (hasFlag("all-missing")) {
-    await generateAllMissing();
-    return;
-  }
-
   const version = (getArgValue("version") || getArgValue("latest") || "").trim();
+  const providerArg = getArgValue("provider") || process.env.TF_EXPORT_PROVIDER_ROOT || "";
   const outputPath = path.resolve(
     getArgValue("output") ||
       (version ? path.join(OUTPUT_DIR, `${version}.json`) : path.join(OUTPUT_DIR, "latest.json"))
   );
   const verifyPath = path.resolve(getArgValue("verify") || outputPath);
 
-  const providerRoot = path.resolve(
-    getArgValue("provider") ||
-      process.env.TF_EXPORT_PROVIDER_ROOT ||
-      (version ? "" : DEFAULT_PROVIDER_ROOT)
-  );
-
   if (hasFlag("verify")) {
+    const providerRoot = path.resolve(
+      providerArg ||
+        (version ? "" : DEFAULT_PROVIDER_ROOT)
+    );
     const resolvedProviderRoot =
       providerRoot ||
       (version ? await ensureProviderSource(version) : DEFAULT_PROVIDER_ROOT);
@@ -249,8 +197,7 @@ async function main() {
 
   if (version) {
     await generateForVersion(version, {
-      providerRoot: providerRoot || undefined,
-      skipExisting: false,
+      providerRoot: providerArg ? path.resolve(providerArg) : undefined,
     });
     const versions = await listDependencyVersions();
     if (versions.length > 0) {
@@ -259,26 +206,31 @@ async function main() {
     return;
   }
 
-  if (!(await pathExists(providerRoot))) {
-    console.error(`Provider source not found: ${providerRoot}`);
-    console.error(
-      "Pass --version=, --all-missing, or --provider=/path/to/genesyscloud"
+  if (hasFlag("stdout") || providerArg) {
+    const providerRoot = path.resolve(providerArg || DEFAULT_PROVIDER_ROOT);
+
+    if (!(await pathExists(providerRoot))) {
+      console.error(`Provider source not found: ${providerRoot}`);
+      console.error("Pass --provider=/path/to/genesyscloud");
+      process.exit(1);
+    }
+
+    const payload = buildPayload(providerRoot);
+    const rendered = `${JSON.stringify(payload, null, 2)}\n`;
+
+    if (hasFlag("stdout")) {
+      process.stdout.write(rendered);
+      return;
+    }
+
+    await writePayload(outputPath, payload);
+    console.log(
+      `Wrote ${outputPath} (${Object.keys(payload.tfExportResourceNames).length} resource types)`
     );
-    process.exit(1);
-  }
-
-  const payload = buildPayload(providerRoot);
-  const rendered = `${JSON.stringify(payload, null, 2)}\n`;
-
-  if (hasFlag("stdout")) {
-    process.stdout.write(rendered);
     return;
   }
 
-  await writePayload(outputPath, payload);
-  console.log(
-    `Wrote ${outputPath} (${Object.keys(payload.tfExportResourceNames).length} resource types)`
-  );
+  await generateAll();
 }
 
 main().catch((error) => {

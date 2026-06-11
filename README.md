@@ -71,13 +71,7 @@ Examples:
 
 `overrides.json` → `tfExportResourceNames` overrides the generated value for any type you list there (hand-edited exceptions only).
 
-**Deploy workflow:** during bootstrap or when a new release appears, CI runs `--all-missing`: for each dependency-tree version without a cached `tf-export-resource-names/{ver}.json`, it downloads that release’s `.tar.gz` once, generates the file, and skips versions already built. Results are cached between workflow runs.
-
-**Force regeneration** when needed:
-
-- **Automatic:** if generator scripts change, the next deploy regenerates all versions even when cached JSON exists.
-- **Manual:** run the **Deploy to GitHub Pages** workflow from Actions with `force_regenerate_tf_export` checked.
-- **Local:** `TF_EXPORT_FORCE=1 npm run generate-tf-export-resource-names` or pass `--force`.
+**Deploy workflow:** when a deploy runs (new provider version, push to main, or manual **`force_deploy`**), CI regenerates permissions TF, spreadsheets, and tf-export resource names for all cached versions. The daily scheduled run skips when nothing changed.
 
 **Local regeneration** (after `npm run bootstrap-local-dev`):
 

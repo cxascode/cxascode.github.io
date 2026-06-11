@@ -128,9 +128,7 @@ async function runGenerator(latest) {
   await runScript("scripts/generate-resource-permissions-tf.mjs", [
     `--latest=${latest}`,
   ]);
-  await runScript("scripts/generate-tf-export-resource-names.mjs", [
-    "--all-missing",
-  ]);
+  await runScript("scripts/generate-tf-export-resource-names.mjs");
   await runScript("scripts/generate-spreadsheet-template.mjs", [
     `--latest=${latest}`,
   ]);
