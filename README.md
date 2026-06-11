@@ -40,6 +40,7 @@ npm run dev
 `public/overrides.json` patches release data served by the site:
 
 - `addDependencies` / `replaceDependencies` — adjust dependency trees from the provider release JSON
+- `tfExportResourceNames` — optional per-type override for **genesyscloud_tf_export template** filter placeholders; wins over the generated map in `tf-export-resource-names.json`
 - `tfExportNote` — default Markdown note (GFM) shown in the **genesyscloud_tf_export template** panel when a resource type is selected. Use `\n` in JSON for line breaks (not `\\n`).
 - `dependencyNotes` — per resource type, Markdown note (GFM) shown at the bottom of Resource Type Details when that type is selected. Use `\n` in JSON for line breaks (not `\\n`).
 - `guiMenuPaths` — per resource type, Genesys Cloud admin menu path shown in Resource Type Details (segments separated by ` > `)
@@ -52,6 +53,9 @@ Examples:
 "hiddenResourceTypes": [
   "genesyscloud_bcp_tf_exporter"
 ],
+"tfExportResourceNames": {
+  "genesyscloud_flow": "<type>_<name>"
+},
 "tfExportNote": "**Tip:** replace `<name>` with the Genesys Cloud resource name before export.",
 "guiMenuPaths": {
   "genesyscloud_routing_language": "User Management > ACD Skills and Languages > Languages"
@@ -63,9 +67,9 @@ Examples:
 
 ## tf-export-resource-names.json
 
-`public/tf-export-resource-names.json` is **generated** from the provider exporter `BlockLabel` logic. The site reads this file directly for **genesyscloud_tf_export template** placeholders (`include_filter_resources` filter names). Types not listed default to `<name>`.
+`public/tf-export-resource-names.json` is **generated** from the provider exporter `BlockLabel` logic. The site uses it as the default source for **genesyscloud_tf_export template** placeholders (`include_filter_resources` filter names). Types not listed default to `<name>`.
 
-This file is separate from `overrides.json` — nothing is merged at runtime.
+`overrides.json` → `tfExportResourceNames` overrides the generated value for any type you list there (hand-edited exceptions only; leave the key out or omit a type to use the generated default).
 
 **Deploy workflow (option A):** `deploy-pages.yml` downloads the provider release source `.tar.gz` at `latest_tag`, extracts `genesyscloud/`, and regenerates this file before each site build. The deployed site always reflects the latest release exporter logic.
 

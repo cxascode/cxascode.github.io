@@ -1,16 +1,25 @@
+import { effectiveDependencies } from "./effectiveDependencies.js";
 import { TF_EXPORT_RESOURCE_NAMES } from "./tfExportResourceNames.js";
 
-export { effectiveDependencies } from "./effectiveDependencies.js";
+export { effectiveDependencies };
 
 export const RESOURCE_NAME_PLACEHOLDER = "<name>";
 
 /**
  * Resolve the Genesys Cloud resource name for include_filter_resources.
- * Reads from generated public/tf-export-resource-names.json only.
+ * Uses overrides.json tfExportResourceNames when present, otherwise generated names.
  */
-export function resolveTfExportResourceName(resourceType) {
+export function resolveTfExportResourceName(resourceType, overrides) {
   const type = (resourceType || "").trim();
   if (!type) return RESOURCE_NAME_PLACEHOLDER;
+
+  const overrideMap = overrides?.tfExportResourceNames;
+  if (overrideMap && typeof overrideMap === "object") {
+    const overrideName = overrideMap[type];
+    if (typeof overrideName === "string" && overrideName.trim()) {
+      return overrideName.trim();
+    }
+  }
 
   const name = TF_EXPORT_RESOURCE_NAMES[type];
   if (typeof name === "string" && name.trim()) return name.trim();
