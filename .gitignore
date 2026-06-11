@@ -27,6 +27,8 @@ public/dependency-tree-json/
 public/resource-permissions-json/
 public/resource-permissions-tf/
 public/spreadsheet-templates/
+public/tf-export-resource-names/
+.cache-meta/
 .cache/provider-source/
 
 # Snyk Security Extension - AI Rules (auto-generated)

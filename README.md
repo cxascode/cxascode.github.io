@@ -65,26 +65,24 @@ Examples:
 }
 ```
 
-## tf-export-resource-names.json
+## tf-export-resource-names/
 
-`public/tf-export-resource-names.json` is **generated** from the provider exporter `BlockLabel` logic. The site uses it as the default source for **genesyscloud_tf_export template** placeholders (`include_filter_resources` filter names). Types not listed default to `<name>`.
+`public/tf-export-resource-names/` is **generated** from provider exporter `BlockLabel` logic, **one JSON file per provider version** (same version list as `dependency-tree-json/`). The version picker loads the matching file for **genesyscloud_tf_export template** placeholders. Types not listed default to `<name>`.
 
-`overrides.json` → `tfExportResourceNames` overrides the generated value for any type you list there (hand-edited exceptions only; leave the key out or omit a type to use the generated default).
+`overrides.json` → `tfExportResourceNames` overrides the generated value for any type you list there (hand-edited exceptions only).
 
-**Deploy workflow (option A):** `deploy-pages.yml` downloads the provider release source `.tar.gz` at `latest_tag`, extracts `genesyscloud/`, and regenerates this file before each site build. The deployed site always reflects the latest release exporter logic.
+**Deploy workflow:** when a deploy runs (new provider version, push to main, or manual **`force_deploy`**), CI regenerates permissions TF, spreadsheets, and tf-export resource names for all cached versions. The daily scheduled run skips when nothing changed.
 
-**Local regeneration:**
+**Local regeneration** (after `npm run bootstrap-local-dev`):
 
 ```bash
 npm run generate-tf-export-resource-names
 ```
 
-By default the script reads `../terraform-provider-genesyscloud/genesyscloud`. Override with `--provider=/path/to/genesyscloud` or `TF_EXPORT_PROVIDER_ROOT`.
-
-Verify a file against a provider checkout:
+Generate one version from a local checkout:
 
 ```bash
-npm run verify-tf-export-resource-names
+node scripts/generate-tf-export-resource-names.mjs --version=1.82.0 --provider=/path/to/genesyscloud
 ```
 
 `tfExportNote` in `overrides.json` is still the hand-edited Markdown note shown below the export template block.
