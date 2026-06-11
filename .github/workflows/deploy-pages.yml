@@ -76,6 +76,7 @@ jobs:
             public/resource-permissions-tf
             public/spreadsheet-templates
             .cache-meta
+            .cache/provider-source
           key: versions-${{ runner.os }}-${{ github.ref_name }}-${{ github.run_id }}
           restore-keys: |
             versions-${{ runner.os }}-${{ github.ref_name }}-
@@ -348,6 +349,35 @@ jobs:
           set -euo pipefail
           latest="$(cat .cache-meta/latest.txt)"
           node scripts/generate-spreadsheet-template.mjs --latest="${latest}"
+
+      - name: Generate tf-export resource names from provider release
+        if: steps.check.outputs.needs_deploy == 'true'
+        env:
+          OWNER: MyPureCloud
+          REPO: terraform-provider-genesyscloud
+        run: |
+          set -euo pipefail
+          latest_tag="${{ steps.check.outputs.latest_tag }}"
+          latest_ver="${{ steps.check.outputs.latest_ver }}"
+          provider_root=".cache/provider-source/${latest_ver}/genesyscloud"
+
+          if [ ! -d "${provider_root}" ]; then
+            mkdir -p .cache/provider-source
+            tarball=".cache/provider-source/${latest_tag}.tar.gz"
+            echo "Downloading provider source archive ${latest_tag}..."
+            curl -fsSL -L \
+              "https://github.com/${OWNER}/${REPO}/archive/refs/tags/${latest_tag}.tar.gz" \
+              -o "${tarball}"
+            extracted=".cache/provider-source/terraform-provider-genesyscloud-${latest_ver}"
+            tar -xzf "${tarball}" -C .cache/provider-source
+            mkdir -p ".cache/provider-source/${latest_ver}"
+            mv "${extracted}/genesyscloud" "${provider_root}"
+            rm -rf "${extracted}"
+          else
+            echo "Using cached provider source at ${provider_root}"
+          fi
+
+          node scripts/generate-tf-export-resource-names.mjs --provider="${provider_root}"
 
       - run: npm run build
         if: steps.check.outputs.needs_deploy == 'true'

@@ -147,9 +147,6 @@ function firstReleaseVersionInIndex(versions) {
  *       "<bad_dep_type>": "<correct_dep_type>"
  *     }
  *   },
- *   "tfExportResourceNames": {
- *     "<resource_type>": "Genesys Cloud resource name"
- *   },
  *   "tfExportNote": "Markdown note shown in the genesyscloud_tf_export template panel when a type is selected",
  *   "dependencyNotes": {
  *     "<resource_type>": "Markdown note shown in Resource Type Details"
@@ -532,7 +529,7 @@ export default function App() {
   );
 
   const tfExportResourceName = useMemo(
-    () => resolveTfExportResourceName(activeType, overrides),
+    () => resolveTfExportResourceName(activeType),
     [activeType]
   );
 
