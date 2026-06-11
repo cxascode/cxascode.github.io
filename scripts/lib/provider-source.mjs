@@ -29,6 +29,15 @@ export async function pathExists(filePath) {
   }
 }
 
+export class ProviderSourceUnavailableError extends Error {
+  constructor(version, status, statusText) {
+    super(`Provider source unavailable for v${version}: ${status} ${statusText}`);
+    this.name = "ProviderSourceUnavailableError";
+    this.version = version;
+    this.status = status;
+  }
+}
+
 /**
  * Return genesyscloud/ source for a provider release version.
  * Downloads and extracts the release .tar.gz once, then reuses the cache.
@@ -57,8 +66,10 @@ export async function ensureProviderSource(
     console.log(`Downloading provider source ${tag}...`);
     const response = await fetch(url, { redirect: "follow" });
     if (!response.ok) {
-      throw new Error(
-        `Failed to download provider source ${tag}: ${response.status} ${response.statusText}`
+      throw new ProviderSourceUnavailableError(
+        normalizedVersion,
+        response.status,
+        response.statusText
       );
     }
     const arrayBuffer = await response.arrayBuffer();

@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { ensureProviderSource, pathExists } from "./lib/provider-source.mjs";
+import { ensureProviderSource, pathExists, ProviderSourceUnavailableError } from "./lib/provider-source.mjs";
 import { scanProviderBlockLabels } from "./lib/tf-export-block-label.mjs";
 
 const REPO_ROOT = path.resolve(import.meta.dirname, "..");
@@ -91,14 +91,26 @@ async function writeIndexAndLatest(versions) {
   return latest;
 }
 
-async function generateForVersion(version, { providerRoot } = {}) {
+async function generateForVersion(version, { providerRoot, allowSkip = false } = {}) {
   const outputPath = path.join(OUTPUT_DIR, `${version}.json`);
 
-  const resolvedProviderRoot =
+  let resolvedProviderRoot =
     providerRoot ||
     (getArgValue("provider") && path.resolve(getArgValue("provider"))) ||
     process.env.TF_EXPORT_PROVIDER_ROOT ||
-    (await ensureProviderSource(version));
+    "";
+
+  if (!resolvedProviderRoot) {
+    try {
+      resolvedProviderRoot = await ensureProviderSource(version);
+    } catch (error) {
+      if (allowSkip && error instanceof ProviderSourceUnavailableError) {
+        console.warn(`Skipping ${version}; ${error.message}`);
+        return null;
+      }
+      throw error;
+    }
+  }
 
   let providerStat;
   try {
@@ -133,14 +145,27 @@ async function generateAll() {
 
   console.log(`Generating tf-export resource names for ${versions.length} provider version(s)...`);
 
+  const generated = [];
   for (const version of versions) {
-    await generateForVersion(version);
+    const outputPath = await generateForVersion(version, { allowSkip: true });
+    if (outputPath) generated.push(version);
   }
 
-  const latest = await writeIndexAndLatest(versions);
+  if (generated.length === 0) {
+    throw new Error(
+      "No tf-export resource names generated. Check provider source availability."
+    );
+  }
+
+  const latest = await writeIndexAndLatest(generated);
   console.log(
-    `tf-export-resource-names index updated (${versions.length} versions, latest ${latest})`
+    `tf-export-resource-names index updated (${generated.length} versions, latest ${latest})`
   );
+  if (generated.length < versions.length) {
+    console.warn(
+      `Skipped ${versions.length - generated.length} version(s) with unavailable provider source.`
+    );
+  }
 }
 
 async function main() {
