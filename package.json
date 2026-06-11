@@ -7,8 +7,7 @@
     "dev": "vite",
     "bootstrap-local-dev": "node scripts/bootstrap-local-dev.mjs",
     "generate-spreadsheet-template": "node scripts/generate-spreadsheet-template.mjs",
-    "generate-tf-export-resource-names": "node scripts/generate-tf-export-resource-names.mjs",
-    "verify-tf-export-resource-names": "node scripts/generate-tf-export-resource-names.mjs --verify",
+    "generate-tf-export-resource-names": "node scripts/generate-tf-export-resource-names.mjs --all-missing",
     "build": "node scripts/write-sitemap.mjs && vite build",
     "lint": "eslint .",
     "preview": "vite preview"

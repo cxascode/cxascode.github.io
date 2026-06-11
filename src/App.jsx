@@ -39,6 +39,10 @@ const INDEX_URL = `${import.meta.env.BASE_URL}dependency-tree-json/index.json`;
 const LATEST_URL = `${import.meta.env.BASE_URL}dependency-tree-json/latest.json`;
 const VERSION_URL = (v) => `${import.meta.env.BASE_URL}dependency-tree-json/${v}.json`;
 
+const TF_EXPORT_NAMES_LATEST_URL = `${import.meta.env.BASE_URL}tf-export-resource-names/latest.json`;
+const TF_EXPORT_NAMES_VERSION_URL = (v) =>
+  `${import.meta.env.BASE_URL}tf-export-resource-names/${v}.json`;
+
 const READ_WRITE_ROLE_URL =
   `${import.meta.env.BASE_URL}resource-permissions-tf/latest-read-write-role.tf`;
 const READ_ONLY_ROLE_URL =
@@ -302,6 +306,7 @@ export default function App() {
   const [selectedVersion, setSelectedVersion] = useState("latest");
 
   const [raw, setRaw] = useState(null);
+  const [tfExportResourceNames, setTfExportResourceNames] = useState({});
 
   const [query, setQuery] = useState("");
   const [divisionFilter, setDivisionFilter] = useState(DIVISION_FILTER_ALL);
@@ -435,6 +440,43 @@ export default function App() {
     };
   }, [selectedVersion]);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
+      const url =
+        selectedVersion === "latest"
+          ? TF_EXPORT_NAMES_LATEST_URL
+          : TF_EXPORT_NAMES_VERSION_URL(selectedVersion);
+
+      try {
+        const res = await fetch(url, { cache: "no-store" });
+        if (!res.ok) {
+          throw new Error(
+            `Failed to fetch tf-export resource names: ${res.status} ${res.statusText}`
+          );
+        }
+
+        const json = await res.json();
+        if (!cancelled) {
+          setTfExportResourceNames(
+            json?.tfExportResourceNames && typeof json.tfExportResourceNames === "object"
+              ? json.tfExportResourceNames
+              : {}
+          );
+        }
+      } catch {
+        if (!cancelled) {
+          setTfExportResourceNames({});
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedVersion]);
+
   const { depsMap, reverseMap } = useMemo(() => buildDepsMaps(raw), [raw]);
 
   const hiddenTypes = useMemo(() => getHiddenResourceTypes(overrides), []);
@@ -532,8 +574,8 @@ export default function App() {
   );
 
   const tfExportResourceName = useMemo(
-    () => resolveTfExportResourceName(activeType, overrides),
-    [activeType]
+    () => resolveTfExportResourceName(activeType, overrides, tfExportResourceNames),
+    [activeType, tfExportResourceNames]
   );
 
   const tfExportNote = useMemo(() => resolveTfExportNote(overrides), []);

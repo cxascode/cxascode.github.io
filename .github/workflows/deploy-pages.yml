@@ -75,6 +75,7 @@ jobs:
             public/resource-permissions-json
             public/resource-permissions-tf
             public/spreadsheet-templates
+            public/tf-export-resource-names
             .cache-meta
             .cache/provider-source
           key: versions-${{ runner.os }}-${{ github.ref_name }}-${{ github.run_id }}
@@ -110,7 +111,7 @@ jobs:
           EVENT_NAME: ${{ github.event_name }}
         run: |
           set -euo pipefail
-          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf .cache-meta
+          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf public/tf-export-resource-names .cache-meta
 
           api_base="https://api.github.com/repos/${OWNER}/${REPO}"
 
@@ -179,7 +180,7 @@ jobs:
           MIN_PERM_VERSION: "1.76.0"
         run: |
           set -euo pipefail
-          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf public/spreadsheet-templates .cache-meta
+          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf public/spreadsheet-templates public/tf-export-resource-names .cache-meta
           rm -f \
             public/dependency-tree-json/index.json \
             public/dependency-tree-json/latest.json \
@@ -256,6 +257,7 @@ jobs:
           cp "public/dependency-tree-json/${latest}.json" public/dependency-tree-json/latest.json
 
           node scripts/generate-resource-permissions-tf.mjs --latest="${latest}"
+          node scripts/generate-tf-export-resource-names.mjs --all-missing
 
           echo "${latest}" > .cache-meta/latest.txt
           echo "true" > .cache-meta/bootstrapped.txt
@@ -268,7 +270,7 @@ jobs:
           REPO: terraform-provider-genesyscloud
         run: |
           set -euo pipefail
-          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf public/spreadsheet-templates .cache-meta
+          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf public/spreadsheet-templates public/tf-export-resource-names .cache-meta
           rm -f \
             public/dependency-tree-json/index.json \
             public/dependency-tree-json/latest.json \
@@ -331,6 +333,7 @@ jobs:
           cp "public/dependency-tree-json/${latest}.json" public/dependency-tree-json/latest.json
 
           node scripts/generate-resource-permissions-tf.mjs --latest="${latest}"
+          node scripts/generate-tf-export-resource-names.mjs --all-missing
 
           echo "${latest}" > .cache-meta/latest.txt
 
@@ -342,35 +345,6 @@ jobs:
 
       - run: npm ci
         if: steps.check.outputs.needs_deploy == 'true'
-
-      - name: Generate tf-export resource names from provider release
-        if: steps.check.outputs.needs_deploy == 'true'
-        env:
-          OWNER: MyPureCloud
-          REPO: terraform-provider-genesyscloud
-        run: |
-          set -euo pipefail
-          latest_tag="${{ steps.check.outputs.latest_tag }}"
-          latest_ver="${{ steps.check.outputs.latest_ver }}"
-          provider_root=".cache/provider-source/${latest_ver}/genesyscloud"
-
-          if [ ! -d "${provider_root}" ]; then
-            mkdir -p .cache/provider-source
-            tarball=".cache/provider-source/${latest_tag}.tar.gz"
-            echo "Downloading provider source archive ${latest_tag}..."
-            curl -fsSL -L \
-              "https://github.com/${OWNER}/${REPO}/archive/refs/tags/${latest_tag}.tar.gz" \
-              -o "${tarball}"
-            extracted=".cache/provider-source/terraform-provider-genesyscloud-${latest_ver}"
-            tar -xzf "${tarball}" -C .cache/provider-source
-            mkdir -p ".cache/provider-source/${latest_ver}"
-            mv "${extracted}/genesyscloud" "${provider_root}"
-            rm -rf "${extracted}"
-          else
-            echo "Using cached provider source at ${provider_root}"
-          fi
-
-          node scripts/generate-tf-export-resource-names.mjs --provider="${provider_root}"
 
       - name: Generate spreadsheet templates
         if: steps.check.outputs.needs_deploy == 'true'
