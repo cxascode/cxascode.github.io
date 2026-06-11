@@ -1,6 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
 
+// Placeholders target include_filter_resources: managed resource block labels only.
+// Some exporters also emit data sources (ExportAsDataFunc) with the same type
+// string; those paths are ignored unless they share the managed BlockLabel shape.
+
 export const SKIP_PACKAGES = new Set([
   "resource_exporter",
   "tfexporter",
@@ -148,9 +152,63 @@ function humanizeRef(ref) {
   return camelToWords(field || normalized);
 }
 
+/** Managed-resource label for exporter helpers (ignores ExportAsData-only branches). */
+const HELPER_BLOCK_LABEL_PLACEHOLDERS = {
+  buildIntegrationActionBlockLabel() {
+    // Managed custom actions only; static built-in actions export as data sources.
+    return formatPlaceholder(["category", "name"], "_");
+  },
+};
+
 function parseLiteral(token) {
   const match = token.trim().match(/^"([^"]*)"$/);
   return match ? match[1] : null;
+}
+
+/**
+ * Read a Go expression starting at startIndex (commas at depth 0 end the value).
+ */
+export function readGoExpression(source, startIndex) {
+  let i = startIndex;
+  while (i < source.length && /\s/.test(source[i])) i += 1;
+
+  const exprStart = i;
+  let depth = 0;
+
+  for (; i < source.length; i += 1) {
+    const ch = source[i];
+
+    if (ch === '"') {
+      i += 1;
+      while (i < source.length) {
+        if (source[i] === "\\") {
+          i += 2;
+          continue;
+        }
+        if (source[i] === '"') break;
+        i += 1;
+      }
+      continue;
+    }
+
+    if (ch === "(" || ch === "{") depth += 1;
+    if (ch === ")" || ch === "}") {
+      if (depth === 0) break;
+      depth -= 1;
+    }
+
+    if (depth === 0 && ch === ",") break;
+  }
+
+  return source.slice(exprStart, i).trim();
+}
+
+function resolveHelperBlockLabel(expr) {
+  const match = expr.match(/^([A-Za-z_]\w*)\(/);
+  if (!match) return null;
+
+  const helper = HELPER_BLOCK_LABEL_PLACEHOLDERS[match[1]];
+  return helper ? helper() : null;
 }
 
 function splitConcat(expr) {
@@ -426,10 +484,12 @@ export function packageResourceType(allFiles) {
 function collectResourceMetaBlockLabels(content) {
   const expressions = [];
 
-  for (const match of content.matchAll(
-    /ResourceMeta\{[\s\S]*?BlockLabel:\s*([^,\n}]+)/g
-  )) {
-    const expr = match[1].trim();
+  for (const match of content.matchAll(/&resourceExporter\.ResourceMeta\{([\s\S]*?)\}/g)) {
+    const block = match[1];
+    const labelIdx = block.indexOf("BlockLabel:");
+    if (labelIdx === -1) continue;
+
+    const expr = readGoExpression(block, labelIdx + "BlockLabel:".length);
     if (expr && !expr.includes("BlockLabel string")) {
       expressions.push(expr);
     }
@@ -471,6 +531,9 @@ function resolveExpression(expr, resourceType) {
   if (expr === "ResourceType") return resourceType;
 
   if (expr === "blockLabel") return null;
+
+  const helperLabel = resolveHelperBlockLabel(expr);
+  if (helperLabel) return helperLabel;
 
   return parseBlockLabelExpression(expr);
 }

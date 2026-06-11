@@ -5,7 +5,8 @@ export { effectiveDependencies };
 export const RESOURCE_NAME_PLACEHOLDER = "<name>";
 
 /**
- * Resolve the Genesys Cloud resource name for include_filter_resources.
+ * Resolve the managed-resource block label placeholder for include_filter_resources.
+ * Data-source export paths (ExportAsDataFunc) are not modeled here.
  * Uses overrides.json tfExportResourceNames when present, otherwise the
  * version-specific generated map for the selected provider release.
  */
