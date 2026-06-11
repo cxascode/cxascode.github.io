@@ -548,7 +548,13 @@ export default function App() {
 
     const dialog = readDialogFromLocation();
     if (dialog) {
-      replaceDialogInUrl(dialog, activeType, selectedVersion);
+      if (dialog === DIALOG_ATTRIBUTE_INDEX) {
+        replaceDialogInUrl(dialog, "", selectedVersion, {
+          attributeIndexResource: readAttributeIndexResourceFromLocation(),
+        });
+      } else {
+        replaceDialogInUrl(dialog, activeType, selectedVersion);
+      }
       return;
     }
 
