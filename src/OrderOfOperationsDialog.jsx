@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
 import { computeCreationOrder } from "./dependencyOrder.js";
 import { toReleaseNotesVersion } from "./releaseNotes.js";
@@ -15,11 +15,12 @@ export default function OrderOfOperationsDialog({
   newestListedRelease,
   loadingIndex,
   loadingData,
+  query = "",
+  onQueryChange,
 }) {
   const dialogRef = useRef(null);
   const versionDropdownRef = useRef(null);
   const selectedVersionRef = useRef(selectedVersion);
-  const [query, setQuery] = useState("");
 
   useEffect(() => {
     selectedVersionRef.current = selectedVersion;
@@ -108,14 +109,13 @@ export default function OrderOfOperationsDialog({
 
   const handleClose = useCallback(
     (nextResourceType) => {
-      setQuery("");
       onClose?.(nextResourceType);
     },
     [onClose]
   );
 
   const clearFilter = () => {
-    setQuery("");
+    onQueryChange?.("");
   };
 
   const handleSelectType = (type) => {
@@ -175,7 +175,7 @@ export default function OrderOfOperationsDialog({
               placeholder="Filter resource types"
               value={query}
               onInput={(event) => {
-                setQuery(event.target.value);
+                onQueryChange?.(event.target.value);
               }}
             />
             <div className="gcOrderDialog__toolbarActions">

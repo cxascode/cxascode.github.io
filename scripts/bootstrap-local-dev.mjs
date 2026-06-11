@@ -32,6 +32,15 @@ async function exists(filePath) {
   }
 }
 
+async function isValidDependencyTreeJson(filePath) {
+  try {
+    const json = JSON.parse(await fs.readFile(filePath, "utf8"));
+    return Boolean(json && typeof json === "object" && Array.isArray(json.resources));
+  } catch {
+    return false;
+  }
+}
+
 async function removeIfExists(filePath) {
   try {
     await fs.rm(filePath, { force: true });
@@ -172,7 +181,10 @@ async function main() {
   }
 
   const depOut = path.join(DEP_DIR, `${latestVersion}.json`);
-  if (!(await exists(depOut))) {
+  if (!(await exists(depOut)) || !(await isValidDependencyTreeJson(depOut))) {
+    if (await exists(depOut)) {
+      console.log(`Replacing invalid dependency tree ${latestVersion} -> ${depOut}`);
+    }
     if (!depUrl) {
       const release = await getLatestRelease(token);
       depUrl = getVersionedAssetUrl(release, "dependency_tree-", latestVersion);

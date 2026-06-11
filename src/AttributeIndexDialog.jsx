@@ -37,17 +37,17 @@ export default function AttributeIndexDialog({
   onClose,
   onSelectResource,
   knownTypes,
-  resourceFilter = "",
-  onResourceFilterChange,
+  query = "",
+  onQueryChange,
+  versionFilter = "",
+  onVersionFilterChange,
 }) {
   const dialogRef = useRef(null);
   const [scope, setScope] = useState(ATTRIBUTE_INDEX_SCOPE_PROVIDER);
   const [index, setIndex] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [query, setQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
-  const [versionFilter, setVersionFilter] = useState("");
 
   const isExportScope = scope === ATTRIBUTE_INDEX_SCOPE_EXPORT;
 
@@ -71,9 +71,7 @@ export default function AttributeIndexDialog({
       return;
     }
 
-    setQuery("");
     setTypeFilter("");
-    setVersionFilter("");
   }, [open]);
 
   useEffect(() => {
@@ -109,14 +107,13 @@ export default function AttributeIndexDialog({
     () =>
       filterIndexEntries(index, {
         query,
-        resourceFilter,
         typeFilter,
         versionFilter,
       }),
-    [index, query, resourceFilter, typeFilter, versionFilter]
+    [index, query, typeFilter, versionFilter]
   );
 
-  const hasActiveFilters = Boolean(query || resourceFilter || typeFilter || versionFilter);
+  const hasActiveFilters = Boolean(query || typeFilter || versionFilter);
 
   const entryCountLabel = loading
     ? "Loading attribute index…"
@@ -128,19 +125,16 @@ export default function AttributeIndexDialog({
 
   const handleClose = useCallback(
     (nextResourceType) => {
-      setQuery("");
       setTypeFilter("");
-      setVersionFilter("");
       onClose?.(nextResourceType);
     },
     [onClose]
   );
 
   const clearFilters = () => {
-    setQuery("");
+    onQueryChange?.("");
+    onVersionFilterChange?.("");
     setTypeFilter("");
-    setVersionFilter("");
-    onResourceFilterChange?.("");
   };
 
   const handleSelectResource = (resourceType) => {
@@ -203,35 +197,12 @@ export default function AttributeIndexDialog({
               placeholder={
                 isExportScope
                   ? "Search export attributes"
-                  : "Search attributes"
+                  : "Search resources, attributes"
               }
               value={query}
-              onInput={(event) => setQuery(event.target.value)}
+              onInput={(event) => onQueryChange?.(event.target.value)}
               disabled={loading || !!error}
             />
-            {!isExportScope ? (
-              <input
-                type="search"
-                className="gcSearchInput gcOrderDialog__resourceFilter"
-                placeholder="Filter by resource"
-                value={resourceFilter}
-                onInput={(event) => onResourceFilterChange?.(event.target.value)}
-                disabled={loading || !!error}
-                aria-label="Filter by resource type"
-                list="attribute-index-resource-options"
-              />
-            ) : null}
-            {!isExportScope ? (
-              <datalist id="attribute-index-resource-options">
-                {Array.from(
-                  new Set(index.map((entry) => entry?.resource).filter(Boolean))
-                )
-                  .sort()
-                  .map((resource) => (
-                    <option key={resource} value={resource} />
-                  ))}
-              </datalist>
-            ) : null}
             <select
               className="gcSelectInput"
               value={typeFilter}
@@ -249,7 +220,7 @@ export default function AttributeIndexDialog({
             <select
               className="gcSelectInput"
               value={versionFilter}
-              onChange={(event) => setVersionFilter(event.target.value)}
+              onChange={(event) => onVersionFilterChange?.(event.target.value)}
               disabled={loading || !!error}
               aria-label="Filter by version"
             >
