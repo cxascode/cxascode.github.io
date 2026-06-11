@@ -32,7 +32,14 @@ function StatusBadge({ status }) {
   return <span className={className}>{normalized || "Unknown"}</span>;
 }
 
-export default function AttributeIndexDialog({ open, onClose, onSelectResource, knownTypes }) {
+export default function AttributeIndexDialog({
+  open,
+  onClose,
+  onSelectResource,
+  knownTypes,
+  resourceFilter = "",
+  onResourceFilterChange,
+}) {
   const dialogRef = useRef(null);
   const [scope, setScope] = useState(ATTRIBUTE_INDEX_SCOPE_PROVIDER);
   const [index, setIndex] = useState([]);
@@ -102,13 +109,14 @@ export default function AttributeIndexDialog({ open, onClose, onSelectResource, 
     () =>
       filterIndexEntries(index, {
         query,
+        resourceFilter,
         typeFilter,
         versionFilter,
       }),
-    [index, query, typeFilter, versionFilter]
+    [index, query, resourceFilter, typeFilter, versionFilter]
   );
 
-  const hasActiveFilters = Boolean(query || typeFilter || versionFilter);
+  const hasActiveFilters = Boolean(query || resourceFilter || typeFilter || versionFilter);
 
   const entryCountLabel = loading
     ? "Loading attribute index…"
@@ -132,6 +140,7 @@ export default function AttributeIndexDialog({ open, onClose, onSelectResource, 
     setQuery("");
     setTypeFilter("");
     setVersionFilter("");
+    onResourceFilterChange?.("");
   };
 
   const handleSelectResource = (resourceType) => {
@@ -194,12 +203,35 @@ export default function AttributeIndexDialog({ open, onClose, onSelectResource, 
               placeholder={
                 isExportScope
                   ? "Search export attributes"
-                  : "Search resources, attributes"
+                  : "Search attributes"
               }
               value={query}
               onInput={(event) => setQuery(event.target.value)}
               disabled={loading || !!error}
             />
+            {!isExportScope ? (
+              <input
+                type="search"
+                className="gcSearchInput gcOrderDialog__resourceFilter"
+                placeholder="Filter by resource"
+                value={resourceFilter}
+                onInput={(event) => onResourceFilterChange?.(event.target.value)}
+                disabled={loading || !!error}
+                aria-label="Filter by resource type"
+                list="attribute-index-resource-options"
+              />
+            ) : null}
+            {!isExportScope ? (
+              <datalist id="attribute-index-resource-options">
+                {Array.from(
+                  new Set(index.map((entry) => entry?.resource).filter(Boolean))
+                )
+                  .sort()
+                  .map((resource) => (
+                    <option key={resource} value={resource} />
+                  ))}
+              </datalist>
+            ) : null}
             <select
               className="gcSelectInput"
               value={typeFilter}
