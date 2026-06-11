@@ -11,12 +11,31 @@ export const PROVIDER_REPO = "terraform-provider-genesyscloud";
 const REPO_ROOT = path.resolve(import.meta.dirname, "../..");
 const DEFAULT_CACHE_ROOT = path.resolve(REPO_ROOT, ".cache/provider-source");
 
-export function versionToTag(version) {
-  return `v${String(version).trim().replace(/^v/, "")}`;
+// Display version (vX.Y.Z) -> actual upstream GitHub release tag.
+// Keep in sync with RELEASE_TAG_OVERRIDES in cxascode/releasenotes.
+export const RELEASE_TAG_OVERRIDES = {
+  "v1.68.2": "1.68.2",
+};
+
+function normalizeVersion(version) {
+  return String(version).trim().replace(/^v/, "");
 }
 
-export function providerSourceUrl(version) {
-  const tag = versionToTag(version);
+function displayVersion(version) {
+  const normalized = normalizeVersion(version);
+  return normalized ? `v${normalized}` : "";
+}
+
+export function resolveProviderReleaseTag(version) {
+  const display = displayVersion(version);
+  if (!display) {
+    throw new Error("Provider version is required");
+  }
+
+  return RELEASE_TAG_OVERRIDES[display] || display;
+}
+
+export function providerSourceUrl(tag) {
   return `https://github.com/${PROVIDER_OWNER}/${PROVIDER_REPO}/archive/refs/tags/${tag}.tar.gz`;
 }
 
@@ -38,7 +57,7 @@ export async function ensureProviderSource(
   cacheRoot = process.env.TF_EXPORT_PROVIDER_CACHE ||
     DEFAULT_CACHE_ROOT
 ) {
-  const normalizedVersion = String(version).trim().replace(/^v/, "");
+  const normalizedVersion = normalizeVersion(version);
   if (!normalizedVersion) {
     throw new Error("Provider version is required");
   }
@@ -48,8 +67,8 @@ export async function ensureProviderSource(
     return providerRoot;
   }
 
-  const tag = versionToTag(normalizedVersion);
-  const url = providerSourceUrl(normalizedVersion);
+  const tag = resolveProviderReleaseTag(normalizedVersion);
+  const url = providerSourceUrl(tag);
   await fs.mkdir(cacheRoot, { recursive: true });
 
   const tarball = path.join(cacheRoot, `${tag}.tar.gz`);
