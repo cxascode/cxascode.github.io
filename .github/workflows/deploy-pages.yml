@@ -343,13 +343,6 @@ jobs:
       - run: npm ci
         if: steps.check.outputs.needs_deploy == 'true'
 
-      - name: Generate spreadsheet templates
-        if: steps.check.outputs.needs_deploy == 'true'
-        run: |
-          set -euo pipefail
-          latest="$(cat .cache-meta/latest.txt)"
-          node scripts/generate-spreadsheet-template.mjs --latest="${latest}"
-
       - name: Generate tf-export resource names from provider release
         if: steps.check.outputs.needs_deploy == 'true'
         env:
@@ -378,6 +371,13 @@ jobs:
           fi
 
           node scripts/generate-tf-export-resource-names.mjs --provider="${provider_root}"
+
+      - name: Generate spreadsheet templates
+        if: steps.check.outputs.needs_deploy == 'true'
+        run: |
+          set -euo pipefail
+          latest="$(cat .cache-meta/latest.txt)"
+          node scripts/generate-spreadsheet-template.mjs --latest="${latest}"
 
       - run: npm run build
         if: steps.check.outputs.needs_deploy == 'true'

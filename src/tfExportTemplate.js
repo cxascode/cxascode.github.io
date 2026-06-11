@@ -1,19 +1,8 @@
 import { TF_EXPORT_RESOURCE_NAMES } from "./tfExportResourceNames.js";
 
+export { effectiveDependencies } from "./effectiveDependencies.js";
+
 export const RESOURCE_NAME_PLACEHOLDER = "<name>";
-
-/**
- * Dependencies that apply for export replace_with_datasource and spreadsheet
- * "possible dependencies" counts — excludes self-referential entries.
- */
-export function effectiveDependencies(resourceType, dependencies) {
-  const type = (resourceType || "").trim();
-  if (!type) return [];
-
-  return (Array.isArray(dependencies) ? dependencies : []).filter(
-    (d) => typeof d === "string" && d.trim() && d.trim() !== type
-  );
-}
 
 /**
  * Resolve the Genesys Cloud resource name for include_filter_resources.
