@@ -10,51 +10,29 @@ export const PROVIDER_REPO = "terraform-provider-genesyscloud";
 
 const REPO_ROOT = path.resolve(import.meta.dirname, "../..");
 const DEFAULT_CACHE_ROOT = path.resolve(REPO_ROOT, ".cache/provider-source");
-const RELEASE_NOTES_INDEX = path.join(
-  REPO_ROOT,
-  "public/release-notes-data/index.json"
-);
 
-let releaseTagByVersionPromise;
+// Display version (vX.Y.Z) -> actual upstream GitHub release tag.
+// Keep in sync with RELEASE_TAG_OVERRIDES in cxascode/releasenotes.
+export const RELEASE_TAG_OVERRIDES = {
+  "v1.68.2": "1.68.2",
+};
 
 function normalizeVersion(version) {
   return String(version).trim().replace(/^v/, "");
 }
 
-async function loadReleaseTagByVersion() {
-  if (!releaseTagByVersionPromise) {
-    releaseTagByVersionPromise = (async () => {
-      const map = new Map();
-
-      try {
-        const index = JSON.parse(await fs.readFile(RELEASE_NOTES_INDEX, "utf8"));
-        for (const entry of index) {
-          const version = normalizeVersion(entry?.version);
-          const releaseUrl = String(entry?.release_url || "");
-          const match = releaseUrl.match(/\/releases\/tag\/([^/?#]+)$/);
-          if (version && match?.[1]) {
-            map.set(version, match[1]);
-          }
-        }
-      } catch {
-        // Release notes index is optional during early bootstrap.
-      }
-
-      return map;
-    })();
-  }
-
-  return releaseTagByVersionPromise;
+function displayVersion(version) {
+  const normalized = normalizeVersion(version);
+  return normalized ? `v${normalized}` : "";
 }
 
-export async function resolveProviderReleaseTag(version) {
-  const normalizedVersion = normalizeVersion(version);
-  if (!normalizedVersion) {
+export function resolveProviderReleaseTag(version) {
+  const display = displayVersion(version);
+  if (!display) {
     throw new Error("Provider version is required");
   }
 
-  const releaseTags = await loadReleaseTagByVersion();
-  return releaseTags.get(normalizedVersion) || `v${normalizedVersion}`;
+  return RELEASE_TAG_OVERRIDES[display] || display;
 }
 
 export function providerSourceUrl(tag) {
@@ -89,7 +67,7 @@ export async function ensureProviderSource(
     return providerRoot;
   }
 
-  const tag = await resolveProviderReleaseTag(normalizedVersion);
+  const tag = resolveProviderReleaseTag(normalizedVersion);
   const url = providerSourceUrl(tag);
   await fs.mkdir(cacheRoot, { recursive: true });
 
