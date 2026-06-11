@@ -334,7 +334,7 @@ jobs:
 
           echo "${latest}" > .cache-meta/latest.txt
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         if: steps.check.outputs.needs_deploy == 'true'
         with:
           node-version: 20
