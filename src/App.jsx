@@ -572,7 +572,7 @@ export default function App() {
       } else if (dialog === DIALOG_CREATION_ORDER) {
         replaceCreationOrderInUrl(
           readCreationOrderFilterFromLocation(),
-          selectedVersion
+          readVersionFromLocation() || "latest"
         );
       } else {
         replaceDialogInUrl(dialog, activeType, selectedVersion);
