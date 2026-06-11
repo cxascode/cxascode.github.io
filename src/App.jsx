@@ -147,6 +147,9 @@ function firstReleaseVersionInIndex(versions) {
  *       "<bad_dep_type>": "<correct_dep_type>"
  *     }
  *   },
+ *   "tfExportResourceNames": {
+ *     "<resource_type>": "optional override for include_filter_resources placeholder (wins over generated map)"
+ *   },
  *   "tfExportNote": "Markdown note shown in the genesyscloud_tf_export template panel when a type is selected",
  *   "dependencyNotes": {
  *     "<resource_type>": "Markdown note shown in Resource Type Details"
@@ -529,7 +532,7 @@ export default function App() {
   );
 
   const tfExportResourceName = useMemo(
-    () => resolveTfExportResourceName(activeType),
+    () => resolveTfExportResourceName(activeType, overrides),
     [activeType]
   );
 

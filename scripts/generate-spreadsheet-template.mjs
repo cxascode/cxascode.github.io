@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import ExcelJS from "exceljs";
 import { computeCreationOrder } from "../src/dependencyOrder.js";
-import { effectiveDependencies } from "../src/tfExportTemplate.js";
+import { effectiveDependencies } from "../src/effectiveDependencies.js";
 
 const INPUT_DIR = path.resolve("public/dependency-tree-json");
 const OUTPUT_DIR = path.resolve("public/spreadsheet-templates");
