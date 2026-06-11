@@ -23,15 +23,17 @@ import {
 } from "./divisionAware.js";
 import { toReleaseNotesVersion } from "./releaseNotes.js";
 import {
-  buildResourceTypePermalink,
   DIALOG_ATTRIBUTE_INDEX,
   DIALOG_CREATION_ORDER,
   DIALOG_RELEASE_NOTES,
-  readAttributeIndexResourceFromLocation,
+  migrateLegacyAttributeIndexUrl,
+  readAttributeIndexFilterFromLocation,
+  readCreationOrderFilterFromLocation,
   readDialogFromLocation,
   readResourceTypeFromLocation,
   readVersionFromLocation,
   replaceAttributeIndexInUrl,
+  replaceCreationOrderInUrl,
   replaceDialogInUrl,
   replaceResourceInUrl,
 } from "./appPermalinks.js";
@@ -40,6 +42,17 @@ import { applyPageSeo, resolvePageSeo } from "./pageSeo.js";
 const INDEX_URL = `${import.meta.env.BASE_URL}dependency-tree-json/index.json`;
 const LATEST_URL = `${import.meta.env.BASE_URL}dependency-tree-json/latest.json`;
 const VERSION_URL = (v) => `${import.meta.env.BASE_URL}dependency-tree-json/${v}.json`;
+
+function attributeIndexVersionFromUrl(versionFromUrl) {
+  const trimmed = (versionFromUrl || "").trim().replace(/^v/i, "");
+  return trimmed ? `v${trimmed}` : "";
+}
+
+function acceptVersionFromUrl(versionFromUrl, availableVersions, dialog = "") {
+  if (!versionFromUrl) return false;
+  if (availableVersions.includes(versionFromUrl)) return true;
+  return dialog === DIALOG_ATTRIBUTE_INDEX;
+}
 
 const TF_EXPORT_NAMES_LATEST_URL = `${import.meta.env.BASE_URL}tf-export-resource-names/latest.json`;
 const TF_EXPORT_NAMES_VERSION_URL = (v) =>
@@ -521,10 +534,13 @@ export default function App() {
     hydratedFromUrlRef.current = true;
 
     const versionFromUrl = readVersionFromLocation();
+    const dialogFromUrl = readDialogFromLocation();
     if (versionFromUrl) {
       skipNextUrlSyncRef.current = true;
       setSelectedVersion(
-        availableVersions.includes(versionFromUrl) ? versionFromUrl : "latest"
+        acceptVersionFromUrl(versionFromUrl, availableVersions, dialogFromUrl)
+          ? versionFromUrl
+          : "latest"
       );
     }
 
@@ -549,9 +565,15 @@ export default function App() {
     const dialog = readDialogFromLocation();
     if (dialog) {
       if (dialog === DIALOG_ATTRIBUTE_INDEX) {
-        replaceDialogInUrl(dialog, "", selectedVersion, {
-          attributeIndexResource: readAttributeIndexResourceFromLocation(),
-        });
+        replaceAttributeIndexInUrl(
+          readAttributeIndexFilterFromLocation(),
+          readVersionFromLocation() || "latest"
+        );
+      } else if (dialog === DIALOG_CREATION_ORDER) {
+        replaceCreationOrderInUrl(
+          readCreationOrderFilterFromLocation(),
+          readVersionFromLocation() || "latest"
+        );
       } else {
         replaceDialogInUrl(dialog, activeType, selectedVersion);
       }
@@ -602,11 +624,6 @@ export default function App() {
     [detailType, selectedVersion]
   );
 
-  const resourceTypePermalink = useMemo(
-    () => (detailType ? buildResourceTypePermalink(detailType, selectedVersion) : ""),
-    [detailType, selectedVersion]
-  );
-
   const detailGuiMenuPath = useMemo(
     () => resolveGuiMenuPath(detailType, overrides),
     [detailType]
@@ -616,25 +633,59 @@ export default function App() {
   const [orderDialogOpen, setOrderDialogOpen] = useState(false);
   const [releaseNotesDialogOpen, setReleaseNotesDialogOpen] = useState(false);
   const [attributeIndexDialogOpen, setAttributeIndexDialogOpen] = useState(false);
-  const [attributeIndexResourceFilter, setAttributeIndexResourceFilter] = useState(() =>
-    readAttributeIndexResourceFromLocation()
+  const [attributeIndexQuery, setAttributeIndexQuery] = useState(() =>
+    readAttributeIndexFilterFromLocation()
   );
+  const [creationOrderQuery, setCreationOrderQuery] = useState(() =>
+    readCreationOrderFilterFromLocation()
+  );
+
+  const attributeIndexVersionFilter = useMemo(() => {
+    if (!attributeIndexDialogOpen) return "";
+    return attributeIndexVersionFromUrl(readVersionFromLocation());
+  }, [attributeIndexDialogOpen, selectedVersion, attributeIndexQuery]);
+
+  const syncAttributeIndexFromUrl = useCallback(() => {
+    setAttributeIndexQuery(readAttributeIndexFilterFromLocation());
+  }, []);
+
+  const syncCreationOrderFromUrl = useCallback(() => {
+    setCreationOrderQuery(readCreationOrderFilterFromLocation());
+  }, []);
 
   const openDialog = useCallback((dialogId) => {
     setOrderDialogOpen(dialogId === DIALOG_CREATION_ORDER);
     setReleaseNotesDialogOpen(dialogId === DIALOG_RELEASE_NOTES);
     setAttributeIndexDialogOpen(dialogId === DIALOG_ATTRIBUTE_INDEX);
     if (dialogId === DIALOG_ATTRIBUTE_INDEX) {
-      setAttributeIndexResourceFilter("");
+      setAttributeIndexQuery("");
+    }
+    if (dialogId === DIALOG_CREATION_ORDER) {
+      setCreationOrderQuery("");
     }
     replaceDialogInUrl(dialogId, "", selectedVersionRef.current);
   }, []);
 
-  const handleAttributeIndexResourceFilterChange = useCallback((nextFilter) => {
-    const normalized = (nextFilter || "").trim();
-    setAttributeIndexResourceFilter(normalized);
-    replaceAttributeIndexInUrl(normalized, selectedVersionRef.current);
+  const handleCreationOrderQueryChange = useCallback((nextQuery) => {
+    setCreationOrderQuery(nextQuery);
+    replaceCreationOrderInUrl(nextQuery, selectedVersionRef.current);
   }, []);
+
+  const handleAttributeIndexQueryChange = useCallback((nextQuery) => {
+    setAttributeIndexQuery(nextQuery);
+    const versionInUrl = readVersionFromLocation();
+    replaceAttributeIndexInUrl(nextQuery, versionInUrl || "latest");
+  }, []);
+
+  const handleAttributeIndexVersionFilterChange = useCallback(
+    (nextVersion) => {
+      const bare = (nextVersion || "").trim().replace(/^v/i, "");
+      const normalizedVersion = bare || "latest";
+      setSelectedVersion(normalizedVersion);
+      replaceAttributeIndexInUrl(attributeIndexQuery, normalizedVersion);
+    },
+    [attributeIndexQuery]
+  );
 
   const openAttributeIndexForResource = useCallback((resourceType) => {
     const normalized = (resourceType || "").trim();
@@ -643,8 +694,8 @@ export default function App() {
     setOrderDialogOpen(false);
     setReleaseNotesDialogOpen(false);
     setAttributeIndexDialogOpen(true);
-    setAttributeIndexResourceFilter(normalized);
-    replaceAttributeIndexInUrl(normalized, selectedVersionRef.current);
+    setAttributeIndexQuery(normalized);
+    replaceAttributeIndexInUrl(normalized, "latest");
   }, []);
 
   const closeDialogs = useCallback(
@@ -652,7 +703,8 @@ export default function App() {
       setOrderDialogOpen(false);
       setReleaseNotesDialogOpen(false);
       setAttributeIndexDialogOpen(false);
-      setAttributeIndexResourceFilter("");
+      setAttributeIndexQuery("");
+      setCreationOrderQuery("");
 
       const resource =
         typeof nextResourceType === "string" && nextResourceType.trim()
@@ -676,9 +728,19 @@ export default function App() {
     setReleaseNotesDialogOpen(dialog === DIALOG_RELEASE_NOTES);
     setAttributeIndexDialogOpen(dialog === DIALOG_ATTRIBUTE_INDEX);
     if (dialog === DIALOG_ATTRIBUTE_INDEX) {
-      setAttributeIndexResourceFilter(readAttributeIndexResourceFromLocation());
+      syncAttributeIndexFromUrl();
     }
-  }, [raw, showDependencyLoading, error]);
+    if (dialog === DIALOG_CREATION_ORDER) {
+      syncCreationOrderFromUrl();
+    }
+  }, [raw, showDependencyLoading, error, syncAttributeIndexFromUrl, syncCreationOrderFromUrl]);
+
+  useEffect(() => {
+    if (migrateLegacyAttributeIndexUrl()) {
+      setAttributeIndexDialogOpen(true);
+      syncAttributeIndexFromUrl();
+    }
+  }, [syncAttributeIndexFromUrl]);
 
   useEffect(() => {
     const syncFromLocation = () => {
@@ -686,11 +748,12 @@ export default function App() {
       setOrderDialogOpen(dialog === DIALOG_CREATION_ORDER);
       setReleaseNotesDialogOpen(dialog === DIALOG_RELEASE_NOTES);
       setAttributeIndexDialogOpen(dialog === DIALOG_ATTRIBUTE_INDEX);
-      setAttributeIndexResourceFilter(readAttributeIndexResourceFromLocation());
+      syncAttributeIndexFromUrl();
+      syncCreationOrderFromUrl();
 
       const versionFromUrl = readVersionFromLocation();
       skipNextUrlSyncRef.current = true;
-      if (versionFromUrl && availableVersions.includes(versionFromUrl)) {
+      if (acceptVersionFromUrl(versionFromUrl, availableVersions, dialog)) {
         setSelectedVersion(versionFromUrl);
       } else {
         setSelectedVersion("latest");
@@ -711,7 +774,7 @@ export default function App() {
 
     window.addEventListener("popstate", syncFromLocation);
     return () => window.removeEventListener("popstate", syncFromLocation);
-  }, [allTypes, availableVersions]);
+  }, [allTypes, availableVersions, syncAttributeIndexFromUrl, syncCreationOrderFromUrl]);
 
   useEffect(() => {
     applyPageSeo(
@@ -721,7 +784,8 @@ export default function App() {
         releaseNotesOpen: releaseNotesDialogOpen,
         creationOrderOpen: orderDialogOpen,
         attributeIndexOpen: attributeIndexDialogOpen,
-        attributeIndexResource: attributeIndexResourceFilter,
+        attributeIndexFilter: attributeIndexQuery,
+        creationOrderFilter: creationOrderQuery,
       })
     );
   }, [
@@ -730,7 +794,8 @@ export default function App() {
     releaseNotesDialogOpen,
     orderDialogOpen,
     attributeIndexDialogOpen,
-    attributeIndexResourceFilter,
+    attributeIndexQuery,
+    creationOrderQuery,
   ]);
 
   const dependencyFor = useMemo(
@@ -1167,34 +1232,7 @@ export default function App() {
                 {detailType ? (
                   <div className="gcResourceHeader">
                     <div className="gcResourceTypeLine">
-                      <span className="gcResourceTypeGroup">
-                        <code className="gcResourceTypeName">{detailType}</code>
-                        {activeType ? (
-                        <a
-                          className="gcPermalinkAnchor"
-                          href={resourceTypePermalink}
-                          aria-label="Link to this resource type"
-                          title="Link to this resource type"
-                        >
-                          <svg
-                            className="gcPermalinkAnchor__icon"
-                            viewBox="0 0 16 16"
-                            width="16"
-                            height="16"
-                            aria-hidden="true"
-                          >
-                            <path
-                              d="M6.2 8.8a2.2 2.2 0 0 0 3.1 0l1.9-1.9a2.2 2.2 0 1 0-3.1-3.1L7.2 4.6M9.8 7.2a2.2 2.2 0 0 0-3.1 0L4.8 9.1a2.2 2.2 0 0 0 3.1 3.1l1.9-1.9"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="1.4"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                        </a>
-                        ) : null}
-                      </span>
+                      <code className="gcResourceTypeName">{detailType}</code>
                       {activeType && isDivisionAware ? (
                         <span
                           className="gcDivisionBadge"
@@ -1422,8 +1460,11 @@ export default function App() {
         newestListedRelease={newestListedRelease}
         loadingIndex={loadingIndex}
         loadingData={loadingData}
+        query={creationOrderQuery}
+        onQueryChange={handleCreationOrderQueryChange}
         onSelectType={(type) => {
           setSelectedType(type);
+          setCreationOrderQuery("");
           setQuery("");
           setDivisionFilter(DIVISION_FILTER_ALL);
         }}
@@ -1443,8 +1484,10 @@ export default function App() {
         open={attributeIndexDialogOpen}
         onClose={closeDialogs}
         knownTypes={new Set(allTypes)}
-        resourceFilter={attributeIndexResourceFilter}
-        onResourceFilterChange={handleAttributeIndexResourceFilterChange}
+        query={attributeIndexQuery}
+        onQueryChange={handleAttributeIndexQueryChange}
+        versionFilter={attributeIndexVersionFilter}
+        onVersionFilterChange={handleAttributeIndexVersionFilterChange}
         onSelectResource={(type) => {
           setSelectedType(type);
           setQuery("");

@@ -1,11 +1,13 @@
 import {
   appRootPathname,
-  attributeIndexPathname,
+  attributeIndexLocation,
+  creationOrderLocation,
   DIALOG_ATTRIBUTE_INDEX,
   DIALOG_CREATION_ORDER,
   DIALOG_RELEASE_NOTES,
   dialogPathname,
-  readAttributeIndexResourceFromLocation,
+  readAttributeIndexFilterFromLocation,
+  readCreationOrderFilterFromLocation,
   readDialogFromLocation,
   readResourceTypeFromLocation,
   readVersionFromLocation,
@@ -83,22 +85,29 @@ export function resolvePageSeo({
   releaseNotesOpen,
   creationOrderOpen,
   attributeIndexOpen,
-  attributeIndexResource = "",
+  attributeIndexFilter = "",
+  creationOrderFilter = "",
 }) {
   const version = resolveVersion(selectedVersion);
-  const attributeIndexFilter =
-    (attributeIndexResource || "").trim() || readAttributeIndexResourceFromLocation();
+  const attributeFilter =
+    (attributeIndexFilter || "").trim() || readAttributeIndexFilterFromLocation();
+  const orderFilter =
+    (creationOrderFilter || "").trim() || readCreationOrderFilterFromLocation();
 
   if (releaseNotesOpen) {
     return { dialogId: DIALOG_RELEASE_NOTES, resourceType: "", version };
   }
   if (creationOrderOpen) {
-    return { dialogId: DIALOG_CREATION_ORDER, resourceType: "", version };
+    return {
+      dialogId: DIALOG_CREATION_ORDER,
+      resourceType: orderFilter,
+      version,
+    };
   }
   if (attributeIndexOpen) {
     return {
       dialogId: DIALOG_ATTRIBUTE_INDEX,
-      resourceType: attributeIndexFilter,
+      resourceType: attributeFilter,
       version,
     };
   }
@@ -108,7 +117,11 @@ export function resolvePageSeo({
     return {
       dialogId: dialogFromUrl,
       resourceType:
-        dialogFromUrl === DIALOG_ATTRIBUTE_INDEX ? readAttributeIndexResourceFromLocation() : "",
+        dialogFromUrl === DIALOG_ATTRIBUTE_INDEX
+          ? readAttributeIndexFilterFromLocation()
+          : dialogFromUrl === DIALOG_CREATION_ORDER
+            ? readCreationOrderFilterFromLocation()
+            : "",
       version,
     };
   }
@@ -120,24 +133,44 @@ export function resolvePageSeo({
   };
 }
 
-function buildAttributeIndexDescription(resourceType, version) {
+function buildAttributeIndexDescription(filter, version) {
   const label = versionLabel(version);
   const suffix = label ? ` (${label})` : "";
-  const typed = (resourceType || "").trim();
-  if (typed) {
-    return `Attribute change history for ${typed}${suffix} in the Genesys Cloud Terraform provider.`;
+  const trimmed = (filter || "").trim();
+  if (trimmed) {
+    return `Attribute change history matching "${trimmed}"${suffix} in the Genesys Cloud Terraform provider.`;
   }
   return DIALOG_SEO[DIALOG_ATTRIBUTE_INDEX].description;
 }
 
-function buildAttributeIndexTitle(resourceType, version) {
+function buildAttributeIndexTitle(filter, version) {
   const label = versionLabel(version);
   const suffix = label ? ` (${label})` : "";
-  const typed = (resourceType || "").trim();
-  if (typed) {
-    return `${typed} attribute history${suffix} — CX as Code Explorer`;
+  const trimmed = (filter || "").trim();
+  if (trimmed) {
+    return `Attribute history: ${trimmed}${suffix} — CX as Code Explorer`;
   }
   return buildDialogTitle(DIALOG_ATTRIBUTE_INDEX, version);
+}
+
+function buildCreationOrderDescription(filter, version) {
+  const label = versionLabel(version);
+  const suffix = label ? ` (${label})` : "";
+  const trimmed = (filter || "").trim();
+  if (trimmed) {
+    return `Creation order for resource types matching "${trimmed}"${suffix} in the Genesys Cloud Terraform provider.`;
+  }
+  return DIALOG_SEO[DIALOG_CREATION_ORDER].description;
+}
+
+function buildCreationOrderTitle(filter, version) {
+  const label = versionLabel(version);
+  const suffix = label ? ` (${label})` : "";
+  const trimmed = (filter || "").trim();
+  if (trimmed) {
+    return `Creation order: ${trimmed}${suffix} — CX as Code Explorer`;
+  }
+  return buildDialogTitle(DIALOG_CREATION_ORDER, version);
 }
 
 export function pageSeoForState({ dialogId, resourceType, version = "" }) {
@@ -145,7 +178,15 @@ export function pageSeoForState({ dialogId, resourceType, version = "" }) {
     return {
       title: buildAttributeIndexTitle(resourceType, version),
       description: buildAttributeIndexDescription(resourceType, version),
-      pathname: attributeIndexPathname(resourceType, version),
+      pathname: attributeIndexLocation(resourceType, version),
+    };
+  }
+
+  if (dialogId === DIALOG_CREATION_ORDER) {
+    return {
+      title: buildCreationOrderTitle(resourceType, version),
+      description: buildCreationOrderDescription(resourceType, version),
+      pathname: creationOrderLocation(resourceType, version),
     };
   }
 

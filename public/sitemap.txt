@@ -16,6 +16,11 @@ https://cxascode.github.io/genesyscloud_auth_division
 https://cxascode.github.io/genesyscloud_auth_role
 https://cxascode.github.io/genesyscloud_business_rules_decision_table
 https://cxascode.github.io/genesyscloud_business_rules_schema
+https://cxascode.github.io/genesyscloud_case_management_caseplan
+https://cxascode.github.io/genesyscloud_case_management_caseplan_create_version
+https://cxascode.github.io/genesyscloud_case_management_caseplan_publish
+https://cxascode.github.io/genesyscloud_case_management_stageplan
+https://cxascode.github.io/genesyscloud_case_management_stepplan
 https://cxascode.github.io/genesyscloud_conversations_messaging_integrations_apple
 https://cxascode.github.io/genesyscloud_conversations_messaging_integrations_instagram
 https://cxascode.github.io/genesyscloud_conversations_messaging_integrations_open
@@ -35,7 +40,9 @@ https://cxascode.github.io/genesyscloud_flow_loglevel
 https://cxascode.github.io/genesyscloud_flow_milestone
 https://cxascode.github.io/genesyscloud_flow_outcome
 https://cxascode.github.io/genesyscloud_greeting
+https://cxascode.github.io/genesyscloud_greeting_user
 https://cxascode.github.io/genesyscloud_group
+https://cxascode.github.io/genesyscloud_group_greeting
 https://cxascode.github.io/genesyscloud_group_roles
 https://cxascode.github.io/genesyscloud_guide
 https://cxascode.github.io/genesyscloud_guide_version

@@ -73,6 +73,26 @@
     <lastmod>2026-06-11</lastmod>
   </url>
   <url>
+    <loc>https://cxascode.github.io/genesyscloud_case_management_caseplan</loc>
+    <lastmod>2026-06-11</lastmod>
+  </url>
+  <url>
+    <loc>https://cxascode.github.io/genesyscloud_case_management_caseplan_create_version</loc>
+    <lastmod>2026-06-11</lastmod>
+  </url>
+  <url>
+    <loc>https://cxascode.github.io/genesyscloud_case_management_caseplan_publish</loc>
+    <lastmod>2026-06-11</lastmod>
+  </url>
+  <url>
+    <loc>https://cxascode.github.io/genesyscloud_case_management_stageplan</loc>
+    <lastmod>2026-06-11</lastmod>
+  </url>
+  <url>
+    <loc>https://cxascode.github.io/genesyscloud_case_management_stepplan</loc>
+    <lastmod>2026-06-11</lastmod>
+  </url>
+  <url>
     <loc>https://cxascode.github.io/genesyscloud_conversations_messaging_integrations_apple</loc>
     <lastmod>2026-06-11</lastmod>
   </url>
@@ -149,7 +169,15 @@
     <lastmod>2026-06-11</lastmod>
   </url>
   <url>
+    <loc>https://cxascode.github.io/genesyscloud_greeting_user</loc>
+    <lastmod>2026-06-11</lastmod>
+  </url>
+  <url>
     <loc>https://cxascode.github.io/genesyscloud_group</loc>
+    <lastmod>2026-06-11</lastmod>
+  </url>
+  <url>
+    <loc>https://cxascode.github.io/genesyscloud_group_greeting</loc>
     <lastmod>2026-06-11</lastmod>
   </url>
   <url>
