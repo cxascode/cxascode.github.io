@@ -13,6 +13,7 @@
       "genesyscloud_flow_milestone",
       "genesyscloud_flow_outcome",
       "genesyscloud_group",
+      "genesyscloud_integration",
       "genesyscloud_integration_action",
       "genesyscloud_journey_action_map",
       "genesyscloud_journey_outcome",
