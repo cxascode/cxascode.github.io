@@ -1,0 +1,34 @@
+{
+    "version": "v1.83.0",
+    "previous": "v1.82.0",
+    "changes": [
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_ai_studio_summary_setting",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Pagination and name filtering for summary settings now use the correct API parameter order, so list, refresh, and export operations return the expected results."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_business_rules_decision_table",
+            "attribute": "rows.inputs.literal.value",
+            "change": "updated",
+            "summary": "Queue IDs referenced in row input literal values are now resolved during export; previous wildcard resolver paths did not match the exporter framework and were skipped silently."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_business_rules_decision_table",
+            "attribute": "rows.outputs.literal.value",
+            "change": "updated",
+            "summary": "Queue IDs referenced in row output literal values are now resolved during export; previous wildcard resolver paths did not match the exporter framework and were skipped silently."
+        },
+        {
+            "kind": "provider_configuration",
+            "resource": null,
+            "attribute": "aws_region",
+            "change": "updated",
+            "summary": "Accepts eusc-de-east-1 for EU Sovereign Cloud (Germany) orgs, routing API calls to edee1.eusc-pure.cloud."
+        }
+    ]
+}

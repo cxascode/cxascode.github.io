@@ -4,6 +4,10 @@ This index is generated from the release notes available on this site. `Introduc
 
 | Type | Resource / Data Source | Attribute | Introduced | Last Updated | Status | Notes |
 |---|---|---|---:|---:|---|---|
+| `export_behavior` | `genesyscloud_business_rules_decision_table` | `rows.inputs.literal.value` | `Unknown` | `v1.83.0` | Active | Queue IDs referenced in row input literal values are now resolved during export; previous wildcard resolver paths did not match the exporter framework and were skipped silently. |
+| `export_behavior` | `genesyscloud_business_rules_decision_table` | `rows.outputs.literal.value` | `Unknown` | `v1.83.0` | Active | Queue IDs referenced in row output literal values are now resolved during export; previous wildcard resolver paths did not match the exporter framework and were skipped silently. |
+| `provider_configuration` | `provider` | `aws_region` | `Unknown` | `v1.83.0` | Active | Accepts eusc-de-east-1 for EU Sovereign Cloud (Germany) orgs, routing API calls to edee1.eusc-pure.cloud. |
+| `resource` | `genesyscloud_ai_studio_summary_setting` | `(resource-level behavior)` | `v1.72.2` | `v1.83.0` | Active | Pagination and name filtering for summary settings now use the correct API parameter order, so list, refresh, and export operations return the expected results. |
 | `data_source` | `genesyscloud_integration_action` | `integration_id` | `v1.82.0` | `v1.82.0` | Active | Optional argument to disambiguate lookups when multiple built-in data actions share the same name across integration instances. |
 | `data_source` | `genesyscloud_processautomation_trigger` | `(resource-level behavior)` | `Unknown` | `v1.82.0` | Active | Name lookup now follows API pagination links correctly, so triggers beyond the first page can be found. |
 | `export_behavior` | `genesyscloud_greeting` | `general export behavior` | `Unknown` | `v1.82.0` | Active | Greeting audio files are now written alongside exported configuration and resolved on import using audio_filename and audio_file_content_hash. |
@@ -360,7 +364,6 @@ This index is generated from the release notes available on this site. `Introduc
 | `resource` | `genesyscloud_outbound_campaignrule` | `campaign_rule_entities.sms_campaign_ids` | `v1.73.0` | `v1.73.0` | Active | Optional list of SMS campaign IDs to monitor; changing this value forces resource replacement. |
 | `resource` | `genesyscloud_responsemanagement_response` | `namespace` | `Unknown` | `v1.73.0` | Active | Now optional instead of required. |
 | `import_behavior` | `genesyscloud_telephony_providers_edges_site_outbound_route` | `general import behavior` | `Unknown` | `v1.72.2` | Active | When a site ID is provided, lookup searches outbound routes within that site first instead of scanning all sites. |
-| `resource` | `genesyscloud_ai_studio_summary_setting` | `(resource-level behavior)` | `v1.72.2` | `v1.72.2` | Active | New resource for managing AI Studio summary settings. |
 | `resource` | `genesyscloud_conversations_messaging_integrations_apple` | `(resource-level behavior)` | `v1.72.2` | `v1.72.2` | Active | New resource for managing Apple messaging integrations. |
 | `resource` | `genesyscloud_conversations_messaging_settings_default` | `(resource-level behavior)` | `Unknown` | `v1.72.2` | Active | Read and update now fail with a clear error when the API returns a messaging settings default without an ID. |
 | `resource` | `genesyscloud_group` | `voicemail_policy` | `v1.72.2` | `v1.72.2` | Active | Optional block to configure group voicemail notification settings. |

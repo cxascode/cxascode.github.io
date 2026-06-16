@@ -1,5 +1,78 @@
 [
   {
+    "type": "export_behavior",
+    "resource": "genesyscloud_business_rules_decision_table",
+    "attribute": "rows.inputs.literal.value",
+    "introduced": "Unknown",
+    "last_updated": "v1.83.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Queue IDs referenced in row input literal values are now resolved during export; previous wildcard resolver paths did not match the exporter framework and were skipped silently.",
+    "history": [
+      {
+        "version": "v1.83.0",
+        "change": "updated",
+        "summary": "Queue IDs referenced in row input literal values are now resolved during export; previous wildcard resolver paths did not match the exporter framework and were skipped silently."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_business_rules_decision_table",
+    "attribute": "rows.outputs.literal.value",
+    "introduced": "Unknown",
+    "last_updated": "v1.83.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Queue IDs referenced in row output literal values are now resolved during export; previous wildcard resolver paths did not match the exporter framework and were skipped silently.",
+    "history": [
+      {
+        "version": "v1.83.0",
+        "change": "updated",
+        "summary": "Queue IDs referenced in row output literal values are now resolved during export; previous wildcard resolver paths did not match the exporter framework and were skipped silently."
+      }
+    ]
+  },
+  {
+    "type": "provider_configuration",
+    "resource": "provider",
+    "attribute": "aws_region",
+    "introduced": "Unknown",
+    "last_updated": "v1.83.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Accepts eusc-de-east-1 for EU Sovereign Cloud (Germany) orgs, routing API calls to edee1.eusc-pure.cloud.",
+    "history": [
+      {
+        "version": "v1.83.0",
+        "change": "updated",
+        "summary": "Accepts eusc-de-east-1 for EU Sovereign Cloud (Germany) orgs, routing API calls to edee1.eusc-pure.cloud."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_ai_studio_summary_setting",
+    "attribute": "(resource-level behavior)",
+    "introduced": "v1.72.2",
+    "last_updated": "v1.83.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Pagination and name filtering for summary settings now use the correct API parameter order, so list, refresh, and export operations return the expected results.",
+    "history": [
+      {
+        "version": "v1.72.2",
+        "change": "added",
+        "summary": "New resource for managing AI Studio summary settings."
+      },
+      {
+        "version": "v1.83.0",
+        "change": "updated",
+        "summary": "Pagination and name filtering for summary settings now use the correct API parameter order, so list, refresh, and export operations return the expected results."
+      }
+    ]
+  },
+  {
     "type": "data_source",
     "resource": "genesyscloud_integration_action",
     "attribute": "integration_id",
@@ -6373,23 +6446,6 @@
         "version": "v1.72.2",
         "change": "updated",
         "summary": "When a site ID is provided, lookup searches outbound routes within that site first instead of scanning all sites."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_ai_studio_summary_setting",
-    "attribute": "(resource-level behavior)",
-    "introduced": "v1.72.2",
-    "last_updated": "v1.72.2",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "New resource for managing AI Studio summary settings.",
-    "history": [
-      {
-        "version": "v1.72.2",
-        "change": "added",
-        "summary": "New resource for managing AI Studio summary settings."
       }
     ]
   },

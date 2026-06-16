@@ -1,5 +1,14 @@
 [
   {
+    "version": "v1.83.0",
+    "previous": "v1.82.0",
+    "title": "v1.83.0",
+    "path": "/release-notes-data/versions/v1.83.0.md",
+    "changes_path": "/release-notes-data/changes/v1.83.0.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.83.0",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.83.0/docs"
+  },
+  {
     "version": "v1.82.0",
     "previous": "v1.81.0",
     "title": "v1.82.0",
