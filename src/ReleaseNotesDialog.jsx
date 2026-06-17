@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import DependencyNote from "./DependencyNote.jsx";
+import { downloadReleaseNotesArtifact } from "./artifactDownloads.js";
 import {
   fetchReleaseNotesIndex,
   fetchReleaseNotesMarkdown,
   RELEASE_NOTES_SCOPE_EXPORT,
   RELEASE_NOTES_SCOPE_PROVIDER,
-  releaseNotesDownloadFilename,
   releaseNotesDownloadLabel,
   releaseNotesVersionsFromIndex,
   toReleaseNotesVersion,
@@ -166,19 +166,13 @@ export default function ReleaseNotesDialog({
   const downloadReleaseNotes = useCallback(() => {
     if (!markdown || !effectiveVersion) return;
 
-    const filename = releaseNotesDownloadFilename(effectiveVersion, scope);
-    const blob = new Blob([markdown], { type: "text/markdown;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = filename;
-    anchor.rel = "noopener";
-    document.body.appendChild(anchor);
-    anchor.click();
-    anchor.remove();
-    URL.revokeObjectURL(url);
-  }, [markdown, effectiveVersion, scope]);
+    void downloadReleaseNotesArtifact(
+      selectedVersion,
+      newestListedRelease,
+      markdown,
+      scope
+    );
+  }, [markdown, effectiveVersion, selectedVersion, newestListedRelease, scope]);
 
   const downloadButtonLabel = releaseNotesDownloadLabel(scope);
 

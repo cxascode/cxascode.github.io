@@ -16,6 +16,48 @@ export function toReleaseNotesVersion(version) {
 /** Display label for provider semver values in the UI. */
 export const formatProviderVersion = toReleaseNotesVersion;
 
+/**
+ * Version label for downloaded artifact filenames. Resolves "latest" to the
+ * newest listed provider release when one is known.
+ */
+export function artifactDownloadVersionLabel(version, newestListedRelease = "") {
+  const bare = String(version || "")
+    .trim()
+    .replace(/^v/i, "");
+  if (bare && bare !== "latest") {
+    return toReleaseNotesVersion(bare) || "unknown";
+  }
+
+  const resolved = String(newestListedRelease || "")
+    .trim()
+    .replace(/^v/i, "");
+  return toReleaseNotesVersion(resolved) || "unknown";
+}
+
+/** index.json may only list semver trees; exclude bundled filenames if present. */
+export function newestListedReleaseFromIndex(versions) {
+  if (!Array.isArray(versions)) return "";
+  const found = versions.find(
+    (version) =>
+      typeof version === "string" &&
+      version.trim() &&
+      version !== "latest" &&
+      version !== "index"
+  );
+  return found ? found.trim() : "";
+}
+
+export async function fetchNewestListedRelease() {
+  try {
+    const res = await fetch(`${BASE}dependency-tree-json/index.json`, { cache: "no-store" });
+    if (!res.ok) return "";
+    const json = await res.json();
+    return newestListedReleaseFromIndex(json);
+  } catch {
+    return "";
+  }
+}
+
 export function fromReleaseNotesVersion(version) {
   return String(version).trim().replace(/^v/i, "");
 }
@@ -69,20 +111,6 @@ export async function fetchReleaseNotesMarkdown(version, scope = RELEASE_NOTES_S
       : releaseNotesMarkdownUrl(version);
   const label = scope === RELEASE_NOTES_SCOPE_EXPORT ? "export release notes" : "release notes";
   return fetchReleaseNotesMarkdownFromUrl(url, label);
-}
-
-export function releaseNotesDownloadFilename(
-  version,
-  scope = RELEASE_NOTES_SCOPE_PROVIDER
-) {
-  const versionLabel = toReleaseNotesVersion(version);
-  if (!versionLabel) return "cx-as-code-release-notes.md";
-
-  if (scope === RELEASE_NOTES_SCOPE_EXPORT) {
-    return `cx-as-code-export-release-notes-${versionLabel}.md`;
-  }
-
-  return `cx-as-code-release-notes-${versionLabel}.md`;
 }
 
 export function releaseNotesDownloadLabel(scope = RELEASE_NOTES_SCOPE_PROVIDER) {

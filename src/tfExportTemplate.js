@@ -36,6 +36,42 @@ export function resolveTfExportResourceName(
   return RESOURCE_NAME_PLACEHOLDER;
 }
 
+/**
+ * Resolve env var comment lines for a resource type.
+ * providerEnvVars is an ordered array from public/provider-env-vars.json;
+ * export-template lists resource types per entry.
+ */
+export function resolveProviderEnvVars(resourceType, providerEnvVars) {
+  const type = (resourceType || "").trim();
+  if (!type) return [];
+
+  const vars = providerEnvVars;
+  if (!Array.isArray(vars)) return [];
+
+  return vars
+    .filter((entry) => {
+      const exportTemplate = entry?.["export-template"];
+      return Array.isArray(exportTemplate) && exportTemplate.includes(type);
+    })
+    .map((entry) => {
+      if (!entry || typeof entry.name !== "string" || !entry.name.trim()) return null;
+      return {
+        name: entry.name.trim(),
+        valueHint: typeof entry.valueHint === "string" ? entry.valueHint : "1",
+        description: typeof entry.description === "string" ? entry.description.trim() : "",
+      };
+    })
+    .filter(Boolean);
+}
+
+function formatEnvVarComment({ name, valueHint, description }) {
+  const assignment =
+    valueHint === "" ? `# export ${name}=` : `# export ${name}=${valueHint}`;
+  return description ? `${assignment}  # ${description}` : assignment;
+}
+
+export { formatEnvVarComment as formatProviderEnvVarExportComment };
+
 const TF_EXPORT_ATTR_WIDTH = "use_legacy_architect_flow_exporter".length;
 
 function tfExportAttrLine(name, value) {
@@ -78,4 +114,17 @@ export function buildTfExportAttributes(resourceType, dependencies, resourceName
   ].join("\n");
 
   return `resource "genesyscloud_tf_export" "tf_export" {\n${body}\n}`;
+}
+
+/**
+ * Build the full copyable export template: env var shell comments, then the HCL block.
+ */
+export function buildTfExportTemplate(resourceType, dependencies, resourceName, envVars) {
+  const block = buildTfExportAttributes(resourceType, dependencies, resourceName);
+  if (!block) return "";
+
+  const preamble = (envVars || []).map(formatEnvVarComment);
+  if (preamble.length === 0) return block;
+
+  return `${preamble.join("\n")}\n\n${block}`;
 }

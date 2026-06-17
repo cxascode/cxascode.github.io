@@ -1181,6 +1181,82 @@ button.gcDocsPill {
   margin-left: auto;
 }
 
+.gcOrderDialog__toolbar--providerEnvVars {
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.gcOrderDialog__toolbar--providerEnvVars .gcOrderDialog__search {
+  flex: 1 1 14rem;
+  min-width: 0;
+}
+
+.gcOrderDialog__toolbar--providerEnvVars .gcSelectInput {
+  flex: 0 1 12rem;
+  min-width: 10rem;
+}
+
+.gcOrderDialog__toolbar--providerEnvVars .gcClearButton--toolbarEnd {
+  margin-left: auto;
+}
+
+.gcProviderEnvVars__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.gcProviderEnvVars__table th,
+.gcProviderEnvVars__table td {
+  padding: 0.55rem 0.65rem;
+  border-bottom: 1px solid var(--gux-grey-90, #d8d8d8);
+  text-align: left;
+  vertical-align: top;
+}
+
+.gcProviderEnvVars__table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--gux-grey-95, #f2f2f2);
+  font-weight: 600;
+}
+
+.gcProviderEnvVars__table th:first-child,
+.gcProviderEnvVars__name {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.gcProviderEnvVars__name code {
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+
+.gcProviderEnvVars__status {
+  display: inline-block;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.gcProviderEnvVars__status--template {
+  background: #e8f4ea;
+  color: #1f6b2c;
+}
+
+.gcProviderEnvVars__status--cataloged {
+  background: #eef2f7;
+  color: #2f4f6f;
+}
+
+.gcProviderEnvVars__status--ignored {
+  background: #f3f3f3;
+  color: #666;
+}
+
 .gcOrderDialog__toolbarActions {
   display: flex;
   align-items: center;

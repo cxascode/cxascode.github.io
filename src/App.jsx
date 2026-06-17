@@ -2,13 +2,15 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import PageTitle from "./PageTitle.jsx";
 import DependencyNote from "./DependencyNote.jsx";
 import OrderOfOperationsDialog from "./OrderOfOperationsDialog.jsx";
+import ProviderEnvVarsDialog from "./ProviderEnvVarsDialog.jsx";
 import AttributeIndexDialog from "./AttributeIndexDialog.jsx";
 import ReleaseNotesDialog from "./ReleaseNotesDialog.jsx";
 import ResourceReleaseChanges from "./ResourceReleaseChanges.jsx";
-import overrides from "../public/overrides.json";
 import {
-  buildTfExportAttributes,
+  buildTfExportTemplate,
+  resolveProviderEnvVars,
   resolveTfExportResourceName,
+  RESOURCE_NAME_PLACEHOLDER,
 } from "./tfExportTemplate.js";
 import {
   buildTerraformRegistryDocsUrl,
@@ -21,16 +23,24 @@ import {
   isDivisionAwareByDependencies,
   matchesDivisionFilter,
 } from "./divisionAware.js";
-import { toReleaseNotesVersion } from "./releaseNotes.js";
+import {
+  ARTIFACT_READ_ONLY_ROLE,
+  ARTIFACT_READ_WRITE_ROLE,
+  ARTIFACT_SPREADSHEET,
+  downloadUrlArtifact,
+} from "./artifactDownloads.js";
+import { newestListedReleaseFromIndex, toReleaseNotesVersion } from "./releaseNotes.js";
 import {
   DIALOG_ATTRIBUTE_INDEX,
   DIALOG_CREATION_ORDER,
+  DIALOG_ENV_VARS,
   DIALOG_RELEASE_NOTES,
   migrateLegacyAttributeIndexUrl,
   readAttributeIndexFilterFromLocation,
   readCreationOrderFilterFromLocation,
   readDialogFromLocation,
   readResourceTypeFromLocation,
+  readSpreadsheetDownloadFromLocation,
   readVersionFromLocation,
   replaceAttributeIndexInUrl,
   replaceCreationOrderInUrl,
@@ -41,6 +51,8 @@ import { applyPageSeo, resolvePageSeo } from "./pageSeo.js";
 
 const INDEX_URL = `${import.meta.env.BASE_URL}dependency-tree-json/index.json`;
 const LATEST_URL = `${import.meta.env.BASE_URL}dependency-tree-json/latest.json`;
+const OVERRIDES_URL = `${import.meta.env.BASE_URL}overrides.json`;
+const PROVIDER_ENV_VARS_URL = `${import.meta.env.BASE_URL}provider-env-vars.json`;
 const VERSION_URL = (v) => `${import.meta.env.BASE_URL}dependency-tree-json/${v}.json`;
 
 function attributeIndexVersionFromUrl(versionFromUrl) {
@@ -57,21 +69,6 @@ function acceptVersionFromUrl(versionFromUrl, availableVersions, dialog = "") {
 const TF_EXPORT_NAMES_LATEST_URL = `${import.meta.env.BASE_URL}tf-export-resource-names/latest.json`;
 const TF_EXPORT_NAMES_VERSION_URL = (v) =>
   `${import.meta.env.BASE_URL}tf-export-resource-names/${v}.json`;
-
-const READ_WRITE_ROLE_URL =
-  `${import.meta.env.BASE_URL}resource-permissions-tf/latest-read-write-role.tf`;
-const READ_ONLY_ROLE_URL =
-  `${import.meta.env.BASE_URL}resource-permissions-tf/latest-read-only-role.tf`;
-
-const VERSIONED_READ_WRITE_ROLE_URL = (v) =>
-  `${import.meta.env.BASE_URL}resource-permissions-tf/${v}-read-write-role.tf`;
-const VERSIONED_READ_ONLY_ROLE_URL = (v) =>
-  `${import.meta.env.BASE_URL}resource-permissions-tf/${v}-read-only-role.tf`;
-
-const SPREADSHEET_TEMPLATE_URL =
-  `${import.meta.env.BASE_URL}spreadsheet-templates/latest-cx-as-code-template.xlsx`;
-const VERSIONED_SPREADSHEET_TEMPLATE_URL = (v) =>
-  `${import.meta.env.BASE_URL}spreadsheet-templates/${v}-cx-as-code-template.xlsx`;
 
 const MIN_DEPENDENCY_VERSION = "1.60.0";
 const MIN_ROLE_DOWNLOAD_VERSION = "1.76.0";
@@ -144,19 +141,10 @@ function isRoleDownloadSupported(version) {
   return compareVersions(version, MIN_ROLE_DOWNLOAD_VERSION) >= 0;
 }
 
-/** index.json may only list semver trees; exclude bundled filenames if present. */
-function firstReleaseVersionInIndex(versions) {
-  if (!Array.isArray(versions)) return "";
-  const found = versions.find(
-    (v) => typeof v === "string" && v.trim() && v !== "latest" && v !== "index"
-  );
-  return found ? found.trim() : "";
-}
-
 /**
  * Apply optional overrides to a dependency tree JSON.
  *
- * overrides.json (public/overrides.json, bundled at build time) shape:
+ * overrides.json (public/overrides.json, fetched at runtime) shape:
  * {
  *   "addDependencies": {
  *     "<resource_type>": ["other_type", ...]
@@ -321,6 +309,8 @@ export default function App() {
   const [selectedVersion, setSelectedVersion] = useState("latest");
 
   const [raw, setRaw] = useState(null);
+  const [overrides, setOverrides] = useState(null);
+  const [providerEnvVarCatalog, setProviderEnvVarCatalog] = useState(null);
   const [tfExportResourceNames, setTfExportResourceNames] = useState({});
 
   const [query, setQuery] = useState("");
@@ -343,6 +333,47 @@ export default function App() {
   useEffect(() => {
     selectedVersionRef.current = selectedVersion;
   }, [selectedVersion]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const [overridesRes, envVarsRes] = await Promise.all([
+          fetch(OVERRIDES_URL, { cache: "no-store" }),
+          fetch(PROVIDER_ENV_VARS_URL, { cache: "no-store" }),
+        ]);
+
+        if (!overridesRes.ok) {
+          throw new Error(
+            `Failed to fetch overrides: ${overridesRes.status} ${overridesRes.statusText}`
+          );
+        }
+
+        if (!envVarsRes.ok) {
+          throw new Error(
+            `Failed to fetch provider env vars: ${envVarsRes.status} ${envVarsRes.statusText}`
+          );
+        }
+
+        const [overridesJson, envVarsJson] = await Promise.all([
+          overridesRes.json(),
+          envVarsRes.json(),
+        ]);
+
+        if (!cancelled) {
+          setOverrides(overridesJson);
+          setProviderEnvVarCatalog(envVarsJson);
+        }
+      } catch (e) {
+        if (!cancelled) setError(String(e));
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -416,6 +447,8 @@ export default function App() {
   }, [loadingIndex, selectedVersion]);
 
   useEffect(() => {
+    if (!overrides) return;
+
     let cancelled = false;
 
     (async () => {
@@ -453,7 +486,7 @@ export default function App() {
     return () => {
       cancelled = true;
     };
-  }, [selectedVersion]);
+  }, [selectedVersion, overrides]);
 
   useEffect(() => {
     let cancelled = false;
@@ -494,8 +527,14 @@ export default function App() {
 
   const { depsMap, reverseMap } = useMemo(() => buildDepsMaps(raw), [raw]);
 
-  const hiddenTypes = useMemo(() => getHiddenResourceTypes(overrides), []);
-  const deprecatedTypes = useMemo(() => getDeprecatedResourceTypes(overrides), []);
+  const hiddenTypes = useMemo(
+    () => (overrides ? getHiddenResourceTypes(overrides) : new Set()),
+    [overrides]
+  );
+  const deprecatedTypes = useMemo(
+    () => (overrides ? getDeprecatedResourceTypes(overrides) : new Set()),
+    [overrides]
+  );
 
   const allTypes = useMemo(() => {
     const s = new Set([...depsMap.keys(), ...reverseMap.keys()]);
@@ -519,7 +558,8 @@ export default function App() {
     return allTypes.includes(selectedType) ? selectedType : "";
   }, [allTypes, selectedType]);
 
-  const showDependencyLoading = loadingData && raw === null;
+  const showDependencyLoading =
+    (loadingData && raw === null) || !overrides || !providerEnvVarCatalog;
   const detailType = activeType || (showDependencyLoading ? selectedType : "");
 
   useEffect(() => {
@@ -599,21 +639,37 @@ export default function App() {
   );
 
   const dependencyNote = useMemo(
-    () => resolveDependencyNote(activeType, overrides),
-    [activeType]
+    () => (overrides ? resolveDependencyNote(activeType, overrides) : ""),
+    [activeType, overrides]
   );
 
   const tfExportResourceName = useMemo(
-    () => resolveTfExportResourceName(activeType, overrides, tfExportResourceNames),
-    [activeType, tfExportResourceNames]
+    () =>
+      overrides
+        ? resolveTfExportResourceName(activeType, overrides, tfExportResourceNames)
+        : RESOURCE_NAME_PLACEHOLDER,
+    [activeType, overrides, tfExportResourceNames]
   );
 
-  const tfExportNote = useMemo(() => resolveTfExportNote(overrides), []);
+  const tfExportNote = useMemo(
+    () => (overrides ? resolveTfExportNote(overrides) : ""),
+    [overrides]
+  );
+
+  const providerEnvVars = useMemo(
+    () =>
+      providerEnvVarCatalog
+        ? resolveProviderEnvVars(activeType, providerEnvVarCatalog.providerEnvVars)
+        : [],
+    [activeType, providerEnvVarCatalog]
+  );
 
   const tfExportTemplate = useMemo(
     () =>
-      activeType ? buildTfExportAttributes(activeType, dependsOn, tfExportResourceName) : "",
-    [activeType, dependsOn, tfExportResourceName]
+      activeType
+        ? buildTfExportTemplate(activeType, dependsOn, tfExportResourceName, providerEnvVars)
+        : "",
+    [activeType, dependsOn, tfExportResourceName, providerEnvVars]
   );
 
   const terraformRegistryDocsUrl = useMemo(
@@ -625,14 +681,17 @@ export default function App() {
   );
 
   const detailGuiMenuPath = useMemo(
-    () => resolveGuiMenuPath(detailType, overrides),
-    [detailType]
+    () => (overrides ? resolveGuiMenuPath(detailType, overrides) : ""),
+    [detailType, overrides]
   );
 
   const [copyState, setCopyState] = useState("idle");
   const [orderDialogOpen, setOrderDialogOpen] = useState(false);
   const [releaseNotesDialogOpen, setReleaseNotesDialogOpen] = useState(false);
   const [attributeIndexDialogOpen, setAttributeIndexDialogOpen] = useState(false);
+  const [envVarsDialogOpen, setEnvVarsDialogOpen] = useState(false);
+  const spreadsheetPermalinkRef = useRef("");
+  const newestListedReleaseRef = useRef("");
   const [attributeIndexQuery, setAttributeIndexQuery] = useState(() =>
     readAttributeIndexFilterFromLocation()
   );
@@ -653,10 +712,20 @@ export default function App() {
     setCreationOrderQuery(readCreationOrderFilterFromLocation());
   }, []);
 
+  const newestListedRelease = useMemo(
+    () => newestListedReleaseFromIndex(availableVersions),
+    [availableVersions]
+  );
+
+  useEffect(() => {
+    newestListedReleaseRef.current = newestListedRelease;
+  }, [newestListedRelease]);
+
   const openDialog = useCallback((dialogId) => {
     setOrderDialogOpen(dialogId === DIALOG_CREATION_ORDER);
     setReleaseNotesDialogOpen(dialogId === DIALOG_RELEASE_NOTES);
     setAttributeIndexDialogOpen(dialogId === DIALOG_ATTRIBUTE_INDEX);
+    setEnvVarsDialogOpen(dialogId === DIALOG_ENV_VARS);
     if (dialogId === DIALOG_ATTRIBUTE_INDEX) {
       setAttributeIndexQuery("");
     }
@@ -694,6 +763,7 @@ export default function App() {
     setOrderDialogOpen(false);
     setReleaseNotesDialogOpen(false);
     setAttributeIndexDialogOpen(true);
+    setEnvVarsDialogOpen(false);
     setAttributeIndexQuery(normalized);
     replaceAttributeIndexInUrl(normalized, "latest");
   }, []);
@@ -703,6 +773,7 @@ export default function App() {
       setOrderDialogOpen(false);
       setReleaseNotesDialogOpen(false);
       setAttributeIndexDialogOpen(false);
+      setEnvVarsDialogOpen(false);
       setAttributeIndexQuery("");
       setCreationOrderQuery("");
 
@@ -727,6 +798,7 @@ export default function App() {
     setOrderDialogOpen(dialog === DIALOG_CREATION_ORDER);
     setReleaseNotesDialogOpen(dialog === DIALOG_RELEASE_NOTES);
     setAttributeIndexDialogOpen(dialog === DIALOG_ATTRIBUTE_INDEX);
+    setEnvVarsDialogOpen(dialog === DIALOG_ENV_VARS);
     if (dialog === DIALOG_ATTRIBUTE_INDEX) {
       syncAttributeIndexFromUrl();
     }
@@ -742,12 +814,45 @@ export default function App() {
     }
   }, [syncAttributeIndexFromUrl]);
 
+  const handleSpreadsheetPermalink = useCallback(() => {
+    const version = readSpreadsheetDownloadFromLocation();
+    if (version === null) {
+      spreadsheetPermalinkRef.current = "";
+      return false;
+    }
+
+    const permalinkKey = window.location.pathname;
+    if (spreadsheetPermalinkRef.current === permalinkKey) return true;
+
+    spreadsheetPermalinkRef.current = permalinkKey;
+
+    void downloadUrlArtifact(
+      ARTIFACT_SPREADSHEET,
+      version,
+      newestListedReleaseRef.current
+    ).finally(() => {
+      if (readSpreadsheetDownloadFromLocation() === null) {
+        spreadsheetPermalinkRef.current = "";
+        return;
+      }
+
+      skipNextUrlSyncRef.current = true;
+      replaceDialogInUrl("", readResourceTypeFromLocation(), readVersionFromLocation() || "latest");
+      spreadsheetPermalinkRef.current = "";
+    });
+
+    return true;
+  }, []);
+
   useEffect(() => {
     const syncFromLocation = () => {
+      if (handleSpreadsheetPermalink()) return;
+
       const dialog = readDialogFromLocation();
       setOrderDialogOpen(dialog === DIALOG_CREATION_ORDER);
       setReleaseNotesDialogOpen(dialog === DIALOG_RELEASE_NOTES);
       setAttributeIndexDialogOpen(dialog === DIALOG_ATTRIBUTE_INDEX);
+      setEnvVarsDialogOpen(dialog === DIALOG_ENV_VARS);
       syncAttributeIndexFromUrl();
       syncCreationOrderFromUrl();
 
@@ -772,9 +877,16 @@ export default function App() {
       setSelectedType("");
     };
 
+    handleSpreadsheetPermalink();
     window.addEventListener("popstate", syncFromLocation);
     return () => window.removeEventListener("popstate", syncFromLocation);
-  }, [allTypes, availableVersions, syncAttributeIndexFromUrl, syncCreationOrderFromUrl]);
+  }, [
+    allTypes,
+    availableVersions,
+    handleSpreadsheetPermalink,
+    syncAttributeIndexFromUrl,
+    syncCreationOrderFromUrl,
+  ]);
 
   useEffect(() => {
     applyPageSeo(
@@ -784,6 +896,7 @@ export default function App() {
         releaseNotesOpen: releaseNotesDialogOpen,
         creationOrderOpen: orderDialogOpen,
         attributeIndexOpen: attributeIndexDialogOpen,
+        envVarsOpen: envVarsDialogOpen,
         attributeIndexFilter: attributeIndexQuery,
         creationOrderFilter: creationOrderQuery,
       })
@@ -794,6 +907,7 @@ export default function App() {
     releaseNotesDialogOpen,
     orderDialogOpen,
     attributeIndexDialogOpen,
+    envVarsDialogOpen,
     attributeIndexQuery,
     creationOrderQuery,
   ]);
@@ -803,45 +917,17 @@ export default function App() {
     [reverseMap, activeType]
   );
 
-  const newestListedRelease = useMemo(
-    () => firstReleaseVersionInIndex(availableVersions),
-    [availableVersions]
-  );
-
   const effectiveVersion =
     selectedVersion === "latest" ? newestListedRelease : selectedVersion;
 
   const roleDownloadsSupported = isRoleDownloadSupported(effectiveVersion);
 
-  const readWriteRoleHref =
-    selectedVersion === "latest"
-      ? READ_WRITE_ROLE_URL
-      : VERSIONED_READ_WRITE_ROLE_URL(selectedVersion);
-
-  const readOnlyRoleHref =
-    selectedVersion === "latest"
-      ? READ_ONLY_ROLE_URL
-      : VERSIONED_READ_ONLY_ROLE_URL(selectedVersion);
-
-  const downloadVersionLabel =
-    toReleaseNotesVersion(effectiveVersion || selectedVersion) || "unknown";
-  const readWriteDownloadName = `cx-as-code-read-write-role-${downloadVersionLabel}.tf`;
-  const readOnlyDownloadName = `cx-as-code-read-only-role-${downloadVersionLabel}.tf`;
-  const spreadsheetTemplateHref =
-    selectedVersion === "latest"
-      ? SPREADSHEET_TEMPLATE_URL
-      : VERSIONED_SPREADSHEET_TEMPLATE_URL(selectedVersion);
-  const spreadsheetDownloadName = `cx-as-code-template-${downloadVersionLabel}.xlsx`;
-
-  const downloadSpreadsheetTemplate = useCallback(() => {
-    const anchor = document.createElement("a");
-    anchor.href = spreadsheetTemplateHref;
-    anchor.download = spreadsheetDownloadName;
-    anchor.rel = "noopener";
-    document.body.appendChild(anchor);
-    anchor.click();
-    anchor.remove();
-  }, [spreadsheetDownloadName, spreadsheetTemplateHref]);
+  const downloadRoleTemplate = useCallback(
+    (artifactId) => {
+      void downloadUrlArtifact(artifactId, selectedVersion, newestListedRelease);
+    },
+    [selectedVersion, newestListedRelease]
+  );
 
   const clearSearch = () => {
     setQuery("");
@@ -980,33 +1066,30 @@ export default function App() {
               className={`gcRoleDownloads ${roleDownloadsSupported ? "isVisible" : "isHidden"}`}
               aria-hidden={!roleDownloadsSupported}
             >
-              <button
-                type="button"
-                className="gcMetaLabel gcMetaLabelButton"
+              <span
+                className="gcMetaLabel"
                 title="Starting-point roles — adjust permissions for your org before use."
-                onClick={downloadSpreadsheetTemplate}
-                tabIndex={roleDownloadsSupported ? 0 : -1}
               >
                 Download Role Template:
-              </button>
+              </span>
 
               <div className="gcHeaderLinks">
-                <a
+                <button
+                  type="button"
                   className="gcHeaderLink"
-                  href={readWriteRoleHref}
-                  download={readWriteDownloadName}
+                  onClick={() => downloadRoleTemplate(ARTIFACT_READ_WRITE_ROLE)}
                   tabIndex={roleDownloadsSupported ? 0 : -1}
                 >
                   Read/Write .tf
-                </a>
-                <a
+                </button>
+                <button
+                  type="button"
                   className="gcHeaderLink"
-                  href={readOnlyRoleHref}
-                  download={readOnlyDownloadName}
+                  onClick={() => downloadRoleTemplate(ARTIFACT_READ_ONLY_ROLE)}
                   tabIndex={roleDownloadsSupported ? 0 : -1}
                 >
                   Read-only .tf
-                </a>
+                </button>
               </div>
             </div>
 
@@ -1494,6 +1577,14 @@ export default function App() {
           setDivisionFilter(DIVISION_FILTER_ALL);
         }}
       />
+
+      <ProviderEnvVarsDialog
+        open={envVarsDialogOpen}
+        onClose={closeDialogs}
+        catalog={providerEnvVarCatalog}
+        loadingCatalog={!providerEnvVarCatalog}
+      />
+
     </div>
   );
 }

@@ -3,6 +3,9 @@ const BASE = import.meta.env.BASE_URL || "/";
 export const DIALOG_RELEASE_NOTES = "release-notes";
 export const DIALOG_CREATION_ORDER = "creation-order";
 export const DIALOG_ATTRIBUTE_INDEX = "attribute-index";
+export const DIALOG_ENV_VARS = "env-vars";
+
+export const SPREADSHEET_PATH_SEGMENT = "spreadsheet";
 
 export const DIALOG_FILTER_QUERY_KEY = "filter";
 export const ATTRIBUTE_INDEX_FILTER_QUERY_KEY = DIALOG_FILTER_QUERY_KEY;
@@ -14,12 +17,14 @@ const DIALOG_PATH_SEGMENT = {
   [DIALOG_RELEASE_NOTES]: "release-notes",
   [DIALOG_CREATION_ORDER]: "creation-order",
   [DIALOG_ATTRIBUTE_INDEX]: "attribute-index",
+  [DIALOG_ENV_VARS]: "env-vars",
 };
 
 export const VALID_DIALOGS = new Set(Object.keys(DIALOG_PATH_SEGMENT));
 
 const RESERVED_PATH_SEGMENTS = new Set([
   ...Object.values(DIALOG_PATH_SEGMENT),
+  SPREADSHEET_PATH_SEGMENT,
   "dependency-tree-json",
   "resource-permissions-json",
   "resource-permissions-tf",
@@ -159,6 +164,28 @@ export function resourcePathname(resourceType, version = "latest") {
   const root = BASE.endsWith("/") ? BASE : `${BASE}/`;
   const base = normalizePathname(
     new URL(encodeURIComponent(typed), new URL(root, "http://local")).pathname
+  );
+  return appendVersionSegment(base, version);
+}
+
+export function readSpreadsheetDownloadFromLocation() {
+  try {
+    const segments = pathSegments(window.location.pathname);
+    if (segments[0] !== SPREADSHEET_PATH_SEGMENT) return null;
+    if (segments.length === 1) return "latest";
+    if (segments.length === 2 && isVersionPathSegment(segments[1])) {
+      return fromVersionPathSegment(segments[1]);
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+export function spreadsheetPathname(version = "latest") {
+  const root = BASE.endsWith("/") ? BASE : `${BASE}/`;
+  const base = normalizePathname(
+    new URL(SPREADSHEET_PATH_SEGMENT, new URL(root, "http://local")).pathname
   );
   return appendVersionSegment(base, version);
 }
