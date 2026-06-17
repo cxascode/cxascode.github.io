@@ -8,6 +8,7 @@ const lastmod = new Date().toISOString().slice(0, 10);
 
 const DIALOG_PATHS = [
   "/release-notes",
+  "/site-updates",
   "/creation-order",
   "/attribute-index",
 ];
@@ -49,11 +50,33 @@ ${urls
   return { xml, txt };
 }
 
+async function loadSiteUpdatesPaths() {
+  try {
+    const raw = await fs.readFile(
+      path.join(PUBLIC_DIR, "site-updates-data/index.json"),
+      "utf8"
+    );
+    const index = JSON.parse(raw);
+    if (!Array.isArray(index)) return [];
+
+    return index
+      .map((entry) => entry?.version)
+      .filter((version) => typeof version === "string" && /^\d{4}-\d{2}-\d{2}$/.test(version))
+      .map((version) => `/site-updates/${version}`);
+  } catch {
+    return [];
+  }
+}
+
 async function write() {
-  const resourcePaths = await loadResourcePaths();
+  const [resourcePaths, siteUpdatesPaths] = await Promise.all([
+    loadResourcePaths(),
+    loadSiteUpdatesPaths(),
+  ]);
   const urls = [
     `${SITE_ORIGIN}/`,
     ...DIALOG_PATHS.map((p) => `${SITE_ORIGIN}${p}`),
+    ...siteUpdatesPaths.map((p) => `${SITE_ORIGIN}${p}`),
     ...resourcePaths.map((p) => `${SITE_ORIGIN}${p}`),
   ];
   const { xml, txt } = buildSitemap(urls);
@@ -67,7 +90,7 @@ async function write() {
   ]);
 
   console.log(
-    `Wrote sitemaps (lastmod=${lastmod}, urls=${urls.length}, resources=${resourcePaths.length})`
+    `Wrote sitemaps (lastmod=${lastmod}, urls=${urls.length}, resources=${resourcePaths.length}, siteUpdates=${siteUpdatesPaths.length})`
   );
 }
 

@@ -6,13 +6,16 @@ import {
   DIALOG_CREATION_ORDER,
   DIALOG_ENV_VARS,
   DIALOG_RELEASE_NOTES,
+  DIALOG_SITE_UPDATES,
   dialogPathname,
   readAttributeIndexFilterFromLocation,
   readCreationOrderFilterFromLocation,
   readDialogFromLocation,
   readResourceTypeFromLocation,
+  readSiteUpdatesEntryFromLocation,
   readVersionFromLocation,
   resourcePathname,
+  siteUpdatesLocation,
   toVersionPathSegment,
 } from "./appPermalinks.js";
 
@@ -27,6 +30,11 @@ const DIALOG_SEO = {
     title: "Release notes — CX as Code Explorer",
     description:
       "Genesys Cloud Terraform provider release notes on CX as Code Explorer. Browse version history and resource changes.",
+  },
+  [DIALOG_SITE_UPDATES]: {
+    title: "Site updates — CX as Code Explorer",
+    description:
+      "What's new on CX as Code Explorer: site improvements, features, and quality-of-life updates.",
   },
   [DIALOG_CREATION_ORDER]: {
     title: "Creation order — CX as Code Explorer",
@@ -89,11 +97,13 @@ export function resolvePageSeo({
   activeType,
   selectedVersion,
   releaseNotesOpen,
+  siteUpdatesOpen,
   creationOrderOpen,
   attributeIndexOpen,
   envVarsOpen,
   attributeIndexFilter = "",
   creationOrderFilter = "",
+  siteUpdatesEntry = "",
 }) {
   const version = resolveVersion(selectedVersion);
   const attributeFilter =
@@ -103,6 +113,13 @@ export function resolvePageSeo({
 
   if (releaseNotesOpen) {
     return { dialogId: DIALOG_RELEASE_NOTES, resourceType: "", version };
+  }
+  if (siteUpdatesOpen) {
+    return {
+      dialogId: DIALOG_SITE_UPDATES,
+      resourceType: (siteUpdatesEntry || "").trim() || readSiteUpdatesEntryFromLocation(),
+      version: "",
+    };
   }
   if (creationOrderOpen) {
     return {
@@ -184,6 +201,15 @@ function buildCreationOrderTitle(filter, version) {
 }
 
 export function pageSeoForState({ dialogId, resourceType, version = "" }) {
+  if (dialogId === DIALOG_SITE_UPDATES) {
+    const entry = (resourceType || "").trim();
+    return {
+      title: buildDialogTitle(DIALOG_SITE_UPDATES, ""),
+      description: DIALOG_SEO[DIALOG_SITE_UPDATES].description,
+      pathname: siteUpdatesLocation(entry),
+    };
+  }
+
   if (dialogId === DIALOG_ATTRIBUTE_INDEX) {
     return {
       title: buildAttributeIndexTitle(resourceType, version),

@@ -5,6 +5,7 @@ import OrderOfOperationsDialog from "./OrderOfOperationsDialog.jsx";
 import ProviderEnvVarsDialog from "./ProviderEnvVarsDialog.jsx";
 import AttributeIndexDialog from "./AttributeIndexDialog.jsx";
 import ReleaseNotesDialog from "./ReleaseNotesDialog.jsx";
+import SiteUpdatesDialog from "./SiteUpdatesDialog.jsx";
 import ResourceReleaseChanges from "./ResourceReleaseChanges.jsx";
 import {
   buildTfExportTemplate,
@@ -40,10 +41,13 @@ import {
   DIALOG_CREATION_ORDER,
   DIALOG_ENV_VARS,
   DIALOG_RELEASE_NOTES,
+  DIALOG_SITE_UPDATES,
   migrateLegacyAttributeIndexUrl,
+  migrateLegacySiteUpdatesEntryUrl,
   readAttributeIndexFilterFromLocation,
   readCreationOrderFilterFromLocation,
   readDialogFromLocation,
+  readSiteUpdatesEntryFromLocation,
   readResourceTypeFromLocation,
   readLabFilesDownloadFromLocation,
   readSpreadsheetDownloadFromLocation,
@@ -51,6 +55,7 @@ import {
   replaceAttributeIndexInUrl,
   replaceCreationOrderInUrl,
   replaceDialogInUrl,
+  replaceSiteUpdatesInUrl,
   replaceResourceInUrl,
 } from "./appPermalinks.js";
 import { applyPageSeo, resolvePageSeo } from "./pageSeo.js";
@@ -754,6 +759,7 @@ export default function App() {
   const [copyState, setCopyState] = useState("idle");
   const [orderDialogOpen, setOrderDialogOpen] = useState(false);
   const [releaseNotesDialogOpen, setReleaseNotesDialogOpen] = useState(false);
+  const [siteUpdatesDialogOpen, setSiteUpdatesDialogOpen] = useState(false);
   const [attributeIndexDialogOpen, setAttributeIndexDialogOpen] = useState(false);
   const [envVarsDialogOpen, setEnvVarsDialogOpen] = useState(false);
   const spreadsheetPermalinkRef = useRef("");
@@ -765,6 +771,10 @@ export default function App() {
   const [creationOrderQuery, setCreationOrderQuery] = useState(() =>
     readCreationOrderFilterFromLocation()
   );
+  const [siteUpdatesEntry, setSiteUpdatesEntry] = useState(() => {
+    const fromUrl = readSiteUpdatesEntryFromLocation();
+    return fromUrl || "latest";
+  });
 
   const attributeIndexVersionFilter = useMemo(() => {
     if (!attributeIndexDialogOpen) return "";
@@ -779,6 +789,11 @@ export default function App() {
     setCreationOrderQuery(readCreationOrderFilterFromLocation());
   }, []);
 
+  const syncSiteUpdatesFromUrl = useCallback(() => {
+    const fromUrl = readSiteUpdatesEntryFromLocation();
+    setSiteUpdatesEntry(fromUrl || "latest");
+  }, []);
+
   const newestListedRelease = useMemo(
     () => newestListedReleaseFromIndex(availableVersions),
     [availableVersions]
@@ -791,6 +806,7 @@ export default function App() {
   const openDialog = useCallback((dialogId) => {
     setOrderDialogOpen(dialogId === DIALOG_CREATION_ORDER);
     setReleaseNotesDialogOpen(dialogId === DIALOG_RELEASE_NOTES);
+    setSiteUpdatesDialogOpen(dialogId === DIALOG_SITE_UPDATES);
     setAttributeIndexDialogOpen(dialogId === DIALOG_ATTRIBUTE_INDEX);
     setEnvVarsDialogOpen(dialogId === DIALOG_ENV_VARS);
     if (dialogId === DIALOG_ATTRIBUTE_INDEX) {
@@ -799,7 +815,18 @@ export default function App() {
     if (dialogId === DIALOG_CREATION_ORDER) {
       setCreationOrderQuery("");
     }
+    if (dialogId === DIALOG_SITE_UPDATES) {
+      setSiteUpdatesEntry("latest");
+      replaceSiteUpdatesInUrl("latest");
+      return;
+    }
     replaceDialogInUrl(dialogId, "", selectedVersionRef.current);
+  }, []);
+
+  const handleSiteUpdatesEntryChange = useCallback((nextEntry) => {
+    const normalized = (nextEntry || "").trim() || "latest";
+    setSiteUpdatesEntry(normalized);
+    replaceSiteUpdatesInUrl(normalized);
   }, []);
 
   const handleCreationOrderQueryChange = useCallback((nextQuery) => {
@@ -829,6 +856,7 @@ export default function App() {
 
     setOrderDialogOpen(false);
     setReleaseNotesDialogOpen(false);
+    setSiteUpdatesDialogOpen(false);
     setAttributeIndexDialogOpen(true);
     setEnvVarsDialogOpen(false);
     setAttributeIndexQuery(normalized);
@@ -839,10 +867,12 @@ export default function App() {
     (nextResourceType) => {
       setOrderDialogOpen(false);
       setReleaseNotesDialogOpen(false);
+      setSiteUpdatesDialogOpen(false);
       setAttributeIndexDialogOpen(false);
       setEnvVarsDialogOpen(false);
       setAttributeIndexQuery("");
       setCreationOrderQuery("");
+      setSiteUpdatesEntry("latest");
 
       const resource =
         typeof nextResourceType === "string" && nextResourceType.trim()
@@ -864,6 +894,7 @@ export default function App() {
 
     setOrderDialogOpen(dialog === DIALOG_CREATION_ORDER);
     setReleaseNotesDialogOpen(dialog === DIALOG_RELEASE_NOTES);
+    setSiteUpdatesDialogOpen(dialog === DIALOG_SITE_UPDATES);
     setAttributeIndexDialogOpen(dialog === DIALOG_ATTRIBUTE_INDEX);
     setEnvVarsDialogOpen(dialog === DIALOG_ENV_VARS);
     if (dialog === DIALOG_ATTRIBUTE_INDEX) {
@@ -872,7 +903,10 @@ export default function App() {
     if (dialog === DIALOG_CREATION_ORDER) {
       syncCreationOrderFromUrl();
     }
-  }, [raw, showDependencyLoading, error, syncAttributeIndexFromUrl, syncCreationOrderFromUrl]);
+    if (dialog === DIALOG_SITE_UPDATES) {
+      syncSiteUpdatesFromUrl();
+    }
+  }, [raw, showDependencyLoading, error, syncAttributeIndexFromUrl, syncCreationOrderFromUrl, syncSiteUpdatesFromUrl]);
 
   useEffect(() => {
     if (migrateLegacyAttributeIndexUrl()) {
@@ -880,6 +914,13 @@ export default function App() {
       syncAttributeIndexFromUrl();
     }
   }, [syncAttributeIndexFromUrl]);
+
+  useEffect(() => {
+    if (migrateLegacySiteUpdatesEntryUrl()) {
+      setSiteUpdatesDialogOpen(true);
+      syncSiteUpdatesFromUrl();
+    }
+  }, [syncSiteUpdatesFromUrl]);
 
   const handleSpreadsheetPermalink = useCallback(() => {
     const version = readSpreadsheetDownloadFromLocation();
@@ -949,10 +990,12 @@ export default function App() {
       const dialog = readDialogFromLocation();
       setOrderDialogOpen(dialog === DIALOG_CREATION_ORDER);
       setReleaseNotesDialogOpen(dialog === DIALOG_RELEASE_NOTES);
+      setSiteUpdatesDialogOpen(dialog === DIALOG_SITE_UPDATES);
       setAttributeIndexDialogOpen(dialog === DIALOG_ATTRIBUTE_INDEX);
       setEnvVarsDialogOpen(dialog === DIALOG_ENV_VARS);
       syncAttributeIndexFromUrl();
       syncCreationOrderFromUrl();
+      syncSiteUpdatesFromUrl();
 
       const versionFromUrl = readVersionFromLocation();
       skipNextUrlSyncRef.current = true;
@@ -986,6 +1029,7 @@ export default function App() {
     handleLabFilesPermalink,
     syncAttributeIndexFromUrl,
     syncCreationOrderFromUrl,
+    syncSiteUpdatesFromUrl,
   ]);
 
   useEffect(() => {
@@ -994,22 +1038,26 @@ export default function App() {
         activeType,
         selectedVersion,
         releaseNotesOpen: releaseNotesDialogOpen,
+        siteUpdatesOpen: siteUpdatesDialogOpen,
         creationOrderOpen: orderDialogOpen,
         attributeIndexOpen: attributeIndexDialogOpen,
         envVarsOpen: envVarsDialogOpen,
         attributeIndexFilter: attributeIndexQuery,
         creationOrderFilter: creationOrderQuery,
+        siteUpdatesEntry,
       })
     );
   }, [
     activeType,
     selectedVersion,
     releaseNotesDialogOpen,
+    siteUpdatesDialogOpen,
     orderDialogOpen,
     attributeIndexDialogOpen,
     envVarsDialogOpen,
     attributeIndexQuery,
     creationOrderQuery,
+    siteUpdatesEntry,
   ]);
 
   const dependencyFor = useMemo(
@@ -1133,7 +1181,7 @@ export default function App() {
     <div className="gcShell">
       <div className="gcPageHeader">
         <div className="gcPageTitleRow">
-          <PageTitle />
+          <PageTitle onOpenSiteUpdates={() => openDialog(DIALOG_SITE_UPDATES)} />
 
           <div className="gcPageMeta">
             <button
@@ -1669,6 +1717,13 @@ export default function App() {
         availableVersions={availableVersions}
         newestListedRelease={newestListedRelease}
         loadingIndex={loadingIndex}
+      />
+
+      <SiteUpdatesDialog
+        open={siteUpdatesDialogOpen}
+        onClose={closeDialogs}
+        selectedEntry={siteUpdatesEntry}
+        onEntryChange={handleSiteUpdatesEntryChange}
       />
 
       <AttributeIndexDialog
