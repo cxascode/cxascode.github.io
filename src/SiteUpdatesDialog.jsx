@@ -10,8 +10,6 @@ import {
 
 export default function SiteUpdatesDialog({ open, onClose, selectedEntry, onEntryChange }) {
   const dialogRef = useRef(null);
-  const entryDropdownRef = useRef(null);
-  const selectedEntryRef = useRef(selectedEntry);
 
   const [entries, setEntries] = useState([]);
   const [loadingIndex, setLoadingIndex] = useState(false);
@@ -23,10 +21,6 @@ export default function SiteUpdatesDialog({ open, onClose, selectedEntry, onEntr
   const effectiveEntry = selectedEntry === "latest" ? newestEntry : selectedEntry;
   const entryHasUpdates =
     !effectiveEntry || entries.some((entry) => entry.version === effectiveEntry);
-
-  useEffect(() => {
-    selectedEntryRef.current = selectedEntry;
-  }, [selectedEntry]);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -65,37 +59,6 @@ export default function SiteUpdatesDialog({ open, onClose, selectedEntry, onEntr
       cancelled = true;
     };
   }, [open]);
-
-  useEffect(() => {
-    const el = entryDropdownRef.current;
-    if (!el) return;
-
-    const handler = (evt) => {
-      const next = evt?.target?.value ?? evt?.detail?.value ?? "";
-      const normalizedNext = next || "latest";
-
-      if (normalizedNext === selectedEntryRef.current) return;
-      onEntryChange?.(normalizedNext);
-    };
-
-    el.addEventListener("guxchange", handler);
-    el.addEventListener("change", handler);
-
-    return () => {
-      el.removeEventListener("guxchange", handler);
-      el.removeEventListener("change", handler);
-    };
-  }, [onEntryChange]);
-
-  useEffect(() => {
-    const el = entryDropdownRef.current;
-    if (!el) return;
-
-    if (el.value !== selectedEntry) {
-      el.value = selectedEntry;
-    }
-    el.setAttribute("value", selectedEntry);
-  }, [selectedEntry, open]);
 
   useEffect(() => {
     if (!open || !effectiveEntry || !entryHasUpdates) {
@@ -156,30 +119,37 @@ export default function SiteUpdatesDialog({ open, onClose, selectedEntry, onEntr
             </button>
           </div>
 
-          <div className="gcOrderDialog__toolbar gcOrderDialog__toolbar--releaseNotes">
+          <div className="gcOrderDialog__toolbar gcOrderDialog__toolbar--siteUpdates">
             <p className="gcOrderDialog__intro gcMuted">
               What&apos;s new on CX as Code Explorer — site improvements, not provider releases.
             </p>
 
             <div className="gcOrderDialog__toolbarActions">
               <div className="gcVersionPicker">
-                <span className="gcMetaLabel">Update:</span>
-                <gux-dropdown ref={entryDropdownRef} disabled={loadingIndex}>
-                  <gux-listbox>
-                    <gux-option value="latest">
-                      Latest{" "}
-                      {newestEntry
-                        ? `(${formatSiteUpdatesEntryLabel(entries.find((e) => e.version === newestEntry))})`
-                        : ""}
-                    </gux-option>
+                <label className="gcMetaLabel" htmlFor="site-updates-entry">
+                  Update:
+                </label>
+                <select
+                  id="site-updates-entry"
+                  className="gcSelectInput gcSelectInput--siteUpdatesEntry"
+                  value={selectedEntry}
+                  onChange={(event) => onEntryChange?.(event.target.value || "latest")}
+                  disabled={loadingIndex}
+                  aria-label="Site update date"
+                >
+                  <option value="latest">
+                    Latest{" "}
+                    {newestEntry
+                      ? `(${formatSiteUpdatesEntryLabel(entries.find((e) => e.version === newestEntry))})`
+                      : ""}
+                  </option>
 
-                    {entries.map((entry) => (
-                      <gux-option key={entry.version} value={entry.version}>
-                        {formatSiteUpdatesEntryLabel(entry)}
-                      </gux-option>
-                    ))}
-                  </gux-listbox>
-                </gux-dropdown>
+                  {entries.map((entry) => (
+                    <option key={entry.version} value={entry.version}>
+                      {formatSiteUpdatesEntryLabel(entry)}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
           </div>
