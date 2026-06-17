@@ -86,3 +86,17 @@ node scripts/generate-tf-export-resource-names.mjs --version=1.82.0 --provider=/
 ```
 
 `tfExportNote` in `overrides.json` is still the hand-edited Markdown note shown below the export template block.
+
+## provider-env-vars.json
+
+`public/provider-env-vars.json` is the hand-edited source for provider environment variables (like release notes — not derived site output).
+
+- **`providerEnvVars`** — full catalog (`name`, `valueHint`, `description`, `export-template`). New provider vars must be added here first.
+- **`providerEnvVarsIgnore`** — names you have decided not to use in export templates.
+
+CI syncs the catalog automatically, then fails when triage is still needed:
+
+1. **Auto-catalog** — new provider vars are appended to **`providerEnvVars`** in `public/provider-env-vars.json` (with a placeholder description and empty `export-template`).
+2. **Triage required** — build fails until each new var has either **`export-template`** resource types assigned or its name added to **`providerEnvVarsIgnore`**.
+
+When the build fails, commit `public/provider-env-vars.json` along with your triage (`export-template` or `providerEnvVarsIgnore`).

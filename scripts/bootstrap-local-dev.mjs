@@ -138,6 +138,7 @@ async function runGenerator(latest) {
     `--latest=${latest}`,
   ]);
   await runScript("scripts/generate-tf-export-resource-names.mjs");
+  await runScript("scripts/verify-tf-export-env-vars.mjs");
   await runScript("scripts/generate-spreadsheet-template.mjs", [
     `--latest=${latest}`,
   ]);

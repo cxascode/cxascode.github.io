@@ -4,6 +4,7 @@ import {
   creationOrderLocation,
   DIALOG_ATTRIBUTE_INDEX,
   DIALOG_CREATION_ORDER,
+  DIALOG_ENV_VARS,
   DIALOG_RELEASE_NOTES,
   dialogPathname,
   readAttributeIndexFilterFromLocation,
@@ -36,6 +37,11 @@ const DIALOG_SEO = {
     title: "Attribute index — CX as Code Explorer",
     description:
       "Genesys Cloud Terraform provider attribute change index: introduced, updated, and removed fields across resources.",
+  },
+  [DIALOG_ENV_VARS]: {
+    title: "Provider environment variables — CX as Code Explorer",
+    description:
+      "Catalog of Genesys Cloud Terraform provider environment variables used by genesyscloud_tf_export, including export-template mappings.",
   },
 };
 
@@ -85,6 +91,7 @@ export function resolvePageSeo({
   releaseNotesOpen,
   creationOrderOpen,
   attributeIndexOpen,
+  envVarsOpen,
   attributeIndexFilter = "",
   creationOrderFilter = "",
 }) {
@@ -110,6 +117,9 @@ export function resolvePageSeo({
       resourceType: attributeFilter,
       version,
     };
+  }
+  if (envVarsOpen) {
+    return { dialogId: DIALOG_ENV_VARS, resourceType: "", version };
   }
 
   const dialogFromUrl = readDialogFromLocation();

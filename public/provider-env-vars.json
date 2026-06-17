@@ -1,0 +1,331 @@
+{
+  "providerEnvVars": [
+    {
+      "name": "ENABLE_STANDALONE_CGR",
+      "valueHint": "1",
+      "description": "Required for export and apply when using genesyscloud_routing_queue_conditional_group_routing resource",
+      "export-template": [
+        "genesyscloud_routing_queue_conditional_group_routing"
+      ]
+    },
+    {
+      "name": "ENABLE_STANDALONE_CGA",
+      "valueHint": "1",
+      "description": "Required for export and apply when using genesyscloud_routing_queue_conditional_group_activation resource",
+      "export-template": [
+        "genesyscloud_routing_queue_conditional_group_activation"
+      ]
+    },
+    {
+      "name": "ENABLE_STANDALONE_EMAIL_ADDRESS",
+      "valueHint": "1",
+      "description": "Required for export and apply when using genesyscloud_routing_queue_outbound_email_address resource",
+      "export-template": [
+        "genesyscloud_routing_queue_outbound_email_address"
+      ]
+    },
+    {
+      "name": "ENABLE_NESTED_TABLES",
+      "valueHint": "1",
+      "description": "Allow nested tables (tables in tables) in knowledge document variations (export and apply)",
+      "export-template": [
+        "genesyscloud_knowledge_document_variation"
+      ]
+    },
+    {
+      "name": "ROUTING_QUEUE_DELAY_MAX",
+      "valueHint": "",
+      "description": "Optional; random delay 0-N seconds before queue API calls — omit value for 0-7s default (export and apply)",
+      "export-template": [
+        "genesyscloud_routing_queue_conditional_group_routing",
+        "genesyscloud_routing_queue_conditional_group_activation",
+        "genesyscloud_routing_queue_outbound_email_address",
+        "genesyscloud_routing_queue"
+      ]
+    },
+    {
+      "name": "BCP_MODE_ENABLED",
+      "valueHint": "1",
+      "description": "Skip E.164 phone validation during apply",
+      "export-template": [
+        "genesyscloud_architect_ivr",
+        "genesyscloud_telephony_providers_edges_did_pool"
+      ]
+    },
+    {
+      "name": "BYPASS_CONSISTENCY_CHECKER",
+      "valueHint": "1",
+      "description": "Bypass or alter resource consistency-check behavior on create/update",
+      "export-template": []
+    },
+    {
+      "name": "CONSISTENCY_CHECKS",
+      "valueHint": "1",
+      "description": "Consistency-check retry count when BYPASS_CONSISTENCY_CHECKER is set; 0 disables",
+      "export-template": []
+    },
+    {
+      "name": "ENABLE_BCP_OPTIMIZED_SANITIZER",
+      "valueHint": "1",
+      "description": "Use BCP-optimized block label sanitizer during bulk export",
+      "export-template": []
+    },
+    {
+      "name": "ENABLE_EXPORTER_STATE_COMPARISON",
+      "valueHint": "1",
+      "description": "Compare HCL export output to terraform.tfstate (must be true)",
+      "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_ACCESS_TOKEN",
+      "valueHint": "1",
+      "description": "Provider OAuth access token",
+      "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_CUSTOM_RETRY_TIMEOUT",
+      "valueHint": "1",
+      "description": "Max time to retry reads when API returns 404 for state resources",
+      "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_GATEWAY_AUTH_PASSWORD",
+      "valueHint": "1",
+      "description": "Provider API gateway basic auth password",
+      "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_GATEWAY_AUTH_USERNAME",
+      "valueHint": "1",
+      "description": "Provider API gateway basic auth username",
+      "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_GATEWAY_HOST",
+      "valueHint": "1",
+      "description": "Provider API gateway host",
+      "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_GATEWAY_PATH_NAME",
+      "valueHint": "1",
+      "description": "Provider API gateway path parameter name",
+      "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_GATEWAY_PATH_VALUE",
+      "valueHint": "1",
+      "description": "Provider API gateway path parameter value",
+      "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_GATEWAY_PORT",
+      "valueHint": "1",
+      "description": "Provider API gateway port",
+      "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_GATEWAY_PROTOCOL",
+      "valueHint": "1",
+      "description": "Provider API gateway protocol",
+      "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_LOG_STACK_TRACES",
+      "valueHint": "1",
+      "description": "Log provider panics to file instead of crashing",
+      "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_LOG_STACK_TRACES_FILE_PATH",
+      "valueHint": "1",
+      "description": "Stack trace log file path for GENESYSCLOUD_LOG_STACK_TRACES",
+      "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_OAUTHCLIENT_ID",
+      "valueHint": "1",
+      "description": "Provider OAuth client ID",
+      "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_OAUTHCLIENT_SECRET",
+      "valueHint": "1",
+      "description": "Provider OAuth client secret",
+      "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_PROXY_AUTH_PASSWORD",
+      "valueHint": "1",
+      "description": "Provider HTTP proxy basic auth password",
+      "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_PROXY_AUTH_USERNAME",
+      "valueHint": "1",
+      "description": "Provider HTTP proxy basic auth username",
+      "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_PROXY_HOST",
+      "valueHint": "1",
+      "description": "Provider HTTP proxy host",
+      "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_PROXY_PORT",
+      "valueHint": "1",
+      "description": "Provider HTTP proxy port",
+      "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_PROXY_PROTOCOL",
+      "valueHint": "1",
+      "description": "Provider HTTP proxy protocol",
+      "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_REGION",
+      "valueHint": "1",
+      "description": "AWS region where the Genesys Cloud org exists",
+      "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_SDK_CLIENT_POOL_DEBUG",
+      "valueHint": "1",
+      "description": "Debug Genesys Cloud SDK client/token pool",
+      "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_SDK_DEBUG",
+      "valueHint": "1",
+      "description": "Enable Genesys Cloud SDK debug logging",
+      "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_SDK_DEBUG_FILE_PATH",
+      "valueHint": "1",
+      "description": "SDK debug log file path",
+      "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_SDK_DEBUG_FORMAT",
+      "valueHint": "1",
+      "description": "SDK debug log format (Text or Json)",
+      "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_TOKEN_ACQUIRE_TIMEOUT",
+      "valueHint": "1",
+      "description": "Timeout acquiring a token from the provider token pool",
+      "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_TOKEN_INIT_TIMEOUT",
+      "valueHint": "1",
+      "description": "Timeout initializing the provider token pool",
+      "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_TOKEN_POOL_SIZE",
+      "valueHint": "1",
+      "description": "Max OAuth tokens in the provider token pool",
+      "export-template": []
+    },
+    {
+      "name": "LOCAL_STACK_IMAGE_URI",
+      "valueHint": "1",
+      "description": "LocalStack image URI for provider AWS integration tests",
+      "export-template": []
+    },
+    {
+      "name": "LOCAL_STACK_PORT",
+      "valueHint": "1",
+      "description": "LocalStack port (default 4566)",
+      "export-template": []
+    },
+    {
+      "name": "MRMO_CXASCODE_INTEGRATION_ENABLED",
+      "valueHint": "1",
+      "description": "Enable MRMO-specific provider integration code paths",
+      "export-template": []
+    },
+    {
+      "name": "OVERRIDE_BCP_NAMING",
+      "valueHint": "1",
+      "description": "Export flows with name-only block labels instead of type_name",
+      "export-template": []
+    },
+    {
+      "name": "TF_ACC",
+      "valueHint": "1",
+      "description": "Terraform acceptance test mode",
+      "export-template": []
+    },
+    {
+      "name": "TF_GC_USER_TESTS_ACTIVE",
+      "valueHint": "1",
+      "description": "Gate Genesys Cloud user resource unit tests",
+      "export-template": []
+    },
+    {
+      "name": "TF_UNIT",
+      "valueHint": "1",
+      "description": "Terraform provider unit test mode (skips SDK authorization)",
+      "export-template": []
+    },
+    {
+      "name": "TF_UNIT_ROUTING_QUEUE_TESTS",
+      "valueHint": "1",
+      "description": "Gate routing queue unit tests",
+      "export-template": []
+    },
+    {
+      "name": "USE_LOCAL_STACK",
+      "valueHint": "1",
+      "description": "Route provider AWS calls through LocalStack when true",
+      "export-template": []
+    }
+  ],
+  "providerEnvVarsIgnore": [
+    "BYPASS_CONSISTENCY_CHECKER",
+    "CONSISTENCY_CHECKS",
+    "ENABLE_BCP_OPTIMIZED_SANITIZER",
+    "ENABLE_EXPORTER_STATE_COMPARISON",
+    "GENESYSCLOUD_ACCESS_TOKEN",
+    "GENESYSCLOUD_CUSTOM_RETRY_TIMEOUT",
+    "GENESYSCLOUD_GATEWAY_AUTH_PASSWORD",
+    "GENESYSCLOUD_GATEWAY_AUTH_USERNAME",
+    "GENESYSCLOUD_GATEWAY_HOST",
+    "GENESYSCLOUD_GATEWAY_PATH_NAME",
+    "GENESYSCLOUD_GATEWAY_PATH_VALUE",
+    "GENESYSCLOUD_GATEWAY_PORT",
+    "GENESYSCLOUD_GATEWAY_PROTOCOL",
+    "GENESYSCLOUD_LOG_STACK_TRACES",
+    "GENESYSCLOUD_LOG_STACK_TRACES_FILE_PATH",
+    "GENESYSCLOUD_OAUTHCLIENT_ID",
+    "GENESYSCLOUD_OAUTHCLIENT_SECRET",
+    "GENESYSCLOUD_PROXY_AUTH_PASSWORD",
+    "GENESYSCLOUD_PROXY_AUTH_USERNAME",
+    "GENESYSCLOUD_PROXY_HOST",
+    "GENESYSCLOUD_PROXY_PORT",
+    "GENESYSCLOUD_PROXY_PROTOCOL",
+    "GENESYSCLOUD_REGION",
+    "GENESYSCLOUD_SDK_CLIENT_POOL_DEBUG",
+    "GENESYSCLOUD_SDK_DEBUG",
+    "GENESYSCLOUD_SDK_DEBUG_FILE_PATH",
+    "GENESYSCLOUD_SDK_DEBUG_FORMAT",
+    "GENESYSCLOUD_TOKEN_ACQUIRE_TIMEOUT",
+    "GENESYSCLOUD_TOKEN_INIT_TIMEOUT",
+    "GENESYSCLOUD_TOKEN_POOL_SIZE",
+    "LOCAL_STACK_IMAGE_URI",
+    "LOCAL_STACK_PORT",
+    "MRMO_CXASCODE_INTEGRATION_ENABLED",
+    "OVERRIDE_BCP_NAMING",
+    "TF_ACC",
+    "TF_GC_USER_TESTS_ACTIVE",
+    "TF_UNIT",
+    "TF_UNIT_ROUTING_QUEUE_TESTS",
+    "USE_LOCAL_STACK"
+  ]
+}
