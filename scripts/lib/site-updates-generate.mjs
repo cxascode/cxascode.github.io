@@ -31,15 +31,23 @@ const USER_VISIBLE_PATHS = [
   /^src\//,
   /^index\.html$/,
   /^scripts\/write-sitemap\.mjs$/,
+];
+
+/** Site-updates feature files — not end-user features to announce. */
+const SITE_UPDATES_INFRA_PATHS = [
   /^public\/site-updates-data\//,
+  /^src\/SiteUpdatesDialog\.jsx$/,
+  /^src\/siteUpdates\.js$/,
+  /^scripts\/generate-site-updates\.mjs$/,
+  /^scripts\/lib\/site-updates-generate\.mjs$/,
 ];
 
 /** Commit subjects that describe hidden or permalink-only features. */
 const HIDDEN_FEATURE_SUBJECT_RE =
-  /\b(lab files?|lab package|cx as code lab|spreadsheet|practice zip|\/labfiles|\/spreadsheet)\b/i;
+  /\b(lab files?|lab package|cx as code lab|spreadsheet|practice zip|\/labfiles|\/spreadsheet|site updates?|site notes?)\b/i;
 
 const SKIP_SUBJECT_RE =
-  /^(chore\(release-notes\)|chore: monthly keep-alive|merge (branch|pull request)|update (app\.jsx|overrides\.json|package-lock\.json|deploy-pages\.yml|provider-source\.mjs)|bump |dependabot|fix(ed)? ci|github actions|deploy-pages|build script|sitemap|seo\b)/i;
+  /^(chore\(release-notes\)|chore\(site-updates\)|chore: monthly keep-alive|merge (branch|pull request)|update (app\.jsx|overrides\.json|package-lock\.json|deploy-pages\.yml|provider-source\.mjs)|bump |dependabot|fix(ed)? ci|github actions|deploy-pages|build script|sitemap|seo\b)/i;
 
 export function parseArgs(argv = process.argv.slice(2)) {
   const options = {
@@ -110,8 +118,13 @@ export function isDataOnlyPath(filePath) {
   return DATA_ONLY_PATHS.some((pattern) => pattern.test(filePath));
 }
 
+export function isSiteUpdatesInfraPath(filePath) {
+  return SITE_UPDATES_INFRA_PATHS.some((pattern) => pattern.test(filePath));
+}
+
 export function isUserVisiblePath(filePath) {
   if (isDataOnlyPath(filePath)) return false;
+  if (isSiteUpdatesInfraPath(filePath)) return false;
   if (USER_VISIBLE_PATHS.some((pattern) => pattern.test(filePath))) return true;
   if (/^scripts\/generate-/.test(filePath)) {
     return !/^scripts\/generate-(tf-export|resource-permissions)/.test(filePath);
@@ -166,7 +179,7 @@ export function featureHints(files) {
 
   for (const filePath of files) {
     const dialogMatch = filePath.match(/^src\/(.+)Dialog\.jsx$/);
-    if (dialogMatch) {
+    if (dialogMatch && filePath !== "src/SiteUpdatesDialog.jsx") {
       const name = dialogMatch[1].replace(/([a-z])([A-Z])/g, "$1 $2");
       hints.add(`Dialog update: ${name}`);
     }
