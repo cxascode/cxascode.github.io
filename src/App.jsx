@@ -13,6 +13,10 @@ import {
   RESOURCE_NAME_PLACEHOLDER,
 } from "./tfExportTemplate.js";
 import {
+  isSingletonTfExportResource,
+  normalizeSingletonResourceTypes,
+} from "./tfExportSingletons.js";
+import {
   buildTerraformRegistryDocsUrl,
   buildTerraformRegistryProviderDocsUrl,
 } from "./terraformRegistry.js";
@@ -48,12 +52,24 @@ import {
   replaceResourceInUrl,
 } from "./appPermalinks.js";
 import { applyPageSeo, resolvePageSeo } from "./pageSeo.js";
+import {
+  DEPENDENCY_TREE_DIR,
+  MIN_DEPENDENCY_TREE_VERSION,
+  MIN_RESOURCE_PERMISSIONS_VERSION,
+  MIN_SINGLETON_FLAG_VERSION,
+  TF_EXPORT_RESOURCE_NAMES_DIR,
+  TF_EXPORT_SINGLETONS_DIR,
+  indexJsonUrl,
+  latestJsonUrl,
+  publicDataUrl,
+  versionedJsonUrl,
+} from "./publicDataPaths.js";
 
-const INDEX_URL = `${import.meta.env.BASE_URL}dependency-tree-json/index.json`;
-const LATEST_URL = `${import.meta.env.BASE_URL}dependency-tree-json/latest.json`;
-const OVERRIDES_URL = `${import.meta.env.BASE_URL}overrides.json`;
-const PROVIDER_ENV_VARS_URL = `${import.meta.env.BASE_URL}provider-env-vars.json`;
-const VERSION_URL = (v) => `${import.meta.env.BASE_URL}dependency-tree-json/${v}.json`;
+const INDEX_URL = indexJsonUrl(DEPENDENCY_TREE_DIR);
+const LATEST_URL = latestJsonUrl(DEPENDENCY_TREE_DIR);
+const OVERRIDES_URL = publicDataUrl("", "overrides.json");
+const PROVIDER_ENV_VARS_URL = publicDataUrl("", "provider-env-vars.json");
+const VERSION_URL = (v) => versionedJsonUrl(DEPENDENCY_TREE_DIR, v);
 
 function attributeIndexVersionFromUrl(versionFromUrl) {
   const trimmed = (versionFromUrl || "").trim().replace(/^v/i, "");
@@ -66,14 +82,12 @@ function acceptVersionFromUrl(versionFromUrl, availableVersions, dialog = "") {
   return dialog === DIALOG_ATTRIBUTE_INDEX;
 }
 
-const TF_EXPORT_NAMES_LATEST_URL = `${import.meta.env.BASE_URL}tf-export-resource-names/latest.json`;
-const TF_EXPORT_NAMES_VERSION_URL = (v) =>
-  `${import.meta.env.BASE_URL}tf-export-resource-names/${v}.json`;
+const TF_EXPORT_NAMES_LATEST_URL = latestJsonUrl(TF_EXPORT_RESOURCE_NAMES_DIR);
+const TF_EXPORT_NAMES_VERSION_URL = (v) => versionedJsonUrl(TF_EXPORT_RESOURCE_NAMES_DIR, v);
+const TF_EXPORT_SINGLETONS_LATEST_URL = latestJsonUrl(TF_EXPORT_SINGLETONS_DIR);
+const TF_EXPORT_SINGLETONS_VERSION_URL = (v) => versionedJsonUrl(TF_EXPORT_SINGLETONS_DIR, v);
 
-const MIN_DEPENDENCY_VERSION = "1.60.0";
-const MIN_ROLE_DOWNLOAD_VERSION = "1.76.0";
-
-const VERSION_PICKER_TOOLTIP = `Dependencies - v${MIN_DEPENDENCY_VERSION}+, Permissions - v${MIN_ROLE_DOWNLOAD_VERSION}+`;
+const VERSION_PICKER_TOOLTIP = `Dependencies - v${MIN_DEPENDENCY_TREE_VERSION}+, Permissions - v${MIN_RESOURCE_PERMISSIONS_VERSION}+`;
 
 function normalizeType(s) {
   return (s || "").trim();
@@ -138,7 +152,7 @@ function compareVersions(a, b) {
 
 function isRoleDownloadSupported(version) {
   if (!version || version === "latest") return false;
-  return compareVersions(version, MIN_ROLE_DOWNLOAD_VERSION) >= 0;
+  return compareVersions(version, MIN_RESOURCE_PERMISSIONS_VERSION) >= 0;
 }
 
 /**
@@ -312,6 +326,7 @@ export default function App() {
   const [overrides, setOverrides] = useState(null);
   const [providerEnvVarCatalog, setProviderEnvVarCatalog] = useState(null);
   const [tfExportResourceNames, setTfExportResourceNames] = useState({});
+  const [tfExportSingletonTypes, setTfExportSingletonTypes] = useState(() => new Set());
 
   const [query, setQuery] = useState("");
   const [divisionFilter, setDivisionFilter] = useState(DIVISION_FILTER_ALL);
@@ -525,6 +540,39 @@ export default function App() {
     };
   }, [selectedVersion]);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
+      const url =
+        selectedVersion === "latest"
+          ? TF_EXPORT_SINGLETONS_LATEST_URL
+          : TF_EXPORT_SINGLETONS_VERSION_URL(selectedVersion);
+
+      try {
+        const res = await fetch(url, { cache: "no-store" });
+        if (!res.ok) {
+          throw new Error(
+            `Failed to fetch tf-export singletons: ${res.status} ${res.statusText}`
+          );
+        }
+
+        const json = await res.json();
+        if (!cancelled) {
+          setTfExportSingletonTypes(normalizeSingletonResourceTypes(json?.singletonResourceTypes));
+        }
+      } catch {
+        if (!cancelled) {
+          setTfExportSingletonTypes(new Set());
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedVersion]);
+
   const { depsMap, reverseMap } = useMemo(() => buildDepsMaps(raw), [raw]);
 
   const hiddenTypes = useMemo(
@@ -649,6 +697,22 @@ export default function App() {
         ? resolveTfExportResourceName(activeType, overrides, tfExportResourceNames)
         : RESOURCE_NAME_PLACEHOLDER,
     [activeType, overrides, tfExportResourceNames]
+  );
+
+  const useSingletonExporterFlag = useMemo(() => {
+    if (selectedVersion === "latest") return true;
+    return compareVersions(selectedVersion, MIN_SINGLETON_FLAG_VERSION) >= 0;
+  }, [selectedVersion]);
+
+  const isSingleton = useMemo(
+    () =>
+      isSingletonTfExportResource(
+        activeType,
+        tfExportSingletonTypes,
+        tfExportResourceName,
+        useSingletonExporterFlag
+      ),
+    [activeType, tfExportSingletonTypes, tfExportResourceName, useSingletonExporterFlag]
   );
 
   const tfExportNote = useMemo(
@@ -1322,6 +1386,14 @@ export default function App() {
                           title="Depends on genesyscloud_auth_division — heuristic for division_id in Registry docs; confirm there if unsure."
                         >
                           Division aware
+                        </span>
+                      ) : null}
+                      {activeType && isSingleton ? (
+                        <span
+                          className="gcSingletonBadge"
+                          title="Org-wide singleton — only one instance exists per organization."
+                        >
+                          Singleton
                         </span>
                       ) : null}
                       {activeType && isDeprecated ? (

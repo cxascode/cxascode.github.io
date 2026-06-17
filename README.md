@@ -65,6 +65,18 @@ Examples:
 }
 ```
 
+## Generated public data paths
+
+Directory names and **oldest supported provider versions** live in `scripts/lib/public-data-path-constants.mjs`. The app imports these via `src/publicDataPaths.js`, which also builds fetch URLs.
+
+| Constant | Value | Used for |
+|----------|-------|----------|
+| `MIN_DEPENDENCY_TREE_VERSION` | `1.60.0` | Dependency explorer, tf-export resource names |
+| `MIN_RESOURCE_PERMISSIONS_VERSION` | `1.76.0` | Role TF downloads |
+| `MIN_SINGLETON_FLAG_VERSION` | `1.78.0` | Singleton badge (`IsSingleton`; older versions use fixed export names) |
+
+CI (`deploy-pages.yml`, `download-provider-versions.sh`) uses `MIN_DEP_VERSION` / `MIN_PERM_VERSION` env vars to gate **downloading** `dependency_tree` and `resource_permissions` release assets — keep those in sync with `MIN_DEPENDENCY_TREE_VERSION` and `MIN_RESOURCE_PERMISSIONS_VERSION`. `MIN_SINGLETON_FLAG_VERSION` is app-only (badge logic); singleton JSON is generated from provider source for every cached dependency-tree version, not downloaded from releases.
+
 ## tf-export-resource-names/
 
 `public/tf-export-resource-names/` is **generated** from provider exporter `BlockLabel` logic, **one JSON file per provider version** (same version list as `dependency-tree-json/`). The version picker loads the matching file for **genesyscloud_tf_export template** placeholders. Types not listed default to `<name>`.
@@ -83,6 +95,14 @@ Generate one version from a local checkout:
 
 ```bash
 node scripts/generate-tf-export-resource-names.mjs --version=1.82.0 --provider=/path/to/genesyscloud
+```
+
+## tf-export-singletons/
+
+`public/tf-export-singletons/` is **generated** from provider exporter `IsSingleton: true`, **one JSON file per provider version** (same version list as `dependency-tree-json/`). The version picker loads the matching file for the **Singleton** badge in resource details on **v1.78.0+**. Older provider versions fall back to fixed tf-export block labels from `tf-export-resource-names` (no `IsSingleton` in source yet).
+
+```bash
+npm run generate-tf-export-singletons
 ```
 
 `tfExportNote` in `overrides.json` is still the hand-edited Markdown note shown below the export template block.

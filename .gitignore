@@ -28,6 +28,7 @@ public/resource-permissions-json/
 public/resource-permissions-tf/
 public/spreadsheet-templates/
 public/tf-export-resource-names/
+public/tf-export-singletons/
 .cache-meta/
 .cache/provider-source/
 

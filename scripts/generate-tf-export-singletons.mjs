@@ -3,17 +3,17 @@ import path from "node:path";
 import { ensureProviderSource, pathExists } from "./lib/provider-source.mjs";
 import {
   DEPENDENCY_TREE_DIR,
-  TF_EXPORT_RESOURCE_NAMES_DIR,
+  TF_EXPORT_SINGLETONS_DIR,
   resolvePublicDataDir,
 } from "./lib/public-data-paths.mjs";
-import { scanProviderBlockLabels } from "./lib/tf-export-block-label.mjs";
+import { scanProviderSingletons } from "./lib/tf-export-singleton-scan.mjs";
 
 const REPO_ROOT = path.resolve(import.meta.dirname, "..");
 const DEFAULT_PROVIDER_ROOT = path.resolve(
   REPO_ROOT,
   "../terraform-provider-genesyscloud/genesyscloud"
 );
-const OUTPUT_DIR = resolvePublicDataDir(REPO_ROOT, TF_EXPORT_RESOURCE_NAMES_DIR);
+const OUTPUT_DIR = resolvePublicDataDir(REPO_ROOT, TF_EXPORT_SINGLETONS_DIR);
 const DEPENDENCY_DIR = resolvePublicDataDir(REPO_ROOT, DEPENDENCY_TREE_DIR);
 
 function getArgValue(name) {
@@ -67,11 +67,8 @@ async function listDependencyVersions() {
 }
 
 function buildPayload(providerRoot) {
-  const tfExportResourceNames = scanProviderBlockLabels(providerRoot);
   return {
-    tfExportResourceNames: Object.fromEntries(
-      Object.entries(tfExportResourceNames).sort(([a], [b]) => a.localeCompare(b))
-    ),
+    singletonResourceTypes: scanProviderSingletons(providerRoot),
   };
 }
 
@@ -121,7 +118,7 @@ async function generateForVersion(version, { providerRoot } = {}) {
   const payload = buildPayload(resolvedProviderRoot);
   await writePayload(outputPath, payload);
   console.log(
-    `Wrote ${path.relative(REPO_ROOT, outputPath)} (${Object.keys(payload.tfExportResourceNames).length} resource types)`
+    `Wrote ${path.relative(REPO_ROOT, outputPath)} (${payload.singletonResourceTypes.length} singleton resource types)`
   );
   return outputPath;
 }
@@ -136,7 +133,7 @@ async function generateAll() {
     );
   }
 
-  console.log(`Generating tf-export resource names for ${versions.length} provider version(s)...`);
+  console.log(`Generating tf-export singletons for ${versions.length} provider version(s)...`);
 
   for (const version of versions) {
     await generateForVersion(version);
@@ -144,7 +141,7 @@ async function generateAll() {
 
   const latest = await writeIndexAndLatest(versions);
   console.log(
-    `tf-export-resource-names index updated (${versions.length} versions, latest ${latest})`
+    `tf-export-singletons index updated (${versions.length} versions, latest ${latest})`
   );
 }
 
@@ -158,44 +155,32 @@ async function main() {
   const verifyPath = path.resolve(getArgValue("verify") || outputPath);
 
   if (hasFlag("verify")) {
-    const providerRoot = path.resolve(
-      providerArg ||
-        (version ? "" : DEFAULT_PROVIDER_ROOT)
-    );
+    const providerRoot = path.resolve(providerArg || (version ? "" : DEFAULT_PROVIDER_ROOT));
     const resolvedProviderRoot =
-      providerRoot ||
-      (version ? await ensureProviderSource(version) : DEFAULT_PROVIDER_ROOT);
+      providerRoot || (version ? await ensureProviderSource(version) : DEFAULT_PROVIDER_ROOT);
     const payload = buildPayload(resolvedProviderRoot);
     const expected = await loadJson(verifyPath);
-    const expectedMap = expected.tfExportResourceNames || {};
-    const missing = Object.keys(expectedMap).filter(
-      (type) => payload.tfExportResourceNames[type] !== expectedMap[type]
-    );
-    const extra = Object.keys(payload.tfExportResourceNames).filter(
-      (type) => !(type in expectedMap)
-    );
+    const expectedTypes = Array.isArray(expected.singletonResourceTypes)
+      ? expected.singletonResourceTypes
+      : [];
+    const actualTypes = payload.singletonResourceTypes;
+
+    const missing = expectedTypes.filter((type) => !actualTypes.includes(type));
+    const extra = actualTypes.filter((type) => !expectedTypes.includes(type));
 
     let exitCode = 0;
     if (missing.length > 0) {
       exitCode = 1;
-      console.error("Generated map differs from verify file:");
-      for (const type of missing.sort()) {
-        console.error(`  ${type}`);
-        console.error(`    expected: ${expectedMap[type]}`);
-        console.error(`    actual:   ${payload.tfExportResourceNames[type] ?? "(missing)"}`);
-      }
+      console.error("Singleton types in verify file but not generated:");
+      for (const type of missing.sort()) console.error(`  - ${type}`);
     }
     if (extra.length > 0) {
       exitCode = 1;
-      console.error("Resource types present in generated map but not verify file:");
-      for (const type of extra.sort()) {
-        console.error(`  - ${type}: ${payload.tfExportResourceNames[type]}`);
-      }
+      console.error("Singleton types generated but not in verify file:");
+      for (const type of extra.sort()) console.error(`  - ${type}`);
     }
     if (exitCode === 0) {
-      console.log(
-        `tf-export-resource-names verified (${Object.keys(expectedMap).length} resource types).`
-      );
+      console.log(`tf-export-singletons verified (${expectedTypes.length} resource types).`);
     }
     process.exit(exitCode);
   }
@@ -230,7 +215,7 @@ async function main() {
 
     await writePayload(outputPath, payload);
     console.log(
-      `Wrote ${outputPath} (${Object.keys(payload.tfExportResourceNames).length} resource types)`
+      `Wrote ${outputPath} (${payload.singletonResourceTypes.length} singleton resource types)`
     );
     return;
   }

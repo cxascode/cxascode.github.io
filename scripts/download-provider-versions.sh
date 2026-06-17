@@ -6,6 +6,7 @@ cd "${ROOT}"
 
 OWNER="${OWNER:-MyPureCloud}"
 REPO="${REPO:-terraform-provider-genesyscloud}"
+# Keep in sync with MIN_DEPENDENCY_TREE_VERSION / MIN_RESOURCE_PERMISSIONS_VERSION in scripts/lib/public-data-path-constants.mjs
 MIN_DEP_VERSION="${MIN_DEP_VERSION:-1.60.0}"
 MIN_PERM_VERSION="${MIN_PERM_VERSION:-1.76.0}"
 GH_TOKEN="${GH_TOKEN:-${GITHUB_TOKEN:-}}"
@@ -138,6 +139,7 @@ if [[ "${RUN_GENERATORS}" == "true" ]]; then
   echo "Running local generators for latest=${latest}..."
   node scripts/generate-resource-permissions-tf.mjs --latest="${latest}"
   node scripts/generate-tf-export-resource-names.mjs
+  node scripts/generate-tf-export-singletons.mjs
   node scripts/verify-tf-export-env-vars.mjs
   node scripts/generate-spreadsheet-template.mjs --latest="${latest}"
 fi

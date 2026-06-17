@@ -85,6 +85,7 @@ jobs:
             public/resource-permissions-tf
             public/spreadsheet-templates
             public/tf-export-resource-names
+            public/tf-export-singletons
             .cache-meta
             .cache/provider-source
           key: versions-${{ runner.os }}-${{ github.ref_name }}-${{ github.run_id }}
@@ -122,7 +123,7 @@ jobs:
           FORCE_REFRESH: ${{ github.event_name == 'workflow_dispatch' && inputs.force_refresh_upstream && 'true' || 'false' }}
         run: |
           set -euo pipefail
-          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf public/tf-export-resource-names .cache-meta
+          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf public/tf-export-resource-names public/tf-export-singletons .cache-meta
 
           api_base="https://api.github.com/repos/${OWNER}/${REPO}"
 
@@ -208,12 +209,13 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           OWNER: MyPureCloud
           REPO: terraform-provider-genesyscloud
+          # Keep in sync with scripts/lib/public-data-path-constants.mjs
           MIN_DEP_VERSION: "1.60.0"
           MIN_PERM_VERSION: "1.76.0"
           FORCE_REFRESH: ${{ steps.check.outputs.force_refresh }}
         run: |
           set -euo pipefail
-          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf public/spreadsheet-templates public/tf-export-resource-names .cache-meta
+          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf public/spreadsheet-templates public/tf-export-resource-names public/tf-export-singletons .cache-meta
           rm -f \
             public/dependency-tree-json/index.json \
             public/dependency-tree-json/latest.json \
@@ -296,6 +298,7 @@ jobs:
 
           node scripts/generate-resource-permissions-tf.mjs --latest="${latest}"
           node scripts/generate-tf-export-resource-names.mjs
+          node scripts/generate-tf-export-singletons.mjs
           node scripts/verify-tf-export-env-vars.mjs
 
           echo "${latest}" > .cache-meta/latest.txt
@@ -309,7 +312,7 @@ jobs:
           REPO: terraform-provider-genesyscloud
         run: |
           set -euo pipefail
-          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf public/spreadsheet-templates public/tf-export-resource-names .cache-meta
+          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf public/spreadsheet-templates public/tf-export-resource-names public/tf-export-singletons .cache-meta
           rm -f \
             public/dependency-tree-json/index.json \
             public/dependency-tree-json/latest.json \
@@ -373,6 +376,7 @@ jobs:
 
           node scripts/generate-resource-permissions-tf.mjs --latest="${latest}"
           node scripts/generate-tf-export-resource-names.mjs
+          node scripts/generate-tf-export-singletons.mjs
           node scripts/verify-tf-export-env-vars.mjs
 
           echo "${latest}" > .cache-meta/latest.txt
