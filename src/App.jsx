@@ -28,6 +28,7 @@ import {
   matchesDivisionFilter,
 } from "./divisionAware.js";
 import {
+  ARTIFACT_LAB,
   ARTIFACT_READ_ONLY_ROLE,
   ARTIFACT_READ_WRITE_ROLE,
   ARTIFACT_SPREADSHEET,
@@ -44,6 +45,7 @@ import {
   readCreationOrderFilterFromLocation,
   readDialogFromLocation,
   readResourceTypeFromLocation,
+  readLabFilesDownloadFromLocation,
   readSpreadsheetDownloadFromLocation,
   readVersionFromLocation,
   replaceAttributeIndexInUrl,
@@ -755,6 +757,7 @@ export default function App() {
   const [attributeIndexDialogOpen, setAttributeIndexDialogOpen] = useState(false);
   const [envVarsDialogOpen, setEnvVarsDialogOpen] = useState(false);
   const spreadsheetPermalinkRef = useRef("");
+  const labFilesPermalinkRef = useRef("");
   const newestListedReleaseRef = useRef("");
   const [attributeIndexQuery, setAttributeIndexQuery] = useState(() =>
     readAttributeIndexFilterFromLocation()
@@ -908,9 +911,40 @@ export default function App() {
     return true;
   }, []);
 
+  const handleLabFilesPermalink = useCallback(() => {
+    const version = readLabFilesDownloadFromLocation();
+    if (version === null) {
+      labFilesPermalinkRef.current = "";
+      return false;
+    }
+
+    const permalinkKey = window.location.pathname;
+    if (labFilesPermalinkRef.current === permalinkKey) return true;
+
+    labFilesPermalinkRef.current = permalinkKey;
+
+    void downloadUrlArtifact(
+      ARTIFACT_LAB,
+      version,
+      newestListedReleaseRef.current
+    ).finally(() => {
+      if (readLabFilesDownloadFromLocation() === null) {
+        labFilesPermalinkRef.current = "";
+        return;
+      }
+
+      skipNextUrlSyncRef.current = true;
+      replaceDialogInUrl("", readResourceTypeFromLocation(), readVersionFromLocation() || "latest");
+      labFilesPermalinkRef.current = "";
+    });
+
+    return true;
+  }, []);
+
   useEffect(() => {
     const syncFromLocation = () => {
       if (handleSpreadsheetPermalink()) return;
+      if (handleLabFilesPermalink()) return;
 
       const dialog = readDialogFromLocation();
       setOrderDialogOpen(dialog === DIALOG_CREATION_ORDER);
@@ -942,12 +976,14 @@ export default function App() {
     };
 
     handleSpreadsheetPermalink();
+    handleLabFilesPermalink();
     window.addEventListener("popstate", syncFromLocation);
     return () => window.removeEventListener("popstate", syncFromLocation);
   }, [
     allTypes,
     availableVersions,
     handleSpreadsheetPermalink,
+    handleLabFilesPermalink,
     syncAttributeIndexFromUrl,
     syncCreationOrderFromUrl,
   ]);

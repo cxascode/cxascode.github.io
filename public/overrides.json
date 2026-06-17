@@ -60,6 +60,9 @@
     ]
   },
   "replaceDependencies": {
+    "genesyscloud_case_management_caseplan": {
+      "genesyscloud_customer_intent": "genesyscloud_intents_customerintents"
+    },
     "genesyscloud_responsemanagement_response": {
       "responsemanagement_responseasset": "genesyscloud_responsemanagement_responseasset"
     }
@@ -228,12 +231,17 @@
       "genesyscloud_idp_salesforce",
       "genesyscloud_oauth_client",
       "genesyscloud_orgauthorization_pairing",
+      "genesyscloud_organization_authentication_settings",
       "genesyscloud_outbound_contact_list_contact",
+      "genesyscloud_outbound_settings",
+      "genesyscloud_routing_settings",
       "genesyscloud_routing_sms_address",
+      "genesyscloud_routing_utilization",
       "genesyscloud_telephony_providers_edges_did_pool",
       "genesyscloud_telephony_providers_edges_edge_group",
       "genesyscloud_telephony_providers_edges_extension_pool",
       "genesyscloud_telephony_providers_edges_phone",
+      "genesyscloud_telephony_providers_edges_phonebasesettings",
       "genesyscloud_telephony_providers_edges_site",
       "genesyscloud_telephony_providers_edges_site_outbound_route",
       "genesyscloud_telephony_providers_edges_trunk",

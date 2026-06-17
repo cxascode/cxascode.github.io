@@ -143,6 +143,7 @@ async function runGenerator(latest) {
   await runScript("scripts/generate-spreadsheet-template.mjs", [
     `--latest=${latest}`,
   ]);
+  await runScript("scripts/generate-lab-package.mjs", [`--latest=${latest}`]);
 }
 
 async function main() {
