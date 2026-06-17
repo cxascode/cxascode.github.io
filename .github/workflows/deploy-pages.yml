@@ -400,7 +400,7 @@ jobs:
         if: steps.check.outputs.needs_deploy == 'true'
         run: node scripts/verify-tf-export-env-vars.mjs
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         if: steps.check.outputs.needs_deploy == 'true'
         with:
           path: dist
