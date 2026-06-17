@@ -122,11 +122,33 @@ html {
   color: var(--gc-text);
 }
 
-.gcPageTitle.gcPageTitleEgg {
-  cursor: default;
+.gcPageTitleButton {
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
 }
 
-.gcPageTitle.gcPageTitleEgg:hover {
+.gcPageTitleEgg {
+  cursor: pointer;
+}
+
+button.gcPageTitleButton {
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+}
+
+button.gcPageTitleButton:focus-visible {
+  outline: 2px solid var(--gc-blue);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.gcPageTitleEgg:hover {
   animation: gcPageTitleColorShift 6s linear infinite;
   animation-delay: var(--gc-page-title-color-delay, 0s);
 }
@@ -162,7 +184,7 @@ html {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .gcPageTitle.gcPageTitleEgg:hover {
+  .gcPageTitleEgg:hover {
     animation: none;
     color: var(--gc-blue);
   }
@@ -1182,6 +1204,16 @@ button.gcDocsPill {
 .gcOrderDialog__toolbar--attributeIndex .gcSegmentedControl--text,
 .gcOrderDialog__toolbar--releaseNotes .gcSegmentedControl--text {
   flex: 0 0 auto;
+}
+
+.gcOrderDialog__intro {
+  flex: 1 1 auto;
+  margin: 0;
+  min-width: 0;
+}
+
+.gcOrderDialog__toolbar--releaseNotes .gcOrderDialog__intro {
+  flex: 1 1 12rem;
 }
 
 .gcOrderDialog__toolbar--attributeIndex .gcOrderDialog__search {

@@ -3,11 +3,15 @@ import { GENERATED_PUBLIC_DATA_DIRS } from "./publicDataPaths.js";
 const BASE = import.meta.env.BASE_URL || "/";
 
 export const DIALOG_RELEASE_NOTES = "release-notes";
+export const DIALOG_SITE_UPDATES = "site-updates";
 export const DIALOG_CREATION_ORDER = "creation-order";
 export const DIALOG_ATTRIBUTE_INDEX = "attribute-index";
 export const DIALOG_ENV_VARS = "env-vars";
 
+export const SITE_UPDATES_ENTRY_QUERY_KEY = "entry";
+
 export const SPREADSHEET_PATH_SEGMENT = "spreadsheet";
+export const LAB_FILES_PATH_SEGMENT = "labfiles";
 
 export const DIALOG_FILTER_QUERY_KEY = "filter";
 export const ATTRIBUTE_INDEX_FILTER_QUERY_KEY = DIALOG_FILTER_QUERY_KEY;
@@ -17,23 +21,29 @@ const LEGACY_TYPE_QUERY_KEY = "type";
 
 const DIALOG_PATH_SEGMENT = {
   [DIALOG_RELEASE_NOTES]: "release-notes",
+  [DIALOG_SITE_UPDATES]: "site-updates",
   [DIALOG_CREATION_ORDER]: "creation-order",
   [DIALOG_ATTRIBUTE_INDEX]: "attribute-index",
   [DIALOG_ENV_VARS]: "env-vars",
 };
+
+const DIALOGS_WITHOUT_PROVIDER_VERSION = new Set([DIALOG_SITE_UPDATES]);
 
 export const VALID_DIALOGS = new Set(Object.keys(DIALOG_PATH_SEGMENT));
 
 const RESERVED_PATH_SEGMENTS = new Set([
   ...Object.values(DIALOG_PATH_SEGMENT),
   SPREADSHEET_PATH_SEGMENT,
+  LAB_FILES_PATH_SEGMENT,
   ...GENERATED_PUBLIC_DATA_DIRS,
   "release-notes-data",
+  "site-updates-data",
   "seo",
   "assets",
 ]);
 
 const VERSION_PATH_RE = /^v?(\d+\.\d+\.\d+)$/i;
+const SITE_UPDATES_ENTRY_PATH_RE = /^(\d{4}-\d{2}-\d{2})$/;
 
 function normalizePathname(pathname) {
   if (!pathname || pathname === "/") return "/";
@@ -48,6 +58,10 @@ function normalizeVersion(version) {
   const trimmed = String(version || "").trim();
   if (!trimmed || trimmed === "latest") return "";
   return trimmed.replace(/^v/i, "");
+}
+
+export function isSiteUpdatesEntryPathSegment(segment) {
+  return SITE_UPDATES_ENTRY_PATH_RE.test((segment || "").trim());
 }
 
 export function isVersionPathSegment(segment) {
@@ -105,12 +119,21 @@ function appendVersionSegment(pathname, version) {
   return normalizePathname(`${normalizePathname(pathname)}/${versionSegment}`);
 }
 
+export function siteUpdatesPathname(entry = "latest") {
+  const base = dialogPathname(DIALOG_SITE_UPDATES);
+  const trimmed = (entry || "").trim();
+  if (!trimmed || trimmed === "latest") return base;
+  if (!isSiteUpdatesEntryPathSegment(trimmed)) return base;
+  return normalizePathname(`${base}/${trimmed}`);
+}
+
 export function dialogPathname(dialogId, version = "latest") {
   const segment = DIALOG_PATH_SEGMENT[dialogId];
   if (!segment) return appRootPathname();
 
   const root = BASE.endsWith("/") ? BASE : `${BASE}/`;
   const base = normalizePathname(new URL(segment, new URL(root, "http://local")).pathname);
+  if (DIALOGS_WITHOUT_PROVIDER_VERSION.has(dialogId)) return base;
   return appendVersionSegment(base, version);
 }
 
@@ -156,6 +179,10 @@ export function creationOrderLocation(filter = "", version = "latest") {
   return `${url.pathname}${url.search}`;
 }
 
+export function siteUpdatesLocation(entry = "latest") {
+  return siteUpdatesPathname(entry);
+}
+
 export function resourcePathname(resourceType, version = "latest") {
   const typed = normalizeResourceType(resourceType);
   if (!typed) return appRootPathname();
@@ -189,6 +216,28 @@ export function spreadsheetPathname(version = "latest") {
   return appendVersionSegment(base, version);
 }
 
+export function readLabFilesDownloadFromLocation() {
+  try {
+    const segments = pathSegments(window.location.pathname);
+    if (segments[0] !== LAB_FILES_PATH_SEGMENT) return null;
+    if (segments.length === 1) return "latest";
+    if (segments.length === 2 && isVersionPathSegment(segments[1])) {
+      return fromVersionPathSegment(segments[1]);
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+export function labFilesPathname(version = "latest") {
+  const root = BASE.endsWith("/") ? BASE : `${BASE}/`;
+  const base = normalizePathname(
+    new URL(LAB_FILES_PATH_SEGMENT, new URL(root, "http://local")).pathname
+  );
+  return appendVersionSegment(base, version);
+}
+
 export function readDialogFromLocation() {
   try {
     return readDialogFromPathname(window.location.pathname);
@@ -200,7 +249,14 @@ export function readDialogFromLocation() {
 function readDialogFromPathname(pathname) {
   const segments = pathSegments(pathname);
   if (segments.length === 0 || segments.length > 2) return "";
-  if (segments.length === 2 && !isVersionPathSegment(segments[1])) return "";
+
+  if (segments.length === 2) {
+    const isSiteUpdates = segments[0] === DIALOG_PATH_SEGMENT[DIALOG_SITE_UPDATES];
+    if (isSiteUpdates && isSiteUpdatesEntryPathSegment(segments[1])) {
+      return DIALOG_SITE_UPDATES;
+    }
+    if (!isVersionPathSegment(segments[1])) return "";
+  }
 
   const first = segments[0];
   for (const dialogId of VALID_DIALOGS) {
@@ -229,6 +285,42 @@ export function readDialogFilterFromLocation() {
     return (url.searchParams.get(DIALOG_FILTER_QUERY_KEY) || "").trim();
   } catch {
     return "";
+  }
+}
+
+function readSiteUpdatesEntryFromPath(pathname) {
+  const segments = pathSegments(pathname);
+  if (segments[0] !== DIALOG_PATH_SEGMENT[DIALOG_SITE_UPDATES]) return "";
+  if (segments.length === 2 && isSiteUpdatesEntryPathSegment(segments[1])) {
+    return segments[1];
+  }
+  return "";
+}
+
+export function readSiteUpdatesEntryFromLocation() {
+  try {
+    const fromPath = readSiteUpdatesEntryFromPath(window.location.pathname);
+    if (fromPath) return fromPath;
+
+    const url = new URL(window.location.href);
+    return (url.searchParams.get(SITE_UPDATES_ENTRY_QUERY_KEY) || "").trim();
+  } catch {
+    return "";
+  }
+}
+
+export function migrateLegacySiteUpdatesEntryUrl() {
+  try {
+    if (readSiteUpdatesEntryFromPath(window.location.pathname)) return false;
+    if (readDialogFromLocation() !== DIALOG_SITE_UPDATES) return false;
+
+    const entry = readSiteUpdatesEntryFromLocation();
+    if (!entry) return false;
+
+    replaceSiteUpdatesInUrl(entry);
+    return true;
+  } catch {
+    return false;
   }
 }
 
@@ -266,7 +358,14 @@ export function readResourceTypeFromLocation() {
 
     const segments = pathSegments(window.location.pathname);
     if (segments.length === 0 || segments.length > 2) return "";
-    if (segments.length === 2 && !isVersionPathSegment(segments[1])) return "";
+    if (
+      segments.length === 2 &&
+      !isVersionPathSegment(segments[1]) &&
+      !(segments[0] === DIALOG_PATH_SEGMENT[DIALOG_SITE_UPDATES] &&
+        isSiteUpdatesEntryPathSegment(segments[1]))
+    ) {
+      return "";
+    }
 
     const segment = decodeURIComponent(segments[0]);
     if (!segment || RESERVED_PATH_SEGMENTS.has(segment)) return "";
@@ -277,19 +376,40 @@ export function readResourceTypeFromLocation() {
   }
 }
 
+function setSiteUpdatesEntryOnUrl(url, entry = "") {
+  url.searchParams.delete(SITE_UPDATES_ENTRY_QUERY_KEY);
+  url.pathname = siteUpdatesPathname(entry);
+}
+
 export function replaceDialogInUrl(dialogId, resourceType = "", version = "latest") {
   try {
     const url = new URL(window.location.href);
     stripLegacyQueryParams(url);
     url.searchParams.delete(DIALOG_FILTER_QUERY_KEY);
+    url.searchParams.delete(SITE_UPDATES_ENTRY_QUERY_KEY);
 
     if (dialogId && VALID_DIALOGS.has(dialogId)) {
-      url.pathname = dialogPathname(dialogId, version);
+      url.pathname =
+        dialogId === DIALOG_SITE_UPDATES
+          ? siteUpdatesPathname("latest")
+          : dialogPathname(dialogId, version);
     } else {
       const typed = normalizeResourceType(resourceType);
       url.pathname = typed ? resourcePathname(typed, version) : appRootPathname();
     }
 
+    replaceIfChanged(url);
+  } catch {
+    /* ignore invalid URLs */
+  }
+}
+
+export function replaceSiteUpdatesInUrl(entry = "latest") {
+  try {
+    const url = new URL(window.location.href);
+    stripLegacyQueryParams(url);
+    url.searchParams.delete(DIALOG_FILTER_QUERY_KEY);
+    setSiteUpdatesEntryOnUrl(url, entry);
     replaceIfChanged(url);
   } catch {
     /* ignore invalid URLs */
@@ -351,10 +471,14 @@ export function buildDialogPermalink(dialogId, version = "latest") {
   try {
     const url = new URL(window.location.href);
     stripLegacyQueryParams(url);
-    url.pathname = dialogPathname(dialogId, version);
+    url.pathname =
+      dialogId === DIALOG_SITE_UPDATES
+        ? siteUpdatesPathname(readSiteUpdatesEntryFromLocation() || "latest")
+        : dialogPathname(dialogId, version);
     if (dialogId !== DIALOG_ATTRIBUTE_INDEX && dialogId !== DIALOG_CREATION_ORDER) {
       url.searchParams.delete(DIALOG_FILTER_QUERY_KEY);
     }
+    url.searchParams.delete(SITE_UPDATES_ENTRY_QUERY_KEY);
     return url.toString();
   } catch {
     return "";

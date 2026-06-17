@@ -1,4 +1,5 @@
 import {
+  LAB_PACKAGES_DIR,
   RESOURCE_PERMISSIONS_TF_DIR,
   SPREADSHEET_TEMPLATES_DIR,
 } from "./publicDataPaths.js";
@@ -14,6 +15,7 @@ const BASE = import.meta.env.BASE_URL;
 export const ARTIFACT_SPREADSHEET = "spreadsheet";
 export const ARTIFACT_READ_WRITE_ROLE = "read-write-role";
 export const ARTIFACT_READ_ONLY_ROLE = "read-only-role";
+export const ARTIFACT_LAB = "lab";
 
 const ARTIFACTS = {
   [ARTIFACT_SPREADSHEET]: {
@@ -30,6 +32,11 @@ const ARTIFACTS = {
     latestPath: `${RESOURCE_PERMISSIONS_TF_DIR}/latest-read-only-role.tf`,
     versionedPath: (version) => `${RESOURCE_PERMISSIONS_TF_DIR}/${version}-read-only-role.tf`,
     filename: (label) => `cx-as-code-read-only-role-${label}.tf`,
+  },
+  [ARTIFACT_LAB]: {
+    latestPath: `${LAB_PACKAGES_DIR}/latest-cx-as-code-lab.zip`,
+    versionedPath: (version) => `${LAB_PACKAGES_DIR}/${version}-cx-as-code-lab.zip`,
+    filename: (label) => `cx-as-code-lab-${label}.zip`,
   },
 };
 

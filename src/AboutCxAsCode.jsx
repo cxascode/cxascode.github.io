@@ -8,6 +8,7 @@ export const ABOUT_CX_AS_CODE_TEXT = (
     dependencies, division-aware resources, Registry documentation, and{" "}
     <code>genesyscloud_tf_export</code> templates. It also includes provider release notes,
     attribute change history, and a suggested resource creation order by dependency tier.
+    Site updates track Explorer improvements separately from provider releases.
   </>
 );
 

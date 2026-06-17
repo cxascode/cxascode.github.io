@@ -42,7 +42,7 @@ function pickQuip(previous) {
   return next;
 }
 
-export default function PageTitle() {
+export default function PageTitle({ onOpenSiteUpdates }) {
   const [quip, setQuip] = useState("");
   const [colorPhase, setColorPhase] = useState(0);
 
@@ -55,15 +55,25 @@ export default function PageTitle() {
     setQuip("");
   }, []);
 
+  const handleOpenSiteUpdates = useCallback(() => {
+    onOpenSiteUpdates?.();
+  }, [onOpenSiteUpdates]);
+
   return (
     <div className="gcPageTitleGroup">
-      <h1
-        className="gcPageTitle gcPageTitleEgg"
-        style={{ "--gc-page-title-color-delay": colorCycleDelay(colorPhase) }}
-        onMouseEnter={handleEnter}
-        onMouseLeave={handleLeave}
-      >
-        CX as Code Explorer
+      <h1 className="gcPageTitle">
+        <button
+          type="button"
+          className="gcPageTitleEgg gcPageTitleButton"
+          style={{ "--gc-page-title-color-delay": colorCycleDelay(colorPhase) }}
+          onClick={handleOpenSiteUpdates}
+          onMouseEnter={handleEnter}
+          onMouseLeave={handleLeave}
+          title="Site updates"
+          aria-label="CX as Code Explorer — open site updates"
+        >
+          CX as Code Explorer
+        </button>
       </h1>
       <AboutCxAsCode />
       {quip ? (
