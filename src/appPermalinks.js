@@ -8,6 +8,7 @@ export const DIALOG_ATTRIBUTE_INDEX = "attribute-index";
 export const DIALOG_ENV_VARS = "env-vars";
 
 export const SPREADSHEET_PATH_SEGMENT = "spreadsheet";
+export const LAB_FILES_PATH_SEGMENT = "labfiles";
 
 export const DIALOG_FILTER_QUERY_KEY = "filter";
 export const ATTRIBUTE_INDEX_FILTER_QUERY_KEY = DIALOG_FILTER_QUERY_KEY;
@@ -27,6 +28,7 @@ export const VALID_DIALOGS = new Set(Object.keys(DIALOG_PATH_SEGMENT));
 const RESERVED_PATH_SEGMENTS = new Set([
   ...Object.values(DIALOG_PATH_SEGMENT),
   SPREADSHEET_PATH_SEGMENT,
+  LAB_FILES_PATH_SEGMENT,
   ...GENERATED_PUBLIC_DATA_DIRS,
   "release-notes-data",
   "seo",
@@ -185,6 +187,28 @@ export function spreadsheetPathname(version = "latest") {
   const root = BASE.endsWith("/") ? BASE : `${BASE}/`;
   const base = normalizePathname(
     new URL(SPREADSHEET_PATH_SEGMENT, new URL(root, "http://local")).pathname
+  );
+  return appendVersionSegment(base, version);
+}
+
+export function readLabFilesDownloadFromLocation() {
+  try {
+    const segments = pathSegments(window.location.pathname);
+    if (segments[0] !== LAB_FILES_PATH_SEGMENT) return null;
+    if (segments.length === 1) return "latest";
+    if (segments.length === 2 && isVersionPathSegment(segments[1])) {
+      return fromVersionPathSegment(segments[1]);
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+export function labFilesPathname(version = "latest") {
+  const root = BASE.endsWith("/") ? BASE : `${BASE}/`;
+  const base = normalizePathname(
+    new URL(LAB_FILES_PATH_SEGMENT, new URL(root, "http://local")).pathname
   );
   return appendVersionSegment(base, version);
 }

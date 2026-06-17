@@ -3,6 +3,10 @@ import path from "node:path";
 import ExcelJS from "exceljs";
 import { computeCreationOrder } from "../src/dependencyOrder.js";
 import { effectiveDependencies } from "../src/effectiveDependencies.js";
+import {
+  applyOverrides,
+  getHiddenResourceTypes,
+} from "./lib/dependency-tree-overrides.mjs";
 
 const INPUT_DIR = path.resolve("public/dependency-tree-json");
 const OUTPUT_DIR = path.resolve("public/spreadsheet-templates");
@@ -24,68 +28,6 @@ function getArgValue(name) {
   const prefix = `--${name}=`;
   const arg = process.argv.find((a) => a.startsWith(prefix));
   return arg ? arg.slice(prefix.length) : "";
-}
-
-function applyOverrides(raw, overrides) {
-  if (!raw || !Array.isArray(raw.resources)) return raw;
-  if (!overrides || typeof overrides !== "object") return raw;
-
-  const patched = {
-    ...raw,
-    resources: raw.resources.map((r) => ({ ...r })),
-  };
-
-  const byType = new Map();
-  for (const r of patched.resources) {
-    if (r && typeof r.type === "string") byType.set(r.type, r);
-  }
-
-  const replace = overrides.replaceDependencies;
-  if (replace && typeof replace === "object") {
-    for (const [type, mapping] of Object.entries(replace)) {
-      const r = byType.get(type);
-      if (!r || !Array.isArray(r.dependencies) || typeof mapping !== "object") {
-        continue;
-      }
-
-      r.dependencies = r.dependencies.map((d) =>
-        typeof d === "string" ? mapping[d] || d : d
-      );
-    }
-  }
-
-  const add = overrides.addDependencies;
-  if (add && typeof add === "object") {
-    for (const [type, additions] of Object.entries(add)) {
-      if (!Array.isArray(additions)) continue;
-
-      const r = byType.get(type);
-      if (!r) continue;
-
-      const current = Array.isArray(r.dependencies) ? r.dependencies : [];
-      const set = new Set(current.filter((d) => typeof d === "string"));
-
-      for (const dep of additions) {
-        if (typeof dep === "string" && dep.trim()) set.add(dep.trim());
-      }
-
-      r.dependencies = [...set];
-    }
-  }
-
-  return patched;
-}
-
-function getHiddenResourceTypes(overrides) {
-  const hidden = overrides?.hiddenResourceTypes;
-  if (!Array.isArray(hidden)) return new Set();
-
-  return new Set(
-    hidden
-      .filter((t) => typeof t === "string")
-      .map((t) => t.trim())
-      .filter(Boolean)
-  );
 }
 
 function resolveGuiMenuPath(resourceType, overrides) {

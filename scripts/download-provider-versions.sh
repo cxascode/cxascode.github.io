@@ -142,6 +142,7 @@ if [[ "${RUN_GENERATORS}" == "true" ]]; then
   node scripts/generate-tf-export-singletons.mjs
   node scripts/verify-tf-export-env-vars.mjs
   node scripts/generate-spreadsheet-template.mjs --latest="${latest}"
+  node scripts/generate-lab-package.mjs --latest="${latest}"
 fi
 
 echo "Done."

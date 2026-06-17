@@ -6,6 +6,7 @@ export const RESOURCE_PERMISSIONS_TF_DIR = "resource-permissions-tf";
 export const SPREADSHEET_TEMPLATES_DIR = "spreadsheet-templates";
 export const TF_EXPORT_RESOURCE_NAMES_DIR = "tf-export-resource-names";
 export const TF_EXPORT_SINGLETONS_DIR = "tf-export-singletons";
+export const LAB_PACKAGES_DIR = "lab-packages";
 
 /** Oldest provider release with dependency_tree.json on GitHub releases. */
 export const MIN_DEPENDENCY_TREE_VERSION = "1.60.0";
@@ -27,4 +28,5 @@ export const GENERATED_PUBLIC_DATA_DIRS = [
   SPREADSHEET_TEMPLATES_DIR,
   TF_EXPORT_RESOURCE_NAMES_DIR,
   TF_EXPORT_SINGLETONS_DIR,
+  LAB_PACKAGES_DIR,
 ];

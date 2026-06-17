@@ -27,10 +27,12 @@ public/dependency-tree-json/
 public/resource-permissions-json/
 public/resource-permissions-tf/
 public/spreadsheet-templates/
+public/lab-packages/
 public/tf-export-resource-names/
 public/tf-export-singletons/
 .cache-meta/
 .cache/provider-source/
+.cache/lab-package-staging/
 
 # Snyk Security Extension - AI Rules (auto-generated)
 .github/instructions/snyk_rules.instructions.md

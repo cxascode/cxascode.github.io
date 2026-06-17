@@ -84,6 +84,7 @@ jobs:
             public/resource-permissions-json
             public/resource-permissions-tf
             public/spreadsheet-templates
+            public/lab-packages
             public/tf-export-resource-names
             public/tf-export-singletons
             .cache-meta
@@ -396,6 +397,7 @@ jobs:
           set -euo pipefail
           latest="$(cat .cache-meta/latest.txt)"
           node scripts/generate-spreadsheet-template.mjs --latest="${latest}"
+          node scripts/generate-lab-package.mjs --latest="${latest}"
 
       - run: npm run build
         if: steps.check.outputs.needs_deploy == 'true'
