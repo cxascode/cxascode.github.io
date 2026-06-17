@@ -4,18 +4,30 @@ import ExcelJS from "exceljs";
 import { computeCreationOrder } from "../src/dependencyOrder.js";
 import { effectiveDependencies } from "../src/effectiveDependencies.js";
 import {
+  isSingletonTfExportResource,
+  normalizeSingletonResourceTypes,
+} from "../src/tfExportSingletons.js";
+import { resolveTfExportResourceName } from "../src/tfExportTemplate.js";
+import {
   applyOverrides,
   getHiddenResourceTypes,
 } from "./lib/dependency-tree-overrides.mjs";
+import {
+  MIN_SINGLETON_FLAG_VERSION,
+  TF_EXPORT_RESOURCE_NAMES_DIR,
+  TF_EXPORT_SINGLETONS_DIR,
+} from "./lib/public-data-path-constants.mjs";
 
 const INPUT_DIR = path.resolve("public/dependency-tree-json");
 const OUTPUT_DIR = path.resolve("public/spreadsheet-templates");
+const PUBLIC_DIR = path.resolve("public");
 const TEMPLATE_PATH = path.resolve(
   "scripts/templates/cx-as-code-spreadsheet-template.xlsx"
 );
 const DEFAULT_OVERRIDES_PATH = path.resolve("public/overrides.json");
 
 const AUTH_DIVISION_RESOURCE_TYPE = "genesyscloud_auth_division";
+const SPREADSHEET_SINGLETON_NOTE = "Org-wide singleton";
 
 const GRAY_FILL = {
   type: "pattern",
@@ -66,6 +78,75 @@ function isDivisionAware(dependencies) {
   return dependencies.includes(AUTH_DIVISION_RESOURCE_TYPE);
 }
 
+function compareVersions(a, b) {
+  const aParts = String(a)
+    .trim()
+    .replace(/^v/i, "")
+    .split(".")
+    .map((n) => Number.parseInt(n, 10) || 0);
+  const bParts = String(b)
+    .trim()
+    .replace(/^v/i, "")
+    .split(".")
+    .map((n) => Number.parseInt(n, 10) || 0);
+  const length = Math.max(aParts.length, bParts.length);
+
+  for (let i = 0; i < length; i += 1) {
+    const av = aParts[i] ?? 0;
+    const bv = bParts[i] ?? 0;
+    if (av > bv) return 1;
+    if (av < bv) return -1;
+  }
+
+  return 0;
+}
+
+async function loadTfExportCatalog(version) {
+  const singletonPath = path.join(PUBLIC_DIR, TF_EXPORT_SINGLETONS_DIR, `${version}.json`);
+  const namesPath = path.join(PUBLIC_DIR, TF_EXPORT_RESOURCE_NAMES_DIR, `${version}.json`);
+
+  let singletonTypes = new Set();
+  let resourceNames = {};
+
+  try {
+    const json = JSON.parse(await fs.readFile(singletonPath, "utf8"));
+    singletonTypes = normalizeSingletonResourceTypes(json?.singletonResourceTypes);
+  } catch {
+    // tf-export-singletons may be missing before local bootstrap
+  }
+
+  try {
+    const json = JSON.parse(await fs.readFile(namesPath, "utf8"));
+    resourceNames =
+      json?.tfExportResourceNames && typeof json.tfExportResourceNames === "object"
+        ? json.tfExportResourceNames
+        : {};
+  } catch {
+    // tf-export-resource-names may be missing before local bootstrap
+  }
+
+  return {
+    singletonTypes,
+    resourceNames,
+    useSingletonExporterFlag: compareVersions(version, MIN_SINGLETON_FLAG_VERSION) >= 0,
+  };
+}
+
+function resolveSpreadsheetNotes(resourceType, overrides, tfExportCatalog) {
+  const resourceName = resolveTfExportResourceName(
+    resourceType,
+    overrides,
+    tfExportCatalog.resourceNames
+  );
+  const isSingleton = isSingletonTfExportResource(
+    resourceType,
+    tfExportCatalog.singletonTypes,
+    resourceName,
+    tfExportCatalog.useSingletonExporterFlag
+  );
+  return isSingleton ? SPREADSHEET_SINGLETON_NOTE : "";
+}
+
 function buildDepsMap(raw) {
   const depsMap = new Map();
 
@@ -102,7 +183,7 @@ function buildTierByType(tiers) {
   return tierByType;
 }
 
-function buildResourceRows(raw, overrides) {
+function buildResourceRows(raw, overrides, tfExportCatalog) {
   const hidden = getHiddenResourceTypes(overrides);
   const patched = applyOverrides(raw, overrides);
   const byType = new Map();
@@ -139,6 +220,7 @@ function buildResourceRows(raw, overrides) {
       dependencyCount: dependencies.length,
       scopePrefix: resolveSpreadsheetScopePrefix(type, overrides),
       priority: tierByType.get(type) ?? null,
+      notes: resolveSpreadsheetNotes(type, overrides, tfExportCatalog),
     };
   });
 }
@@ -193,7 +275,7 @@ async function writeWorkbook(rows, outPath) {
     row.getCell(7).value = entry.priority;
     row.getCell(8).value = null;
     row.getCell(9).value = null;
-    row.getCell(10).value = null;
+    row.getCell(10).value = entry.notes || null;
 
     for (const col of [5, 6, 7, 8]) {
       row.getCell(col).fill = GRAY_FILL;
@@ -260,7 +342,8 @@ async function main() {
     const version = file.replace(/\.json$/, "");
     const inputPath = path.join(INPUT_DIR, file);
     const raw = JSON.parse(await fs.readFile(inputPath, "utf8"));
-    const rows = buildResourceRows(raw, overrides);
+    const tfExportCatalog = await loadTfExportCatalog(version);
+    const rows = buildResourceRows(raw, overrides, tfExportCatalog);
     const outPath = path.join(OUTPUT_DIR, `${version}-cx-as-code-template.xlsx`);
 
     await writeWorkbook(rows, outPath);

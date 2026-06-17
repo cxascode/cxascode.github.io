@@ -47,6 +47,7 @@ npm run dev
 - `hiddenResourceTypes` — resource types omitted from the left-hand list (still appear in Depends on / Dependency for when referenced)
 - `spreadsheetScopePrefixes` — prefix labels in generated spreadsheet templates (e.g. `"out"` for out-of-scope types). Also the source of truth for `exclude_filter_resources` in the lab `exportpipeline/main.tf` (minus any types listed in that file's `replace_with_datasource` block).
 - **Division aware** — badge when **Depends on** includes `genesyscloud_auth_division`; list filter **Division Aware** → *Yes* / *No* (blank = all types; same heuristic)
+- **Singleton** — badge in resource details; **Notes** column in spreadsheet templates (`Org-wide singleton`)
 
 Examples:
 

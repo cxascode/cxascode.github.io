@@ -1216,6 +1216,34 @@ button.gcDocsPill {
   flex: 1 1 12rem;
 }
 
+.gcOrderDialog__toolbar--siteUpdates {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.gcOrderDialog__toolbar--siteUpdates .gcOrderDialog__intro {
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+.gcOrderDialog__toolbar--siteUpdates .gcOrderDialog__toolbarActions {
+  margin-left: 0;
+  width: 100%;
+  justify-content: flex-end;
+}
+
+.gcOrderDialog__toolbar--siteUpdates .gcVersionPicker {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.gcSelectInput--siteUpdatesEntry {
+  min-width: 16rem;
+  max-width: 20rem;
+  width: 100%;
+}
+
 .gcOrderDialog__toolbar--attributeIndex .gcOrderDialog__search {
   flex: 1 1 12rem;
   min-width: 0;
