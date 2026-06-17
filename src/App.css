@@ -9,6 +9,8 @@
   --gc-blue-weak: rgba(42, 96, 255, 0.1);
   --gc-amber: #b45309;
   --gc-amber-weak: rgba(180, 83, 9, 0.12);
+  --gc-teal: #0f766e;
+  --gc-teal-weak: rgba(15, 118, 110, 0.12);
 }
 
 html {
@@ -660,6 +662,20 @@ button.gcHeaderLink:disabled {
   border: 1px solid var(--gc-border);
   background: var(--gc-blue-weak);
   color: var(--gc-blue);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.gcSingletonBadge {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  border: 1px solid var(--gc-border);
+  background: var(--gc-teal-weak);
+  color: var(--gc-teal);
   font-size: 11px;
   font-weight: 700;
   white-space: nowrap;

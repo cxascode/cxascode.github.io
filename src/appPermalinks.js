@@ -1,3 +1,5 @@
+import { GENERATED_PUBLIC_DATA_DIRS } from "./publicDataPaths.js";
+
 const BASE = import.meta.env.BASE_URL || "/";
 
 export const DIALOG_RELEASE_NOTES = "release-notes";
@@ -25,10 +27,7 @@ export const VALID_DIALOGS = new Set(Object.keys(DIALOG_PATH_SEGMENT));
 const RESERVED_PATH_SEGMENTS = new Set([
   ...Object.values(DIALOG_PATH_SEGMENT),
   SPREADSHEET_PATH_SEGMENT,
-  "dependency-tree-json",
-  "resource-permissions-json",
-  "resource-permissions-tf",
-  "spreadsheet-templates",
+  ...GENERATED_PUBLIC_DATA_DIRS,
   "release-notes-data",
   "seo",
   "assets",

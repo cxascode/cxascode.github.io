@@ -9,6 +9,7 @@
     "download-provider-versions": "scripts/download-provider-versions.sh",
     "generate-spreadsheet-template": "node scripts/generate-spreadsheet-template.mjs",
     "generate-tf-export-resource-names": "node scripts/generate-tf-export-resource-names.mjs",
+    "generate-tf-export-singletons": "node scripts/generate-tf-export-singletons.mjs",
     "verify-tf-export-env-vars": "node scripts/verify-tf-export-env-vars.mjs",
     "build": "node scripts/write-sitemap.mjs && vite build",
     "lint": "eslint .",

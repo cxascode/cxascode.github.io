@@ -1,4 +1,8 @@
 import {
+  RESOURCE_PERMISSIONS_TF_DIR,
+  SPREADSHEET_TEMPLATES_DIR,
+} from "./publicDataPaths.js";
+import {
   artifactDownloadVersionLabel,
   fetchNewestListedRelease,
   RELEASE_NOTES_SCOPE_EXPORT,
@@ -13,18 +17,18 @@ export const ARTIFACT_READ_ONLY_ROLE = "read-only-role";
 
 const ARTIFACTS = {
   [ARTIFACT_SPREADSHEET]: {
-    latestPath: "spreadsheet-templates/latest-cx-as-code-template.xlsx",
-    versionedPath: (version) => `spreadsheet-templates/${version}-cx-as-code-template.xlsx`,
+    latestPath: `${SPREADSHEET_TEMPLATES_DIR}/latest-cx-as-code-template.xlsx`,
+    versionedPath: (version) => `${SPREADSHEET_TEMPLATES_DIR}/${version}-cx-as-code-template.xlsx`,
     filename: (label) => `cx-as-code-template-${label}.xlsx`,
   },
   [ARTIFACT_READ_WRITE_ROLE]: {
-    latestPath: "resource-permissions-tf/latest-read-write-role.tf",
-    versionedPath: (version) => `resource-permissions-tf/${version}-read-write-role.tf`,
+    latestPath: `${RESOURCE_PERMISSIONS_TF_DIR}/latest-read-write-role.tf`,
+    versionedPath: (version) => `${RESOURCE_PERMISSIONS_TF_DIR}/${version}-read-write-role.tf`,
     filename: (label) => `cx-as-code-read-write-role-${label}.tf`,
   },
   [ARTIFACT_READ_ONLY_ROLE]: {
-    latestPath: "resource-permissions-tf/latest-read-only-role.tf",
-    versionedPath: (version) => `resource-permissions-tf/${version}-read-only-role.tf`,
+    latestPath: `${RESOURCE_PERMISSIONS_TF_DIR}/latest-read-only-role.tf`,
+    versionedPath: (version) => `${RESOURCE_PERMISSIONS_TF_DIR}/${version}-read-only-role.tf`,
     filename: (label) => `cx-as-code-read-only-role-${label}.tf`,
   },
 };
