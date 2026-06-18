@@ -10,6 +10,18 @@ export function getHiddenResourceTypes(overrides) {
   );
 }
 
+export function getDeprecatedResourceTypes(overrides) {
+  const deprecated = overrides?.deprecatedResourceTypes;
+  if (!Array.isArray(deprecated)) return new Set();
+
+  return new Set(
+    deprecated
+      .filter((entry) => typeof entry === "string")
+      .map((entry) => entry.trim())
+      .filter(Boolean)
+  );
+}
+
 export function applyOverrides(raw, overrides) {
   if (!raw || !Array.isArray(raw.resources)) return raw;
   if (!overrides || typeof overrides !== "object") return raw;

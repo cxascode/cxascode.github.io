@@ -10,6 +10,7 @@ import {
 import { resolveTfExportResourceName } from "../src/tfExportTemplate.js";
 import {
   applyOverrides,
+  getDeprecatedResourceTypes,
   getHiddenResourceTypes,
 } from "./lib/dependency-tree-overrides.mjs";
 import {
@@ -28,6 +29,7 @@ const DEFAULT_OVERRIDES_PATH = path.resolve("public/overrides.json");
 
 const AUTH_DIVISION_RESOURCE_TYPE = "genesyscloud_auth_division";
 const SPREADSHEET_SINGLETON_NOTE = "Org-wide singleton";
+const SPREADSHEET_DEPRECATED_NOTE = "Deprecated";
 
 const GRAY_FILL = {
   type: "pattern",
@@ -132,7 +134,9 @@ async function loadTfExportCatalog(version) {
   };
 }
 
-function resolveSpreadsheetNotes(resourceType, overrides, tfExportCatalog) {
+function resolveSpreadsheetNotes(resourceType, overrides, tfExportCatalog, deprecatedTypes) {
+  const notes = [];
+
   const resourceName = resolveTfExportResourceName(
     resourceType,
     overrides,
@@ -144,7 +148,10 @@ function resolveSpreadsheetNotes(resourceType, overrides, tfExportCatalog) {
     resourceName,
     tfExportCatalog.useSingletonExporterFlag
   );
-  return isSingleton ? SPREADSHEET_SINGLETON_NOTE : "";
+  if (isSingleton) notes.push(SPREADSHEET_SINGLETON_NOTE);
+  if (deprecatedTypes.has(resourceType)) notes.push(SPREADSHEET_DEPRECATED_NOTE);
+
+  return notes.length > 0 ? notes.join("; ") : "";
 }
 
 function buildDepsMap(raw) {
@@ -185,6 +192,7 @@ function buildTierByType(tiers) {
 
 function buildResourceRows(raw, overrides, tfExportCatalog) {
   const hidden = getHiddenResourceTypes(overrides);
+  const deprecatedTypes = getDeprecatedResourceTypes(overrides);
   const patched = applyOverrides(raw, overrides);
   const byType = new Map();
 
@@ -220,7 +228,7 @@ function buildResourceRows(raw, overrides, tfExportCatalog) {
       dependencyCount: dependencies.length,
       scopePrefix: resolveSpreadsheetScopePrefix(type, overrides),
       priority: tierByType.get(type) ?? null,
-      notes: resolveSpreadsheetNotes(type, overrides, tfExportCatalog),
+      notes: resolveSpreadsheetNotes(type, overrides, tfExportCatalog, deprecatedTypes),
     };
   });
 }
