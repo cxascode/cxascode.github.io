@@ -10,6 +10,7 @@ resource "genesyscloud_tf_export" "export" {
   log_permission_errors        = true
   #replace_with_datasource      = ["resource_type::Resource name regex"]
   replace_with_datasource      = [
+    "genesyscloud_integration_credential::.*",
     "genesyscloud_telephony_providers_edges_edge_group::.*",
     "genesyscloud_telephony_providers_edges_trunkbasesettings::.*"
   ]
