@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-export const ABOUT_CX_AS_CODE_TEXT = (
+const ABOUT_CX_AS_CODE_TEXT = (
   <>
     <strong>CX as Code</strong> is Genesys Cloud&apos;s approach to managing contact center
     configuration — queues, flows, users, and more — as version-controlled Terraform.{" "}
