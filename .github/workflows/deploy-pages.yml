@@ -30,7 +30,7 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           persist-credentials: true
 
@@ -73,7 +73,7 @@ jobs:
       needs_deploy: ${{ steps.check.outputs.needs_deploy }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           persist-credentials: true
           # Site updates diffs github.event.before..github.sha; shallow clones miss the "before" commit.
