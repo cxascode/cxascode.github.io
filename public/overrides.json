@@ -221,7 +221,13 @@
   ],
   "spreadsheetScopePrefixes": {
     "out": [
+      "genesyscloud_conversations_messaging_supportedcontent_default",
+      "genesyscloud_conversations_settings",
+      "genesyscloud_employeeperformance_externalmetrics_definitions",
       "genesyscloud_externalcontacts_contact",
+      "genesyscloud_externalcontacts_organization",
+      "genesyscloud_externalcontacts_external_source",
+      "genesyscloud_flow_loglevel",
       "genesyscloud_idp_adfs",
       "genesyscloud_idp_generic",
       "genesyscloud_idp_gsuite",
@@ -229,6 +235,8 @@
       "genesyscloud_idp_onelogin",
       "genesyscloud_idp_ping",
       "genesyscloud_idp_salesforce",
+      "genesyscloud_integration_credential",
+      "genesyscloud_integration_custom_auth_action",
       "genesyscloud_oauth_client",
       "genesyscloud_orgauthorization_pairing",
       "genesyscloud_organization_authentication_settings",
@@ -236,14 +244,8 @@
       "genesyscloud_outbound_settings",
       "genesyscloud_routing_settings",
       "genesyscloud_routing_sms_address",
-      "genesyscloud_routing_utilization",
-      "genesyscloud_telephony_providers_edges_did_pool",
       "genesyscloud_telephony_providers_edges_edge_group",
-      "genesyscloud_telephony_providers_edges_extension_pool",
       "genesyscloud_telephony_providers_edges_phone",
-      "genesyscloud_telephony_providers_edges_phonebasesettings",
-      "genesyscloud_telephony_providers_edges_site",
-      "genesyscloud_telephony_providers_edges_site_outbound_route",
       "genesyscloud_telephony_providers_edges_trunk",
       "genesyscloud_telephony_providers_edges_trunkbasesettings",
       "genesyscloud_user",
@@ -251,7 +253,7 @@
     ]
   },
   "addReadWritePermissions": {
-    "genesyscloud_outbound_dnclist": [
+    "genesyscloud_out bound_dnclist": [
       "outbound:dnc:add",
       "outbound:dnc:delete",
       "outbound:dnc:edit",
