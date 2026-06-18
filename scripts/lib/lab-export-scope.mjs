@@ -1,3 +1,5 @@
+import { getNonExportableResourceTypes } from "./dependency-tree-overrides.mjs";
+
 export function getOutOfScopeResourceTypes(overrides) {
   const out = overrides?.spreadsheetScopePrefixes?.out;
   if (!Array.isArray(out)) return [];
@@ -35,13 +37,19 @@ export function parseReplaceWithDatasourceTypes(terraformContent) {
   return types;
 }
 
-export function buildExcludeFilterResources(outOfScopeTypes, replaceWithDatasourceTypes) {
+export function buildExcludeFilterResources(
+  outOfScopeTypes,
+  replaceWithDatasourceTypes,
+  nonExportableTypes = []
+) {
   const replaceTypes =
     replaceWithDatasourceTypes instanceof Set
       ? replaceWithDatasourceTypes
       : new Set(replaceWithDatasourceTypes);
+  const nonExportable =
+    nonExportableTypes instanceof Set ? nonExportableTypes : new Set(nonExportableTypes);
 
-  return outOfScopeTypes.filter((type) => !replaceTypes.has(type));
+  return outOfScopeTypes.filter((type) => !replaceTypes.has(type) && !nonExportable.has(type));
 }
 
 export function renderExcludeFilterResourcesAttribute(resourceTypes, indent = "  ") {
@@ -67,5 +75,6 @@ export function patchExcludeFilterResources(terraformContent, resourceTypes) {
 export function resolveExcludeFilterResources(terraformContent, overrides) {
   const outOfScopeTypes = getOutOfScopeResourceTypes(overrides);
   const replaceTypes = parseReplaceWithDatasourceTypes(terraformContent);
-  return buildExcludeFilterResources(outOfScopeTypes, replaceTypes);
+  const nonExportableTypes = getNonExportableResourceTypes(overrides);
+  return buildExcludeFilterResources(outOfScopeTypes, replaceTypes, nonExportableTypes);
 }

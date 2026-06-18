@@ -12,6 +12,7 @@ import {
   applyOverrides,
   getDeprecatedResourceTypes,
   getHiddenResourceTypes,
+  getNonExportableResourceTypes,
 } from "./lib/dependency-tree-overrides.mjs";
 import {
   MIN_SINGLETON_FLAG_VERSION,
@@ -30,6 +31,7 @@ const DEFAULT_OVERRIDES_PATH = path.resolve("public/overrides.json");
 const AUTH_DIVISION_RESOURCE_TYPE = "genesyscloud_auth_division";
 const SPREADSHEET_SINGLETON_NOTE = "Org-wide singleton";
 const SPREADSHEET_DEPRECATED_NOTE = "Deprecated";
+const SPREADSHEET_NON_EXPORTABLE_NOTE = "Non-exportable";
 
 const GRAY_FILL = {
   type: "pattern",
@@ -134,7 +136,13 @@ async function loadTfExportCatalog(version) {
   };
 }
 
-function resolveSpreadsheetNotes(resourceType, overrides, tfExportCatalog, deprecatedTypes) {
+function resolveSpreadsheetNotes(
+  resourceType,
+  overrides,
+  tfExportCatalog,
+  deprecatedTypes,
+  nonExportableTypes
+) {
   const notes = [];
 
   const resourceName = resolveTfExportResourceName(
@@ -150,6 +158,7 @@ function resolveSpreadsheetNotes(resourceType, overrides, tfExportCatalog, depre
   );
   if (isSingleton) notes.push(SPREADSHEET_SINGLETON_NOTE);
   if (deprecatedTypes.has(resourceType)) notes.push(SPREADSHEET_DEPRECATED_NOTE);
+  if (nonExportableTypes.has(resourceType)) notes.push(SPREADSHEET_NON_EXPORTABLE_NOTE);
 
   return notes.length > 0 ? notes.join("; ") : "";
 }
@@ -193,6 +202,7 @@ function buildTierByType(tiers) {
 function buildResourceRows(raw, overrides, tfExportCatalog) {
   const hidden = getHiddenResourceTypes(overrides);
   const deprecatedTypes = getDeprecatedResourceTypes(overrides);
+  const nonExportableTypes = getNonExportableResourceTypes(overrides);
   const patched = applyOverrides(raw, overrides);
   const byType = new Map();
 
@@ -228,7 +238,13 @@ function buildResourceRows(raw, overrides, tfExportCatalog) {
       dependencyCount: dependencies.length,
       scopePrefix: resolveSpreadsheetScopePrefix(type, overrides),
       priority: tierByType.get(type) ?? null,
-      notes: resolveSpreadsheetNotes(type, overrides, tfExportCatalog, deprecatedTypes),
+      notes: resolveSpreadsheetNotes(
+        type,
+        overrides,
+        tfExportCatalog,
+        deprecatedTypes,
+        nonExportableTypes
+      ),
     };
   });
 }
