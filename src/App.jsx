@@ -187,6 +187,7 @@ function isRoleDownloadSupported(version) {
  *   },
  *   "hiddenResourceTypes": ["genesyscloud_bcp_tf_exporter", ...]
  *   "deprecatedResourceTypes": ["genesyscloud_journey_outcome", ...]
+ *   "nonExportableResourceTypes": ["genesyscloud_outbound_contact_list_contact", ...]
  *   "spreadsheetScopePrefixes": {
  *     "In scope - ": ["genesyscloud_flow", "genesyscloud_script"]
  *   }
@@ -290,6 +291,18 @@ function getDeprecatedResourceTypes(overrides) {
 
   return new Set(
     deprecated
+      .filter((t) => typeof t === "string")
+      .map((t) => t.trim())
+      .filter(Boolean)
+  );
+}
+
+function getNonExportableResourceTypes(overrides) {
+  const nonExportable = overrides?.nonExportableResourceTypes;
+  if (!Array.isArray(nonExportable)) return new Set();
+
+  return new Set(
+    nonExportable
       .filter((t) => typeof t === "string")
       .map((t) => t.trim())
       .filter(Boolean)
@@ -590,6 +603,10 @@ export default function App() {
     () => (overrides ? getDeprecatedResourceTypes(overrides) : new Set()),
     [overrides]
   );
+  const nonExportableTypes = useMemo(
+    () => (overrides ? getNonExportableResourceTypes(overrides) : new Set()),
+    [overrides]
+  );
 
   const allTypes = useMemo(() => {
     const s = new Set([...depsMap.keys(), ...reverseMap.keys()]);
@@ -691,6 +708,11 @@ export default function App() {
   const isDeprecated = useMemo(
     () => (activeType ? deprecatedTypes.has(activeType) : false),
     [activeType, deprecatedTypes]
+  );
+
+  const isNonExportable = useMemo(
+    () => (activeType ? nonExportableTypes.has(activeType) : false),
+    [activeType, nonExportableTypes]
   );
 
   const dependencyNote = useMemo(
@@ -1482,6 +1504,14 @@ export default function App() {
                       ) : null}
                       {activeType && isDeprecated ? (
                         <span className="gcDeprecatedBadge">Deprecated</span>
+                      ) : null}
+                      {activeType && isNonExportable ? (
+                        <span
+                          className="gcNonExportableBadge"
+                          title="This provider resource type cannot be exported with genesyscloud_tf_export."
+                        >
+                          Non-exportable
+                        </span>
                       ) : null}
                     </div>
                     <div className="gcMenuPathBlock" aria-label="Genesys Cloud GUI menu path">

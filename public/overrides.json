@@ -219,6 +219,10 @@
     "genesyscloud_journey_outcome_predictor",
     "genesyscloud_outbound_contact_list_contact"
   ],
+  "nonExportableResourceTypes": [
+    "genesyscloud_orgauthorization_pairing",
+    "genesyscloud_outbound_contact_list_contact"
+  ],
   "spreadsheetScopePrefixes": {
     "out": [
       "genesyscloud_conversations_messaging_supportedcontent_default",
