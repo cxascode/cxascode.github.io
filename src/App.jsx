@@ -1503,7 +1503,12 @@ export default function App() {
                         </span>
                       ) : null}
                       {activeType && isDeprecated ? (
-                        <span className="gcDeprecatedBadge">Deprecated</span>
+                        <span
+                          className="gcDeprecatedBadge"
+                          title="Marked deprecated by the provider — avoid new use and plan migration; see release notes for details."
+                        >
+                          Deprecated
+                        </span>
                       ) : null}
                       {activeType && isNonExportable ? (
                         <span

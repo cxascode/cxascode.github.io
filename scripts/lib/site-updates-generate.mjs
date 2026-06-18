@@ -46,6 +46,10 @@ const SITE_UPDATES_INFRA_PATHS = [
 const HIDDEN_FEATURE_SUBJECT_RE =
   /\b(lab files?|lab package|cx as code lab|spreadsheet|practice zip|\/labfiles|\/spreadsheet|site updates?|site notes?)\b/i;
 
+export function mentionsHiddenSiteFeature(text) {
+  return HIDDEN_FEATURE_SUBJECT_RE.test(String(text || ""));
+}
+
 const SKIP_SUBJECT_RE =
   /^(chore\(release-notes\)|chore\(site-updates\)|chore: monthly keep-alive|merge (branch|pull request)|update (app\.jsx|overrides\.json|package-lock\.json|deploy-pages\.yml|provider-source\.mjs)|bump |dependabot|fix(ed)? ci|github actions|deploy-pages|build script|sitemap|seo\b)/i;
 
@@ -274,13 +278,13 @@ export function expandSubject(subject) {
 
   if (/\bnon[- ]?exportable\b/.test(lower)) {
     return {
-      summary: "Non-exportable resource visibility and export guidance.",
+      summary: "Non-exportable resource visibility in Explorer.",
       sections: [
         {
           title: "Non-exportable resource visibility",
           bullets: [
             "Resources that cannot be exported with genesyscloud_tf_export now show a Non-exportable badge in the resource list and detail panel.",
-            "Spreadsheet templates, lab packages, and export scope logic respect non-exportable resource types.",
+            "genesyscloud_tf_export template guidance in Explorer reflects non-exportable resource types.",
           ],
         },
       ],
@@ -289,13 +293,12 @@ export function expandSubject(subject) {
 
   if (/\bdeprecated\b/.test(lower)) {
     return {
-      summary: "Deprecated resource visibility in Explorer and spreadsheet templates.",
+      summary: "Deprecated resource visibility in Explorer.",
       sections: [
         {
           title: "Deprecated resource visibility",
           bullets: [
             "Deprecated resource types now show a clear badge in the resource list and detail panel.",
-            "Spreadsheet template Notes call out deprecated types.",
           ],
         },
       ],
@@ -304,12 +307,12 @@ export function expandSubject(subject) {
 
   if (/\bout[- ]of[- ]scope\b|\bout of scope\b/.test(lower)) {
     return {
-      summary: "Out-of-scope export guidance across Explorer, spreadsheets, and lab packages.",
+      summary: "Out-of-scope export guidance in Explorer.",
       sections: [
         {
           title: "Out-of-scope export guidance",
           bullets: [
-            "Out-of-scope resource types are labeled consistently in spreadsheet templates and lab export scope.",
+            "Out-of-scope resource types are labeled consistently in Explorer export guidance.",
           ],
         },
       ],
@@ -339,7 +342,9 @@ export function expandSubject(subject) {
 
 function renderSubjectBlocks(subjects) {
   const expansions = subjects.map(expandSubject);
-  const summaries = expansions.map((expansion) => expansion.summary).filter(Boolean);
+  const summaries = expansions
+    .map((expansion) => expansion.summary)
+    .filter((summary) => summary && !mentionsHiddenSiteFeature(summary));
   const lines = [];
 
   if (summaries.length) {
@@ -348,8 +353,13 @@ function renderSubjectBlocks(subjects) {
 
   for (const expansion of expansions) {
     for (const section of expansion.sections) {
+      const bullets = section.bullets.filter(
+        (bullet) => bullet && !mentionsHiddenSiteFeature(bullet)
+      );
+      if (!bullets.length) continue;
+
       lines.push(`### ${section.title}`, "");
-      for (const bullet of section.bullets) {
+      for (const bullet of bullets) {
         lines.push(`- ${bullet}`);
       }
       lines.push("");
