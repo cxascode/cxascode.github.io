@@ -432,11 +432,17 @@ jobs:
 
       - name: Generate spreadsheet templates
         if: steps.check.outputs.needs_deploy == 'true'
+        env:
+          FORCE_DEPLOY: ${{ github.event_name == 'workflow_dispatch' && inputs.force_deploy && 'true' || 'false' }}
         run: |
           set -euo pipefail
           latest="$(cat .cache-meta/latest.txt)"
-          node scripts/generate-spreadsheet-template.mjs --latest="${latest}"
-          node scripts/generate-lab-package.mjs --latest="${latest}"
+          artifact_flags="--incremental"
+          if [ "${{ steps.check.outputs.force_refresh }}" = "true" ] || [ "${FORCE_DEPLOY}" = "true" ]; then
+            artifact_flags="--incremental --force"
+          fi
+          node scripts/generate-spreadsheet-template.mjs --latest="${latest}" ${artifact_flags}
+          node scripts/generate-lab-package.mjs --latest="${latest}" ${artifact_flags}
 
       - run: npm run build
         if: steps.check.outputs.needs_deploy == 'true'

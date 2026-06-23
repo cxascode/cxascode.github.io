@@ -32,13 +32,27 @@ const OUTPUT_BASENAME = "cx-as-code-lab";
 const FILTER_BUILDER_FILENAME = "filter-builder-template.xlsx";
 const EXPORT_PIPELINE_MAIN_TF = "exportpipeline/main.tf";
 const DEFAULT_OVERRIDES_PATH = path.resolve(REPO_ROOT, "public/overrides.json");
+const STAMP_DIR = path.resolve(REPO_ROOT, ".cache-meta/artifact-stamps/lab");
+
+const LAB_GLOBAL_INPUT_RELATIVE_PATHS = [
+  "public/overrides.json",
+  "scripts/lib/dependency-tree-overrides.mjs",
+  "scripts/lib/filter-builder-template.mjs",
+  "scripts/lib/lab-export-scope.mjs",
+  "scripts/lib/lab-package-version.mjs",
+];
 const SKIP_TEMPLATE_ENTRIES = new Set([".vscode", ".DS_Store", "__MACOSX"]);
 
-function getArgValue(name) {
-  const prefix = `--${name}=`;
-  const arg = process.argv.find((entry) => entry.startsWith(prefix));
-  return arg ? arg.slice(prefix.length) : "";
-}
+import {
+  combinedInputsHash,
+  getArgValue,
+  hasArgFlag,
+  hashDirectory,
+  hashFile,
+  hashPaths,
+  shouldSkipIncremental,
+  writeStamp,
+} from "./lib/generated-artifact-incremental.mjs";
 
 async function ensureDir(dir) {
   await fs.mkdir(dir, { recursive: true });
@@ -151,6 +165,11 @@ async function buildLabPackage(version, stagingRoot, { overrides, dependencyTree
   return stagingDir;
 }
 
+async function computeLabInputsHash(version, globalInputsHash) {
+  const depHash = await hashFile(path.join(INPUT_DIR, `${version}.json`));
+  return combinedInputsHash([globalInputsHash, version, depHash]);
+}
+
 async function main() {
   if (!(await pathExists(TEMPLATE_ROOT))) {
     throw new Error(`Lab template not found at ${TEMPLATE_ROOT}`);
@@ -184,13 +203,45 @@ async function main() {
 
   console.log(`Using latest version: ${latest}`);
 
+  const incremental = hasArgFlag("incremental");
+  const force = hasArgFlag("force");
+  const globalInputsHash = incremental
+    ? await combinedInputsHash([
+        await hashPaths(REPO_ROOT, LAB_GLOBAL_INPUT_RELATIVE_PATHS),
+        await hashDirectory(TEMPLATE_ROOT, { ignore: SKIP_TEMPLATE_ENTRIES }),
+      ])
+    : "";
+
   const overrides = await loadOverrides();
   const stagingRoot = path.join(REPO_ROOT, ".cache", "lab-package-staging", Date.now().toString());
   await ensureDir(stagingRoot);
 
+  let generatedCount = 0;
+  let skippedCount = 0;
+
   try {
     for (const file of jsonFiles) {
       const version = file.replace(/\.json$/, "");
+      const zipPath = path.join(OUTPUT_DIR, `${version}-${OUTPUT_BASENAME}.zip`);
+      const stampPath = path.join(STAMP_DIR, `${version}.json`);
+      const inputsHash = incremental
+        ? await computeLabInputsHash(version, globalInputsHash)
+        : "";
+
+      if (
+        await shouldSkipIncremental({
+          incremental,
+          force,
+          outPath: zipPath,
+          stampPath,
+          inputsHash,
+        })
+      ) {
+        console.log(`Skipping lab package for ${version} (inputs unchanged)`);
+        skippedCount += 1;
+        continue;
+      }
+
       const dependencyTree = JSON.parse(
         await fs.readFile(path.join(INPUT_DIR, file), "utf8")
       );
@@ -200,14 +251,23 @@ async function main() {
         dependencyTree,
       });
 
-      const zipPath = path.join(OUTPUT_DIR, `${version}-${OUTPUT_BASENAME}.zip`);
       await zipDirectory(
         path.join(versionStagingRoot, LAB_FOLDER_NAME),
         zipPath
       );
+      if (incremental) {
+        await writeStamp(stampPath, inputsHash);
+      }
+      generatedCount += 1;
       console.log(`Generated lab package for ${version} -> ${zipPath}`);
 
       await fs.rm(versionStagingRoot, { recursive: true, force: true });
+    }
+
+    if (incremental) {
+      console.log(
+        `Lab packages: generated ${generatedCount}, skipped ${skippedCount} (incremental).`
+      );
     }
 
     const latestZip = path.join(OUTPUT_DIR, `${latest}-${OUTPUT_BASENAME}.zip`);
