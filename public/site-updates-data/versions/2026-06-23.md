@@ -4,3 +4,7 @@
 ### What's new
 
 - Adding filter/search by gui menu path
+
+### What's new
+
+- Gui search
