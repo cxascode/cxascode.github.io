@@ -409,6 +409,50 @@ button.gcHeaderLink:disabled {
   gap: 10px 12px;
 }
 
+.gcListViewToggle {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: stretch;
+  height: 34px;
+  padding: 3px;
+  border: 1px solid var(--gc-border);
+  border-radius: 999px;
+  background: #f0f3f6;
+  gap: 2px;
+}
+
+.gcListViewToggle__option {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 100%;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #8a97a6;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.gcListViewToggle__option:hover:not(:disabled) {
+  color: var(--gc-text);
+}
+
+.gcListViewToggle__option[aria-checked="true"] {
+  background: var(--gc-surface);
+  color: var(--gc-blue);
+  box-shadow: 0 1px 2px rgba(31, 45, 61, 0.08);
+}
+
+.gcListViewToggle__option:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 .gcDivisionFilterBlock {
   display: flex;
   align-items: center;
@@ -675,6 +719,14 @@ button.gcHeaderLink:disabled {
   gap: 8px;
 }
 
+.gcResourceTypeLine .gcMenuPath__crumbs,
+.gcResourceTypeLine .gcMenuPath__empty {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--gc-text);
+}
+
 .gcDivisionBadge {
   display: inline-flex;
   align-items: center;
@@ -767,6 +819,24 @@ button.gcDocsPill {
   margin-top: 10px;
   padding-top: 10px;
   border-top: 1px solid var(--gc-border2);
+}
+
+.gcTd--menuPath {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  word-break: break-word;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--gc-text);
+}
+
+.gcListMenuPath__type {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--gc-subtle);
 }
 
 .gcMenuPath__label {
