@@ -96,6 +96,14 @@ const TF_EXPORT_SINGLETONS_VERSION_URL = (v) => versionedJsonUrl(TF_EXPORT_SINGL
 
 const VERSION_PICKER_TOOLTIP = `Dependencies - v${MIN_DEPENDENCY_TREE_VERSION}+, Permissions - v${MIN_RESOURCE_PERMISSIONS_VERSION}+`;
 
+const LIST_VIEW_TYPE = "type";
+const LIST_VIEW_MENU_PATH = "menuPath";
+
+const LIST_VIEW_OPTIONS = [
+  { id: LIST_VIEW_TYPE, label: "Type", title: "List by resource type" },
+  { id: LIST_VIEW_MENU_PATH, label: "GUI", title: "List by GUI menu path" },
+];
+
 function normalizeType(s) {
   return (s || "").trim();
 }
@@ -273,6 +281,39 @@ function resolveGuiMenuPath(resourceType, overrides) {
   return typeof path === "string" ? path.trim() : "";
 }
 
+function sortTypesForListView(types, listViewMode, overrides) {
+  if (listViewMode !== LIST_VIEW_MENU_PATH || !overrides) return types;
+
+  return [...types].sort((a, b) => {
+    const pathA = resolveGuiMenuPath(a, overrides);
+    const pathB = resolveGuiMenuPath(b, overrides);
+    const keyA = pathA || `\uffff${a}`;
+    const keyB = pathB || `\uffff${b}`;
+    const pathCmp = keyA.localeCompare(keyB, undefined, { sensitivity: "base" });
+    if (pathCmp !== 0) return pathCmp;
+    return a.localeCompare(b);
+  });
+}
+
+function MenuPathCrumbs({ path, className = "" }) {
+  if (!path) return null;
+
+  return (
+    <span className={`gcMenuPath__crumbs ${className}`.trim()}>
+      {path.split(">").map((segment, index) => (
+        <React.Fragment key={`${segment}-${index}`}>
+          {index > 0 ? (
+            <span className="gcMenuPath__sep" aria-hidden="true">
+              ›
+            </span>
+          ) : null}
+          <span>{segment.trim()}</span>
+        </React.Fragment>
+      ))}
+    </span>
+  );
+}
+
 function getHiddenResourceTypes(overrides) {
   const hidden = overrides?.hiddenResourceTypes;
   if (!Array.isArray(hidden)) return new Set();
@@ -349,6 +390,7 @@ export default function App() {
   const [tfExportSingletonTypes, setTfExportSingletonTypes] = useState(() => new Set());
 
   const [query, setQuery] = useState("");
+  const [listViewMode, setListViewMode] = useState(LIST_VIEW_TYPE);
   const [divisionFilter, setDivisionFilter] = useState(DIVISION_FILTER_ALL);
   const [selectedType, setSelectedType] = useState("");
 
@@ -618,12 +660,35 @@ export default function App() {
     [allTypes, depsMap, divisionFilter]
   );
 
+  const isMenuPathListView = listViewMode === LIST_VIEW_MENU_PATH;
+
+  const menuPathUsageCount = useMemo(() => {
+    const counts = new Map();
+    if (!overrides) return counts;
+
+    for (const t of divisionFilteredTypes) {
+      const path = resolveGuiMenuPath(t, overrides);
+      if (!path) continue;
+      counts.set(path, (counts.get(path) || 0) + 1);
+    }
+
+    return counts;
+  }, [divisionFilteredTypes, overrides]);
+
   const filteredTypes = useMemo(() => {
     const q = normalizeType(query).toLowerCase();
-    return q
-      ? divisionFilteredTypes.filter((t) => t.toLowerCase().includes(q))
+    const matched = q
+      ? divisionFilteredTypes.filter((t) => {
+          if (isMenuPathListView) {
+            const path = resolveGuiMenuPath(t, overrides).toLowerCase();
+            return path.includes(q);
+          }
+          return t.toLowerCase().includes(q);
+        })
       : divisionFilteredTypes;
-  }, [divisionFilteredTypes, query]);
+
+    return sortTypesForListView(matched, listViewMode, overrides);
+  }, [divisionFilteredTypes, query, listViewMode, overrides, isMenuPathListView]);
 
   const activeType = useMemo(() => {
     if (!selectedType) return "";
@@ -633,6 +698,8 @@ export default function App() {
   const showDependencyLoading =
     (loadingData && raw === null) || !overrides || !providerEnvVarCatalog;
   const detailType = activeType || (showDependencyLoading ? selectedType : "");
+  const detailMenuPath =
+    detailType && overrides ? resolveGuiMenuPath(detailType, overrides) : "";
 
   useEffect(() => {
     if (!selectedType || !allTypes.length) return;
@@ -771,11 +838,6 @@ export default function App() {
         ? buildTerraformRegistryDocsUrl(detailType, selectedVersion)
         : buildTerraformRegistryProviderDocsUrl(selectedVersion),
     [detailType, selectedVersion]
-  );
-
-  const detailGuiMenuPath = useMemo(
-    () => (overrides ? resolveGuiMenuPath(detailType, overrides) : ""),
-    [detailType, overrides]
   );
 
   const [copyState, setCopyState] = useState("idle");
@@ -1099,6 +1161,13 @@ export default function App() {
     [selectedVersion, newestListedRelease]
   );
 
+  const setListViewModeAndReset = useCallback((nextMode) => {
+    if (nextMode === listViewMode) return;
+    setListViewMode(nextMode);
+    setQuery("");
+    setSelectedType("");
+  }, [listViewMode]);
+
   const clearSearch = () => {
     setQuery("");
     setDivisionFilter(DIVISION_FILTER_ALL);
@@ -1148,6 +1217,43 @@ export default function App() {
     }
   };
 
+  const detailResourceBadges = activeType ? (
+    <>
+      {isDivisionAware ? (
+        <span
+          className="gcDivisionBadge"
+          title="Depends on genesyscloud_auth_division — heuristic for division_id in Registry docs; confirm there if unsure."
+        >
+          Division aware
+        </span>
+      ) : null}
+      {isSingleton ? (
+        <span
+          className="gcSingletonBadge"
+          title="Org-wide singleton — only one instance exists per organization."
+        >
+          Singleton
+        </span>
+      ) : null}
+      {isDeprecated ? (
+        <span
+          className="gcDeprecatedBadge"
+          title="Marked deprecated by the provider — avoid new use and plan migration; see release notes for details."
+        >
+          Deprecated
+        </span>
+      ) : null}
+      {isNonExportable ? (
+        <span
+          className="gcNonExportableBadge"
+          title="This provider resource type cannot be exported with genesyscloud_tf_export."
+        >
+          Non-exportable
+        </span>
+      ) : null}
+    </>
+  ) : null;
+
   const resourceListCountLabel = useMemo(() => {
     if (error) return "";
     if (showDependencyLoading) return "Loading resource types…";
@@ -1170,12 +1276,21 @@ export default function App() {
     if (hasSearch) {
       if (!filtered) {
         if (hasDivisionFilter) return `No matches among ${pool} ${poolLabel}`;
-        return `No matches among ${total} resource types`;
+        return isMenuPathListView
+          ? `No matches among ${total} menu paths`
+          : `No matches among ${total} resource types`;
       }
       if (hasDivisionFilter) {
         return filtered === pool
           ? `${filtered} ${poolLabel}`
           : `${filtered} of ${pool} ${poolLabel}`;
+      }
+      if (isMenuPathListView) {
+        return filtered === total
+          ? filtered === 1
+            ? "1 match"
+            : `${filtered} matches`
+          : `${filtered} of ${total} matches`;
       }
       return filtered === total
         ? filtered === 1
@@ -1197,6 +1312,7 @@ export default function App() {
     filteredTypes.length,
     query,
     divisionFilter,
+    isMenuPathListView,
   ]);
 
   return (
@@ -1297,11 +1413,33 @@ export default function App() {
           <section className="gcCard">
             <div className="gcCard__toolbar">
               <div className="gcToolbarRow">
+                <div
+                  className="gcListViewToggle"
+                  role="radiogroup"
+                  aria-label="List by"
+                >
+                  {LIST_VIEW_OPTIONS.map((option) => (
+                    <button
+                      key={option.id}
+                      type="button"
+                      className="gcListViewToggle__option"
+                      role="radio"
+                      aria-checked={listViewMode === option.id}
+                      title={option.title}
+                      disabled={showDependencyLoading || !!error}
+                      onClick={() => setListViewModeAndReset(option.id)}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
                 <input
                   ref={searchRef}
                   type="search"
                   className="gcSearchInput"
-                  placeholder="Search resource types"
+                  placeholder={
+                    isMenuPathListView ? "Search GUI menu paths" : "Search resource types"
+                  }
                   value={query}
                   onInput={(e) => {
                     setQuery(e.target.value);
@@ -1329,7 +1467,7 @@ export default function App() {
               ref={listBodyRef}
               className="gcTable__body"
               role="listbox"
-              aria-label="Resource types"
+              aria-label={isMenuPathListView ? "GUI menu paths" : "Resource types"}
               tabIndex={0}
               onKeyDown={handleResourceListKeyDown}
             >
@@ -1338,23 +1476,53 @@ export default function App() {
               ) : null}
 
               {!showDependencyLoading &&
-                filteredTypes.map((t) => (
-                  <button
-                    key={t}
-                    data-resource-type={t}
-                    className={`gcTr ${t === selectedType ? "isActive" : ""}`}
-                    onClick={() => {
-                      setSelectedType(t);
-                      listBodyRef.current?.focus();
-                    }}
-                    onKeyDown={handleResourceListKeyDown}
-                    type="button"
-                    role="option"
-                    aria-selected={t === selectedType}
-                  >
-                    <div className="gcTd gcMono">{t}</div>
-                  </button>
-                ))}
+                filteredTypes.map((t) => {
+                  const menuPath = overrides ? resolveGuiMenuPath(t, overrides) : "";
+                  const showTypeHint =
+                    isMenuPathListView &&
+                    menuPath &&
+                    (menuPathUsageCount.get(menuPath) || 0) > 1;
+
+                  return (
+                    <button
+                      key={t}
+                      data-resource-type={t}
+                      className={`gcTr ${t === selectedType ? "isActive" : ""}`}
+                      onClick={() => {
+                        setSelectedType(t);
+                        listBodyRef.current?.focus();
+                      }}
+                      onKeyDown={handleResourceListKeyDown}
+                      type="button"
+                      role="option"
+                      aria-selected={t === selectedType}
+                      aria-label={
+                        isMenuPathListView && menuPath ? `${menuPath} (${t})` : t
+                      }
+                    >
+                      <div
+                        className={
+                          isMenuPathListView ? "gcTd gcTd--menuPath" : "gcTd gcMono"
+                        }
+                      >
+                        {isMenuPathListView ? (
+                          <>
+                            {menuPath ? (
+                              <MenuPathCrumbs path={menuPath} />
+                            ) : (
+                              <span className="gcMenuPath__empty">TBD</span>
+                            )}
+                            {showTypeHint ? (
+                              <span className="gcListMenuPath__type gcMono">{t}</span>
+                            ) : null}
+                          </>
+                        ) : (
+                          t
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
 
               {!showDependencyLoading && filteredTypes.length === 0 ? (
                 <div className="gcEmptyRow">No matches.</div>
@@ -1462,7 +1630,9 @@ export default function App() {
           <section className="gcCard gcRightCard">
             <div className="gcCard__header">
               <div className="gcCard__titleRow">
-                <h2 className="gcCard__title">Resource Type Details</h2>
+                <h2 className="gcCard__title">
+                  {isMenuPathListView ? "GUI Menu Path Details" : "Resource Type Details"}
+                </h2>
                 <div className="gcCard__titleActions">
                   {terraformRegistryDocsUrl ? (
                     <a
@@ -1485,56 +1655,40 @@ export default function App() {
                 {detailType ? (
                   <div className="gcResourceHeader">
                     <div className="gcResourceTypeLine">
-                      <code className="gcResourceTypeName">{detailType}</code>
-                      {activeType && isDivisionAware ? (
-                        <span
-                          className="gcDivisionBadge"
-                          title="Depends on genesyscloud_auth_division — heuristic for division_id in Registry docs; confirm there if unsure."
-                        >
-                          Division aware
-                        </span>
-                      ) : null}
-                      {activeType && isSingleton ? (
-                        <span
-                          className="gcSingletonBadge"
-                          title="Org-wide singleton — only one instance exists per organization."
-                        >
-                          Singleton
-                        </span>
-                      ) : null}
-                      {activeType && isDeprecated ? (
-                        <span
-                          className="gcDeprecatedBadge"
-                          title="Marked deprecated by the provider — avoid new use and plan migration; see release notes for details."
-                        >
-                          Deprecated
-                        </span>
-                      ) : null}
-                      {activeType && isNonExportable ? (
-                        <span
-                          className="gcNonExportableBadge"
-                          title="This provider resource type cannot be exported with genesyscloud_tf_export."
-                        >
-                          Non-exportable
-                        </span>
-                      ) : null}
-                    </div>
-                    <div className="gcMenuPathBlock" aria-label="Genesys Cloud GUI menu path">
-                      <div className="gcMenuPath__label">GUI menu path</div>
-                      <div className="gcMenuPath__value">
-                        {activeType && detailGuiMenuPath ? (
-                          <span className="gcMenuPath__crumbs">
-                            {detailGuiMenuPath.split(">").map((segment, index) => (
-                              <React.Fragment key={`${segment}-${index}`}>
-                                {index > 0 ? (
-                                  <span className="gcMenuPath__sep" aria-hidden="true">
-                                    ›
-                                  </span>
-                                ) : null}
-                                <span>{segment.trim()}</span>
-                              </React.Fragment>
-                            ))}
+                      {isMenuPathListView ? (
+                        activeType && detailMenuPath ? (
+                          <MenuPathCrumbs path={detailMenuPath} />
+                        ) : (
+                          <span className="gcMenuPath__empty">
+                            {showDependencyLoading ? "Loading…" : "TBD"}
                           </span>
+                        )
+                      ) : (
+                        <>
+                          <code className="gcResourceTypeName">{detailType}</code>
+                          {detailResourceBadges}
+                        </>
+                      )}
+                    </div>
+                    <div
+                      className="gcMenuPathBlock"
+                      aria-label={
+                        isMenuPathListView
+                          ? "Resource type"
+                          : "Genesys Cloud GUI menu path"
+                      }
+                    >
+                      <div className="gcMenuPath__label">
+                        {isMenuPathListView ? "Resource type" : "GUI menu path"}
+                      </div>
+                      <div className="gcMenuPath__value">
+                        {isMenuPathListView ? (
+                          <div className="gcResourceTypeLine">
+                            <code className="gcResourceTypeName">{detailType}</code>
+                            {detailResourceBadges}
+                          </div>
+                        ) : activeType && detailMenuPath ? (
+                          <MenuPathCrumbs path={detailMenuPath} />
                         ) : (
                           <span className="gcMenuPath__empty">
                             {showDependencyLoading ? "Loading…" : "TBD"}
@@ -1543,6 +1697,8 @@ export default function App() {
                       </div>
                     </div>
                   </div>
+                ) : isMenuPathListView ? (
+                  "Pick a menu path"
                 ) : (
                   "Pick a resource type"
                 )}
