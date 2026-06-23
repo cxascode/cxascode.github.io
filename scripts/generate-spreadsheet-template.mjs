@@ -27,6 +27,18 @@ const TEMPLATE_PATH = path.resolve(
   "scripts/templates/cx-as-code-spreadsheet-template.xlsx"
 );
 const DEFAULT_OVERRIDES_PATH = path.resolve("public/overrides.json");
+const REPO_ROOT = path.resolve(import.meta.dirname, "..");
+const STAMP_DIR = path.resolve(REPO_ROOT, ".cache-meta/artifact-stamps/spreadsheet");
+
+const SPREADSHEET_GLOBAL_INPUT_RELATIVE_PATHS = [
+  "public/overrides.json",
+  "scripts/templates/cx-as-code-spreadsheet-template.xlsx",
+  "scripts/lib/dependency-tree-overrides.mjs",
+  "src/dependencyOrder.js",
+  "src/effectiveDependencies.js",
+  "src/tfExportTemplate.js",
+  "src/tfExportSingletons.js",
+];
 
 const AUTH_DIVISION_RESOURCE_TYPE = "genesyscloud_auth_division";
 const SPREADSHEET_SINGLETON_NOTE = "Org-wide singleton";
@@ -40,11 +52,16 @@ const GRAY_FILL = {
   bgColor: { indexed: 64 },
 };
 
-function getArgValue(name) {
-  const prefix = `--${name}=`;
-  const arg = process.argv.find((a) => a.startsWith(prefix));
-  return arg ? arg.slice(prefix.length) : "";
-}
+import {
+  combinedInputsHash,
+  getArgValue,
+  hasArgFlag,
+  hashDirectory,
+  hashFile,
+  hashPaths,
+  shouldSkipIncremental,
+  writeStamp,
+} from "./lib/generated-artifact-incremental.mjs";
 
 function resolveGuiMenuPath(resourceType, overrides) {
   const type = (resourceType || "").trim();
@@ -311,6 +328,18 @@ async function writeWorkbook(rows, outPath) {
   await workbook.xlsx.writeFile(outPath);
 }
 
+async function computeSpreadsheetInputsHash(version, globalInputsHash) {
+  const depHash = await hashFile(path.join(INPUT_DIR, `${version}.json`));
+  const namesHash = await hashFile(
+    path.join(PUBLIC_DIR, TF_EXPORT_RESOURCE_NAMES_DIR, `${version}.json`)
+  );
+  const singletonHash = await hashFile(
+    path.join(PUBLIC_DIR, TF_EXPORT_SINGLETONS_DIR, `${version}.json`)
+  );
+
+  return combinedInputsHash([globalInputsHash, version, depHash, namesHash, singletonHash]);
+}
+
 async function resolveLatestVersion(explicitLatest, jsonFiles) {
   if (explicitLatest) return explicitLatest;
 
@@ -362,17 +391,55 @@ async function main() {
 
   console.log(`Using latest version: ${latest}`);
 
+  const incremental = hasArgFlag("incremental");
+  const force = hasArgFlag("force");
+  const globalInputsHash = incremental
+    ? await hashPaths(REPO_ROOT, SPREADSHEET_GLOBAL_INPUT_RELATIVE_PATHS)
+    : "";
+
+  let generatedCount = 0;
+  let skippedCount = 0;
+
   for (const file of jsonFiles) {
     const version = file.replace(/\.json$/, "");
+    const outPath = path.join(OUTPUT_DIR, `${version}-cx-as-code-template.xlsx`);
+    const stampPath = path.join(STAMP_DIR, `${version}.json`);
+    const inputsHash = incremental
+      ? await computeSpreadsheetInputsHash(version, globalInputsHash)
+      : "";
+
+    if (
+      await shouldSkipIncremental({
+        incremental,
+        force,
+        outPath,
+        stampPath,
+        inputsHash,
+      })
+    ) {
+      console.log(`Skipping spreadsheet template for ${version} (inputs unchanged)`);
+      skippedCount += 1;
+      continue;
+    }
+
     const inputPath = path.join(INPUT_DIR, file);
     const raw = JSON.parse(await fs.readFile(inputPath, "utf8"));
     const tfExportCatalog = await loadTfExportCatalog(version);
     const rows = buildResourceRows(raw, overrides, tfExportCatalog);
-    const outPath = path.join(OUTPUT_DIR, `${version}-cx-as-code-template.xlsx`);
 
     await writeWorkbook(rows, outPath);
+    if (incremental) {
+      await writeStamp(stampPath, inputsHash);
+    }
+    generatedCount += 1;
     console.log(
       `Generated spreadsheet template for ${version} (${rows.length} resource types) -> ${outPath}`
+    );
+  }
+
+  if (incremental) {
+    console.log(
+      `Spreadsheet templates: generated ${generatedCount}, skipped ${skippedCount} (incremental).`
     );
   }
 
