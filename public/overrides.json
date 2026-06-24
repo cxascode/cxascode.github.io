@@ -78,7 +78,8 @@
     "genesyscloud_externalusers_identity": "User Management > Users",
     "genesyscloud_greeting": "Greetings > Greeting",
     "genesyscloud_greeting_user": "User Management > Users",
-    "genesyscloud_group_greeting": "Greetings > Group Greeting"
+    "genesyscloud_group_greeting": "Greetings > Group Greeting",
+    "genesyscloud_widget_deployment": "Digital and Telephony > Message > Messenger Deployments"
   },
   "hiddenResourceTypes": [
     "genesyscloud_bcp_tf_exporter",
