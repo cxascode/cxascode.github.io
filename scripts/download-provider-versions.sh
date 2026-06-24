@@ -138,6 +138,7 @@ echo "Indexed ${dep_count} dependency tree version(s). Latest: ${latest}"
 if [[ "${RUN_GENERATORS}" == "true" ]]; then
   echo "Running local generators for latest=${latest}..."
   node scripts/generate-resource-permissions-tf.mjs --latest="${latest}"
+  node scripts/generate-gui-menu-paths.mjs --latest="${latest}" --union-permissions
   node scripts/generate-tf-export-resource-names.mjs
   node scripts/generate-tf-export-singletons.mjs
   node scripts/verify-tf-export-env-vars.mjs

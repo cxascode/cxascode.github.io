@@ -9,6 +9,10 @@ import {
 } from "../src/tfExportSingletons.js";
 import { resolveTfExportResourceName } from "../src/tfExportTemplate.js";
 import {
+  normalizeGeneratedGuiMenuPaths,
+  resolveGuiMenuPath,
+} from "../src/guiMenuPaths.js";
+import {
   applyOverrides,
   getDeprecatedResourceTypes,
   getHiddenResourceTypes,
@@ -36,6 +40,7 @@ const SPREADSHEET_GLOBAL_INPUT_RELATIVE_PATHS = [
   "scripts/lib/dependency-tree-overrides.mjs",
   "src/dependencyOrder.js",
   "src/effectiveDependencies.js",
+  "src/guiMenuPaths.js",
   "src/tfExportTemplate.js",
   "src/tfExportSingletons.js",
 ];
@@ -59,20 +64,14 @@ import {
   hashDirectory,
   hashFile,
   hashPaths,
+  hashStableJson,
   shouldSkipIncremental,
   writeStamp,
 } from "./lib/generated-artifact-incremental.mjs";
 
-function resolveGuiMenuPath(resourceType, overrides) {
-  const type = (resourceType || "").trim();
-  if (!type) return "TBD";
-
-  const paths = overrides?.guiMenuPaths;
-  if (!paths || typeof paths !== "object") return "TBD";
-
-  const menuPath = paths[type];
-  const trimmed = typeof menuPath === "string" ? menuPath.trim() : "";
-  return trimmed || "TBD";
+function resolveSpreadsheetMenuPath(resourceType, overrides, generatedGuiMenuPaths) {
+  const menuPath = resolveGuiMenuPath(resourceType, overrides, generatedGuiMenuPaths);
+  return menuPath || "TBD";
 }
 
 function resolveSpreadsheetScopePrefix(resourceType, overrides) {
@@ -216,7 +215,7 @@ function buildTierByType(tiers) {
   return tierByType;
 }
 
-function buildResourceRows(raw, overrides, tfExportCatalog) {
+function buildResourceRows(raw, overrides, tfExportCatalog, generatedGuiMenuPaths) {
   const hidden = getHiddenResourceTypes(overrides);
   const deprecatedTypes = getDeprecatedResourceTypes(overrides);
   const nonExportableTypes = getNonExportableResourceTypes(overrides);
@@ -249,7 +248,7 @@ function buildResourceRows(raw, overrides, tfExportCatalog) {
     const dependencies = effectiveDependencies(type, allDependencies);
 
     return {
-      menuPath: resolveGuiMenuPath(type, overrides),
+      menuPath: resolveSpreadsheetMenuPath(type, overrides, generatedGuiMenuPaths),
       resourceType: type,
       divisionAware: isDivisionAware(allDependencies) ? "Yes" : "No",
       dependencyCount: dependencies.length,
@@ -264,6 +263,20 @@ function buildResourceRows(raw, overrides, tfExportCatalog) {
       ),
     };
   });
+}
+
+async function loadGeneratedGuiMenuPaths() {
+  const guiMenuPathsPath = path.join(PUBLIC_DIR, "gui-menu-paths.json");
+  try {
+    const parsed = JSON.parse(await fs.readFile(guiMenuPathsPath, "utf8"));
+    return normalizeGeneratedGuiMenuPaths(parsed?.guiMenuPaths);
+  } catch (err) {
+    if (err && err.code === "ENOENT") {
+      console.log("No gui-menu-paths.json found, continuing without generated menu paths.");
+      return {};
+    }
+    throw err;
+  }
 }
 
 async function loadOverrides() {
@@ -328,8 +341,32 @@ async function writeWorkbook(rows, outPath) {
   await workbook.xlsx.writeFile(outPath);
 }
 
-async function computeSpreadsheetInputsHash(version, globalInputsHash) {
-  const depHash = await hashFile(path.join(INPUT_DIR, `${version}.json`));
+function buildSpreadsheetMenuPathsFingerprint(raw, overrides, generatedGuiMenuPaths) {
+  const types = [
+    ...new Set(
+      (raw.resources || [])
+        .map((resource) => resource?.type)
+        .filter((type) => typeof type === "string" && type.trim())
+        .map((type) => type.trim())
+    ),
+  ].sort();
+
+  return Object.fromEntries(
+    types.map((type) => [
+      type,
+      resolveSpreadsheetMenuPath(type, overrides, generatedGuiMenuPaths),
+    ])
+  );
+}
+
+async function computeSpreadsheetInputsHash(
+  version,
+  globalInputsHash,
+  overrides,
+  generatedGuiMenuPaths
+) {
+  const inputPath = path.join(INPUT_DIR, `${version}.json`);
+  const depHash = await hashFile(inputPath);
   const namesHash = await hashFile(
     path.join(PUBLIC_DIR, TF_EXPORT_RESOURCE_NAMES_DIR, `${version}.json`)
   );
@@ -337,7 +374,24 @@ async function computeSpreadsheetInputsHash(version, globalInputsHash) {
     path.join(PUBLIC_DIR, TF_EXPORT_SINGLETONS_DIR, `${version}.json`)
   );
 
-  return combinedInputsHash([globalInputsHash, version, depHash, namesHash, singletonHash]);
+  let menuPathsHash = "";
+  try {
+    const raw = JSON.parse(await fs.readFile(inputPath, "utf8"));
+    menuPathsHash = hashStableJson(
+      buildSpreadsheetMenuPathsFingerprint(raw, overrides, generatedGuiMenuPaths)
+    );
+  } catch {
+    menuPathsHash = "";
+  }
+
+  return combinedInputsHash([
+    globalInputsHash,
+    version,
+    depHash,
+    namesHash,
+    singletonHash,
+    menuPathsHash,
+  ]);
 }
 
 async function resolveLatestVersion(explicitLatest, jsonFiles) {
@@ -365,6 +419,7 @@ async function main() {
   await ensureDir(OUTPUT_DIR);
 
   const overrides = await loadOverrides();
+  const generatedGuiMenuPaths = await loadGeneratedGuiMenuPaths();
 
   const entries = await fs.readdir(INPUT_DIR, { withFileTypes: true });
   const jsonFiles = entries
@@ -405,7 +460,12 @@ async function main() {
     const outPath = path.join(OUTPUT_DIR, `${version}-cx-as-code-template.xlsx`);
     const stampPath = path.join(STAMP_DIR, `${version}.json`);
     const inputsHash = incremental
-      ? await computeSpreadsheetInputsHash(version, globalInputsHash)
+      ? await computeSpreadsheetInputsHash(
+          version,
+          globalInputsHash,
+          overrides,
+          generatedGuiMenuPaths
+        )
       : "";
 
     if (
@@ -425,7 +485,7 @@ async function main() {
     const inputPath = path.join(INPUT_DIR, file);
     const raw = JSON.parse(await fs.readFile(inputPath, "utf8"));
     const tfExportCatalog = await loadTfExportCatalog(version);
-    const rows = buildResourceRows(raw, overrides, tfExportCatalog);
+    const rows = buildResourceRows(raw, overrides, tfExportCatalog, generatedGuiMenuPaths);
 
     await writeWorkbook(rows, outPath);
     if (incremental) {

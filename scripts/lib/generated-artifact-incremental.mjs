@@ -12,6 +12,14 @@ export function hasArgFlag(name, argv = process.argv) {
   return argv.includes(`--${name}`);
 }
 
+export function hashStableString(value) {
+  return crypto.createHash("sha256").update(String(value ?? "")).digest("hex");
+}
+
+export function hashStableJson(value) {
+  return hashStableString(JSON.stringify(value));
+}
+
 export async function hashFile(filePath) {
   try {
     const buf = await fs.readFile(filePath);

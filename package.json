@@ -11,6 +11,7 @@
     "generate-lab-package": "node scripts/generate-lab-package.mjs",
     "generate-tf-export-resource-names": "node scripts/generate-tf-export-resource-names.mjs",
     "generate-tf-export-singletons": "node scripts/generate-tf-export-singletons.mjs",
+    "generate-gui-menu-paths": "node scripts/generate-gui-menu-paths.mjs",
     "verify-tf-export-env-vars": "node scripts/verify-tf-export-env-vars.mjs",
     "generate-site-updates": "node scripts/generate-site-updates.mjs",
     "build": "node scripts/write-sitemap.mjs && vite build",

@@ -91,6 +91,7 @@ jobs:
             public/lab-packages
             public/tf-export-resource-names
             public/tf-export-singletons
+            public/gui-menu-paths.json
             .cache-meta
             .cache/provider-source
           key: versions-${{ runner.os }}-${{ github.ref_name }}-${{ github.run_id }}
@@ -302,6 +303,7 @@ jobs:
           cp "public/dependency-tree-json/${latest}.json" public/dependency-tree-json/latest.json
 
           node scripts/generate-resource-permissions-tf.mjs --latest="${latest}"
+          node scripts/generate-gui-menu-paths.mjs --latest="${latest}" --union-permissions
           node scripts/generate-tf-export-resource-names.mjs
           node scripts/generate-tf-export-singletons.mjs
           node scripts/verify-tf-export-env-vars.mjs
@@ -380,6 +382,7 @@ jobs:
           cp "public/dependency-tree-json/${latest}.json" public/dependency-tree-json/latest.json
 
           node scripts/generate-resource-permissions-tf.mjs --latest="${latest}"
+          node scripts/generate-gui-menu-paths.mjs --latest="${latest}" --union-permissions
           node scripts/generate-tf-export-resource-names.mjs
           node scripts/generate-tf-export-singletons.mjs
           node scripts/verify-tf-export-env-vars.mjs
@@ -437,6 +440,8 @@ jobs:
         run: |
           set -euo pipefail
           latest="$(cat .cache-meta/latest.txt)"
+          # Incremental: skip cached versions when inputs unchanged.
+          # force_deploy / force_refresh adds --force to rebuild every cached version.
           artifact_flags="--incremental"
           if [ "${{ steps.check.outputs.force_refresh }}" = "true" ] || [ "${FORCE_DEPLOY}" = "true" ]; then
             artifact_flags="--incremental --force"

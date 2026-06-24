@@ -69,6 +69,7 @@ All generators read `public/overrides.json` unless `--overrides=` is passed (spr
 | `npm run generate-lab-package` | `public/lab-packages/{version}-cx-as-code-lab.zip`, `latest-cx-as-code-lab.zip` | `--latest=X.Y.Z`, `--incremental`, `--force` |
 | `npm run generate-tf-export-resource-names` | `public/tf-export-resource-names/{version}.json` | No args: all cached versions. `--version=X.Y.Z`, `--latest=X.Y.Z`, `--provider=path`, `--verify`, `--stdout` |
 | `npm run generate-tf-export-singletons` | `public/tf-export-singletons/{version}.json` | Same pattern as tf-export resource names |
+| `npm run generate-gui-menu-paths` | `public/gui-menu-paths.json` (slim), `.cache-meta/gui-menu-paths-debug.json` (full catalog) | Genesys Cloud `admin/menu.json` plus Directory command-nav. `--latest=X.Y.Z`, `--union-permissions` (default in CI), `--no-union-permissions`, `--menu=`, `--permissions=`, `--directory-base=`, `--directory-bundle=`, `--directory-translations=`, `--no-directory-nav`, `--stdout` (full JSON). |
 | `npm run verify-tf-export-env-vars` | Updates `public/provider-env-vars.json` | `--version=X.Y.Z`, `--latest=X.Y.Z`. Auto-appends new provider env vars; **exits non-zero** until each is triaged (`export-template` or `providerEnvVarsIgnore`). Runs in CI after upstream refresh. |
 | `npm run generate-site-updates` | `public/site-updates-data/` | `--base`, `--head`, `--date=YYYY-MM-DD`, `--dry-run`, `--force`. Normally CI-only on push to `main`; use locally to preview changelog entries from a commit range. |
 
@@ -110,7 +111,7 @@ npm run download-provider-versions
 - `tfExportResourceNames` — optional per-type override for **genesyscloud_tf_export template** filter placeholders; wins over the generated map in `tf-export-resource-names.json`
 - `tfExportNote` — default Markdown note (GFM) shown in the **genesyscloud_tf_export template** panel when a resource type is selected. Use `\n` in JSON for line breaks (not `\\n`).
 - `dependencyNotes` — per resource type, Markdown note (GFM) shown at the bottom of Resource Type Details when that type is selected. Use `\n` in JSON for line breaks (not `\\n`).
-- `guiMenuPaths` — per resource type, Genesys Cloud admin menu path shown in Resource Type Details (segments separated by ` > `)
+- `guiMenuPaths` — optional per-type override for Genesys Cloud admin menu paths shown in Resource Type Details and the GUI list view; wins over `public/gui-menu-paths.json`
 - `hiddenResourceTypes` — resource types omitted from the left-hand list (still appear in Depends on / Dependency for when referenced)
 - `spreadsheetScopePrefixes` — prefix labels in generated spreadsheet templates (e.g. `"out"` for out-of-scope types). Also the source of truth for `exclude_filter_resources` in the lab `exportpipeline/main.tf` (minus any types listed in that file's `replace_with_datasource` block, and minus `nonExportableResourceTypes`).
 - **Division aware** — badge when **Depends on** includes `genesyscloud_auth_division`; list filter **Division Aware** → *Yes* / *No* (blank = all types; same heuristic)
@@ -188,9 +189,15 @@ Every run compares the latest `MyPureCloud/terraform-provider-genesyscloud` rele
 | Site updates auto-commit | Yes (push only) | Yes | Yes if push | Yes if push |
 | Spreadsheet templates | Skip unchanged versions | Regenerate all | Regenerate new version only | Regenerate all |
 | Lab packages | Skip unchanged versions | Regenerate all | Regenerate new version only | Regenerate all |
-| Permissions TF / tf-export | All cached versions | All cached versions | All cached versions | All cached versions |
+| Permissions TF / tf-export / **gui-menu-paths** | All cached versions / union permissions + live nav | Same | Same | Same |
 
-Spreadsheet templates and lab packages use **`--incremental`** in CI. Each provider version gets a fingerprint in `.cache-meta/artifact-stamps/`. A version is skipped when its output file exists and inputs are unchanged (dependency JSON, `overrides.json`, templates, generator libs). A version is rebuilt when output is missing, inputs changed, or CI passed **`--force`**.
+Spreadsheet templates and lab packages use **`--incremental`** in CI. Each provider version gets a fingerprint in `.cache-meta/artifact-stamps/`. A version is skipped when its output file exists and inputs are unchanged. A version is rebuilt when output is missing, its inputs changed, or CI passed **`--force`** (via **`force_deploy`** / **`force_refresh_upstream`**).
+
+| Trigger | Spreadsheet / lab behavior |
+|---------|----------------------------|
+| **`force_deploy`** or **`force_refresh_upstream`** | Regenerate **all** cached versions (`--incremental --force`) |
+| **New cx-as-code release** (incremental deploy) | Regenerate **only the new version** (and any version whose dependency tree, tf-export catalog, overrides, or menu paths changed) |
+| **Push to `main`** with no input changes | Skip unchanged versions |
 
 Permissions TF and tf-export generators do not use incremental skip yet — they still run for every cached version on each deploy.
 
@@ -234,6 +241,46 @@ node scripts/generate-tf-export-resource-names.mjs --version=1.82.0 --provider=/
 **Local:** `npm run generate-tf-export-singletons`
 
 `tfExportNote` in `overrides.json` is still the hand-edited Markdown note shown below the export template block.
+
+## gui-menu-paths.json
+
+`public/gui-menu-paths.json` is the **slim generated** GUI menu path map shipped to the site (~15 KB). The app and spreadsheet generator load `guiMenuPaths` from this file and apply `overrides.json` → `guiMenuPaths` on top (same pattern as `tfExportResourceNames`).
+
+The full mapping catalog (~200 KB) is written to **`.cache-meta/gui-menu-paths-debug.json`** (Actions cache only, not deployed). Use `--stdout` for the full JSON locally.
+
+**Generate:** `npm run generate-gui-menu-paths -- --latest=X.Y.Z --union-permissions` (CI, bootstrap, and `download-provider-versions.sh` pass `--union-permissions` so paths cover every resource type that ever appeared in cached `resource_permissions-*.json` since **1.76.0**, while still fetching live Genesys nav each run).
+
+**Public file fields:** `guiMenuPaths`, `generatedAt`, `permissionsSource`, `permissionsUnion`.
+
+- **`--union-permissions`** — merge all cached `public/resource-permissions-json/*.json` from `1.76.0` through `--latest` (newer file wins per resource type). Omit for a single `--permissions=` file or add `--no-union-permissions` with `--latest` for latest-only mapping.
+- **`guiMenuPaths`** — lookup map (`resource_type` → menu path). Same shape as `overrides.json` → `guiMenuPaths`. Types removed from **latest** permissions but mapped via the union are kept; debug catalog entries for those show `retired: true`.
+
+**Debug file only** (`.cache-meta/gui-menu-paths-debug.json`):
+
+- **`guiMenuPathCatalog`** — per-type detail: `permissions`, matched `menuPath` / `menuLeaf` / `menuAuthorize` / `matchScore` / `matchMethod`, optional `overrideMenuPath` / `overrideMatches`, or `unmappedReason`.
+- **`menuRows`** — flattened admin menu plus Directory command-nav rows (`path`, `authorize`). Grows over time; removed rows are retained across runs.
+- **`directoryNavSource`** / **`directoryCommandNavEntries`** — where the Directory bundle and translations were loaded from, and how many command-nav entries were parsed.
+- **`guiMenuPathsIgnore`** — resource types to skip during auto-mapping (hand-edited, preserved across runs).
+
+Match methods (in priority order):
+
+1. **`permission`** — menu `authorize` policy overlap using resource-type primary entities (admin menu and Directory command-nav).
+2. **`path-affinity`** — disambiguates rows that share generic policies such as `telephony:plugin:all`, using the resource type tail (e.g. `did_pool` → DID Numbers).
+3. **`translation-*`** — falls back to menu translation keys (`translation-entity`, `translation-scope`, `translation-resource-type`, `translation-resource`) when permission join is absent or ambiguous.
+
+Directory command-nav is fetched from `{region}/directory/` (same host as `--menu=` when remote). Override bundle or translations with `--directory-bundle=` / `--directory-translations=` (local path or URL). Skip with `--no-directory-nav`.
+
+Additional Genesys surfaces not yet ingested (needed for a few remaining resource types):
+
+| Surface | URL pattern | Would unlock |
+|---------|-------------|--------------|
+| **Architect app** | `{region}/architect/` → `build-assets/*/build/main.bundle.js` + localized strings | Grammars sub-nav (`Orchestration > Architect > Grammars`) |
+| **Journey Management app** | `{region}/journey-management/` (external link in directory bundle) | Journey views / schedules vs Outcomes disambiguation |
+| **Agent UI / Greetings** | `{region}/agent-ui-settings/` or agent-greeting iframe routes | `greeting`, `group_greeting` (not in directory command-nav today) |
+
+Some overrides use legacy labels (`Case Management > Caseplan`) where Directory search now shows `Orchestration > Work Automation > Caseplans` — the generator follows current search breadcrumbs.
+
+Unmapped types still appear in the catalog with `unmappedReason`; the app shows an empty menu path until covered by generated output or `overrides.json` → `guiMenuPaths`.
 
 ## provider-env-vars.json
 
