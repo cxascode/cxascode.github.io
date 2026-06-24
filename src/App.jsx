@@ -14,6 +14,10 @@ import {
   RESOURCE_NAME_PLACEHOLDER,
 } from "./tfExportTemplate.js";
 import {
+  normalizeGeneratedGuiMenuPaths,
+  resolveGuiMenuPath,
+} from "./guiMenuPaths.js";
+import {
   isSingletonTfExportResource,
   normalizeSingletonResourceTypes,
 } from "./tfExportSingletons.js";
@@ -76,6 +80,7 @@ const INDEX_URL = indexJsonUrl(DEPENDENCY_TREE_DIR);
 const LATEST_URL = latestJsonUrl(DEPENDENCY_TREE_DIR);
 const OVERRIDES_URL = publicDataUrl("", "overrides.json");
 const PROVIDER_ENV_VARS_URL = publicDataUrl("", "provider-env-vars.json");
+const GUI_MENU_PATHS_URL = publicDataUrl("", "gui-menu-paths.json");
 const VERSION_URL = (v) => versionedJsonUrl(DEPENDENCY_TREE_DIR, v);
 
 function attributeIndexVersionFromUrl(versionFromUrl) {
@@ -191,7 +196,7 @@ function isRoleDownloadSupported(version) {
  *     "<resource_type>": "Markdown note shown in Resource Type Details"
  *   },
  *   "guiMenuPaths": {
- *     "<resource_type>": "Admin > Menu > Path"
+ *     "<resource_type>": "Admin > Menu > Path (overrides public/gui-menu-paths.json)"
  *   },
  *   "hiddenResourceTypes": ["genesyscloud_bcp_tf_exporter", ...]
  *   "deprecatedResourceTypes": ["genesyscloud_journey_outcome", ...]
@@ -270,23 +275,12 @@ function resolveDependencyNote(resourceType, overrides) {
   return typeof note === "string" ? note.trim() : "";
 }
 
-function resolveGuiMenuPath(resourceType, overrides) {
-  const type = (resourceType || "").trim();
-  if (!type) return "";
-
-  const paths = overrides?.guiMenuPaths;
-  if (!paths || typeof paths !== "object") return "";
-
-  const path = paths[type];
-  return typeof path === "string" ? path.trim() : "";
-}
-
-function sortTypesForListView(types, listViewMode, overrides) {
-  if (listViewMode !== LIST_VIEW_MENU_PATH || !overrides) return types;
+function sortTypesForListView(types, listViewMode, overrides, generatedGuiMenuPaths) {
+  if (listViewMode !== LIST_VIEW_MENU_PATH) return types;
 
   return [...types].sort((a, b) => {
-    const pathA = resolveGuiMenuPath(a, overrides);
-    const pathB = resolveGuiMenuPath(b, overrides);
+    const pathA = resolveGuiMenuPath(a, overrides, generatedGuiMenuPaths);
+    const pathB = resolveGuiMenuPath(b, overrides, generatedGuiMenuPaths);
     const keyA = pathA || `\uffff${a}`;
     const keyB = pathB || `\uffff${b}`;
     const pathCmp = keyA.localeCompare(keyB, undefined, { sensitivity: "base" });
@@ -385,6 +379,7 @@ export default function App() {
 
   const [raw, setRaw] = useState(null);
   const [overrides, setOverrides] = useState(null);
+  const [generatedGuiMenuPaths, setGeneratedGuiMenuPaths] = useState({});
   const [providerEnvVarCatalog, setProviderEnvVarCatalog] = useState(null);
   const [tfExportResourceNames, setTfExportResourceNames] = useState({});
   const [tfExportSingletonTypes, setTfExportSingletonTypes] = useState(() => new Set());
@@ -416,9 +411,10 @@ export default function App() {
 
     (async () => {
       try {
-        const [overridesRes, envVarsRes] = await Promise.all([
+        const [overridesRes, envVarsRes, guiMenuPathsRes] = await Promise.all([
           fetch(OVERRIDES_URL, { cache: "no-store" }),
           fetch(PROVIDER_ENV_VARS_URL, { cache: "no-store" }),
+          fetch(GUI_MENU_PATHS_URL, { cache: "no-store" }),
         ]);
 
         if (!overridesRes.ok) {
@@ -433,14 +429,18 @@ export default function App() {
           );
         }
 
-        const [overridesJson, envVarsJson] = await Promise.all([
+        const [overridesJson, envVarsJson, guiMenuPathsJson] = await Promise.all([
           overridesRes.json(),
           envVarsRes.json(),
+          guiMenuPathsRes.ok ? guiMenuPathsRes.json() : Promise.resolve(null),
         ]);
 
         if (!cancelled) {
           setOverrides(overridesJson);
           setProviderEnvVarCatalog(envVarsJson);
+          setGeneratedGuiMenuPaths(
+            normalizeGeneratedGuiMenuPaths(guiMenuPathsJson?.guiMenuPaths)
+          );
         }
       } catch (e) {
         if (!cancelled) setError(String(e));
@@ -664,31 +664,37 @@ export default function App() {
 
   const menuPathUsageCount = useMemo(() => {
     const counts = new Map();
-    if (!overrides) return counts;
 
     for (const t of divisionFilteredTypes) {
-      const path = resolveGuiMenuPath(t, overrides);
+      const path = resolveGuiMenuPath(t, overrides, generatedGuiMenuPaths);
       if (!path) continue;
       counts.set(path, (counts.get(path) || 0) + 1);
     }
 
     return counts;
-  }, [divisionFilteredTypes, overrides]);
+  }, [divisionFilteredTypes, overrides, generatedGuiMenuPaths]);
 
   const filteredTypes = useMemo(() => {
     const q = normalizeType(query).toLowerCase();
     const matched = q
       ? divisionFilteredTypes.filter((t) => {
           if (isMenuPathListView) {
-            const path = resolveGuiMenuPath(t, overrides).toLowerCase();
+            const path = resolveGuiMenuPath(t, overrides, generatedGuiMenuPaths).toLowerCase();
             return path.includes(q);
           }
           return t.toLowerCase().includes(q);
         })
       : divisionFilteredTypes;
 
-    return sortTypesForListView(matched, listViewMode, overrides);
-  }, [divisionFilteredTypes, query, listViewMode, overrides, isMenuPathListView]);
+    return sortTypesForListView(matched, listViewMode, overrides, generatedGuiMenuPaths);
+  }, [
+    divisionFilteredTypes,
+    query,
+    listViewMode,
+    overrides,
+    generatedGuiMenuPaths,
+    isMenuPathListView,
+  ]);
 
   const activeType = useMemo(() => {
     if (!selectedType) return "";
@@ -698,8 +704,9 @@ export default function App() {
   const showDependencyLoading =
     (loadingData && raw === null) || !overrides || !providerEnvVarCatalog;
   const detailType = activeType || (showDependencyLoading ? selectedType : "");
-  const detailMenuPath =
-    detailType && overrides ? resolveGuiMenuPath(detailType, overrides) : "";
+  const detailMenuPath = detailType
+    ? resolveGuiMenuPath(detailType, overrides, generatedGuiMenuPaths)
+    : "";
 
   useEffect(() => {
     if (!selectedType || !allTypes.length) return;
@@ -1477,7 +1484,7 @@ export default function App() {
 
               {!showDependencyLoading &&
                 filteredTypes.map((t) => {
-                  const menuPath = overrides ? resolveGuiMenuPath(t, overrides) : "";
+                  const menuPath = resolveGuiMenuPath(t, overrides, generatedGuiMenuPaths);
                   const showTypeHint =
                     isMenuPathListView &&
                     menuPath &&

@@ -137,6 +137,10 @@ async function runGenerator(latest) {
   await runScript("scripts/generate-resource-permissions-tf.mjs", [
     `--latest=${latest}`,
   ]);
+  await runScript("scripts/generate-gui-menu-paths.mjs", [
+    `--latest=${latest}`,
+    "--union-permissions",
+  ]);
   await runScript("scripts/generate-tf-export-resource-names.mjs");
   await runScript("scripts/generate-tf-export-singletons.mjs");
   await runScript("scripts/verify-tf-export-env-vars.mjs");
