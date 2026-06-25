@@ -1,0 +1,195 @@
+{
+    "version": "v1.84.0",
+    "previous": "v1.83.0",
+    "changes": [
+        {
+            "kind": "provider_configuration",
+            "resource": null,
+            "attribute": "max_concurrent_pages",
+            "change": "added",
+            "summary": "New optional setting (default 1, max 75) to fetch list API pages in parallel during large reads and exports."
+        },
+        {
+            "kind": "provider_configuration",
+            "resource": null,
+            "attribute": "token_pool_size",
+            "change": "updated",
+            "summary": "Maximum allowed value increased from 20 to 50; description documents OAuth startup cost, rate-limit risk, and alignment with max_concurrent_pages."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_architect_grammar_language",
+            "attribute": "voice_file_data.file_name",
+            "change": "updated",
+            "summary": "Plan diffs ignore Windows-style path separator and drive-letter differences because values are normalized before being sent to the API."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_architect_grammar_language",
+            "attribute": "dtmf_file_data.file_name",
+            "change": "updated",
+            "summary": "Plan diffs ignore Windows-style path separator and drive-letter differences because values are normalized before being sent to the API."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_journey_action_map",
+            "attribute": "action.media_type",
+            "change": "updated",
+            "summary": "Documentation now marks webchat as deprecated because ACD Chat v2.0 in Genesys Predictive Engagement is being removed."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_journey_action_map",
+            "attribute": "action.is_pacing_enabled",
+            "change": "updated",
+            "summary": "Deprecated with an ACD Chat v2.0 removal notice."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_journey_action_template",
+            "attribute": "media_type",
+            "change": "updated",
+            "summary": "Documentation now marks webchat as deprecated because ACD Chat v2.0 in Genesys Predictive Engagement is being removed."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_journey_segment",
+            "attribute": "color",
+            "change": "updated",
+            "summary": "No longer required in configuration; optional and populated from the API on read."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_journey_segment",
+            "attribute": "should_display_to_agent",
+            "change": "updated",
+            "summary": "Computed from the API when omitted from configuration."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_callabletimeset",
+            "attribute": "callable_times.name",
+            "change": "added",
+            "summary": "Optional name for each callable-time block; populated from the API on read."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_digitalruleset",
+            "attribute": "rules.actions.set_content_template_action_settings.sms_content_template_id",
+            "change": "updated",
+            "summary": "No longer required; SMS and email template actions can be configured independently."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_digitalruleset",
+            "attribute": "rules.actions.set_content_template_action_settings.email_content_template_id",
+            "change": "updated",
+            "summary": "No longer required; SMS and email template actions can be configured independently."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_outbound_digitalruleset",
+            "attribute": "rules.actions.set_content_template_action_settings.sms_content_template_id",
+            "change": "updated",
+            "summary": "Content template IDs are resolved to genesyscloud_responsemanagement_response references during export, and unresolved references can be omitted when export omit-unresolved-refs is enabled."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_outbound_digitalruleset",
+            "attribute": "rules.actions.set_content_template_action_settings.email_content_template_id",
+            "change": "updated",
+            "summary": "Content template IDs are resolved to genesyscloud_responsemanagement_response references during export, and unresolved references can be omitted when export omit-unresolved-refs is enabled."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_outbound_digitalruleset",
+            "attribute": "contact_list_id",
+            "change": "updated",
+            "summary": "Unresolved contact_list_id references can be omitted during export when export omit-unresolved-refs is enabled."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_outbound_digitalruleset",
+            "attribute": "rules.actions.set_content_template_action_settings",
+            "change": "updated",
+            "summary": "Empty sms_content_template_id or email_content_template_id values are removed from exported set_content_template_action_settings blocks."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_responsemanagement_responseasset",
+            "attribute": "name",
+            "change": "updated",
+            "summary": "Plan diffs ignore Windows-style path separator and drive-letter differences because values are normalized before being sent to the API."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "media_settings_message.enable_inactivity_timeout",
+            "change": "updated",
+            "summary": "Schema default of false removed; when omitted, the value comes from the API on read."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_task_management_workitem",
+            "attribute": "status_id",
+            "change": "updated",
+            "summary": "status_id is resolved using worktype-aware status lookup during export."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_task_management_worktype_flow_onattributechange_rule",
+            "attribute": "condition.new_value",
+            "change": "updated",
+            "summary": "Resolved to genesyscloud_task_management_worktype_status references only when condition.attribute is statusId."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_task_management_worktype_flow_onattributechange_rule",
+            "attribute": "condition.old_value",
+            "change": "updated",
+            "summary": "Resolved to genesyscloud_task_management_worktype_status references only when condition.attribute is statusId."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_task_management_worktype_status",
+            "attribute": "destination_status_ids",
+            "change": "updated",
+            "summary": "Resolved to worktype-status references during export."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_task_management_worktype_status",
+            "attribute": "default_destination_status_id",
+            "change": "updated",
+            "summary": "Resolved to worktype-status references during export."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_webdeployments_configuration",
+            "attribute": "messenger.launcher_button.display_type",
+            "change": "added",
+            "summary": "Controls launcher button display as Icon, Text, or IconAndText."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_webdeployments_configuration",
+            "attribute": "messenger.launcher_button.icon",
+            "change": "added",
+            "summary": "Optional custom launcher icon settings block."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_webdeployments_configuration",
+            "attribute": "messenger.launcher_button.icon.url",
+            "change": "added",
+            "summary": "URL for a custom launcher icon."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_webdeployments_configuration",
+            "attribute": "custom_i18n_labels.localized_labels.key",
+            "change": "updated",
+            "summary": "Accepts MessengerLauncherButtonText for launcher button label localization."
+        }
+    ]
+}

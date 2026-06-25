@@ -1,6 +1,485 @@
 [
   {
     "type": "export_behavior",
+    "resource": "genesyscloud_outbound_digitalruleset",
+    "attribute": "contact_list_id",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Unresolved contact_list_id references can be omitted during export when export omit-unresolved-refs is enabled.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Unresolved contact_list_id references can be omitted during export when export omit-unresolved-refs is enabled."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_outbound_digitalruleset",
+    "attribute": "rules.actions.set_content_template_action_settings",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Empty sms_content_template_id or email_content_template_id values are removed from exported set_content_template_action_settings blocks.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Empty sms_content_template_id or email_content_template_id values are removed from exported set_content_template_action_settings blocks."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_outbound_digitalruleset",
+    "attribute": "rules.actions.set_content_template_action_settings.email_content_template_id",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Content template IDs are resolved to genesyscloud_responsemanagement_response references during export, and unresolved references can be omitted when export omit-unresolved-refs is enabled.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Content template IDs are resolved to genesyscloud_responsemanagement_response references during export, and unresolved references can be omitted when export omit-unresolved-refs is enabled."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_outbound_digitalruleset",
+    "attribute": "rules.actions.set_content_template_action_settings.sms_content_template_id",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Content template IDs are resolved to genesyscloud_responsemanagement_response references during export, and unresolved references can be omitted when export omit-unresolved-refs is enabled.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Content template IDs are resolved to genesyscloud_responsemanagement_response references during export, and unresolved references can be omitted when export omit-unresolved-refs is enabled."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_task_management_workitem",
+    "attribute": "status_id",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "status_id is resolved using worktype-aware status lookup during export.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "status_id is resolved using worktype-aware status lookup during export."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_task_management_worktype_flow_onattributechange_rule",
+    "attribute": "condition.new_value",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Resolved to genesyscloud_task_management_worktype_status references only when condition.attribute is statusId.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Resolved to genesyscloud_task_management_worktype_status references only when condition.attribute is statusId."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_task_management_worktype_flow_onattributechange_rule",
+    "attribute": "condition.old_value",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Resolved to genesyscloud_task_management_worktype_status references only when condition.attribute is statusId.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Resolved to genesyscloud_task_management_worktype_status references only when condition.attribute is statusId."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_task_management_worktype_status",
+    "attribute": "default_destination_status_id",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Resolved to worktype-status references during export.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Resolved to worktype-status references during export."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_task_management_worktype_status",
+    "attribute": "destination_status_ids",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Resolved to worktype-status references during export.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Resolved to worktype-status references during export."
+      }
+    ]
+  },
+  {
+    "type": "provider_configuration",
+    "resource": "provider",
+    "attribute": "max_concurrent_pages",
+    "introduced": "v1.84.0",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "New optional setting (default 1, max 75) to fetch list API pages in parallel during large reads and exports.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "added",
+        "summary": "New optional setting (default 1, max 75) to fetch list API pages in parallel during large reads and exports."
+      }
+    ]
+  },
+  {
+    "type": "provider_configuration",
+    "resource": "provider",
+    "attribute": "token_pool_size",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Maximum allowed value increased from 20 to 50; description documents OAuth startup cost, rate-limit risk, and alignment with max_concurrent_pages.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Maximum allowed value increased from 20 to 50; description documents OAuth startup cost, rate-limit risk, and alignment with max_concurrent_pages."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_architect_grammar_language",
+    "attribute": "dtmf_file_data.file_name",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Plan diffs ignore Windows-style path separator and drive-letter differences because values are normalized before being sent to the API.",
+    "history": [
+      {
+        "version": "v1.69.0",
+        "change": "updated",
+        "summary": "S3 paths are supported for grammar language files; changes to files stored in S3 are not detected by Terraform."
+      },
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Plan diffs ignore Windows-style path separator and drive-letter differences because values are normalized before being sent to the API."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_architect_grammar_language",
+    "attribute": "voice_file_data.file_name",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Plan diffs ignore Windows-style path separator and drive-letter differences because values are normalized before being sent to the API.",
+    "history": [
+      {
+        "version": "v1.69.0",
+        "change": "updated",
+        "summary": "S3 paths are supported for grammar language files; changes to files stored in S3 are not detected by Terraform."
+      },
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Plan diffs ignore Windows-style path separator and drive-letter differences because values are normalized before being sent to the API."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_journey_action_map",
+    "attribute": "action.is_pacing_enabled",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Deprecated with an ACD Chat v2.0 removal notice.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Deprecated with an ACD Chat v2.0 removal notice."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_journey_action_map",
+    "attribute": "action.media_type",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Documentation now marks webchat as deprecated because ACD Chat v2.0 in Genesys Predictive Engagement is being removed.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Documentation now marks webchat as deprecated because ACD Chat v2.0 in Genesys Predictive Engagement is being removed."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_journey_action_template",
+    "attribute": "media_type",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Documentation now marks webchat as deprecated because ACD Chat v2.0 in Genesys Predictive Engagement is being removed.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Documentation now marks webchat as deprecated because ACD Chat v2.0 in Genesys Predictive Engagement is being removed."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_journey_segment",
+    "attribute": "color",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "No longer required in configuration; optional and populated from the API on read.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "No longer required in configuration; optional and populated from the API on read."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_journey_segment",
+    "attribute": "should_display_to_agent",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Computed from the API when omitted from configuration.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Computed from the API when omitted from configuration."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_outbound_callabletimeset",
+    "attribute": "callable_times.name",
+    "introduced": "v1.84.0",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional name for each callable-time block; populated from the API on read.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "added",
+        "summary": "Optional name for each callable-time block; populated from the API on read."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_outbound_digitalruleset",
+    "attribute": "rules.actions.set_content_template_action_settings.email_content_template_id",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "No longer required; SMS and email template actions can be configured independently.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "No longer required; SMS and email template actions can be configured independently."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_outbound_digitalruleset",
+    "attribute": "rules.actions.set_content_template_action_settings.sms_content_template_id",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "No longer required; SMS and email template actions can be configured independently.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "No longer required; SMS and email template actions can be configured independently."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_responsemanagement_responseasset",
+    "attribute": "name",
+    "introduced": "v1.71.0",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Plan diffs ignore Windows-style path separator and drive-letter differences because values are normalized before being sent to the API.",
+    "history": [
+      {
+        "version": "v1.71.0",
+        "change": "added",
+        "summary": "Optional display name for the response asset; can differ from the uploaded filename. Changing name forces replacement."
+      },
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Plan diffs ignore Windows-style path separator and drive-letter differences because values are normalized before being sent to the API."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "media_settings_message.enable_inactivity_timeout",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Schema default of false removed; when omitted, the value comes from the API on read.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Schema default of false removed; when omitted, the value comes from the API on read."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_webdeployments_configuration",
+    "attribute": "custom_i18n_labels.localized_labels.key",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Accepts MessengerLauncherButtonText for launcher button label localization.",
+    "history": [
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "PushNotificationTitle and PushNotificationBody are now accepted localized label keys."
+      },
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Accepts MessengerLauncherButtonText for launcher button label localization."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_webdeployments_configuration",
+    "attribute": "messenger.launcher_button.display_type",
+    "introduced": "v1.84.0",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Controls launcher button display as Icon, Text, or IconAndText.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "added",
+        "summary": "Controls launcher button display as Icon, Text, or IconAndText."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_webdeployments_configuration",
+    "attribute": "messenger.launcher_button.icon",
+    "introduced": "v1.84.0",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional custom launcher icon settings block.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "added",
+        "summary": "Optional custom launcher icon settings block."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_webdeployments_configuration",
+    "attribute": "messenger.launcher_button.icon.url",
+    "introduced": "v1.84.0",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "URL for a custom launcher icon.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "added",
+        "summary": "URL for a custom launcher icon."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
     "resource": "genesyscloud_business_rules_decision_table",
     "attribute": "rows.inputs.literal.value",
     "introduced": "Unknown",
@@ -7037,23 +7516,6 @@
   },
   {
     "type": "resource",
-    "resource": "genesyscloud_responsemanagement_responseasset",
-    "attribute": "name",
-    "introduced": "v1.71.0",
-    "last_updated": "v1.71.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Optional display name for the response asset; can differ from the uploaded filename. Changing name forces replacement.",
-    "history": [
-      {
-        "version": "v1.71.0",
-        "change": "added",
-        "summary": "Optional display name for the response asset; can differ from the uploaded filename. Changing name forces replacement."
-      }
-    ]
-  },
-  {
-    "type": "resource",
     "resource": "genesyscloud_routing_queue",
     "attribute": "(resource-level behavior)",
     "introduced": "Unknown",
@@ -7520,23 +7982,6 @@
   {
     "type": "resource",
     "resource": "genesyscloud_architect_grammar_language",
-    "attribute": "dtmf_file_data.file_name",
-    "introduced": "Unknown",
-    "last_updated": "v1.69.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "S3 paths are supported for grammar language files; changes to files stored in S3 are not detected by Terraform.",
-    "history": [
-      {
-        "version": "v1.69.0",
-        "change": "updated",
-        "summary": "S3 paths are supported for grammar language files; changes to files stored in S3 are not detected by Terraform."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_architect_grammar_language",
     "attribute": "voice_file_data.file_content_hash",
     "introduced": "Unknown",
     "last_updated": "v1.69.0",
@@ -7548,23 +7993,6 @@
         "version": "v1.69.0",
         "change": "updated",
         "summary": "Optional in configuration; still required at apply time when the corresponding file_name is not an S3 path."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_architect_grammar_language",
-    "attribute": "voice_file_data.file_name",
-    "introduced": "Unknown",
-    "last_updated": "v1.69.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "S3 paths are supported for grammar language files; changes to files stored in S3 are not detected by Terraform.",
-    "history": [
-      {
-        "version": "v1.69.0",
-        "change": "updated",
-        "summary": "S3 paths are supported for grammar language files; changes to files stored in S3 are not detected by Terraform."
       }
     ]
   },
@@ -9331,23 +9759,6 @@
         "version": "v1.65.0",
         "change": "updated",
         "summary": "Plan diffs ignore case differences for operator values such as Includes and DoesNotInclude."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_webdeployments_configuration",
-    "attribute": "custom_i18n_labels.localized_labels.key",
-    "introduced": "Unknown",
-    "last_updated": "v1.65.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "PushNotificationTitle and PushNotificationBody are now accepted localized label keys.",
-    "history": [
-      {
-        "version": "v1.65.0",
-        "change": "updated",
-        "summary": "PushNotificationTitle and PushNotificationBody are now accepted localized label keys."
       }
     ]
   },

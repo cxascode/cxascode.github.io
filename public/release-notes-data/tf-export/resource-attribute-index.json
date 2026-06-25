@@ -2,6 +2,45 @@
   {
     "type": "export_behavior",
     "resource": "genesyscloud_tf_export",
+    "attribute": "export_omit_unresolved_refs",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When export_omit_unresolved_refs is true, optional reference attributes that cannot be resolved to Terraform references are omitted from exported configuration instead of being left as raw GUIDs. The default false preserves prior export output that included unresolved references as GUIDs.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "When export_omit_unresolved_refs is true, optional reference attributes that cannot be resolved to Terraform references are omitted from exported configuration instead of being left as raw GUIDs. The default false preserves prior export output that included unresolved references as GUIDs."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_tf_export",
+    "attribute": "export_omit_unresolved_refs",
+    "introduced": "v1.84.0",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Changing export_omit_unresolved_refs forces replacement of the genesyscloud_tf_export resource.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "added",
+        "summary": "Optional boolean (defaults to false). When true, optional reference attributes that the exporter cannot resolve to Terraform references are omitted from exported configuration. When false, unresolved references continue to be written as raw GUIDs. Changing this value forces replacement of the export resource."
+      },
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Changing export_omit_unresolved_refs forces replacement of the genesyscloud_tf_export resource."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_tf_export",
     "attribute": "export_deprecated",
     "introduced": "Unknown",
     "last_updated": "v1.82.0",
