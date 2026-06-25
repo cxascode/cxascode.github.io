@@ -143,6 +143,12 @@
       "export-template": []
     },
     {
+      "name": "GENESYSCLOUD_MAX_CONCURRENT_PAGES",
+      "valueHint": "1",
+      "description": "Max parallel list API pages during large reads and exports (default 1, max 75); increase token_pool_size for higher values",
+      "export-template": []
+    },
+    {
       "name": "GENESYSCLOUD_OAUTHCLIENT_ID",
       "valueHint": "1",
       "description": "Provider OAuth client ID",
@@ -303,6 +309,7 @@
     "GENESYSCLOUD_GATEWAY_PROTOCOL",
     "GENESYSCLOUD_LOG_STACK_TRACES",
     "GENESYSCLOUD_LOG_STACK_TRACES_FILE_PATH",
+    "GENESYSCLOUD_MAX_CONCURRENT_PAGES",
     "GENESYSCLOUD_OAUTHCLIENT_ID",
     "GENESYSCLOUD_OAUTHCLIENT_SECRET",
     "GENESYSCLOUD_PROXY_AUTH_PASSWORD",
