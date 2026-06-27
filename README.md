@@ -46,7 +46,7 @@ Reference for `package.json` scripts. CI behavior is described in [Deploy workfl
 | Script | What it does |
 |--------|----------------|
 | `npm run dev` | Start the Vite dev server (hot reload). |
-| `npm run build` | Run `scripts/write-sitemap.mjs` (writes `public/sitemap.xml`, `public/seo/sitemap.xml`, `public/sitemap.txt`, `public/.nojekyll` from latest dependency tree + site updates), then Vite production build to `dist/`. |
+| `npm run build` | Run `scripts/write-sitemap.mjs` (writes `public/sitemap.xml`, `public/seo/sitemap.xml`, `public/sitemap.txt`, `public/.nojekyll` from latest dependency tree + site updates), `scripts/write-merged-dependency-tree.mjs` (writes `public/dependency-tree-json/latest-merged.json`), then Vite production build to `dist/`. |
 | `npm run preview` | Serve the production build locally after `npm run build`. |
 | `npm run lint` | Run ESLint on the repo. |
 
@@ -107,7 +107,7 @@ npm run download-provider-versions
 
 `public/overrides.json` patches release data served by the site:
 
-- `addDependencies` / `replaceDependencies` — adjust dependency trees from the provider release JSON
+- `addDependencies` / `replaceDependencies` — adjust dependency trees from the provider release JSON. At build time these patches are also baked into `public/dependency-tree-json/latest-merged.json` (published as `https://cxascode.github.io/dependency-tree-json/latest-merged.json`) for external consumers; the app still merges at runtime from the raw tree + `overrides.json`.
 - `tfExportResourceNames` — optional per-type override for **genesyscloud_tf_export template** filter placeholders; wins over the generated map in `tf-export-resource-names.json`
 - `tfExportNote` — default Markdown note (GFM) shown in the **genesyscloud_tf_export template** panel when a resource type is selected. Use `\n` in JSON for line breaks (not `\\n`).
 - `dependencyNotes` — per resource type, Markdown note (GFM) shown at the bottom of Resource Type Details when that type is selected. Use `\n` in JSON for line breaks (not `\\n`).

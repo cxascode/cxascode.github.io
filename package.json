@@ -14,7 +14,7 @@
     "generate-gui-menu-paths": "node scripts/generate-gui-menu-paths.mjs",
     "verify-tf-export-env-vars": "node scripts/verify-tf-export-env-vars.mjs",
     "generate-site-updates": "node scripts/generate-site-updates.mjs",
-    "build": "node scripts/write-sitemap.mjs && vite build",
+    "build": "node scripts/write-sitemap.mjs && node scripts/write-merged-dependency-tree.mjs && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
