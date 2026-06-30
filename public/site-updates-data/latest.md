@@ -8,3 +8,7 @@
 ### What's new
 
 - Fixing readme versioning and adding blurb on tfvars
+
+### What's new
+
+- Ignoring latest-merged
