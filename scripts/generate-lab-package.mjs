@@ -10,7 +10,12 @@ import {
   patchExcludeFilterResources,
   resolveExcludeFilterResources,
 } from "./lib/lab-export-scope.mjs";
-import { patchProviderVersionPins } from "./lib/lab-package-version.mjs";
+import {
+  findLabTemplateProviderVersionPinMismatches,
+  isLabTerraformTemplateFile,
+  LAB_TEMPLATE_PROVIDER_VERSION_PLACEHOLDER,
+  patchProviderVersionPins,
+} from "./lib/lab-package-version.mjs";
 import {
   DEPENDENCY_TREE_DIR,
   LAB_PACKAGES_DIR,
@@ -40,6 +45,7 @@ const LAB_GLOBAL_INPUT_RELATIVE_PATHS = [
   "scripts/lib/filter-builder-template.mjs",
   "scripts/lib/lab-export-scope.mjs",
   "scripts/lib/lab-package-version.mjs",
+  "scripts/lib/public-data-path-constants.mjs",
 ];
 const SKIP_TEMPLATE_ENTRIES = new Set([".vscode", ".DS_Store", "__MACOSX"]);
 
@@ -98,6 +104,31 @@ async function loadOverrides() {
   }
 }
 
+async function validateLabTemplateProviderVersionPins(rootDir, relativeDir = "") {
+  const entries = await fs.readdir(rootDir, { withFileTypes: true });
+  const mismatches = [];
+
+  for (const entry of entries) {
+    const entryPath = path.join(rootDir, entry.name);
+    const relativePath = relativeDir ? path.join(relativeDir, entry.name) : entry.name;
+
+    if (entry.isDirectory()) {
+      mismatches.push(...(await validateLabTemplateProviderVersionPins(entryPath, relativePath)));
+      continue;
+    }
+
+    if (!isLabTerraformTemplateFile(entry.name)) continue;
+
+    const content = await fs.readFile(entryPath, "utf8");
+    const unexpectedPins = findLabTemplateProviderVersionPinMismatches(content);
+    if (unexpectedPins.length > 0) {
+      mismatches.push({ relativePath, unexpectedPins });
+    }
+  }
+
+  return mismatches;
+}
+
 async function patchTerraformFiles(rootDir, version) {
   const entries = await fs.readdir(rootDir, { withFileTypes: true });
 
@@ -109,7 +140,7 @@ async function patchTerraformFiles(rootDir, version) {
       continue;
     }
 
-    if (!entry.name.endsWith(".tf")) continue;
+    if (!isLabTerraformTemplateFile(entry.name)) continue;
 
     const original = await fs.readFile(entryPath, "utf8");
     const patched = patchProviderVersionPins(original, version);
@@ -173,6 +204,19 @@ async function computeLabInputsHash(version, globalInputsHash) {
 async function main() {
   if (!(await pathExists(TEMPLATE_ROOT))) {
     throw new Error(`Lab template not found at ${TEMPLATE_ROOT}`);
+  }
+
+  const templatePinMismatches = await validateLabTemplateProviderVersionPins(TEMPLATE_ROOT);
+  if (templatePinMismatches.length > 0) {
+    const details = templatePinMismatches
+      .map(
+        ({ relativePath, unexpectedPins }) =>
+          `${relativePath}: ${[...new Set(unexpectedPins)].join(", ")}`
+      )
+      .join("; ");
+    throw new Error(
+      `Lab template provider version pins must use ~> ${LAB_TEMPLATE_PROVIDER_VERSION_PLACEHOLDER} before build (mismatches: ${details})`
+    );
   }
 
   await ensureDir(INPUT_DIR);

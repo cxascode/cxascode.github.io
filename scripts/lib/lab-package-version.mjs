@@ -1,5 +1,16 @@
+import { MIN_DEPENDENCY_TREE_VERSION } from "./public-data-path-constants.mjs";
+
 /** Match genesyscloud provider version pins in lab .tf files. */
 export const PROVIDER_VERSION_PIN_RE = /version\s*=\s*"~>\s*[\d.]+"/g;
+
+const PROVIDER_VERSION_PIN_VALUE_RE = /version\s*=\s*"~>\s*([\d.]+)"/g;
+
+/** Static lab template source pins; replaced per zip at package build time. */
+export const LAB_TEMPLATE_PROVIDER_VERSION_PLACEHOLDER = MIN_DEPENDENCY_TREE_VERSION;
+
+export function isLabTerraformTemplateFile(filename) {
+  return filename.endsWith(".tf") || filename.endsWith(".tf.bak");
+}
 
 export function renderProviderVersionPin(version) {
   const normalized = String(version || "")
@@ -9,6 +20,19 @@ export function renderProviderVersionPin(version) {
     throw new Error("Provider version is required");
   }
   return `version = "~> ${normalized}"`;
+}
+
+export function renderLabTemplateProviderVersionPin() {
+  return renderProviderVersionPin(LAB_TEMPLATE_PROVIDER_VERSION_PLACEHOLDER);
+}
+
+export function findProviderVersionPinValues(content) {
+  return [...content.matchAll(PROVIDER_VERSION_PIN_VALUE_RE)].map((match) => match[1]);
+}
+
+export function findLabTemplateProviderVersionPinMismatches(content) {
+  const expected = LAB_TEMPLATE_PROVIDER_VERSION_PLACEHOLDER;
+  return findProviderVersionPinValues(content).filter((value) => value !== expected);
 }
 
 export function patchProviderVersionPins(content, version) {
