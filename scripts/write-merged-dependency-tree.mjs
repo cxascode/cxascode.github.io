@@ -13,6 +13,8 @@ const REPO_ROOT = path.resolve(import.meta.dirname, "..");
 const INPUT_DIR = resolvePublicDataDir(REPO_ROOT, DEPENDENCY_TREE_DIR);
 const OUTPUT_DIR = resolvePublicDataDir(REPO_ROOT, DEPENDENCY_TREE_MERGED_DIR);
 const OVERRIDES_PATH = path.join(REPO_ROOT, PUBLIC_DIR_NAME, "overrides.json");
+const STALE_MERGED_PATH = path.join(INPUT_DIR, "latest-merged.json");
+const SEMVER_VERSION = /^\d+\.\d+\.\d+$/;
 
 function compareVersionsDesc(a, b) {
   return b.localeCompare(a, undefined, { numeric: true, sensitivity: "base" });
@@ -30,7 +32,9 @@ async function listDependencyVersions() {
   if (await pathExists(indexPath)) {
     const index = await loadJson(indexPath);
     if (Array.isArray(index)) {
-      versions = index.filter((entry) => typeof entry === "string" && entry.trim());
+      versions = index.filter(
+        (entry) => typeof entry === "string" && SEMVER_VERSION.test(entry.trim())
+      );
     }
   }
 
@@ -40,9 +44,7 @@ async function listDependencyVersions() {
       .filter(
         (entry) =>
           entry.isFile() &&
-          entry.name.endsWith(".json") &&
-          entry.name !== "index.json" &&
-          entry.name !== "latest.json"
+          /^\d+\.\d+\.\d+\.json$/.test(entry.name)
       )
       .map((entry) => entry.name.slice(0, -".json".length));
   }
@@ -70,6 +72,11 @@ async function writeIndexAndLatest(versions) {
 
 async function write() {
   await fs.mkdir(OUTPUT_DIR, { recursive: true });
+
+  if (await pathExists(STALE_MERGED_PATH)) {
+    await fs.rm(STALE_MERGED_PATH);
+    console.log(`Removed stale ${path.relative(REPO_ROOT, STALE_MERGED_PATH)}`);
+  }
 
   const versions = await listDependencyVersions();
   if (versions.length === 0) {

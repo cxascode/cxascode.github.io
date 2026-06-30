@@ -112,6 +112,8 @@ dep_count="$(
   find "${DEP_DIR}" -maxdepth 1 -name '*.json' \
     ! -name 'index.json' \
     ! -name 'latest.json' \
+    | sed 's|.*/||; s|\.json$||' \
+    | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' \
     | wc -l | tr -d ' '
 )"
 
@@ -125,6 +127,7 @@ versions_sorted="$(
     ! -name 'index.json' \
     ! -name 'latest.json' \
     | sed 's|.*/||; s|\.json$||' \
+    | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' \
     | sort -Vr
 )"
 
