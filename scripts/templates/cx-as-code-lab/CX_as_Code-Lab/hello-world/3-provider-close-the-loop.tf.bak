@@ -1,10 +1,10 @@
-#this tests connectivity to genesys cloud
+# this is a simple test of genesys cloud permissions
 
 terraform {
   required_providers {
     genesyscloud = {
       source  = "mypurecloud/genesyscloud"
-      version = "~> 1.69.0"
+      version = "~> 1.60.0"
     }
   }
 }
@@ -35,4 +35,9 @@ variable "genesyscloud_region" {
 
 data "genesyscloud_auth_division" "home" {
   name = "Home"
+}
+
+resource "genesyscloud_routing_wrapupcode" "hello_world" {
+  name        = "Hello World"
+  division_id = data.genesyscloud_auth_division.home.id
 }
