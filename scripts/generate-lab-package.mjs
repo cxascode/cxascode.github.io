@@ -11,9 +11,11 @@ import {
   resolveExcludeFilterResources,
 } from "./lib/lab-export-scope.mjs";
 import {
+  findLabReadmeProviderVersionMismatch,
   findLabTemplateProviderVersionPinMismatches,
   isLabTerraformTemplateFile,
   LAB_TEMPLATE_PROVIDER_VERSION_PLACEHOLDER,
+  patchLabReadmeProviderVersion,
   patchProviderVersionPins,
 } from "./lib/lab-package-version.mjs";
 import {
@@ -36,6 +38,7 @@ const LAB_FOLDER_NAME = "CX_as_Code-Lab";
 const OUTPUT_BASENAME = "cx-as-code-lab";
 const FILTER_BUILDER_FILENAME = "filter-builder-template.xlsx";
 const EXPORT_PIPELINE_MAIN_TF = "exportpipeline/main.tf";
+const LAB_README_FILENAME = "README.md";
 const DEFAULT_OVERRIDES_PATH = path.resolve(REPO_ROOT, "public/overrides.json");
 const STAMP_DIR = path.resolve(REPO_ROOT, ".cache-meta/artifact-stamps/lab");
 
@@ -129,6 +132,17 @@ async function validateLabTemplateProviderVersionPins(rootDir, relativeDir = "")
   return mismatches;
 }
 
+async function patchLabReadme(stagingDir, version) {
+  const readmePath = path.join(stagingDir, LAB_README_FILENAME);
+  if (!(await pathExists(readmePath))) return;
+
+  const original = await fs.readFile(readmePath, "utf8");
+  const patched = patchLabReadmeProviderVersion(original, version);
+  if (patched !== original) {
+    await fs.writeFile(readmePath, patched, "utf8");
+  }
+}
+
 async function patchTerraformFiles(rootDir, version) {
   const entries = await fs.readdir(rootDir, { withFileTypes: true });
 
@@ -176,6 +190,7 @@ async function buildLabPackage(version, stagingRoot, { overrides, dependencyTree
   const stagingDir = path.join(stagingRoot, LAB_FOLDER_NAME);
   await copyDir(TEMPLATE_ROOT, stagingDir);
   await patchTerraformFiles(stagingDir, version);
+  await patchLabReadme(stagingDir, version);
 
   const filterBuilderPath = path.join(stagingDir, FILTER_BUILDER_FILENAME);
   if (await pathExists(filterBuilderPath)) {
@@ -217,6 +232,17 @@ async function main() {
     throw new Error(
       `Lab template provider version pins must use ~> ${LAB_TEMPLATE_PROVIDER_VERSION_PLACEHOLDER} before build (mismatches: ${details})`
     );
+  }
+
+  const templateReadmePath = path.join(TEMPLATE_ROOT, LAB_README_FILENAME);
+  if (await pathExists(templateReadmePath)) {
+    const readme = await fs.readFile(templateReadmePath, "utf8");
+    const readmeMismatches = findLabReadmeProviderVersionMismatch(readme);
+    if (readmeMismatches.length > 0) {
+      throw new Error(
+        `Lab template README provider version must be ~> ${LAB_TEMPLATE_PROVIDER_VERSION_PLACEHOLDER} before build (mismatches: ${[...new Set(readmeMismatches)].join(", ")})`
+      );
+    }
   }
 
   await ensureDir(INPUT_DIR);
