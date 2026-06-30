@@ -160,7 +160,7 @@ async function main() {
   await ensureDir(PERM_TF_DIR);
   await ensureDir(SPREADSHEET_DIR);
 
-  // Clean up old top-level aliases if they still exist from previous layout.
+  // Clean up retired top-level aliases if they still exist from previous layout.
   await removeIfExists(path.join(PUBLIC_DIR, "dependency_tree.json"));
   await removeIfExists(path.join(PUBLIC_DIR, "read-write-role.tf"));
   await removeIfExists(path.join(PUBLIC_DIR, "read-only-role.tf"));

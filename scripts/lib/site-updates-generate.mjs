@@ -44,7 +44,7 @@ const SITE_UPDATES_INFRA_PATHS = [
 
 /** Commit subjects that describe hidden or permalink-only features. */
 const HIDDEN_FEATURE_SUBJECT_RE =
-  /\b(lab files?|lab package|cx as code lab|spreadsheet|practice zip|\/labfiles|\/spreadsheet|site updates?|site notes?)\b/i;
+  /\b(lab files?|lab package|cx as code lab|spreadsheet|practice zip|\/labfiles|\/spreadsheet|\/roles|role template|site updates?|site notes?)\b/i;
 
 export function mentionsHiddenSiteFeature(text) {
   return HIDDEN_FEATURE_SUBJECT_RE.test(String(text || ""));

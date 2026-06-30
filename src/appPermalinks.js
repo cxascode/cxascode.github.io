@@ -12,6 +12,11 @@ export const SITE_UPDATES_ENTRY_QUERY_KEY = "entry";
 
 export const SPREADSHEET_PATH_SEGMENT = "spreadsheet";
 export const LAB_FILES_PATH_SEGMENT = "labfiles";
+export const ROLES_PATH_SEGMENT = "roles";
+export const ROLE_READ_WRITE_SEGMENT = "read-write";
+export const ROLE_READ_ONLY_SEGMENT = "read-only";
+
+const ROLE_DOWNLOAD_SEGMENTS = new Set([ROLE_READ_WRITE_SEGMENT, ROLE_READ_ONLY_SEGMENT]);
 
 export const DIALOG_FILTER_QUERY_KEY = "filter";
 export const ATTRIBUTE_INDEX_FILTER_QUERY_KEY = DIALOG_FILTER_QUERY_KEY;
@@ -35,6 +40,9 @@ const RESERVED_PATH_SEGMENTS = new Set([
   ...Object.values(DIALOG_PATH_SEGMENT),
   SPREADSHEET_PATH_SEGMENT,
   LAB_FILES_PATH_SEGMENT,
+  ROLES_PATH_SEGMENT,
+  ROLE_READ_WRITE_SEGMENT,
+  ROLE_READ_ONLY_SEGMENT,
   ...GENERATED_PUBLIC_DATA_DIRS,
   "release-notes-data",
   "site-updates-data",
@@ -234,6 +242,39 @@ export function labFilesPathname(version = "latest") {
   const root = BASE.endsWith("/") ? BASE : `${BASE}/`;
   const base = normalizePathname(
     new URL(LAB_FILES_PATH_SEGMENT, new URL(root, "http://local")).pathname
+  );
+  return appendVersionSegment(base, version);
+}
+
+export function readRoleDownloadFromLocation() {
+  try {
+    const segments = pathSegments(window.location.pathname);
+    if (segments[0] !== ROLES_PATH_SEGMENT) return null;
+    if (segments.length < 2 || segments.length > 3) return null;
+
+    const role = segments[1];
+    if (!ROLE_DOWNLOAD_SEGMENTS.has(role)) return null;
+
+    if (segments.length === 2) return { role, version: "latest" };
+
+    const versionSegment = segments[2];
+    if (versionSegment === "latest") return { role, version: "latest" };
+    if (isVersionPathSegment(versionSegment)) {
+      return { role, version: fromVersionPathSegment(versionSegment) };
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+export function roleDownloadPathname(role, version = "latest") {
+  if (!ROLE_DOWNLOAD_SEGMENTS.has(role)) return appRootPathname();
+
+  const root = BASE.endsWith("/") ? BASE : `${BASE}/`;
+  const base = normalizePathname(
+    new URL(`${ROLES_PATH_SEGMENT}/${role}`, new URL(root, "http://local")).pathname
   );
   return appendVersionSegment(base, version);
 }
