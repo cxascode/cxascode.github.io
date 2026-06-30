@@ -112,7 +112,6 @@ dep_count="$(
   find "${DEP_DIR}" -maxdepth 1 -name '*.json' \
     ! -name 'index.json' \
     ! -name 'latest.json' \
-    ! -name 'latest-merged.json' \
     | wc -l | tr -d ' '
 )"
 
@@ -125,7 +124,6 @@ versions_sorted="$(
   find "${DEP_DIR}" -maxdepth 1 -name '*.json' \
     ! -name 'index.json' \
     ! -name 'latest.json' \
-    ! -name 'latest-merged.json' \
     | sed 's|.*/||; s|\.json$||' \
     | sort -Vr
 )"
@@ -144,6 +142,7 @@ if [[ "${RUN_GENERATORS}" == "true" ]]; then
   node scripts/generate-tf-export-resource-names.mjs
   node scripts/generate-tf-export-singletons.mjs
   node scripts/verify-tf-export-env-vars.mjs
+  node scripts/write-merged-dependency-tree.mjs
   node scripts/generate-spreadsheet-template.mjs --latest="${latest}"
   node scripts/generate-lab-package.mjs --latest="${latest}"
 fi

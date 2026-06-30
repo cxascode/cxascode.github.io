@@ -10,6 +10,7 @@ const AUTO_MARKER = "<!-- site-updates:auto -->";
 const DATA_ONLY_PATHS = [
   /^public\/release-notes-data\//,
   /^public\/dependency-tree-json\//,
+  /^public\/dependency-tree-merged-json\//,
   /^public\/resource-permissions-json\//,
   /^public\/resource-permissions-tf\//,
   /^public\/tf-export-resource-names\//,
@@ -31,6 +32,7 @@ const USER_VISIBLE_PATHS = [
   /^src\//,
   /^index\.html$/,
   /^scripts\/write-sitemap\.mjs$/,
+  /^scripts\/write-merged-dependency-tree\.mjs$/,
 ];
 
 /** Site-updates feature files — not end-user features to announce. */

@@ -24,6 +24,7 @@ It then regenerates these local development assets:
 Versioned assets are stored in:
 
 - `public/dependency-tree-json/`
+- `public/dependency-tree-merged-json/` (raw trees + `overrides.json`, for external consumers)
 - `public/resource-permissions-json/`
 - `public/resource-permissions-tf/`
 
@@ -46,7 +47,7 @@ Reference for `package.json` scripts. CI behavior is described in [Deploy workfl
 | Script | What it does |
 |--------|----------------|
 | `npm run dev` | Start the Vite dev server (hot reload). |
-| `npm run build` | Run `scripts/write-sitemap.mjs` (writes `public/sitemap.xml`, `public/seo/sitemap.xml`, `public/sitemap.txt`, `public/.nojekyll` from latest dependency tree + site updates), `scripts/write-merged-dependency-tree.mjs` (writes `public/dependency-tree-json/latest-merged.json`), then Vite production build to `dist/`. |
+| `npm run build` | Run `scripts/write-sitemap.mjs` (writes `public/sitemap.xml`, `public/seo/sitemap.xml`, `public/sitemap.txt`, `public/.nojekyll` from latest dependency tree + site updates), `scripts/write-merged-dependency-tree.mjs` (writes `public/dependency-tree-merged-json/`), then Vite production build to `dist/`. |
 | `npm run preview` | Serve the production build locally after `npm run build`. |
 | `npm run lint` | Run ESLint on the repo. |
 
@@ -73,9 +74,11 @@ All generators read `public/overrides.json` unless `--overrides=` is passed (spr
 | `npm run verify-tf-export-env-vars` | Updates `public/provider-env-vars.json` | `--version=X.Y.Z`, `--latest=X.Y.Z`. Auto-appends new provider env vars; **exits non-zero** until each is triaged (`export-template` or `providerEnvVarsIgnore`). Runs in CI after upstream refresh. |
 | `npm run generate-site-updates` | `public/site-updates-data/` | `--base`, `--head`, `--date=YYYY-MM-DD`, `--dry-run`, `--force`. Normally CI-only on push to `main`; use locally to preview changelog entries from a commit range. |
 
-### Related script (no npm alias)
+### Related scripts (no npm alias)
 
 `scripts/generate-resource-permissions-tf.mjs` writes `public/resource-permissions-tf/{version}-read-write-role.tf` and `{version}-read-only-role.tf`, plus `latest-*` aliases. Invoked by `bootstrap-local-dev`, `download-provider-versions`, and CI — not exposed as its own npm script. Flags: `--latest=X.Y.Z`.
+
+`scripts/write-merged-dependency-tree.mjs` writes `public/dependency-tree-merged-json/{version}.json`, `index.json`, and `latest.json` by applying `overrides.json` to each cached raw tree in `public/dependency-tree-json/`. Invoked by `bootstrap-local-dev`, `download-provider-versions`, and `npm run build`.
 
 ### Typical local workflows
 
@@ -107,7 +110,7 @@ npm run download-provider-versions
 
 `public/overrides.json` patches release data served by the site:
 
-- `addDependencies` / `replaceDependencies` — adjust dependency trees from the provider release JSON. At build time these patches are also baked into `public/dependency-tree-json/latest-merged.json` (published as `https://cxascode.github.io/dependency-tree-json/latest-merged.json`) for external consumers; the app still merges at runtime from the raw tree + `overrides.json`.
+- `addDependencies` / `replaceDependencies` — adjust dependency trees from the provider release JSON. At build time these patches are baked into `public/dependency-tree-merged-json/` (published as `https://cxascode.github.io/dependency-tree-merged-json/{version}.json`, with `latest.json` and `index.json`) for external consumers; the app still merges at runtime from the raw tree + `overrides.json`.
 - `tfExportResourceNames` — optional per-type override for **genesyscloud_tf_export template** filter placeholders; wins over the generated map in `tf-export-resource-names.json`
 - `tfExportNote` — default Markdown note (GFM) shown in the **genesyscloud_tf_export template** panel when a resource type is selected. Use `\n` in JSON for line breaks (not `\\n`).
 - `dependencyNotes` — per resource type, Markdown note (GFM) shown at the bottom of Resource Type Details when that type is selected. Use `\n` in JSON for line breaks (not `\\n`).
@@ -144,6 +147,7 @@ Directory names and **oldest supported provider versions** live in `scripts/lib/
 | Constant | Value | Used for |
 |----------|-------|----------|
 | `MIN_DEPENDENCY_TREE_VERSION` | `1.60.0` | Dependency explorer, tf-export resource names |
+| `MIN_DEPENDENCY_TREE_MERGED_VERSION` | `1.60.0` | Merged dependency trees (`dependency-tree-merged-json/`) |
 | `MIN_RESOURCE_PERMISSIONS_VERSION` | `1.76.0` | Role TF downloads |
 | `MIN_SINGLETON_FLAG_VERSION` | `1.78.0` | Singleton badge (`IsSingleton`; older versions use fixed export names) |
 

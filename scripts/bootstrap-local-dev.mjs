@@ -144,6 +144,7 @@ async function runGenerator(latest) {
   await runScript("scripts/generate-tf-export-resource-names.mjs");
   await runScript("scripts/generate-tf-export-singletons.mjs");
   await runScript("scripts/verify-tf-export-env-vars.mjs");
+  await runScript("scripts/write-merged-dependency-tree.mjs");
   await runScript("scripts/generate-spreadsheet-template.mjs", [
     `--latest=${latest}`,
   ]);
