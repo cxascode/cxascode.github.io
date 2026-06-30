@@ -1,3 +1,5 @@
+import { isDependencyTreeVersionId } from "../scripts/lib/public-data-path-constants.mjs";
+
 const BASE = import.meta.env.BASE_URL;
 
 export const RELEASE_NOTES_DATA_PATH = "release-notes-data";
@@ -38,11 +40,7 @@ export function artifactDownloadVersionLabel(version, newestListedRelease = "") 
 export function newestListedReleaseFromIndex(versions) {
   if (!Array.isArray(versions)) return "";
   const found = versions.find(
-    (version) =>
-      typeof version === "string" &&
-      version.trim() &&
-      version !== "latest" &&
-      version !== "index"
+    (version) => typeof version === "string" && isDependencyTreeVersionId(version)
   );
   return found ? found.trim() : "";
 }

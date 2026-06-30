@@ -11,6 +11,40 @@ export const LAB_PACKAGES_DIR = "lab-packages";
 /** Oldest provider release with dependency_tree.json on GitHub releases. */
 export const MIN_DEPENDENCY_TREE_VERSION = "1.60.0";
 
+/** Alias / merged JSON filenames in dependency-tree-json/, not semver provider releases. */
+export const DEPENDENCY_TREE_NON_VERSION_JSON_FILES = new Set([
+  "index.json",
+  "latest.json",
+  "latest-merged.json",
+]);
+
+/** Version ids that must not appear in dependency-tree-json/index.json. */
+export const DEPENDENCY_TREE_NON_VERSION_IDS = new Set([
+  "index",
+  "latest",
+  "latest-merged",
+]);
+
+export function isDependencyTreeVersionJsonFilename(filename) {
+  return (
+    typeof filename === "string" &&
+    filename.endsWith(".json") &&
+    !DEPENDENCY_TREE_NON_VERSION_JSON_FILES.has(filename)
+  );
+}
+
+export function isDependencyTreeVersionId(version) {
+  const bare = String(version || "")
+    .trim()
+    .replace(/^v/i, "");
+  return Boolean(bare) && !DEPENDENCY_TREE_NON_VERSION_IDS.has(bare);
+}
+
+export function filterDependencyTreeVersionIds(versions) {
+  if (!Array.isArray(versions)) return [];
+  return versions.filter((entry) => isDependencyTreeVersionId(entry));
+}
+
 /** Oldest provider release with resource_permissions JSON and role TF downloads. */
 export const MIN_RESOURCE_PERMISSIONS_VERSION = "1.76.0";
 

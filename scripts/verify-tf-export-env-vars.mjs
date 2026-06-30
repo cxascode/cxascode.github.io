@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { filterDependencyTreeVersionIds } from "./lib/public-data-path-constants.mjs";
 import { ensureProviderSource } from "./lib/provider-source.mjs";
 import { scanProviderEnvVars } from "./lib/tf-export-env-vars-scan.mjs";
 
@@ -40,11 +41,12 @@ async function resolveLatestVersion() {
 
   const indexPath = path.join(DEPENDENCY_DIR, "index.json");
   const index = await loadJson(indexPath);
-  if (!Array.isArray(index) || index.length === 0) {
+  const versions = filterDependencyTreeVersionIds(index);
+  if (versions.length === 0) {
     throw new Error("No provider version found in public/dependency-tree-json/");
   }
 
-  return String(index[0]).replace(/^v/, "");
+  return String(versions[0]).replace(/^v/, "");
 }
 
 function defaultValueHint(name) {

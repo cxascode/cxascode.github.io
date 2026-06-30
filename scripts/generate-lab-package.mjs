@@ -20,6 +20,7 @@ import {
 } from "./lib/lab-package-version.mjs";
 import {
   DEPENDENCY_TREE_DIR,
+  isDependencyTreeVersionJsonFilename,
   LAB_PACKAGES_DIR,
   resolvePublicDataDir,
 } from "./lib/public-data-paths.mjs";
@@ -250,13 +251,7 @@ async function main() {
 
   const entries = await fs.readdir(INPUT_DIR, { withFileTypes: true });
   const jsonFiles = entries
-    .filter(
-      (entry) =>
-        entry.isFile() &&
-        entry.name.endsWith(".json") &&
-        entry.name !== "index.json" &&
-        entry.name !== "latest.json"
-    )
+    .filter((entry) => entry.isFile() && isDependencyTreeVersionJsonFilename(entry.name))
     .map((entry) => entry.name)
     .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
 
