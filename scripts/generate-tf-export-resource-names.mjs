@@ -3,6 +3,8 @@ import path from "node:path";
 import { ensureProviderSource, pathExists } from "./lib/provider-source.mjs";
 import {
   DEPENDENCY_TREE_DIR,
+  filterDependencyTreeVersionIds,
+  isDependencyTreeVersionJsonFilename,
   TF_EXPORT_RESOURCE_NAMES_DIR,
   resolvePublicDataDir,
 } from "./lib/public-data-paths.mjs";
@@ -46,20 +48,14 @@ async function listDependencyVersions() {
   if (await pathExists(indexPath)) {
     const index = await loadJson(indexPath);
     if (Array.isArray(index)) {
-      versions = index.filter((entry) => typeof entry === "string" && entry.trim());
+      versions = filterDependencyTreeVersionIds(index);
     }
   }
 
   if (versions.length === 0 && (await pathExists(DEPENDENCY_DIR))) {
     const entries = await fs.readdir(DEPENDENCY_DIR, { withFileTypes: true });
     versions = entries
-      .filter(
-        (entry) =>
-          entry.isFile() &&
-          entry.name.endsWith(".json") &&
-          entry.name !== "index.json" &&
-          entry.name !== "latest.json"
-      )
+      .filter((entry) => entry.isFile() && isDependencyTreeVersionJsonFilename(entry.name))
       .map((entry) => entry.name.replace(/\.json$/, ""));
   }
 

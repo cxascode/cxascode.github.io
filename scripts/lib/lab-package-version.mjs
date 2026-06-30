@@ -6,6 +6,7 @@ export const PROVIDER_VERSION_PIN_RE = /version\s*=\s*"~>\s*[\d.]+"/g;
 /** Match genesyscloud provider version line in lab README.md. */
 export const LAB_README_PROVIDER_VERSION_RE = /genesyscloud\s+~>\s*[\d.]+/g;
 
+const PROVIDER_VERSION_PIN_VALUE_RE = /version\s*=\s*"~>\s*([\d.]+)"/g;
 const LAB_README_PROVIDER_VERSION_VALUE_RE = /genesyscloud\s+~>\s*([\d.]+)/g;
 
 /** Static lab template source pins; replaced per zip at package build time. */

@@ -19,6 +19,7 @@ import {
   getNonExportableResourceTypes,
 } from "./lib/dependency-tree-overrides.mjs";
 import {
+  isDependencyTreeVersionJsonFilename,
   MIN_SINGLETON_FLAG_VERSION,
   TF_EXPORT_RESOURCE_NAMES_DIR,
   TF_EXPORT_SINGLETONS_DIR,
@@ -423,13 +424,7 @@ async function main() {
 
   const entries = await fs.readdir(INPUT_DIR, { withFileTypes: true });
   const jsonFiles = entries
-    .filter(
-      (e) =>
-        e.isFile() &&
-        e.name.endsWith(".json") &&
-        e.name !== "index.json" &&
-        e.name !== "latest.json"
-    )
+    .filter((e) => e.isFile() && isDependencyTreeVersionJsonFilename(e.name))
     .map((e) => e.name)
     .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
 
