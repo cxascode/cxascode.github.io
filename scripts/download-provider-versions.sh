@@ -112,6 +112,7 @@ dep_count="$(
   find "${DEP_DIR}" -maxdepth 1 -name '*.json' \
     ! -name 'index.json' \
     ! -name 'latest.json' \
+    ! -name 'latest-merged.json' \
     | wc -l | tr -d ' '
 )"
 
@@ -124,6 +125,7 @@ versions_sorted="$(
   find "${DEP_DIR}" -maxdepth 1 -name '*.json' \
     ! -name 'index.json' \
     ! -name 'latest.json' \
+    ! -name 'latest-merged.json' \
     | sed 's|.*/||; s|\.json$||' \
     | sort -Vr
 )"
