@@ -37,9 +37,14 @@ import {
   ARTIFACT_READ_ONLY_ROLE,
   ARTIFACT_READ_WRITE_ROLE,
   ARTIFACT_SPREADSHEET,
+  artifactDownloadFilename,
   downloadUrlArtifact,
 } from "./artifactDownloads.js";
-import { newestListedReleaseFromIndex, toReleaseNotesVersion } from "./releaseNotes.js";
+import {
+  artifactDownloadVersionLabel,
+  newestListedReleaseFromIndex,
+  toReleaseNotesVersion,
+} from "./releaseNotes.js";
 import {
   DIALOG_ATTRIBUTE_INDEX,
   DIALOG_CREATION_ORDER,
@@ -54,7 +59,11 @@ import {
   readSiteUpdatesEntryFromLocation,
   readResourceTypeFromLocation,
   readLabFilesDownloadFromLocation,
+  readRoleDownloadFromLocation,
   readSpreadsheetDownloadFromLocation,
+  roleDownloadPathname,
+  ROLE_READ_ONLY_SEGMENT,
+  ROLE_READ_WRITE_SEGMENT,
   readVersionFromLocation,
   replaceAttributeIndexInUrl,
   replaceCreationOrderInUrl,
@@ -855,6 +864,7 @@ export default function App() {
   const [envVarsDialogOpen, setEnvVarsDialogOpen] = useState(false);
   const spreadsheetPermalinkRef = useRef("");
   const labFilesPermalinkRef = useRef("");
+  const roleDownloadPermalinkRef = useRef("");
   const newestListedReleaseRef = useRef("");
   const [attributeIndexQuery, setAttributeIndexQuery] = useState(() =>
     readAttributeIndexFilterFromLocation()
@@ -1073,10 +1083,46 @@ export default function App() {
     return true;
   }, []);
 
+  const handleRoleDownloadPermalink = useCallback(() => {
+    const target = readRoleDownloadFromLocation();
+    if (!target) {
+      roleDownloadPermalinkRef.current = "";
+      return false;
+    }
+
+    const artifactId =
+      target.role === ROLE_READ_WRITE_SEGMENT
+        ? ARTIFACT_READ_WRITE_ROLE
+        : ARTIFACT_READ_ONLY_ROLE;
+
+    const permalinkKey = window.location.pathname;
+    if (roleDownloadPermalinkRef.current === permalinkKey) return true;
+
+    roleDownloadPermalinkRef.current = permalinkKey;
+
+    void downloadUrlArtifact(
+      artifactId,
+      target.version,
+      newestListedReleaseRef.current
+    ).finally(() => {
+      if (readRoleDownloadFromLocation() === null) {
+        roleDownloadPermalinkRef.current = "";
+        return;
+      }
+
+      skipNextUrlSyncRef.current = true;
+      replaceDialogInUrl("", readResourceTypeFromLocation(), readVersionFromLocation() || "latest");
+      roleDownloadPermalinkRef.current = "";
+    });
+
+    return true;
+  }, []);
+
   useEffect(() => {
     const syncFromLocation = () => {
       if (handleSpreadsheetPermalink()) return;
       if (handleLabFilesPermalink()) return;
+      if (handleRoleDownloadPermalink()) return;
 
       const dialog = readDialogFromLocation();
       setOrderDialogOpen(dialog === DIALOG_CREATION_ORDER);
@@ -1111,6 +1157,7 @@ export default function App() {
 
     handleSpreadsheetPermalink();
     handleLabFilesPermalink();
+    handleRoleDownloadPermalink();
     window.addEventListener("popstate", syncFromLocation);
     return () => window.removeEventListener("popstate", syncFromLocation);
   }, [
@@ -1118,6 +1165,7 @@ export default function App() {
     availableVersions,
     handleSpreadsheetPermalink,
     handleLabFilesPermalink,
+    handleRoleDownloadPermalink,
     syncAttributeIndexFromUrl,
     syncCreationOrderFromUrl,
     syncSiteUpdatesFromUrl,
@@ -1161,11 +1209,29 @@ export default function App() {
 
   const roleDownloadsSupported = isRoleDownloadSupported(effectiveVersion);
 
-  const downloadRoleTemplate = useCallback(
-    (artifactId) => {
-      void downloadUrlArtifact(artifactId, selectedVersion, newestListedRelease);
-    },
+  const roleDownloadVersionLabel = useMemo(
+    () => artifactDownloadVersionLabel(selectedVersion, newestListedRelease),
     [selectedVersion, newestListedRelease]
+  );
+
+  const readWriteRoleHref = useMemo(
+    () => roleDownloadPathname(ROLE_READ_WRITE_SEGMENT, selectedVersion),
+    [selectedVersion]
+  );
+
+  const readOnlyRoleHref = useMemo(
+    () => roleDownloadPathname(ROLE_READ_ONLY_SEGMENT, selectedVersion),
+    [selectedVersion]
+  );
+
+  const readWriteRoleDownloadName = useMemo(
+    () => artifactDownloadFilename(ARTIFACT_READ_WRITE_ROLE, roleDownloadVersionLabel),
+    [roleDownloadVersionLabel]
+  );
+
+  const readOnlyRoleDownloadName = useMemo(
+    () => artifactDownloadFilename(ARTIFACT_READ_ONLY_ROLE, roleDownloadVersionLabel),
+    [roleDownloadVersionLabel]
   );
 
   const setListViewModeAndReset = useCallback((nextMode) => {
@@ -1367,22 +1433,24 @@ export default function App() {
               </span>
 
               <div className="gcHeaderLinks">
-                <button
-                  type="button"
+                <a
+                  href={readWriteRoleHref}
+                  download={readWriteRoleDownloadName}
                   className="gcHeaderLink"
-                  onClick={() => downloadRoleTemplate(ARTIFACT_READ_WRITE_ROLE)}
+                  title={readWriteRoleHref}
                   tabIndex={roleDownloadsSupported ? 0 : -1}
                 >
                   Read/Write .tf
-                </button>
-                <button
-                  type="button"
+                </a>
+                <a
+                  href={readOnlyRoleHref}
+                  download={readOnlyRoleDownloadName}
                   className="gcHeaderLink"
-                  onClick={() => downloadRoleTemplate(ARTIFACT_READ_ONLY_ROLE)}
+                  title={readOnlyRoleHref}
                   tabIndex={roleDownloadsSupported ? 0 : -1}
                 >
                   Read-only .tf
-                </button>
+                </a>
               </div>
             </div>
 
