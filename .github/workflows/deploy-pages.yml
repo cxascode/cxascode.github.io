@@ -291,12 +291,12 @@ jobs:
             page=$((page + 1))
           done
 
-          if [ "$(find public/dependency-tree-json -maxdepth 1 -name '*.json' ! -name 'index.json' ! -name 'latest.json' ! -name 'latest-merged.json' | wc -l)" -eq 0 ]; then
+          if [ "$(find public/dependency-tree-json -maxdepth 1 -name '*.json' ! -name 'index.json' ! -name 'latest.json' | wc -l)" -eq 0 ]; then
             echo "Bootstrap failed: no dependency tree JSONs found. Check release assets and MIN_DEP_VERSION."
             exit 1
           fi
 
-          versions_sorted="$(find public/dependency-tree-json -maxdepth 1 -name '*.json' ! -name 'index.json' ! -name 'latest.json' ! -name 'latest-merged.json' | sed 's|.*/||; s|\.json$||' | sort -Vr)"
+          versions_sorted="$(find public/dependency-tree-json -maxdepth 1 -name '*.json' ! -name 'index.json' ! -name 'latest.json' | sed 's|.*/||; s|\.json$||' | sort -Vr)"
           printf "%s\n" "${versions_sorted}" | jq -R -s 'split("\n") | map(select(length>0))' > public/dependency-tree-json/index.json
 
           latest="$(printf "%s\n" "${versions_sorted}" | head -n 1)"
@@ -375,7 +375,7 @@ jobs:
             fi
           fi
 
-          versions_sorted="$(find public/dependency-tree-json -maxdepth 1 -name '*.json' ! -name 'index.json' ! -name 'latest.json' ! -name 'latest-merged.json' | sed 's|.*/||; s|\.json$||' | sort -Vr)"
+          versions_sorted="$(find public/dependency-tree-json -maxdepth 1 -name '*.json' ! -name 'index.json' ! -name 'latest.json' | sed 's|.*/||; s|\.json$||' | sort -Vr)"
           printf "%s\n" "${versions_sorted}" | jq -R -s 'split("\n") | map(select(length>0))' > public/dependency-tree-json/index.json
 
           latest="$(printf "%s\n" "${versions_sorted}" | head -n 1)"
