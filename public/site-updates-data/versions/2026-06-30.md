@@ -4,3 +4,7 @@
 ### What's new
 
 - Adding role permalink
+
+### What's new
+
+- Fixing readme versioning and adding blurb on tfvars
