@@ -12,3 +12,7 @@
 ### What's new
 
 - Ignoring latest-merged
+
+### What's new
+
+- Fixing json generation
