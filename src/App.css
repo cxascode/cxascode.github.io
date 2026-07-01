@@ -1129,12 +1129,12 @@ button.gcDocsPill {
   position: fixed;
   top: 16px;
   bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
   width: min(920px, calc(100% - 32px));
   max-width: calc(100% - 32px);
   max-height: calc(100dvh - 32px);
-  margin: 0;
+  margin-inline: auto;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -1337,8 +1337,21 @@ button.gcDocsPill {
   flex: 0 0 auto;
 }
 
-.gcOrderDialog__toolbar--attributeIndex .gcClearButton--toolbarEnd {
+.gcOrderDialog__toolbar--attributeIndex .gcOrderDialog__toolbarActions {
+  flex: 0 0 auto;
   margin-left: auto;
+}
+
+.gcOrderDialog__toolbar--attributeIndex .gcClearButton--toolbarEnd {
+  margin-left: 0;
+}
+
+.gcOrderDialog__panel > .gcListFooter .gcDivisionFilterBlock {
+  flex-shrink: 0;
+}
+
+.gcAttributeIndex__viewToggle.gcSegmentedControl--text .gcSegmentedControl__option {
+  padding: 0 10px;
 }
 
 .gcOrderDialog__toolbar--providerEnvVars {
@@ -1415,6 +1428,120 @@ button.gcDocsPill {
 .gcProviderEnvVars__status--ignored {
   background: #f3f3f3;
   color: #666;
+}
+
+.gcAttributeIndexLifecycle__table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.875rem;
+}
+
+.gcAttributeIndexLifecycle__table--fixed {
+  table-layout: fixed;
+}
+
+.gcAttributeIndexLifecycle__tableShell {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.gcAttributeIndexLifecycle__tableHead {
+  flex-shrink: 0;
+  padding: 0 14px;
+  background: var(--gc-surface);
+  border-bottom: 1px solid var(--gux-grey-90, #d8d8d8);
+}
+
+.gcAttributeIndexLifecycle__tableHead .gcAttributeIndexLifecycle__table th {
+  position: static;
+  border-bottom: 0;
+}
+
+.gcAttributeIndexLifecycle__tableBodyScroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 0 14px 14px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.gcAttributeIndexLifecycle__colVersion {
+  width: 6.25rem;
+}
+
+.gcAttributeIndexLifecycle__colStatus {
+  width: 6.5rem;
+}
+
+.gcAttributeIndexLifecycle__colKind {
+  width: 7.25rem;
+}
+
+.gcAttributeIndexLifecycle__table th,
+.gcAttributeIndexLifecycle__table td {
+  padding: 0.55rem 0.65rem;
+  border-bottom: 1px solid var(--gux-grey-90, #d8d8d8);
+  text-align: left;
+  vertical-align: top;
+}
+
+.gcAttributeIndexLifecycle__table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--gux-grey-95, #f2f2f2);
+  color: var(--gc-text);
+  font-weight: 600;
+  box-shadow: 0 1px 0 var(--gux-grey-90, #d8d8d8);
+}
+
+.gcAttributeIndexLifecycle__name code {
+  font-size: 0.8125rem;
+}
+
+.gcAttributeIndexLifecycle__version {
+  white-space: nowrap;
+  font-size: 0.8125rem;
+  color: var(--gc-subtle, #666);
+}
+
+.gcAttributeIndexLifecycle__link {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.gcAttributeIndexLifecycle__link:hover code,
+.gcAttributeIndexLifecycle__link:focus-visible code {
+  text-decoration: underline;
+}
+
+.gcAttributeIndexLifecycle__status {
+  display: inline-block;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.gcAttributeIndexLifecycle__status--added {
+  background: #e6f4ea;
+  color: #137333;
+}
+
+.gcAttributeIndexLifecycle__status--removed {
+  background: #fce8e6;
+  color: #c5221f;
 }
 
 .gcOrderDialog__toolbarActions {

@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-06-24T15:37:52.630Z",
-  "permissionsSource": "public/resource-permissions-json/1.83.0.json",
+  "generatedAt": "2026-07-01T19:44:57.900Z",
+  "permissionsSource": "public/resource-permissions-json/1.84.1.json",
   "permissionsUnion": {
     "fromVersion": "1.76.0",
-    "toVersion": "1.83.0",
-    "fileCount": 15,
+    "toVersion": "1.84.1",
+    "fileCount": 16,
     "resourceTypeCount": 144,
     "minVersion": "1.76.0"
   },

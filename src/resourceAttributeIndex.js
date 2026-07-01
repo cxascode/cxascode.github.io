@@ -16,6 +16,26 @@ export const ATTRIBUTE_INDEX_DESCRIPTION =
 export const ATTRIBUTE_INDEX_SCOPE_PROVIDER = RELEASE_NOTES_SCOPE_PROVIDER;
 export const ATTRIBUTE_INDEX_SCOPE_EXPORT = RELEASE_NOTES_SCOPE_EXPORT;
 
+export const ATTRIBUTE_INDEX_RESOURCE_LEVEL_ATTRIBUTE = "(resource-level behavior)";
+
+export const ATTRIBUTE_INDEX_VIEW_ALL = "all";
+export const ATTRIBUTE_INDEX_VIEW_TYPE_LIFECYCLE = "typeLifecycle";
+
+export const ATTRIBUTE_INDEX_TYPE_LIFECYCLE_ADDED = "added";
+export const ATTRIBUTE_INDEX_TYPE_LIFECYCLE_REMOVED = "removed";
+
+export function formatAttributeIndexTypeLifecycleKind(kind) {
+  if (kind === "data_source") return "Data source";
+  if (kind === "resource") return "Resource";
+  return kind || "Resource";
+}
+
+export function formatAttributeIndexTypeLifecycleStatus(status) {
+  if (status === ATTRIBUTE_INDEX_TYPE_LIFECYCLE_ADDED) return "Added";
+  if (status === ATTRIBUTE_INDEX_TYPE_LIFECYCLE_REMOVED) return "Removed";
+  return status || "";
+}
+
 function attributeIndexJsonUrl(scope = ATTRIBUTE_INDEX_SCOPE_PROVIDER) {
   const root =
     scope === ATTRIBUTE_INDEX_SCOPE_EXPORT ? TF_EXPORT_DATA_PATH : RELEASE_NOTES_DATA_PATH;
@@ -150,6 +170,42 @@ export function getIndexVersionOptions(index) {
   );
 }
 
+export function getAttributeIndexTypeLifecycleVersionOptions(index) {
+  if (!Array.isArray(index)) return [];
+
+  const versions = new Set();
+
+  for (const entry of index) {
+    if (!isAttributeIndexTypeLifecycleEntry(entry)) continue;
+
+    for (const item of entry.history) {
+      const change = (item?.change || "").trim().toLowerCase();
+      if (change !== "added" && change !== "removed") continue;
+
+      const version = (item?.version || "").trim();
+      if (version) versions.add(version);
+    }
+  }
+
+  return [...versions].sort((a, b) =>
+    compareVersionPartsDesc(versionParts(a), versionParts(b))
+  );
+}
+
+function entryMatchesTypeLifecycleVersionFilter(entry, versionFilter) {
+  if (!versionFilter) return true;
+
+  const target = normalizeVersionForCompare(versionFilter);
+  if (!target) return true;
+  if (!isAttributeIndexTypeLifecycleEntry(entry)) return false;
+
+  return entry.history.some((item) => {
+    const change = (item?.change || "").trim().toLowerCase();
+    if (change !== "added" && change !== "removed") return false;
+    return normalizeVersionForCompare(item?.version) === target;
+  });
+}
+
 function entryMatchesVersionFilter(entry, versionFilter) {
   if (!versionFilter) return true;
 
@@ -167,18 +223,81 @@ function entryMatchesVersionFilter(entry, versionFilter) {
   );
 }
 
+export function isAttributeIndexTypeLifecycleEntry(entry) {
+  const type = (entry?.type || "").trim();
+  if (type !== "resource" && type !== "data_source") return false;
+  if ((entry?.attribute || "").trim() !== ATTRIBUTE_INDEX_RESOURCE_LEVEL_ATTRIBUTE) return false;
+  if (!Array.isArray(entry?.history) || entry.history.length === 0) return false;
+
+  return entry.history.some((item) => {
+    const change = (item?.change || "").trim().toLowerCase();
+    return change === "added" || change === "removed";
+  });
+}
+
+function compareAttributeIndexTypeLifecycleRows(a, b) {
+  const versionCompare = compareVersionPartsDesc(
+    versionParts(a?.version),
+    versionParts(b?.version)
+  );
+  if (versionCompare !== 0) return versionCompare;
+
+  const statusCompare = String(a?.status || "").localeCompare(String(b?.status || ""));
+  if (statusCompare !== 0) return statusCompare;
+
+  return String(a?.resource || "").localeCompare(String(b?.resource || ""));
+}
+
+export function flattenAttributeIndexTypeLifecycleRows(entries) {
+  if (!Array.isArray(entries)) return [];
+
+  const rows = [];
+
+  for (const entry of entries) {
+    if (!isAttributeIndexTypeLifecycleEntry(entry)) continue;
+
+    for (const item of entry.history) {
+      const change = (item?.change || "").trim().toLowerCase();
+      if (change !== "added" && change !== "removed") continue;
+
+      const version = (item?.version || "").trim();
+      if (!version) continue;
+
+      rows.push({
+        resource: entry.resource,
+        status: change,
+        kind: entry.type,
+        version,
+      });
+    }
+  }
+
+  return rows.sort(compareAttributeIndexTypeLifecycleRows);
+}
+
 export function filterIndexEntries(
   index,
-  { query = "", typeFilter = "", statusFilter = "", versionFilter = "" } = {}
+  {
+    query = "",
+    typeFilter = "",
+    statusFilter = "",
+    versionFilter = "",
+    typeLifecycleOnly = false,
+  } = {}
 ) {
   if (!Array.isArray(index)) return [];
 
   const normalizedQuery = query.trim().toLowerCase();
 
   const filtered = index.filter((entry) => {
+    if (typeLifecycleOnly && !isAttributeIndexTypeLifecycleEntry(entry)) return false;
     if (typeFilter && entry?.type !== typeFilter) return false;
     if (statusFilter && entry?.status !== statusFilter) return false;
-    if (!entryMatchesVersionFilter(entry, versionFilter)) return false;
+    if (typeLifecycleOnly) {
+      if (!entryMatchesTypeLifecycleVersionFilter(entry, versionFilter)) return false;
+    } else if (!entryMatchesVersionFilter(entry, versionFilter)) {
+      return false;
+    }
 
     if (!normalizedQuery) return true;
 
