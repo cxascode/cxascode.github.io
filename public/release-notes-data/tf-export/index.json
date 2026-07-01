@@ -1,5 +1,15 @@
 [
   {
+    "version": "v1.84.1",
+    "previous": "v1.84.0",
+    "title": "v1.84.1 \u2014 genesyscloud_tf_export",
+    "path": "/release-notes-data/tf-export/versions/v1.84.1.md",
+    "changes_path": "/release-notes-data/tf-export/changes/v1.84.1.json",
+    "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.84.1",
+    "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.84.1/docs",
+    "resource": "genesyscloud_tf_export"
+  },
+  {
     "version": "v1.84.0",
     "previous": "v1.83.0",
     "title": "v1.84.0 \u2014 genesyscloud_tf_export",
