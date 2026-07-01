@@ -1,0 +1,13 @@
+{
+    "version": "v1.84.1",
+    "previous": "v1.84.0",
+    "changes": [
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_routing_email_domain",
+            "attribute": null,
+            "change": "updated",
+            "summary": "If create returns a 400 domain-already-exists error during an eventual-consistency race, the provider adopts the existing domain into state instead of failing apply, then updates or refreshes it as needed."
+        }
+    ]
+}

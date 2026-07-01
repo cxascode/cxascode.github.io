@@ -1,5 +1,27 @@
 [
   {
+    "type": "resource",
+    "resource": "genesyscloud_routing_email_domain",
+    "attribute": "(resource-level behavior)",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.1",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "If create returns a 400 domain-already-exists error during an eventual-consistency race, the provider adopts the existing domain into state instead of failing apply, then updates or refreshes it as needed.",
+    "history": [
+      {
+        "version": "v1.66.0",
+        "change": "updated",
+        "summary": "Delete completes successfully when the domain is already absent (HTTP 404)."
+      },
+      {
+        "version": "v1.84.1",
+        "change": "updated",
+        "summary": "If create returns a 400 domain-already-exists error during an eventual-consistency race, the provider adopts the existing domain into state instead of failing apply, then updates or refreshes it as needed."
+      }
+    ]
+  },
+  {
     "type": "export_behavior",
     "resource": "genesyscloud_outbound_digitalruleset",
     "attribute": "contact_list_id",
@@ -9404,23 +9426,6 @@
         "version": "v1.66.0",
         "change": "updated",
         "summary": "Bulk export block labels now use {email}."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_routing_email_domain",
-    "attribute": "(resource-level behavior)",
-    "introduced": "Unknown",
-    "last_updated": "v1.66.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Delete completes successfully when the domain is already absent (HTTP 404).",
-    "history": [
-      {
-        "version": "v1.66.0",
-        "change": "updated",
-        "summary": "Delete completes successfully when the domain is already absent (HTTP 404)."
       }
     ]
   },

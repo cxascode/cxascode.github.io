@@ -4,6 +4,7 @@ This index is generated from the release notes available on this site. `Introduc
 
 | Type | Resource / Data Source | Attribute | Introduced | Last Updated | Status | Notes |
 |---|---|---|---:|---:|---|---|
+| `resource` | `genesyscloud_routing_email_domain` | `(resource-level behavior)` | `Unknown` | `v1.84.1` | Active | If create returns a 400 domain-already-exists error during an eventual-consistency race, the provider adopts the existing domain into state instead of failing apply, then updates or refreshes it as needed. |
 | `export_behavior` | `genesyscloud_outbound_digitalruleset` | `contact_list_id` | `Unknown` | `v1.84.0` | Active | Unresolved contact_list_id references can be omitted during export when export omit-unresolved-refs is enabled. |
 | `export_behavior` | `genesyscloud_outbound_digitalruleset` | `rules.actions.set_content_template_action_settings` | `Unknown` | `v1.84.0` | Active | Empty sms_content_template_id or email_content_template_id values are removed from exported set_content_template_action_settings blocks. |
 | `export_behavior` | `genesyscloud_outbound_digitalruleset` | `rules.actions.set_content_template_action_settings.email_content_template_id` | `Unknown` | `v1.84.0` | Active | Content template IDs are resolved to genesyscloud_responsemanagement_response references during export, and unresolved references can be omitted when export omit-unresolved-refs is enabled. |
@@ -523,7 +524,6 @@ This index is generated from the release notes available on this site. `Introduc
 | `export_behavior` | `genesyscloud_responsemanagement_responseasset` | `filename` | `Unknown` | `v1.66.0` | Active | Bulk export filename values use forward slashes instead of backslashes. |
 | `export_behavior` | `genesyscloud_script` | `general export behavior` | `Unknown` | `v1.66.0` | Active | Bulk export excludes Genesys Cloud default scripts (Default Outbound Script, Default Inbound Script, Default Callback Script). |
 | `export_behavior` | `genesyscloud_user` | `general export behavior` | `Unknown` | `v1.66.0` | Active | Bulk export block labels now use {email}. |
-| `resource` | `genesyscloud_routing_email_domain` | `(resource-level behavior)` | `Unknown` | `v1.66.0` | Active | Delete completes successfully when the domain is already absent (HTTP 404). |
 | `resource` | `genesyscloud_routing_email_route` | `(resource-level behavior)` | `Unknown` | `v1.66.0` | Active | Read fetches the route directly by ID with up to a 7-minute retry window instead of listing all domain routes. |
 | `resource` | `genesyscloud_user` | `addresses` | `Unknown` | `v1.66.0` | Active | Removing the addresses block from configuration triggers an update that clears user addresses in Genesys Cloud. |
 | `resource` | `genesyscloud_user` | `employer_info` | `Unknown` | `v1.66.0` | Active | No longer computed; values are not populated from the API on read unless explicitly configured. |
