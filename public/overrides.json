@@ -110,6 +110,7 @@
       "genesyscloud_idp_onelogin",
       "genesyscloud_idp_ping",
       "genesyscloud_idp_salesforce",
+      "genesyscloud_integration_action_draft",
       "genesyscloud_integration_credential",
       "genesyscloud_integration_custom_auth_action",
       "genesyscloud_oauth_client",
