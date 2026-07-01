@@ -5,21 +5,39 @@ import {
   ATTRIBUTE_INDEX_DESCRIPTION,
   ATTRIBUTE_INDEX_SCOPE_EXPORT,
   ATTRIBUTE_INDEX_SCOPE_PROVIDER,
+  ATTRIBUTE_INDEX_VIEW_ALL,
+  ATTRIBUTE_INDEX_VIEW_TYPE_LIFECYCLE,
   fetchResourceAttributeIndex,
   filterIndexEntries,
+  ATTRIBUTE_INDEX_TYPE_LIFECYCLE_ADDED,
+  ATTRIBUTE_INDEX_TYPE_LIFECYCLE_REMOVED,
+  flattenAttributeIndexTypeLifecycleRows,
   formatAttributeIndexIntroducedLabel,
+  formatAttributeIndexTypeLifecycleKind,
+  formatAttributeIndexTypeLifecycleStatus,
   formatAttributeIndexLastChanged,
   formatAttributeIndexRowSummary,
   formatAttributeIndexType,
   formatAttributeIndexVersionEventLabel,
   getIndexFilterOptions,
+  getAttributeIndexTypeLifecycleVersionOptions,
   getIndexVersionOptions,
+  isAttributeIndexTypeLifecycleEntry,
 } from "./resourceAttributeIndex.js";
 import { TF_EXPORT_RESOURCE, toReleaseNotesVersion } from "./releaseNotes.js";
 
 const SCOPE_OPTIONS = [
   { id: ATTRIBUTE_INDEX_SCOPE_PROVIDER, label: "All resources" },
   { id: ATTRIBUTE_INDEX_SCOPE_EXPORT, label: "Export" },
+];
+
+const VIEW_OPTIONS = [
+  { id: ATTRIBUTE_INDEX_VIEW_ALL, label: "All" },
+  {
+    id: ATTRIBUTE_INDEX_VIEW_TYPE_LIFECYCLE,
+    label: "Added/Removed",
+    title: "Resource and data source types added or removed",
+  },
 ];
 
 function StatusBadge({ status }) {
@@ -30,6 +48,81 @@ function StatusBadge({ status }) {
       : "gcAttributeHistory__status gcAttributeHistory__status--active";
 
   return <span className={className}>{normalized || "Unknown"}</span>;
+}
+
+function TypeLifecycleStatusBadge({ status }) {
+  const className =
+    status === ATTRIBUTE_INDEX_TYPE_LIFECYCLE_ADDED
+      ? "gcAttributeIndexLifecycle__status gcAttributeIndexLifecycle__status--added"
+      : "gcAttributeIndexLifecycle__status gcAttributeIndexLifecycle__status--removed";
+
+  return <span className={className}>{formatAttributeIndexTypeLifecycleStatus(status)}</span>;
+}
+
+function LifecycleTableColgroup({ showVersionColumn }) {
+  return (
+    <colgroup>
+      {showVersionColumn ? <col className="gcAttributeIndexLifecycle__colVersion" /> : null}
+      <col />
+      <col className="gcAttributeIndexLifecycle__colStatus" />
+      <col className="gcAttributeIndexLifecycle__colKind" />
+    </colgroup>
+  );
+}
+
+function LifecycleTableHead({ showVersionColumn }) {
+  return (
+    <thead>
+      <tr>
+        {showVersionColumn ? <th scope="col">Version</th> : null}
+        <th scope="col">Type</th>
+        <th scope="col">Status</th>
+        <th scope="col">Kind</th>
+      </tr>
+    </thead>
+  );
+}
+
+function LifecycleTableBodyRows({
+  rows,
+  showVersionColumn,
+  isExportScope,
+  knownTypes,
+  onSelectResource,
+}) {
+  return rows.map((row) => {
+    const selectable =
+      !isExportScope &&
+      row.resource &&
+      (!(knownTypes instanceof Set) || knownTypes.has(row.resource));
+
+    return (
+      <tr key={`${row.version}:${row.status}:${row.kind}:${row.resource}`}>
+        {showVersionColumn ? (
+          <td className="gcAttributeIndexLifecycle__version">
+            {toReleaseNotesVersion(row.version)}
+          </td>
+        ) : null}
+        <td className="gcAttributeIndexLifecycle__name">
+          {selectable ? (
+            <button
+              type="button"
+              className="gcAttributeIndexLifecycle__link"
+              onClick={() => onSelectResource(row.resource)}
+            >
+              <code>{row.resource}</code>
+            </button>
+          ) : (
+            <code>{row.resource}</code>
+          )}
+        </td>
+        <td>
+          <TypeLifecycleStatusBadge status={row.status} />
+        </td>
+        <td>{formatAttributeIndexTypeLifecycleKind(row.kind)}</td>
+      </tr>
+    );
+  });
 }
 
 export default function AttributeIndexDialog({
@@ -48,8 +141,10 @@ export default function AttributeIndexDialog({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
+  const [viewMode, setViewMode] = useState(ATTRIBUTE_INDEX_VIEW_ALL);
 
   const isExportScope = scope === ATTRIBUTE_INDEX_SCOPE_EXPORT;
+  const typeLifecycleOnly = viewMode === ATTRIBUTE_INDEX_VIEW_TYPE_LIFECYCLE;
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -72,6 +167,7 @@ export default function AttributeIndexDialog({
     }
 
     setTypeFilter("");
+    setViewMode(ATTRIBUTE_INDEX_VIEW_ALL);
   }, [open]);
 
   useEffect(() => {
@@ -100,28 +196,71 @@ export default function AttributeIndexDialog({
     };
   }, [open, scope]);
 
-  const filterOptions = useMemo(() => getIndexFilterOptions(index), [index]);
-  const versionOptions = useMemo(() => getIndexVersionOptions(index), [index]);
+  const scopedIndex = useMemo(() => {
+    if (!typeLifecycleOnly) return index;
+    return index.filter(isAttributeIndexTypeLifecycleEntry);
+  }, [index, typeLifecycleOnly]);
+
+  const lifecycleRows = useMemo(() => {
+    if (!typeLifecycleOnly) return [];
+
+    const entries = filterIndexEntries(index, {
+      query: "",
+      typeFilter,
+      versionFilter,
+      typeLifecycleOnly: true,
+    });
+
+    return flattenAttributeIndexTypeLifecycleRows(entries);
+  }, [index, typeFilter, versionFilter, typeLifecycleOnly]);
+
+  const visibleLifecycleRows = useMemo(() => {
+    if (!typeLifecycleOnly) return [];
+    return lifecycleRows;
+  }, [lifecycleRows, typeLifecycleOnly]);
+
+  const showVersionColumn = typeLifecycleOnly && !versionFilter;
+
+  const filterOptions = useMemo(() => getIndexFilterOptions(scopedIndex), [scopedIndex]);
+  const versionOptions = useMemo(
+    () =>
+      typeLifecycleOnly
+        ? getAttributeIndexTypeLifecycleVersionOptions(index)
+        : getIndexVersionOptions(scopedIndex),
+    [index, scopedIndex, typeLifecycleOnly]
+  );
 
   const visibleEntries = useMemo(
     () =>
-      filterIndexEntries(index, {
-        query,
-        typeFilter,
-        versionFilter,
-      }),
-    [index, query, typeFilter, versionFilter]
+      typeLifecycleOnly
+        ? []
+        : filterIndexEntries(index, {
+            query,
+            typeFilter,
+            versionFilter,
+            typeLifecycleOnly: false,
+          }),
+    [index, query, typeFilter, versionFilter, typeLifecycleOnly]
   );
 
-  const hasActiveFilters = Boolean(query || typeFilter || versionFilter);
+  const hasActiveFilters = typeLifecycleOnly
+    ? Boolean(typeFilter || versionFilter)
+    : Boolean(query || typeFilter || versionFilter);
 
   const entryCountLabel = loading
     ? "Loading attribute index…"
     : error
       ? "Could not load attribute index."
-      : hasActiveFilters
-        ? `${visibleEntries.length} of ${index.length} entries`
-        : `${index.length} entries`;
+      : typeLifecycleOnly
+        ? hasActiveFilters
+          ? `${visibleLifecycleRows.length} of ${lifecycleRows.length} types`
+          : `${lifecycleRows.length} types`
+        : hasActiveFilters
+          ? `${visibleEntries.length} of ${scopedIndex.length} entries`
+          : `${scopedIndex.length} entries`;
+
+  const showLifecycleTable =
+    !error && !loading && typeLifecycleOnly && visibleLifecycleRows.length > 0;
 
   const handleClose = useCallback(
     (nextResourceType) => {
@@ -135,6 +274,7 @@ export default function AttributeIndexDialog({
     onQueryChange?.("");
     onVersionFilterChange?.("");
     setTypeFilter("");
+    setViewMode(ATTRIBUTE_INDEX_VIEW_ALL);
   };
 
   const handleSelectResource = (resourceType) => {
@@ -191,141 +331,203 @@ export default function AttributeIndexDialog({
                 </button>
               ))}
             </div>
-            <input
-              type="search"
-              className="gcSearchInput gcOrderDialog__search"
-              placeholder={
-                isExportScope
-                  ? "Search export attributes"
-                  : "Search resources, attributes"
-              }
-              value={query}
-              onInput={(event) => onQueryChange?.(event.target.value)}
-              disabled={loading || !!error}
-            />
-            <select
-              className="gcSelectInput"
-              value={typeFilter}
-              onChange={(event) => setTypeFilter(event.target.value)}
-              disabled={loading || !!error}
-              aria-label="Filter by change type"
-            >
-              <option value="">All types</option>
-              {filterOptions.types.map((type) => (
-                <option key={type} value={type}>
-                  {formatAttributeIndexType(type)}
-                </option>
-              ))}
-            </select>
-            <select
-              className="gcSelectInput"
-              value={versionFilter}
-              onChange={(event) => onVersionFilterChange?.(event.target.value)}
-              disabled={loading || !!error}
-              aria-label="Filter by version"
-            >
-              <option value="">All versions</option>
-              {versionOptions.map((version) => (
-                <option key={version} value={version}>
-                  {toReleaseNotesVersion(version)}
-                </option>
-              ))}
-            </select>
-            <button
-              type="button"
-              className="gcClearButton gcClearButton--toolbarEnd"
-              onClick={clearFilters}
-              disabled={loading || !!error || !hasActiveFilters}
-            >
-              Clear
-            </button>
+            {!typeLifecycleOnly ? (
+              <input
+                type="search"
+                className="gcSearchInput gcOrderDialog__search"
+                placeholder={
+                  isExportScope ? "Search export attributes" : "Search resources, attributes"
+                }
+                value={query}
+                onInput={(event) => onQueryChange?.(event.target.value)}
+                disabled={loading || !!error}
+              />
+            ) : null}
+            <div className="gcOrderDialog__toolbarActions">
+              <select
+                className="gcSelectInput"
+                value={typeFilter}
+                onChange={(event) => setTypeFilter(event.target.value)}
+                disabled={loading || !!error}
+                aria-label={typeLifecycleOnly ? "Filter by kind" : "Filter by change type"}
+              >
+                <option value="">{typeLifecycleOnly ? "All kinds" : "All types"}</option>
+                {filterOptions.types.map((type) => (
+                  <option key={type} value={type}>
+                    {formatAttributeIndexType(type)}
+                  </option>
+                ))}
+              </select>
+              <select
+                className="gcSelectInput"
+                value={versionFilter}
+                onChange={(event) => onVersionFilterChange?.(event.target.value)}
+                disabled={loading || !!error}
+                aria-label="Filter by version"
+              >
+                <option value="">All versions</option>
+                {versionOptions.map((version) => (
+                  <option key={version} value={version}>
+                    {toReleaseNotesVersion(version)}
+                  </option>
+                ))}
+              </select>
+              <button
+                type="button"
+                className="gcClearButton gcClearButton--toolbarEnd"
+                onClick={clearFilters}
+                disabled={loading || !!error || !hasActiveFilters}
+              >
+                Clear
+              </button>
+            </div>
           </div>
         </div>
 
-        <div className="gcOrderDialog__body">
-          {error ? (
-            <div className="gcAlert" role="alert">
-              <div className="gcAlert__body gcMono">{error}</div>
+        {showLifecycleTable ? (
+          <div className="gcAttributeIndexLifecycle__tableShell">
+            <div className="gcAttributeIndexLifecycle__tableHead">
+              <table className="gcAttributeIndexLifecycle__table gcAttributeIndexLifecycle__table--fixed">
+                <LifecycleTableColgroup showVersionColumn={showVersionColumn} />
+                <LifecycleTableHead showVersionColumn={showVersionColumn} />
+              </table>
             </div>
-          ) : null}
-
-          {!error && loading ? <div className="gcMuted">Loading attribute index…</div> : null}
-
-          {!error && !loading && !visibleEntries.length ? (
-            <div className="gcMuted">No matching attribute history entries.</div>
-          ) : null}
-
-          {!error && !loading && visibleEntries.length ? (
-            <div className="gcAttributeIndex__list">
-              {visibleEntries.map((entry) => {
-                const canSelect =
-                  !isExportScope &&
-                  entry.resource &&
-                  (!(knownTypes instanceof Set) || knownTypes.has(entry.resource));
-                const introducedLabel = formatAttributeIndexIntroducedLabel(entry.introduced);
-                const lastChangedLabel = formatAttributeIndexLastChanged(
-                  entry.last_updated,
-                  entry.introduced
-                );
-                const versionEventLabel = formatAttributeIndexVersionEventLabel(
-                  entry,
-                  versionFilter
-                );
-                const summary = formatAttributeIndexRowSummary(entry, versionFilter);
-
-                return (
-                  <button
-                    key={attributeIndexEntryKey(entry)}
-                    type="button"
-                    className={`gcAttributeIndex__row ${canSelect ? "" : "isStatic"}`}
-                    onClick={() => handleSelectResource(entry.resource)}
-                    disabled={!canSelect}
-                    title={
-                      canSelect
-                        ? `Open ${entry.resource} in the explorer`
-                        : isExportScope
-                          ? `${TF_EXPORT_RESOURCE} attribute history`
-                          : `${entry.resource} is not in the dependency explorer`
-                    }
-                  >
-                    <div className="gcAttributeIndex__rowMain">
-                      <code className="gcAttributeIndex__resource gcMono">{entry.resource}</code>
-                      <code className="gcAttributeIndex__attribute">{entry.attribute}</code>
-                    </div>
-                    <div className="gcAttributeIndex__rowMeta">
-                      <span className="gcAttributeHistory__type">
-                        {formatAttributeIndexType(entry.type)}
-                      </span>
-                      <StatusBadge status={entry.status} />
-                      {versionFilter ? (
-                        versionEventLabel ? (
-                          <span className="gcAttributeHistory__version">{versionEventLabel}</span>
-                        ) : null
-                      ) : (
-                        <>
-                          {introducedLabel ? (
-                            <span className="gcAttributeHistory__introduced">{introducedLabel}</span>
-                          ) : null}
-                          {lastChangedLabel ? (
-                            <span className="gcAttributeHistory__version">{lastChangedLabel}</span>
-                          ) : null}
-                        </>
-                      )}
-                    </div>
-                    {summary ? (
-                      <p className="gcAttributeIndex__summary">{summary}</p>
-                    ) : null}
-                  </button>
-                );
-              })}
+            <div className="gcAttributeIndexLifecycle__tableBodyScroll">
+              <table className="gcAttributeIndexLifecycle__table gcAttributeIndexLifecycle__table--fixed">
+                <LifecycleTableColgroup showVersionColumn={showVersionColumn} />
+                <tbody>
+                  <LifecycleTableBodyRows
+                    rows={visibleLifecycleRows}
+                    showVersionColumn={showVersionColumn}
+                    isExportScope={isExportScope}
+                    knownTypes={knownTypes}
+                    onSelectResource={handleSelectResource}
+                  />
+                </tbody>
+              </table>
             </div>
-          ) : null}
-        </div>
+          </div>
+        ) : (
+          <div className="gcOrderDialog__body">
+            {error ? (
+              <div className="gcAlert" role="alert">
+                <div className="gcAlert__body gcMono">{error}</div>
+              </div>
+            ) : null}
+
+            {!error && loading ? <div className="gcMuted">Loading attribute index…</div> : null}
+
+            {!error && !loading && typeLifecycleOnly && !visibleLifecycleRows.length ? (
+              <div className="gcMuted">No matching resource or data source types added or removed.</div>
+            ) : null}
+
+            {!error && !loading && !typeLifecycleOnly && !visibleEntries.length ? (
+              <div className="gcMuted">No matching attribute history entries.</div>
+            ) : null}
+
+            {!error && !loading && !typeLifecycleOnly && visibleEntries.length ? (
+              <div className="gcAttributeIndex__list">
+                {visibleEntries.map((entry) => {
+                  const canSelect =
+                    !isExportScope &&
+                    entry.resource &&
+                    (!(knownTypes instanceof Set) || knownTypes.has(entry.resource));
+                  const introducedLabel = formatAttributeIndexIntroducedLabel(entry.introduced);
+                  const lastChangedLabel = formatAttributeIndexLastChanged(
+                    entry.last_updated,
+                    entry.introduced
+                  );
+                  const versionEventLabel = formatAttributeIndexVersionEventLabel(
+                    entry,
+                    versionFilter
+                  );
+                  const summary = formatAttributeIndexRowSummary(entry, versionFilter);
+
+                  return (
+                    <button
+                      key={attributeIndexEntryKey(entry)}
+                      type="button"
+                      className={`gcAttributeIndex__row ${canSelect ? "" : "isStatic"}`}
+                      onClick={() => handleSelectResource(entry.resource)}
+                      disabled={!canSelect}
+                      title={
+                        canSelect
+                          ? `Open ${entry.resource} in the explorer`
+                          : isExportScope
+                            ? `${TF_EXPORT_RESOURCE} attribute history`
+                            : `${entry.resource} is not in the dependency explorer`
+                      }
+                    >
+                      <div className="gcAttributeIndex__rowMain">
+                        <code className="gcAttributeIndex__resource gcMono">{entry.resource}</code>
+                        <code className="gcAttributeIndex__attribute">{entry.attribute}</code>
+                      </div>
+                      <div className="gcAttributeIndex__rowMeta">
+                        <span className="gcAttributeHistory__type">
+                          {formatAttributeIndexType(entry.type)}
+                        </span>
+                        <StatusBadge status={entry.status} />
+                        {versionFilter ? (
+                          versionEventLabel ? (
+                            <span className="gcAttributeHistory__version">{versionEventLabel}</span>
+                          ) : null
+                        ) : (
+                          <>
+                            {introducedLabel ? (
+                              <span className="gcAttributeHistory__introduced">{introducedLabel}</span>
+                            ) : null}
+                            {lastChangedLabel ? (
+                              <span className="gcAttributeHistory__version">{lastChangedLabel}</span>
+                            ) : null}
+                          </>
+                        )}
+                      </div>
+                      {summary ? (
+                        <p className="gcAttributeIndex__summary">{summary}</p>
+                      ) : null}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : null}
+          </div>
+        )}
 
         <div className="gcListFooter">
           <p className="gcListCount" aria-live="polite">
             {entryCountLabel}
           </p>
+          <div className="gcDivisionFilterBlock">
+            <span className="gcDivisionFilterLabel" id="attribute-index-view-label">
+              Show
+            </span>
+            <div
+              className="gcSegmentedControl gcSegmentedControl--text gcAttributeIndex__viewToggle"
+              role="radiogroup"
+              aria-labelledby="attribute-index-view-label"
+              title="Filter to resource and data source types added or removed"
+            >
+              {VIEW_OPTIONS.map((option) => (
+                <button
+                  key={option.id}
+                  type="button"
+                  className="gcSegmentedControl__option"
+                  role="radio"
+                  aria-checked={viewMode === option.id}
+                  title={option.title}
+                  disabled={loading || !!error}
+                  onClick={() => {
+                    if (option.id === ATTRIBUTE_INDEX_VIEW_TYPE_LIFECYCLE) {
+                      onQueryChange?.("");
+                    }
+                    setViewMode(option.id);
+                  }}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </dialog>,
