@@ -32,7 +32,6 @@ const USER_VISIBLE_PATHS = [
   /^src\//,
   /^index\.html$/,
   /^scripts\/write-sitemap\.mjs$/,
-  /^scripts\/write-merged-dependency-tree\.mjs$/,
 ];
 
 /** Site-updates feature files — not end-user features to announce. */
@@ -46,10 +45,18 @@ const SITE_UPDATES_INFRA_PATHS = [
 
 /** Commit subjects that describe hidden or permalink-only features. */
 const HIDDEN_FEATURE_SUBJECT_RE =
-  /\b(lab files?|lab package|cx as code lab|spreadsheet|practice zip|\/labfiles|\/spreadsheet|\/roles|role template|site updates?|site notes?)\b/i;
+  /\b(lab files?|lab package|cx as code lab|spreadsheet|practice zip|\/labfiles|\/spreadsheet|\/roles|role template|site updates?|site notes?|env vars?|environment variables?)\b/i;
+
+/** Repo, lab-package, or build-pipeline changes — not explorer UI for end users. */
+const INTERNAL_SITE_UPDATE_SUBJECT_RE =
+  /\b(readme versioning|terraform\.tfvars|tfvars|latest-merged|json generation|lab readme|bootstrap-local|write-merged|merged-dependency|resource-type-changes|generate-resource|deploy-pages|github actions|provider-source)\b/i;
 
 export function mentionsHiddenSiteFeature(text) {
   return HIDDEN_FEATURE_SUBJECT_RE.test(String(text || ""));
+}
+
+export function mentionsInternalSiteUpdate(text) {
+  return INTERNAL_SITE_UPDATE_SUBJECT_RE.test(String(text || ""));
 }
 
 const SKIP_SUBJECT_RE =
@@ -196,6 +203,7 @@ export function shouldIncludeSubject(subject) {
   if (!cleaned) return false;
   if (SKIP_SUBJECT_RE.test(cleaned)) return false;
   if (HIDDEN_FEATURE_SUBJECT_RE.test(cleaned)) return false;
+  if (mentionsInternalSiteUpdate(cleaned)) return false;
   if (/^take \d+$/i.test(cleaned)) return false;
   if (/^(this one has to be it|hopefully final|another special|special one-time|splitting the baby)$/i.test(cleaned)) {
     return false;
@@ -346,8 +354,12 @@ function renderSubjectBlocks(subjects) {
   const expansions = subjects.map(expandSubject);
   const summaries = expansions
     .map((expansion) => expansion.summary)
-    .filter((summary) => summary && !mentionsHiddenSiteFeature(summary));
+    .filter(
+      (summary) =>
+        summary && !mentionsHiddenSiteFeature(summary) && !mentionsInternalSiteUpdate(summary)
+    );
   const lines = [];
+  const mergedSections = new Map();
 
   if (summaries.length) {
     lines.push(summaries.join(" "), "");
@@ -356,16 +368,24 @@ function renderSubjectBlocks(subjects) {
   for (const expansion of expansions) {
     for (const section of expansion.sections) {
       const bullets = section.bullets.filter(
-        (bullet) => bullet && !mentionsHiddenSiteFeature(bullet)
+        (bullet) =>
+          bullet &&
+          !mentionsHiddenSiteFeature(bullet) &&
+          !mentionsInternalSiteUpdate(bullet)
       );
       if (!bullets.length) continue;
 
-      lines.push(`### ${section.title}`, "");
-      for (const bullet of bullets) {
-        lines.push(`- ${bullet}`);
-      }
-      lines.push("");
+      const existing = mergedSections.get(section.title) || [];
+      mergedSections.set(section.title, [...existing, ...bullets]);
     }
+  }
+
+  for (const [title, bullets] of mergedSections) {
+    lines.push(`### ${title}`, "");
+    for (const bullet of bullets) {
+      lines.push(`- ${bullet}`);
+    }
+    lines.push("");
   }
 
   return lines;
