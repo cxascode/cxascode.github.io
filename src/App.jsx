@@ -1234,6 +1234,25 @@ export default function App() {
     [roleDownloadVersionLabel]
   );
 
+  const handleRoleTemplateDownload = useCallback(
+    (event, artifactId) => {
+      if (
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+      void downloadUrlArtifact(artifactId, selectedVersion, newestListedRelease);
+    },
+    [selectedVersion, newestListedRelease]
+  );
+
   const setListViewModeAndReset = useCallback((nextMode) => {
     if (nextMode === listViewMode) return;
     setListViewMode(nextMode);
@@ -1435,19 +1454,23 @@ export default function App() {
               <div className="gcHeaderLinks">
                 <a
                   href={readWriteRoleHref}
-                  download={readWriteRoleDownloadName}
                   className="gcHeaderLink"
-                  title={readWriteRoleHref}
+                  title={`Download ${readWriteRoleDownloadName}`}
                   tabIndex={roleDownloadsSupported ? 0 : -1}
+                  onClick={(event) =>
+                    handleRoleTemplateDownload(event, ARTIFACT_READ_WRITE_ROLE)
+                  }
                 >
                   Read/Write .tf
                 </a>
                 <a
                   href={readOnlyRoleHref}
-                  download={readOnlyRoleDownloadName}
                   className="gcHeaderLink"
-                  title={readOnlyRoleHref}
+                  title={`Download ${readOnlyRoleDownloadName}`}
                   tabIndex={roleDownloadsSupported ? 0 : -1}
+                  onClick={(event) =>
+                    handleRoleTemplateDownload(event, ARTIFACT_READ_ONLY_ROLE)
+                  }
                 >
                   Read-only .tf
                 </a>
