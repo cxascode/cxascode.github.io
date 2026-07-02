@@ -115,6 +115,8 @@
       "genesyscloud_integration_action_draft",
       "genesyscloud_integration_credential",
       "genesyscloud_integration_custom_auth_action",
+      "genesyscloud_journey_outcome",
+      "genesyscloud_journey_outcome_predictor",
       "genesyscloud_oauth_client",
       "genesyscloud_orgauthorization_pairing",
       "genesyscloud_organization_authentication_settings",

@@ -248,13 +248,15 @@ function buildResourceRows(raw, overrides, tfExportCatalog, generatedGuiMenuPath
       : [];
     const dependencies = effectiveDependencies(type, allDependencies);
 
+    const scopePrefix = resolveSpreadsheetScopePrefix(type, overrides);
+
     return {
       menuPath: resolveSpreadsheetMenuPath(type, overrides, generatedGuiMenuPaths),
       resourceType: type,
       divisionAware: isDivisionAware(allDependencies) ? "Yes" : "No",
       dependencyCount: dependencies.length,
-      scopePrefix: resolveSpreadsheetScopePrefix(type, overrides),
-      priority: tierByType.get(type) ?? null,
+      scopePrefix,
+      priority: scopePrefix === "out" ? null : (tierByType.get(type) ?? null),
       notes: resolveSpreadsheetNotes(
         type,
         overrides,
