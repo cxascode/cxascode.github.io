@@ -51,15 +51,16 @@ function isLatestArtifactVersion(version) {
   return !bare || bare === "latest";
 }
 
-export function artifactHref(artifactId, version = "latest") {
+export function artifactHref(artifactId, version = "latest", { cacheBust = false } = {}) {
   const config = ARTIFACTS[artifactId];
   if (!config) return "";
 
-  if (isLatestArtifactVersion(version)) {
-    return `${BASE}${config.latestPath}`;
-  }
+  const path = isLatestArtifactVersion(version)
+    ? config.latestPath
+    : config.versionedPath(normalizeArtifactVersion(version));
 
-  return `${BASE}${config.versionedPath(normalizeArtifactVersion(version))}`;
+  const href = `${BASE}${path}`;
+  return cacheBust ? `${href}?v=${Date.now()}` : href;
 }
 
 export async function resolveArtifactDownloadVersionLabel(
@@ -123,7 +124,7 @@ export async function downloadUrlArtifact(
 ) {
   const versionLabel = await resolveArtifactDownloadVersionLabel(version, newestListedRelease);
   triggerBrowserDownload({
-    href: artifactHref(artifactId, version),
+    href: artifactHref(artifactId, version, { cacheBust: true }),
     filename: artifactDownloadFilename(artifactId, versionLabel),
   });
 }

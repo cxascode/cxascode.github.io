@@ -1,16 +1,8 @@
 import { getNonExportableResourceTypes } from "./dependency-tree-overrides.mjs";
+import { getSpreadsheetOutResourceTypes } from "./priority-group-keywords.mjs";
 
 export function getOutOfScopeResourceTypes(overrides) {
-  const out = overrides?.spreadsheetScopePrefixes?.out;
-  if (!Array.isArray(out)) return [];
-
-  return [
-    ...new Set(
-      out
-        .filter((entry) => typeof entry === "string" && entry.trim())
-        .map((entry) => entry.trim())
-    ),
-  ].sort((a, b) => a.localeCompare(b));
+  return getSpreadsheetOutResourceTypes(overrides).sort((a, b) => a.localeCompare(b));
 }
 
 function stripHclLineComments(terraformContent) {

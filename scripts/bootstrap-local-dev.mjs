@@ -147,6 +147,7 @@ async function runGenerator(latest) {
   await runScript("scripts/write-merged-dependency-tree.mjs");
   await runScript("scripts/generate-spreadsheet-template.mjs", [
     `--latest=${latest}`,
+    "--force",
   ]);
   await runScript("scripts/generate-lab-package.mjs", [`--latest=${latest}`]);
 }

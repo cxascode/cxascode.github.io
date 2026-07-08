@@ -210,8 +210,13 @@ function isRoleDownloadSupported(version) {
  *   "hiddenResourceTypes": ["genesyscloud_bcp_tf_exporter", ...]
  *   "deprecatedResourceTypes": ["genesyscloud_journey_outcome", ...]
  *   "nonExportableResourceTypes": ["genesyscloud_outbound_contact_list_contact", ...]
- *   "spreadsheetScopePrefixes": {
- *     "In scope - ": ["genesyscloud_flow", "genesyscloud_script"]
+ *   "spreadsheetTemplates": {
+ *     "out": ["genesyscloud_user", ...],
+ *     "repoDeployOrder": ["foundation", "routing", ...],
+ *     "repoAssignments": {
+ *       "foundation": "genesyscloud_auth_division, genesyscloud_auth_role, ...",
+ *       "routing": "genesyscloud_architect_emergencygroup, ..."
+ *     }
  *   }
  * }
  *
