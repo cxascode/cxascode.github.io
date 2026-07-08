@@ -1,7 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import ExcelJS from "exceljs";
-import { computeCreationOrder } from "../src/dependencyOrder.js";
 import { effectiveDependencies } from "../src/effectiveDependencies.js";
 import {
   isSingletonTfExportResource,
@@ -18,6 +17,15 @@ import {
   getHiddenResourceTypes,
   getNonExportableResourceTypes,
 } from "./lib/dependency-tree-overrides.mjs";
+import {
+  compareSpreadsheetRows,
+  getRepoAssignments,
+  getRepoDeployOrderIndex,
+  getSkippedResourceTypes,
+  getSpreadsheetOutResourceTypesSet,
+  resolveRepoPriority,
+  resolveSpreadsheetRepoName,
+} from "./lib/priority-group-keywords.mjs";
 import {
   isDependencyTreeVersionJsonFilename,
   MIN_SINGLETON_FLAG_VERSION,
@@ -39,7 +47,7 @@ const SPREADSHEET_GLOBAL_INPUT_RELATIVE_PATHS = [
   "public/overrides.json",
   "scripts/templates/cx-as-code-spreadsheet-template.xlsx",
   "scripts/lib/dependency-tree-overrides.mjs",
-  "src/dependencyOrder.js",
+  "scripts/lib/priority-group-keywords.mjs",
   "src/effectiveDependencies.js",
   "src/guiMenuPaths.js",
   "src/tfExportTemplate.js",
@@ -79,16 +87,8 @@ function resolveSpreadsheetScopePrefix(resourceType, overrides) {
   const type = (resourceType || "").trim();
   if (!type) return null;
 
-  const prefixGroups = overrides?.spreadsheetScopePrefixes;
-  if (!prefixGroups || typeof prefixGroups !== "object") return null;
-
-  for (const [prefix, resourceTypes] of Object.entries(prefixGroups)) {
-    if (typeof prefix !== "string" || !prefix) continue;
-    if (!Array.isArray(resourceTypes)) continue;
-
-    if (resourceTypes.some((entry) => typeof entry === "string" && entry.trim() === type)) {
-      return prefix;
-    }
+  if (getSpreadsheetOutResourceTypesSet(overrides).has(type)) {
+    return "out";
   }
 
   return null;
@@ -180,42 +180,6 @@ function resolveSpreadsheetNotes(
   return notes.length > 0 ? notes.join("; ") : "";
 }
 
-function buildDepsMap(raw) {
-  const depsMap = new Map();
-
-  if (!raw || !Array.isArray(raw.resources)) {
-    return depsMap;
-  }
-
-  for (const resource of raw.resources) {
-    if (!resource || typeof resource.type !== "string") continue;
-
-    const from = resource.type;
-    const deps = Array.isArray(resource.dependencies) ? resource.dependencies : [];
-
-    if (!depsMap.has(from)) depsMap.set(from, new Set());
-
-    for (const dep of deps) {
-      if (typeof dep !== "string") continue;
-      depsMap.get(from).add(dep);
-    }
-  }
-
-  return depsMap;
-}
-
-function buildTierByType(tiers) {
-  const tierByType = new Map();
-
-  for (let index = 0; index < tiers.length; index += 1) {
-    for (const type of tiers[index]) {
-      tierByType.set(type, index + 1);
-    }
-  }
-
-  return tierByType;
-}
-
 function buildResourceRows(raw, overrides, tfExportCatalog, generatedGuiMenuPaths) {
   const hidden = getHiddenResourceTypes(overrides);
   const deprecatedTypes = getDeprecatedResourceTypes(overrides);
@@ -229,19 +193,14 @@ function buildResourceRows(raw, overrides, tfExportCatalog, generatedGuiMenuPath
     byType.set(resource.type, resource);
   }
 
-  const depsMap = buildDepsMap(patched);
-  const { flatOrder, tiers } = computeCreationOrder(depsMap, { hiddenTypes: hidden });
-  const tierByType = buildTierByType(tiers);
-  const orderedTypes = [...flatOrder];
+  const repoContext = {
+    skipped: getSkippedResourceTypes(overrides),
+    out: getSpreadsheetOutResourceTypesSet(overrides),
+    assignments: getRepoAssignments(overrides),
+  };
+  const repoDeployOrderIndex = getRepoDeployOrderIndex(overrides);
 
-  const orderedSet = new Set(orderedTypes);
-  const remaining = [...byType.keys()]
-    .filter((type) => !orderedSet.has(type))
-    .sort((a, b) => a.localeCompare(b));
-
-  orderedTypes.push(...remaining);
-
-  return orderedTypes.map((type) => {
+  const rows = [...byType.keys()].map((type) => {
     const resource = byType.get(type);
     const allDependencies = Array.isArray(resource?.dependencies)
       ? resource.dependencies.filter((d) => typeof d === "string")
@@ -249,6 +208,8 @@ function buildResourceRows(raw, overrides, tfExportCatalog, generatedGuiMenuPath
     const dependencies = effectiveDependencies(type, allDependencies);
 
     const scopePrefix = resolveSpreadsheetScopePrefix(type, overrides);
+    const inScope = scopePrefix !== "out";
+    const repoName = inScope ? resolveSpreadsheetRepoName(type, repoContext) : null;
 
     return {
       menuPath: resolveSpreadsheetMenuPath(type, overrides, generatedGuiMenuPaths),
@@ -256,7 +217,8 @@ function buildResourceRows(raw, overrides, tfExportCatalog, generatedGuiMenuPath
       divisionAware: isDivisionAware(allDependencies) ? "Yes" : "No",
       dependencyCount: dependencies.length,
       scopePrefix,
-      priority: scopePrefix === "out" ? null : (tierByType.get(type) ?? null),
+      priority: inScope ? resolveRepoPriority(repoName, repoDeployOrderIndex) : null,
+      repoName,
       notes: resolveSpreadsheetNotes(
         type,
         overrides,
@@ -266,6 +228,8 @@ function buildResourceRows(raw, overrides, tfExportCatalog, generatedGuiMenuPath
       ),
     };
   });
+
+  return rows.sort(compareSpreadsheetRows);
 }
 
 async function loadGeneratedGuiMenuPaths() {
@@ -330,7 +294,7 @@ async function writeWorkbook(rows, outPath) {
     row.getCell(5).value = entry.scopePrefix;
     row.getCell(6).value = null;
     row.getCell(7).value = entry.priority;
-    row.getCell(8).value = null;
+    row.getCell(8).value = entry.repoName;
     row.getCell(9).value = null;
     row.getCell(10).value = entry.notes || null;
 
@@ -340,6 +304,13 @@ async function writeWorkbook(rows, outPath) {
 
     row.commit();
   }
+
+  const lastDataRow = rows.length + 1;
+  if (worksheet.rowCount > lastDataRow) {
+    worksheet.spliceRows(lastDataRow + 1, worksheet.rowCount - lastDataRow);
+  }
+
+  worksheet.autoFilter = rows.length > 0 ? `A1:J${lastDataRow}` : "A1:J1";
 
   await workbook.xlsx.writeFile(outPath);
 }

@@ -94,8 +94,36 @@
     "genesyscloud_orgauthorization_pairing",
     "genesyscloud_outbound_contact_list_contact"
   ],
-  "spreadsheetScopePrefixes": {
+  "spreadsheetTemplates": {
+    "repoDeployOrder": [
+      "foundation",
+      "queues",
+      "datatables",
+      "prompts",
+      "reference",
+      "channels",
+      "quality",
+      "outbound",
+      "workautomation",
+      "intelligence",
+      "flows"
+    ],
+    "repoAssignments": {
+      "foundation": "genesyscloud_auth_division, genesyscloud_auth_role, genesyscloud_flow_milestone, genesyscloud_flow_outcome, genesyscloud_greeting, genesyscloud_group, genesyscloud_group_greeting, genesyscloud_group_roles, genesyscloud_integration, genesyscloud_integration_action, genesyscloud_location, genesyscloud_organization_presence_definition, genesyscloud_routing_language, genesyscloud_routing_skill, genesyscloud_routing_skill_group, genesyscloud_routing_utilization, genesyscloud_routing_utilization_label, genesyscloud_routing_wrapupcode, genesyscloud_team, genesyscloud_telephony_providers_edges_did_pool, genesyscloud_telephony_providers_edges_extension_pool, genesyscloud_telephony_providers_edges_phonebasesettings, genesyscloud_telephony_providers_edges_site, genesyscloud_telephony_providers_edges_site_outbound_route",
+      "queues": "genesyscloud_architect_emergencygroup, genesyscloud_architect_schedulegroups, genesyscloud_architect_schedules, genesyscloud_routing_queue, genesyscloud_routing_queue_conditional_group_activation, genesyscloud_routing_queue_conditional_group_routing, genesyscloud_routing_queue_outbound_email_address",
+      "datatables": "genesyscloud_architect_datatable, genesyscloud_architect_datatable_row, genesyscloud_business_rules_decision_table, genesyscloud_business_rules_schema",
+      "prompts": "genesyscloud_architect_user_prompt, genesyscloud_script",
+      "reference": "genesyscloud_knowledge_category, genesyscloud_knowledge_document, genesyscloud_knowledge_document_variation, genesyscloud_knowledge_knowledgebase, genesyscloud_knowledge_label, genesyscloud_responsemanagement_library, genesyscloud_responsemanagement_response, genesyscloud_responsemanagement_responseasset",
+      "channels": "genesyscloud_architect_ivr, genesyscloud_conversations_messaging_integrations_apple, genesyscloud_conversations_messaging_integrations_instagram, genesyscloud_conversations_messaging_integrations_open, genesyscloud_conversations_messaging_integrations_whatsapp, genesyscloud_conversations_messaging_settings, genesyscloud_conversations_messaging_settings_default, genesyscloud_conversations_messaging_supportedcontent, genesyscloud_integration_facebook, genesyscloud_processautomation_trigger, genesyscloud_routing_email_domain, genesyscloud_routing_email_route, genesyscloud_webdeployments_configuration, genesyscloud_webdeployments_deployment",
+      "quality": "genesyscloud_quality_forms_evaluation, genesyscloud_quality_forms_survey, genesyscloud_recording_media_retention_policy, genesyscloud_speechandtextanalytics_dictionaryfeedback, genesyscloud_speechandtextanalytics_topic",
+      "outbound": "genesyscloud_outbound_attempt_limit, genesyscloud_outbound_callabletimeset, genesyscloud_outbound_callanalysisresponseset, genesyscloud_outbound_campaign, genesyscloud_outbound_campaignrule, genesyscloud_outbound_contact_list, genesyscloud_outbound_contact_list_template, genesyscloud_outbound_contactlistfilter, genesyscloud_outbound_digitalruleset, genesyscloud_outbound_dnclist, genesyscloud_outbound_filespecificationtemplate, genesyscloud_outbound_messagingcampaign, genesyscloud_outbound_ruleset, genesyscloud_outbound_sequence, genesyscloud_outbound_wrapupcodemappings",
+      "flows": "genesyscloud_flow",
+      "intelligence": "genesyscloud_ai_studio_summary_setting, genesyscloud_guide, genesyscloud_guide_version, genesyscloud_intents_categories, genesyscloud_intents_customerintents, genesyscloud_journey_action_map, genesyscloud_journey_action_template, genesyscloud_journey_segment, genesyscloud_journey_view_schedule, genesyscloud_journey_views, genesyscloud_learning_modules, genesyscloud_users_rules",
+      "workautomation": "genesyscloud_case_management_caseplan, genesyscloud_case_management_caseplan_create_version, genesyscloud_case_management_caseplan_publish, genesyscloud_case_management_stageplan, genesyscloud_case_management_stepplan, genesyscloud_task_management_workbin, genesyscloud_task_management_workitem, genesyscloud_task_management_workitem_schema, genesyscloud_task_management_worktype, genesyscloud_task_management_worktype_flow_datebased_rule, genesyscloud_task_management_worktype_flow_onattributechange_rule, genesyscloud_task_management_worktype_flow_oncreate_rule, genesyscloud_task_management_worktype_status, genesyscloud_task_management_worktype_status_transition, genesyscloud_workforcemanagement_businessunits"
+    },
     "out": [
+      "genesyscloud_architect_grammar",
+      "genesyscloud_architect_grammar_language",
       "genesyscloud_conversations_messaging_supportedcontent_default",
       "genesyscloud_conversations_settings",
       "genesyscloud_employeeperformance_externalmetrics_definitions",
