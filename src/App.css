@@ -821,6 +821,56 @@ button.gcDocsPill {
   border-top: 1px solid var(--gc-border2);
 }
 
+.gcResourceMetaRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 20px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--gc-border2);
+}
+
+.gcResourceMetaRow--single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.gcResourceMetaRow__col.gcMenuPathBlock {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+  min-width: 0;
+}
+
+.gcResourceMetaRow__col--end {
+  text-align: right;
+}
+
+.gcResourceMetaRow__col--end .gcMenuPath__label,
+.gcResourceMetaRow__col--end .gcMenuPath__value {
+  text-align: right;
+}
+
+.gcResourceMetaRow .gcMenuPath__value {
+  font-size: 13px;
+  line-height: 1.45;
+  font-weight: 500;
+  color: var(--gc-text);
+}
+
+.gcResourceMetaRow .gcMenuPath__crumbs,
+.gcResourceMetaRow .gcMenuPath__crumbs span,
+.gcResourceMetaRow .gcMenuPath__empty {
+  font-size: inherit;
+  line-height: inherit;
+  font-weight: inherit;
+  color: inherit;
+}
+
+.gcResourceMetaRow .gcMenuPath__sep {
+  font-size: inherit;
+  line-height: inherit;
+}
+
 .gcTd--menuPath {
   white-space: normal;
   overflow: visible;
@@ -840,12 +890,13 @@ button.gcDocsPill {
 }
 
 .gcMenuPath__label {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: normal;
+  text-transform: none;
   color: var(--gc-subtle);
   margin-bottom: 4px;
+  line-height: 1.4;
 }
 
 .gcMenuPath__value {
@@ -1889,6 +1940,10 @@ button.gcDocsPill {
   }
 
   .gcDetailsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .gcResourceMetaRow:not(.gcResourceMetaRow--single) {
     grid-template-columns: 1fr;
   }
 

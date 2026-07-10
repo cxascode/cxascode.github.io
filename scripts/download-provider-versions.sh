@@ -144,6 +144,7 @@ if [[ "${RUN_GENERATORS}" == "true" ]]; then
   node scripts/generate-gui-menu-paths.mjs --latest="${latest}" --union-permissions
   node scripts/generate-tf-export-resource-names.mjs
   node scripts/generate-tf-export-singletons.mjs
+  node scripts/generate-schema-force-new.mjs
   node scripts/verify-tf-export-env-vars.mjs
   node scripts/write-merged-dependency-tree.mjs
   node scripts/generate-spreadsheet-template.mjs --latest="${latest}"
