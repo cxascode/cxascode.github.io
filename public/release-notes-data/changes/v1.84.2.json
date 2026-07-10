@@ -1,0 +1,188 @@
+{
+    "version": "v1.84.2",
+    "previous": "v1.84.1",
+    "changes": [
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_architect_user_prompt",
+            "attribute": "resources",
+            "change": "updated",
+            "summary": "When BCP mode is active, the attribute is no longer computed and must be set explicitly in configuration; when BCP mode is not active, it remains optional and computed from the API."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_business_rules_decision_table",
+            "attribute": "input_columns.default_to.value",
+            "change": "updated",
+            "summary": "Now computed as well as optional so unused default fields no longer cause plan/apply inconsistencies when another mutually exclusive default is set."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_business_rules_decision_table",
+            "attribute": "input_columns.default_to.values",
+            "change": "updated",
+            "summary": "Now computed as well as optional for string-list defaults; documentation clarifies mutual exclusivity with value and special."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_business_rules_decision_table",
+            "attribute": "input_columns.default_to.special",
+            "change": "updated",
+            "summary": "Now computed as well as optional for special-value defaults; documentation clarifies mutual exclusivity with value and values."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_business_rules_decision_table",
+            "attribute": "output_columns.default_to.value",
+            "change": "updated",
+            "summary": "Now computed as well as optional so unused default fields no longer cause plan/apply inconsistencies when another mutually exclusive default is set."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_business_rules_decision_table",
+            "attribute": "output_columns.default_to.values",
+            "change": "updated",
+            "summary": "Now computed as well as optional for string-list defaults; documentation clarifies mutual exclusivity with value and special."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_business_rules_decision_table",
+            "attribute": "output_columns.default_to.special",
+            "change": "updated",
+            "summary": "Now computed as well as optional for special-value defaults; documentation clarifies mutual exclusivity with value and values."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_business_rules_decision_table",
+            "attribute": "description",
+            "change": "updated",
+            "summary": "Read now preserves a null description from the API instead of coercing it to an empty string, avoiding null-to-empty-string plan inconsistencies."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_business_rules_decision_table",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Default create and update timeouts are now 120 minutes."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_business_rules_decision_table",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Failed creates roll back partially created decision tables even after a create timeout, and timeout errors suggest increasing the create timeout in a timeouts block."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_business_rules_decision_table",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When adding rows, a duplicate-row 409 at the expected row index is treated as a successful add instead of failing apply."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_business_rules_schema",
+            "attribute": "description",
+            "change": "updated",
+            "summary": "Read now preserves a null description from the API instead of coercing it to an empty string, avoiding null-to-empty-string plan inconsistencies."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_case_management_caseplan",
+            "attribute": "customer_intent.id",
+            "change": "updated",
+            "summary": "Export now resolves customer_intent.id references to genesyscloud_intents_customerintents instead of genesyscloud_customer_intent."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_knowledge_knowledgebase",
+            "attribute": "content_search_enabled",
+            "change": "added",
+            "summary": "Optional flag to enable article content search when creating the knowledge base (defaults to true); changing it after creation forces replacement."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_email_domain",
+            "attribute": "imap_settings",
+            "change": "added",
+            "summary": "Optional block to configure the IMAP server integration used to ingest inbound emails; populated from the API when present."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_email_domain",
+            "attribute": "imap_settings.integration_id",
+            "change": "added",
+            "summary": "IMAP server integration ID to associate with the domain."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_email_domain",
+            "attribute": "imap_settings.status",
+            "change": "added",
+            "summary": "Computed IMAP server status from the API."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_email_domain",
+            "attribute": "graph_api_settings",
+            "change": "added",
+            "summary": "Optional block to configure the Graph API integration used for inbound and outbound email processing; populated from the API when present."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_email_domain",
+            "attribute": "graph_api_settings.integration_id",
+            "change": "added",
+            "summary": "Graph API server integration ID to associate with the domain."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_email_domain",
+            "attribute": "graph_api_settings.status",
+            "change": "added",
+            "summary": "Computed Graph API server status from the API."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_routing_email_domain",
+            "attribute": null,
+            "change": "updated",
+            "summary": "imap_settings and graph_api_settings are now read from the API and can be patched on create and update alongside existing mail-from and SMTP settings."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_email_route",
+            "attribute": "signature",
+            "change": "added",
+            "summary": "Optional block to configure a canned-response signature appended to outbound emails sent via the route."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_email_route",
+            "attribute": "signature.enabled",
+            "change": "added",
+            "summary": "Toggle to enable the signature on email send."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_email_route",
+            "attribute": "signature.canned_response_id",
+            "change": "added",
+            "summary": "ID of the email signature canned response to use."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_email_route",
+            "attribute": "signature.always_included",
+            "change": "added",
+            "summary": "Whether the signature is included on every email or only the first email in a chain."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_email_route",
+            "attribute": "signature.inclusion_type",
+            "change": "added",
+            "summary": "When to include the signature; valid values are Draft, Send, and SendOnce."
+        }
+    ]
+}

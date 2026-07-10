@@ -2,68 +2,12 @@
   {
     "type": "export_behavior",
     "resource": "genesyscloud_tf_export",
-    "attribute": "export_omit_unresolved_refs",
-    "introduced": "Unknown",
-    "last_updated": "v1.84.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "When export_omit_unresolved_refs is true, optional reference attributes that cannot be resolved to Terraform references are omitted from exported configuration instead of being left as raw GUIDs. The default false preserves prior export output that included unresolved references as GUIDs.",
-    "history": [
-      {
-        "version": "v1.84.0",
-        "change": "updated",
-        "summary": "When export_omit_unresolved_refs is true, optional reference attributes that cannot be resolved to Terraform references are omitted from exported configuration instead of being left as raw GUIDs. The default false preserves prior export output that included unresolved references as GUIDs."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_tf_export",
-    "attribute": "export_omit_unresolved_refs",
-    "introduced": "v1.84.0",
-    "last_updated": "v1.84.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Changing export_omit_unresolved_refs forces replacement of the genesyscloud_tf_export resource.",
-    "history": [
-      {
-        "version": "v1.84.0",
-        "change": "added",
-        "summary": "Optional boolean (defaults to false). When true, optional reference attributes that the exporter cannot resolve to Terraform references are omitted from exported configuration. When false, unresolved references continue to be written as raw GUIDs. Changing this value forces replacement of the export resource."
-      },
-      {
-        "version": "v1.84.0",
-        "change": "updated",
-        "summary": "Changing export_omit_unresolved_refs forces replacement of the genesyscloud_tf_export resource."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
-    "resource": "genesyscloud_tf_export",
-    "attribute": "export_deprecated",
-    "introduced": "Unknown",
-    "last_updated": "v1.82.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "When export_deprecated is false, deprecated schema attributes are omitted from exported configuration; the default true preserves prior behavior that included deprecated attributes.",
-    "history": [
-      {
-        "version": "v1.82.0",
-        "change": "updated",
-        "summary": "When export_deprecated is false, deprecated schema attributes are omitted from exported configuration; the default true preserves prior behavior that included deprecated attributes."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
-    "resource": "genesyscloud_tf_export",
     "attribute": "general export behavior",
     "introduced": "Unknown",
-    "last_updated": "v1.82.0",
+    "last_updated": "v1.84.2",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Schema-based exclusions for computed, read-only computed, and deprecated attributes now apply recursively to nested block attributes and run before output sanitization.",
+    "latest_summary": "Custom file writers for exported resources retry transient failures up to three times with exponential backoff before reporting an error.",
     "history": [
       {
         "version": "v1.67.0",
@@ -139,6 +83,67 @@
         "version": "v1.82.0",
         "change": "updated",
         "summary": "Schema-based exclusions for computed, read-only computed, and deprecated attributes now apply recursively to nested block attributes and run before output sanitization."
+      },
+      {
+        "version": "v1.84.2",
+        "change": "updated",
+        "summary": "Custom file writers for exported resources retry transient failures up to three times with exponential backoff before reporting an error."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_tf_export",
+    "attribute": "export_omit_unresolved_refs",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When export_omit_unresolved_refs is true, optional reference attributes that cannot be resolved to Terraform references are omitted from exported configuration instead of being left as raw GUIDs. The default false preserves prior export output that included unresolved references as GUIDs.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "When export_omit_unresolved_refs is true, optional reference attributes that cannot be resolved to Terraform references are omitted from exported configuration instead of being left as raw GUIDs. The default false preserves prior export output that included unresolved references as GUIDs."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_tf_export",
+    "attribute": "export_omit_unresolved_refs",
+    "introduced": "v1.84.0",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Changing export_omit_unresolved_refs forces replacement of the genesyscloud_tf_export resource.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "added",
+        "summary": "Optional boolean (defaults to false). When true, optional reference attributes that the exporter cannot resolve to Terraform references are omitted from exported configuration. When false, unresolved references continue to be written as raw GUIDs. Changing this value forces replacement of the export resource."
+      },
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Changing export_omit_unresolved_refs forces replacement of the genesyscloud_tf_export resource."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_tf_export",
+    "attribute": "export_deprecated",
+    "introduced": "Unknown",
+    "last_updated": "v1.82.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When export_deprecated is false, deprecated schema attributes are omitted from exported configuration; the default true preserves prior behavior that included deprecated attributes.",
+    "history": [
+      {
+        "version": "v1.82.0",
+        "change": "updated",
+        "summary": "When export_deprecated is false, deprecated schema attributes are omitted from exported configuration; the default true preserves prior behavior that included deprecated attributes."
       }
     ]
   },

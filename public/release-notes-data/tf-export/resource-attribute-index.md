@@ -4,10 +4,10 @@ This index is generated from the release notes available on this site. `Introduc
 
 | Type | Resource / Data Source | Attribute | Introduced | Last Updated | Status | Notes |
 |---|---|---|---:|---:|---|---|
+| `export_behavior` | `genesyscloud_tf_export` | `general export behavior` | `Unknown` | `v1.84.2` | Active | Custom file writers for exported resources retry transient failures up to three times with exponential backoff before reporting an error. |
 | `export_behavior` | `genesyscloud_tf_export` | `export_omit_unresolved_refs` | `Unknown` | `v1.84.0` | Active | When export_omit_unresolved_refs is true, optional reference attributes that cannot be resolved to Terraform references are omitted from exported configuration instead of being left as raw GUIDs. The default false preserves prior export output that included unresolved references as GUIDs. |
 | `resource` | `genesyscloud_tf_export` | `export_omit_unresolved_refs` | `v1.84.0` | `v1.84.0` | Active | Changing export_omit_unresolved_refs forces replacement of the genesyscloud_tf_export resource. |
 | `export_behavior` | `genesyscloud_tf_export` | `export_deprecated` | `Unknown` | `v1.82.0` | Active | When export_deprecated is false, deprecated schema attributes are omitted from exported configuration; the default true preserves prior behavior that included deprecated attributes. |
-| `export_behavior` | `genesyscloud_tf_export` | `general export behavior` | `Unknown` | `v1.82.0` | Active | Schema-based exclusions for computed, read-only computed, and deprecated attributes now apply recursively to nested block attributes and run before output sanitization. |
 | `resource` | `genesyscloud_tf_export` | `export_deprecated` | `v1.82.0` | `v1.82.0` | Active | Changing export_deprecated forces replacement of the genesyscloud_tf_export resource. |
 | `resource` | `genesyscloud_tf_export` | `exclude_attributes` | `Unknown` | `v1.79.0` | Active | Exclusions are applied when exporters are loaded, in addition to the final output pass. |
 | `resource` | `genesyscloud_tf_export` | `replace_with_datasource` | `Unknown` | `v1.78.0` | Active | Accepts a resource type without a label suffix (equivalent to type::) to replace all exported instances of that type with data sources. |
