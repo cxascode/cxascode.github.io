@@ -3,12 +3,5 @@
 
 ### What's new
 
-- Added export resource name type to attribute history
-
-### What's new
-
-- Adding forcenew attributes to the site
-
-### What's new
-
-- Attributes that force recreate
+- Export resource name changes now appear as their own type in attribute history
+- Resource detail panels list attributes that trigger a full resource recreate when changed

@@ -347,43 +347,164 @@ export function expandSubject(subject) {
     };
   }
 
+  if (/\bexport resource name\b/.test(lower)) {
+    return {
+      summary: "",
+      sections: [
+        {
+          title: "What's new",
+          bullets: [
+            "Export resource name changes now appear as their own type in attribute history.",
+          ],
+        },
+      ],
+    };
+  }
+
+  if (/\bforcenew\b|\bforce recreate\b|\bforce[- ]new\b/.test(lower)) {
+    return {
+      summary: "Attributes that force resource recreate are shown in Explorer.",
+      sections: [
+        {
+          title: "Attributes that force recreate",
+          bullets: [
+            "Resource detail panels list attributes that trigger a full resource recreate when changed.",
+          ],
+        },
+      ],
+    };
+  }
+
   return {
     summary: "",
     sections: [{ title: "What's new", bullets: [capitalizeSentence(cleaned)] }],
   };
 }
 
-function renderSubjectBlocks(subjects) {
+function normalizeDedupeKey(text) {
+  return String(text || "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+export function dedupeBullets(bullets) {
+  const seen = new Set();
+  const result = [];
+
+  for (const bullet of bullets) {
+    const key = normalizeDedupeKey(bullet);
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    result.push(bullet);
+  }
+
+  return result;
+}
+
+function dedupeSummaries(summaries) {
+  return dedupeBullets(summaries);
+}
+
+function filterVisibleBullets(bullets) {
+  return bullets.filter(
+    (bullet) =>
+      bullet && !mentionsHiddenSiteFeature(bullet) && !mentionsInternalSiteUpdate(bullet)
+  );
+}
+
+/** Parse an auto-generated site-update entry into header, summary, and sections. */
+export function parseAutoMarkdown(content) {
+  const lines = String(content || "").split("\n");
+  const summaries = [];
+  const sections = new Map();
+  let headerLine = "";
+  let currentSection = null;
+  let afterHeader = false;
+  let seenFirstSection = false;
+
+  for (const line of lines) {
+    if (line.includes(AUTO_MARKER)) continue;
+
+    if (line.startsWith("## ")) {
+      headerLine = line;
+      afterHeader = true;
+      continue;
+    }
+
+    if (line.startsWith("### ")) {
+      seenFirstSection = true;
+      currentSection = line.slice(4).trim();
+      if (!sections.has(currentSection)) {
+        sections.set(currentSection, []);
+      }
+      continue;
+    }
+
+    if (line.startsWith("- ")) {
+      if (currentSection) {
+        sections.get(currentSection).push(line.slice(2).trim());
+      }
+      continue;
+    }
+
+    if (afterHeader && !seenFirstSection && line.trim()) {
+      summaries.push(line.trim());
+    }
+  }
+
+  for (const [title, bullets] of sections) {
+    sections.set(title, dedupeBullets(bullets));
+  }
+
+  return { headerLine, summaries: dedupeSummaries(summaries), sections };
+}
+
+function collectSubjectBlocks(subjects) {
   const expansions = subjects.map(expandSubject);
-  const summaries = expansions
-    .map((expansion) => expansion.summary)
-    .filter(
-      (summary) =>
-        summary && !mentionsHiddenSiteFeature(summary) && !mentionsInternalSiteUpdate(summary)
-    );
-  const lines = [];
-  const mergedSections = new Map();
+  const summaries = dedupeSummaries(
+    expansions
+      .map((expansion) => expansion.summary)
+      .filter(
+        (summary) =>
+          summary && !mentionsHiddenSiteFeature(summary) && !mentionsInternalSiteUpdate(summary)
+      )
+  );
+  const sections = new Map();
+
+  for (const expansion of expansions) {
+    for (const section of expansion.sections) {
+      const bullets = filterVisibleBullets(section.bullets);
+      if (!bullets.length) continue;
+
+      const existing = sections.get(section.title) || [];
+      sections.set(section.title, dedupeBullets([...existing, ...bullets]));
+    }
+  }
+
+  return { summaries, sections };
+}
+
+function mergeSectionMaps(baseSections, incomingSections) {
+  const merged = new Map(baseSections);
+
+  for (const [title, bullets] of incomingSections) {
+    const existing = merged.get(title) || [];
+    merged.set(title, dedupeBullets([...existing, ...bullets]));
+  }
+
+  return merged;
+}
+
+function renderMarkdownBlocks({ headerLine, summaries, sections }) {
+  const lines = [AUTO_MARKER, headerLine, ""];
 
   if (summaries.length) {
     lines.push(summaries.join(" "), "");
   }
 
-  for (const expansion of expansions) {
-    for (const section of expansion.sections) {
-      const bullets = section.bullets.filter(
-        (bullet) =>
-          bullet &&
-          !mentionsHiddenSiteFeature(bullet) &&
-          !mentionsInternalSiteUpdate(bullet)
-      );
-      if (!bullets.length) continue;
-
-      const existing = mergedSections.get(section.title) || [];
-      mergedSections.set(section.title, [...existing, ...bullets]);
-    }
-  }
-
-  for (const [title, bullets] of mergedSections) {
+  for (const [title, bullets] of sections) {
+    if (!bullets.length) continue;
     lines.push(`### ${title}`, "");
     for (const bullet of bullets) {
       lines.push(`- ${bullet}`);
@@ -395,19 +516,22 @@ function renderSubjectBlocks(subjects) {
 }
 
 export function buildMarkdown({ date, subjects }) {
-  const title = formatTitleFromDate(date);
-  const lines = [AUTO_MARKER, `## Site updates — ${title}`, ""];
-
-  if (subjects.length) {
-    lines.push(...renderSubjectBlocks(subjects));
-  }
-
-  return `${lines.join("\n").trim()}\n`;
+  const headerLine = `## Site updates — ${formatTitleFromDate(date)}`;
+  const { summaries, sections } = collectSubjectBlocks(subjects);
+  return `${renderMarkdownBlocks({ headerLine, summaries, sections }).join("\n").trim()}\n`;
 }
 
-export function appendMarkdown(existing, { subjects }) {
+export function appendMarkdown(existing, { subjects, date = "" }) {
   if (!subjects.length) return `${existing.trim()}\n`;
-  return `${existing.trim()}\n\n${renderSubjectBlocks(subjects).join("\n").trim()}\n`;
+
+  const parsed = parseAutoMarkdown(existing);
+  const incoming = collectSubjectBlocks(subjects);
+  const headerLine =
+    parsed.headerLine || `## Site updates — ${formatTitleFromDate(date)}`;
+  const summaries = dedupeSummaries([...parsed.summaries, ...incoming.summaries]);
+  const sections = mergeSectionMaps(parsed.sections, incoming.sections);
+
+  return `${renderMarkdownBlocks({ headerLine, summaries, sections }).join("\n").trim()}\n`;
 }
 
 export function updateIndexEntries(index, version, title) {
@@ -461,7 +585,7 @@ export async function generateSiteUpdates(options = parseArgs()) {
   try {
     const existing = await fs.readFile(versionPath, "utf8");
     if (isAutoGeneratedEntry(existing)) {
-      markdown = appendMarkdown(existing, { subjects });
+      markdown = appendMarkdown(existing, { subjects, date });
       mode = "append";
     } else {
       console.log(
