@@ -6,6 +6,11 @@ import {
   isSingletonTfExportResource,
   normalizeSingletonResourceTypes,
 } from "../src/tfExportSingletons.js";
+import {
+  formatSpreadsheetForceNewNote,
+  getForceNewAttributes,
+  normalizeForceNewCatalog,
+} from "../src/schemaForceNew.js";
 import { resolveTfExportResourceName } from "../src/tfExportTemplate.js";
 import {
   normalizeGeneratedGuiMenuPaths,
@@ -29,6 +34,7 @@ import {
 import {
   isDependencyTreeVersionJsonFilename,
   MIN_SINGLETON_FLAG_VERSION,
+  SCHEMA_FORCE_NEW_DIR,
   TF_EXPORT_RESOURCE_NAMES_DIR,
   TF_EXPORT_SINGLETONS_DIR,
 } from "./lib/public-data-path-constants.mjs";
@@ -52,6 +58,7 @@ const SPREADSHEET_GLOBAL_INPUT_RELATIVE_PATHS = [
   "src/guiMenuPaths.js",
   "src/tfExportTemplate.js",
   "src/tfExportSingletons.js",
+  "src/schemaForceNew.js",
 ];
 
 const AUTH_DIVISION_RESOURCE_TYPE = "genesyscloud_auth_division";
@@ -64,6 +71,20 @@ const GRAY_FILL = {
   pattern: "solid",
   fgColor: { theme: 2 },
   bgColor: { indexed: 64 },
+};
+
+/** Excel column widths from user auto-fit on v1.84.2 template. */
+const SPREADSHEET_COLUMN_WIDTHS = {
+  A: 67,
+  B: 58,
+  C: 16,
+  D: 15,
+  E: 16,
+  F: 10,
+  G: 9,
+  H: 20,
+  I: 16,
+  J: 50,
 };
 
 import {
@@ -125,9 +146,11 @@ function compareVersions(a, b) {
 async function loadTfExportCatalog(version) {
   const singletonPath = path.join(PUBLIC_DIR, TF_EXPORT_SINGLETONS_DIR, `${version}.json`);
   const namesPath = path.join(PUBLIC_DIR, TF_EXPORT_RESOURCE_NAMES_DIR, `${version}.json`);
+  const forceNewPath = path.join(PUBLIC_DIR, SCHEMA_FORCE_NEW_DIR, `${version}.json`);
 
   let singletonTypes = new Set();
   let resourceNames = {};
+  let forceNewCatalog = {};
 
   try {
     const json = JSON.parse(await fs.readFile(singletonPath, "utf8"));
@@ -146,9 +169,17 @@ async function loadTfExportCatalog(version) {
     // tf-export-resource-names may be missing before local bootstrap
   }
 
+  try {
+    const json = JSON.parse(await fs.readFile(forceNewPath, "utf8"));
+    forceNewCatalog = normalizeForceNewCatalog(json?.forceNewAttributes);
+  } catch {
+    // schema-force-new may be missing before local bootstrap
+  }
+
   return {
     singletonTypes,
     resourceNames,
+    forceNewCatalog,
     useSingletonExporterFlag: compareVersions(version, MIN_SINGLETON_FLAG_VERSION) >= 0,
   };
 }
@@ -176,6 +207,11 @@ function resolveSpreadsheetNotes(
   if (isSingleton) notes.push(SPREADSHEET_SINGLETON_NOTE);
   if (deprecatedTypes.has(resourceType)) notes.push(SPREADSHEET_DEPRECATED_NOTE);
   if (nonExportableTypes.has(resourceType)) notes.push(SPREADSHEET_NON_EXPORTABLE_NOTE);
+
+  const forceNewNote = formatSpreadsheetForceNewNote(
+    getForceNewAttributes(resourceType, tfExportCatalog.forceNewCatalog)
+  );
+  if (forceNewNote) notes.push(forceNewNote);
 
   return notes.length > 0 ? notes.join("; ") : "";
 }
@@ -268,6 +304,16 @@ async function ensureDir(dir) {
   await fs.mkdir(dir, { recursive: true });
 }
 
+function applySpreadsheetLayout(worksheet) {
+  for (const [column, width] of Object.entries(SPREADSHEET_COLUMN_WIDTHS)) {
+    worksheet.getColumn(column).width = width;
+  }
+
+  const extraColumn = worksheet.getColumn("K");
+  extraColumn.width = 2;
+  extraColumn.hidden = true;
+}
+
 async function writeWorkbook(rows, outPath) {
   const workbook = new ExcelJS.Workbook();
   await workbook.xlsx.readFile(TEMPLATE_PATH);
@@ -276,6 +322,8 @@ async function writeWorkbook(rows, outPath) {
   if (!worksheet) {
     throw new Error("Spreadsheet template is missing a worksheet.");
   }
+
+  applySpreadsheetLayout(worksheet);
 
   const lastRow = worksheet.rowCount;
   if (lastRow > 1) {
@@ -347,6 +395,9 @@ async function computeSpreadsheetInputsHash(
   const singletonHash = await hashFile(
     path.join(PUBLIC_DIR, TF_EXPORT_SINGLETONS_DIR, `${version}.json`)
   );
+  const forceNewHash = await hashFile(
+    path.join(PUBLIC_DIR, SCHEMA_FORCE_NEW_DIR, `${version}.json`)
+  );
 
   let menuPathsHash = "";
   try {
@@ -364,6 +415,7 @@ async function computeSpreadsheetInputsHash(
     depHash,
     namesHash,
     singletonHash,
+    forceNewHash,
     menuPathsHash,
   ]);
 }

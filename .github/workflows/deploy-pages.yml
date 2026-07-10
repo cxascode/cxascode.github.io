@@ -91,6 +91,7 @@ jobs:
             public/lab-packages
             public/tf-export-resource-names
             public/tf-export-singletons
+            public/schema-force-new
             public/tf-export-block-label-history.json
             public/gui-menu-paths.json
             .cache-meta
@@ -130,7 +131,7 @@ jobs:
           FORCE_REFRESH: ${{ github.event_name == 'workflow_dispatch' && inputs.force_refresh_upstream && 'true' || 'false' }}
         run: |
           set -euo pipefail
-          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf public/tf-export-resource-names public/tf-export-singletons .cache-meta
+          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf public/tf-export-resource-names public/tf-export-singletons public/schema-force-new .cache-meta
 
           api_base="https://api.github.com/repos/${OWNER}/${REPO}"
 
@@ -222,7 +223,7 @@ jobs:
           FORCE_REFRESH: ${{ steps.check.outputs.force_refresh }}
         run: |
           set -euo pipefail
-          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf public/spreadsheet-templates public/tf-export-resource-names public/tf-export-singletons .cache-meta
+          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf public/spreadsheet-templates public/tf-export-resource-names public/tf-export-singletons public/schema-force-new .cache-meta
           rm -f \
             public/dependency-tree-json/index.json \
             public/dependency-tree-json/latest.json \
@@ -308,6 +309,7 @@ jobs:
           node scripts/generate-gui-menu-paths.mjs --latest="${latest}" --union-permissions
           node scripts/generate-tf-export-resource-names.mjs
           node scripts/generate-tf-export-singletons.mjs
+          node scripts/generate-schema-force-new.mjs
           node scripts/verify-tf-export-env-vars.mjs
 
           echo "${latest}" > .cache-meta/latest.txt
@@ -321,7 +323,7 @@ jobs:
           REPO: terraform-provider-genesyscloud
         run: |
           set -euo pipefail
-          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf public/spreadsheet-templates public/tf-export-resource-names public/tf-export-singletons .cache-meta
+          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf public/spreadsheet-templates public/tf-export-resource-names public/tf-export-singletons public/schema-force-new .cache-meta
           rm -f \
             public/dependency-tree-json/index.json \
             public/dependency-tree-json/latest.json \
@@ -388,6 +390,7 @@ jobs:
           node scripts/generate-gui-menu-paths.mjs --latest="${latest}" --union-permissions
           node scripts/generate-tf-export-resource-names.mjs
           node scripts/generate-tf-export-singletons.mjs
+          node scripts/generate-schema-force-new.mjs
           node scripts/verify-tf-export-env-vars.mjs
 
           echo "${latest}" > .cache-meta/latest.txt

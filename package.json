@@ -12,6 +12,7 @@
     "generate-tf-export-resource-names": "node scripts/generate-tf-export-resource-names.mjs",
     "generate-tf-export-block-label-history": "node scripts/generate-tf-export-block-label-history.mjs",
     "generate-tf-export-singletons": "node scripts/generate-tf-export-singletons.mjs",
+    "generate-schema-force-new": "node scripts/generate-schema-force-new.mjs",
     "generate-gui-menu-paths": "node scripts/generate-gui-menu-paths.mjs",
     "verify-tf-export-env-vars": "node scripts/verify-tf-export-env-vars.mjs",
     "generate-site-updates": "node scripts/generate-site-updates.mjs",

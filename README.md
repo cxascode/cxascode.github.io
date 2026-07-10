@@ -70,6 +70,7 @@ All generators read `public/overrides.json` unless `--overrides=` is passed (spr
 | `npm run generate-lab-package` | `public/lab-packages/{version}-cx-as-code-lab.zip`, `latest-cx-as-code-lab.zip` | `--latest=X.Y.Z`, `--incremental`, `--force` |
 | `npm run generate-tf-export-resource-names` | `public/tf-export-resource-names/{version}.json` | No args: all cached versions. `--version=X.Y.Z`, `--latest=X.Y.Z`, `--provider=path`, `--verify`, `--stdout` |
 | `npm run generate-tf-export-singletons` | `public/tf-export-singletons/{version}.json` | Same pattern as tf-export resource names |
+| `npm run generate-schema-force-new` | `public/schema-force-new/{version}.json` | Same pattern as tf-export resource names |
 | `npm run generate-gui-menu-paths` | `public/gui-menu-paths.json` (slim), `.cache-meta/gui-menu-paths-debug.json` (full catalog) | Genesys Cloud `admin/menu.json` plus Directory command-nav. `--latest=X.Y.Z`, `--union-permissions` (default in CI), `--no-union-permissions`, `--menu=`, `--permissions=`, `--directory-base=`, `--directory-bundle=`, `--directory-translations=`, `--no-directory-nav`, `--stdout` (full JSON). |
 | `npm run verify-tf-export-env-vars` | Updates `public/provider-env-vars.json` | `--version=X.Y.Z`, `--latest=X.Y.Z`. Auto-appends new provider env vars; **exits non-zero** until each is triaged (`export-template` or `providerEnvVarsIgnore`). Runs in CI after upstream refresh. |
 | `npm run generate-site-updates` | `public/site-updates-data/` | `--base`, `--head`, `--date=YYYY-MM-DD`, `--dry-run`, `--force`. Normally CI-only on push to `main`; use locally to preview changelog entries from a commit range. |
@@ -121,6 +122,7 @@ npm run download-provider-versions
 - `deprecatedResourceTypes` — **Deprecated** badge in resource details; **Notes** column in spreadsheet templates (`Deprecated`)
 - `nonExportableResourceTypes` — **Non-exportable** badge in resource details; **Notes** column in spreadsheet templates (`Non-exportable`); omitted from lab `exclude_filter_resources` (cannot be exported, so exclusion is unnecessary)
 - **Singleton** — badge in resource details; **Notes** column in spreadsheet templates (`Org-wide singleton`)
+- **Changing these attributes recreates the resource** — detail row in resource details; **Notes** column in spreadsheet templates (`Recreates if attrib(s) changed: attr1, attr2`)
 
 Examples:
 
@@ -193,7 +195,7 @@ Every run compares the latest `MyPureCloud/terraform-provider-genesyscloud` rele
 | Site updates auto-commit | Yes (push only) | Yes | Yes if push | Yes if push |
 | Spreadsheet templates | Skip unchanged versions | Regenerate all | Regenerate new version only | Regenerate all |
 | Lab packages | Skip unchanged versions | Regenerate all | Regenerate new version only | Regenerate all |
-| Permissions TF / tf-export / **gui-menu-paths** | All cached versions / union permissions + live nav | Same | Same | Same |
+| Permissions TF / tf-export / **schema-force-new** / **gui-menu-paths** | All cached versions / union permissions + live nav | Same | Same | Same |
 
 Spreadsheet templates and lab packages use **`--incremental`** in CI. Each provider version gets a fingerprint in `.cache-meta/artifact-stamps/`. A version is skipped when its output file exists and inputs are unchanged. A version is rebuilt when output is missing, its inputs changed, or CI passed **`--force`** (via **`force_deploy`** / **`force_refresh_upstream`**).
 
@@ -203,7 +205,7 @@ Spreadsheet templates and lab packages use **`--incremental`** in CI. Each provi
 | **New cx-as-code release** (incremental deploy) | Regenerate **only the new version** (and any version whose dependency tree, tf-export catalog, overrides, or menu paths changed) |
 | **Push to `main`** with no input changes | Skip unchanged versions |
 
-Permissions TF and tf-export generators do not use incremental skip yet — they still run for every cached version on each deploy.
+Permissions TF and tf-export generators do not use incremental skip yet — they still run for every cached version on each deploy. `schema-force-new` follows the same pattern as tf-export singletons.
 
 ### Manual workflow options
 
@@ -245,6 +247,16 @@ node scripts/generate-tf-export-resource-names.mjs --version=1.82.0 --provider=/
 **Local:** `npm run generate-tf-export-singletons`
 
 `tfExportNote` in `overrides.json` is still the hand-edited Markdown note shown below the export template block.
+
+## schema-force-new/
+
+`public/schema-force-new/` is **generated** from provider schema `ForceNew: true` attributes in `*_schema.go` (and inline resource schema), **one JSON file per provider version** (same version list as `dependency-tree-json/`). The version picker loads the matching file for the **Changing these attributes recreates the resource** detail row in resource details.
+
+**Local:** `npm run generate-schema-force-new`
+
+```bash
+node scripts/generate-schema-force-new.mjs --provider=/path/to/genesyscloud --stdout
+```
 
 ## gui-menu-paths.json
 

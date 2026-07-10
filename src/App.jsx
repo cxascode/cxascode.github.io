@@ -22,6 +22,11 @@ import {
   normalizeSingletonResourceTypes,
 } from "./tfExportSingletons.js";
 import {
+  getForceNewAttributes,
+  normalizeForceNewCatalog,
+  RECREATES_ON_CHANGE_LABEL,
+} from "./schemaForceNew.js";
+import {
   buildTerraformRegistryDocsUrl,
   buildTerraformRegistryProviderDocsUrl,
 } from "./terraformRegistry.js";
@@ -79,6 +84,7 @@ import {
   MIN_SINGLETON_FLAG_VERSION,
   TF_EXPORT_RESOURCE_NAMES_DIR,
   TF_EXPORT_SINGLETONS_DIR,
+  SCHEMA_FORCE_NEW_DIR,
   indexJsonUrl,
   latestJsonUrl,
   publicDataUrl,
@@ -119,6 +125,8 @@ const TF_EXPORT_NAMES_LATEST_URL = latestJsonUrl(TF_EXPORT_RESOURCE_NAMES_DIR);
 const TF_EXPORT_NAMES_VERSION_URL = (v) => versionedJsonUrl(TF_EXPORT_RESOURCE_NAMES_DIR, v);
 const TF_EXPORT_SINGLETONS_LATEST_URL = latestJsonUrl(TF_EXPORT_SINGLETONS_DIR);
 const TF_EXPORT_SINGLETONS_VERSION_URL = (v) => versionedJsonUrl(TF_EXPORT_SINGLETONS_DIR, v);
+const SCHEMA_FORCE_NEW_LATEST_URL = latestJsonUrl(SCHEMA_FORCE_NEW_DIR);
+const SCHEMA_FORCE_NEW_VERSION_URL = (v) => versionedJsonUrl(SCHEMA_FORCE_NEW_DIR, v);
 
 const VERSION_PICKER_TOOLTIP = `Dependencies - v${MIN_DEPENDENCY_TREE_VERSION}+, Permissions - v${MIN_RESOURCE_PERMISSIONS_VERSION}+`;
 
@@ -334,6 +342,21 @@ function MenuPathCrumbs({ path, className = "" }) {
   );
 }
 
+function InlineCrumbs({ items, className = "" }) {
+  if (!Array.isArray(items) || items.length === 0) return null;
+
+  return (
+    <span className={`gcMenuPath__crumbs ${className}`.trim()}>
+      {items.map((item, index) => (
+        <React.Fragment key={item}>
+          {index > 0 ? ", " : null}
+          <span>{item}</span>
+        </React.Fragment>
+      ))}
+    </span>
+  );
+}
+
 function getHiddenResourceTypes(overrides) {
   const hidden = overrides?.hiddenResourceTypes;
   if (!Array.isArray(hidden)) return new Set();
@@ -409,6 +432,7 @@ export default function App() {
   const [providerEnvVarCatalog, setProviderEnvVarCatalog] = useState(null);
   const [tfExportResourceNames, setTfExportResourceNames] = useState({});
   const [tfExportSingletonTypes, setTfExportSingletonTypes] = useState(() => new Set());
+  const [forceNewCatalog, setForceNewCatalog] = useState(() => ({}));
 
   const [query, setQuery] = useState("");
   const [listViewMode, setListViewMode] = useState(LIST_VIEW_TYPE);
@@ -661,6 +685,39 @@ export default function App() {
     };
   }, [selectedVersion]);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
+      const url =
+        selectedVersion === "latest"
+          ? SCHEMA_FORCE_NEW_LATEST_URL
+          : SCHEMA_FORCE_NEW_VERSION_URL(selectedVersion);
+
+      try {
+        const res = await fetch(url, { cache: "no-store" });
+        if (!res.ok) {
+          throw new Error(
+            `Failed to fetch schema force-new data: ${res.status} ${res.statusText}`
+          );
+        }
+
+        const json = await res.json();
+        if (!cancelled) {
+          setForceNewCatalog(normalizeForceNewCatalog(json?.forceNewAttributes));
+        }
+      } catch {
+        if (!cancelled) {
+          setForceNewCatalog({});
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedVersion]);
+
   const { depsMap, reverseMap } = useMemo(() => buildDepsMaps(raw), [raw]);
 
   const hiddenTypes = useMemo(
@@ -842,6 +899,11 @@ export default function App() {
         useSingletonExporterFlag
       ),
     [activeType, tfExportSingletonTypes, tfExportResourceName, useSingletonExporterFlag]
+  );
+
+  const forceNewAttributes = useMemo(
+    () => getForceNewAttributes(activeType, forceNewCatalog),
+    [activeType, forceNewCatalog]
   );
 
   const tfExportNote = useMemo(
@@ -1796,30 +1858,47 @@ export default function App() {
                       )}
                     </div>
                     <div
-                      className="gcMenuPathBlock"
-                      aria-label={
-                        isMenuPathListView
-                          ? "Resource type"
-                          : "Genesys Cloud GUI menu path"
-                      }
+                      className={`gcResourceMetaRow${
+                        activeType && forceNewAttributes.length ? "" : " gcResourceMetaRow--single"
+                      }`}
                     >
-                      <div className="gcMenuPath__label">
-                        {isMenuPathListView ? "Resource type" : "GUI menu path"}
+                      <div
+                        className="gcMenuPathBlock gcResourceMetaRow__col"
+                        aria-label={
+                          isMenuPathListView
+                            ? "Resource type"
+                            : "Genesys Cloud GUI menu path"
+                        }
+                      >
+                        <div className="gcMenuPath__label">
+                          {isMenuPathListView ? "Resource type" : "GUI menu path"}
+                        </div>
+                        <div className="gcMenuPath__value">
+                          {isMenuPathListView ? (
+                            <div className="gcResourceTypeLine">
+                              <code className="gcResourceTypeName">{detailType}</code>
+                              {detailResourceBadges}
+                            </div>
+                          ) : activeType && detailMenuPath ? (
+                            <MenuPathCrumbs path={detailMenuPath} />
+                          ) : (
+                            <span className="gcMenuPath__empty">
+                              {showDependencyLoading ? "Loading…" : "TBD"}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                      <div className="gcMenuPath__value">
-                        {isMenuPathListView ? (
-                          <div className="gcResourceTypeLine">
-                            <code className="gcResourceTypeName">{detailType}</code>
-                            {detailResourceBadges}
+                      {activeType && forceNewAttributes.length ? (
+                        <div
+                          className="gcMenuPathBlock gcResourceMetaRow__col gcResourceMetaRow__col--end"
+                          aria-label={RECREATES_ON_CHANGE_LABEL}
+                        >
+                          <div className="gcMenuPath__label">{RECREATES_ON_CHANGE_LABEL}</div>
+                          <div className="gcMenuPath__value">
+                            <InlineCrumbs items={forceNewAttributes} />
                           </div>
-                        ) : activeType && detailMenuPath ? (
-                          <MenuPathCrumbs path={detailMenuPath} />
-                        ) : (
-                          <span className="gcMenuPath__empty">
-                            {showDependencyLoading ? "Loading…" : "TBD"}
-                          </span>
-                        )}
-                      </div>
+                        </div>
+                      ) : null}
                     </div>
                   </div>
                 ) : isMenuPathListView ? (
