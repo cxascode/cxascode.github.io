@@ -250,7 +250,7 @@ node scripts/generate-tf-export-resource-names.mjs --version=1.82.0 --provider=/
 
 ## schema-force-new/
 
-`public/schema-force-new/` is **generated** from provider schema `ForceNew: true` attributes in `*_schema.go` (and inline resource schema), **one JSON file per provider version** (same version list as `dependency-tree-json/`). The version picker loads the matching file for the **Changing these attributes recreates the resource** detail row in resource details.
+`public/schema-force-new/` is **generated** from provider schema `ForceNew: true` attributes in `*_schema.go` (and inline resource schema), **one JSON file per provider version** (same version list as `dependency-tree-json/`). Harvest logic lives in `scripts/lib/provider-schema-scan.mjs` (shared schema parser; `schema-force-new-scan.mjs` re-exports the ForceNew selector). The version picker loads the matching file for the **Changing these attributes recreates the resource** detail row in resource details.
 
 **Local:** `npm run generate-schema-force-new`
 
