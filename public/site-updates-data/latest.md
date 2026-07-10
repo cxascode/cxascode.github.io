@@ -8,3 +8,7 @@
 ### What's new
 
 - Adding forcenew attributes to the site
+
+### What's new
+
+- Attributes that force recreate
