@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import {
-  attributeIndexEntryKey,
+  attributeIndexHistoryRowKey,
   ATTRIBUTE_INDEX_DESCRIPTION,
   ATTRIBUTE_INDEX_SCOPE_EXPORT,
   ATTRIBUTE_INDEX_SCOPE_PROVIDER,
@@ -11,14 +11,12 @@ import {
   filterIndexEntries,
   ATTRIBUTE_INDEX_TYPE_LIFECYCLE_ADDED,
   ATTRIBUTE_INDEX_TYPE_LIFECYCLE_REMOVED,
+  flattenAttributeIndexEntries,
   flattenAttributeIndexTypeLifecycleRows,
-  formatAttributeIndexIntroducedLabel,
+  formatAttributeIndexHistoryRowVersionLabel,
   formatAttributeIndexTypeLifecycleKind,
   formatAttributeIndexTypeLifecycleStatus,
-  formatAttributeIndexLastChanged,
-  formatAttributeIndexRowSummary,
   formatAttributeIndexType,
-  formatAttributeIndexVersionEventLabel,
   getIndexFilterOptions,
   getAttributeIndexTypeLifecycleVersionOptions,
   getIndexVersionOptions,
@@ -197,8 +195,10 @@ export default function AttributeIndexDialog({
   }, [open, scope]);
 
   const scopedIndex = useMemo(() => {
-    if (!typeLifecycleOnly) return index;
-    return index.filter(isAttributeIndexTypeLifecycleEntry);
+    if (typeLifecycleOnly) {
+      return index.filter(isAttributeIndexTypeLifecycleEntry);
+    }
+    return flattenAttributeIndexEntries(index);
   }, [index, typeLifecycleOnly]);
 
   const lifecycleRows = useMemo(() => {
@@ -325,7 +325,12 @@ export default function AttributeIndexDialog({
                   className="gcSegmentedControl__option"
                   role="radio"
                   aria-checked={scope === option.id}
-                  onClick={() => setScope(option.id)}
+                  onClick={() => {
+                    setScope(option.id);
+                    if (option.id === ATTRIBUTE_INDEX_SCOPE_EXPORT) {
+                      setViewMode(ATTRIBUTE_INDEX_VIEW_ALL);
+                    }
+                  }}
                 >
                   {option.label}
                 </button>
@@ -427,60 +432,41 @@ export default function AttributeIndexDialog({
 
             {!error && !loading && !typeLifecycleOnly && visibleEntries.length ? (
               <div className="gcAttributeIndex__list">
-                {visibleEntries.map((entry) => {
+                {visibleEntries.map((row) => {
                   const canSelect =
                     !isExportScope &&
-                    entry.resource &&
-                    (!(knownTypes instanceof Set) || knownTypes.has(entry.resource));
-                  const introducedLabel = formatAttributeIndexIntroducedLabel(entry.introduced);
-                  const lastChangedLabel = formatAttributeIndexLastChanged(
-                    entry.last_updated,
-                    entry.introduced
-                  );
-                  const versionEventLabel = formatAttributeIndexVersionEventLabel(
-                    entry,
-                    versionFilter
-                  );
-                  const summary = formatAttributeIndexRowSummary(entry, versionFilter);
+                    row.resource &&
+                    (!(knownTypes instanceof Set) || knownTypes.has(row.resource));
+                  const versionEventLabel = formatAttributeIndexHistoryRowVersionLabel(row);
+                  const summary = (row.summary || "").trim();
 
                   return (
                     <button
-                      key={attributeIndexEntryKey(entry)}
+                      key={attributeIndexHistoryRowKey(row)}
                       type="button"
                       className={`gcAttributeIndex__row ${canSelect ? "" : "isStatic"}`}
-                      onClick={() => handleSelectResource(entry.resource)}
+                      onClick={() => handleSelectResource(row.resource)}
                       disabled={!canSelect}
                       title={
                         canSelect
-                          ? `Open ${entry.resource} in the explorer`
+                          ? `Open ${row.resource} in the explorer`
                           : isExportScope
                             ? `${TF_EXPORT_RESOURCE} attribute history`
-                            : `${entry.resource} is not in the dependency explorer`
+                            : `${row.resource} is not in the dependency explorer`
                       }
                     >
                       <div className="gcAttributeIndex__rowMain">
-                        <code className="gcAttributeIndex__resource gcMono">{entry.resource}</code>
-                        <code className="gcAttributeIndex__attribute">{entry.attribute}</code>
+                        <code className="gcAttributeIndex__resource gcMono">{row.resource}</code>
+                        <code className="gcAttributeIndex__attribute">{row.attribute}</code>
                       </div>
                       <div className="gcAttributeIndex__rowMeta">
                         <span className="gcAttributeHistory__type">
-                          {formatAttributeIndexType(entry.type)}
+                          {formatAttributeIndexType(row.type)}
                         </span>
-                        <StatusBadge status={entry.status} />
-                        {versionFilter ? (
-                          versionEventLabel ? (
-                            <span className="gcAttributeHistory__version">{versionEventLabel}</span>
-                          ) : null
-                        ) : (
-                          <>
-                            {introducedLabel ? (
-                              <span className="gcAttributeHistory__introduced">{introducedLabel}</span>
-                            ) : null}
-                            {lastChangedLabel ? (
-                              <span className="gcAttributeHistory__version">{lastChangedLabel}</span>
-                            ) : null}
-                          </>
-                        )}
+                        <StatusBadge status={row.status} />
+                        {versionEventLabel ? (
+                          <span className="gcAttributeHistory__version">{versionEventLabel}</span>
+                        ) : null}
                       </div>
                       {summary ? (
                         <p className="gcAttributeIndex__summary">{summary}</p>
@@ -497,37 +483,39 @@ export default function AttributeIndexDialog({
           <p className="gcListCount" aria-live="polite">
             {entryCountLabel}
           </p>
-          <div className="gcDivisionFilterBlock">
-            <span className="gcDivisionFilterLabel" id="attribute-index-view-label">
-              Show
-            </span>
-            <div
-              className="gcSegmentedControl gcSegmentedControl--text gcAttributeIndex__viewToggle"
-              role="radiogroup"
-              aria-labelledby="attribute-index-view-label"
-              title="Filter to resource and data source types added or removed"
-            >
-              {VIEW_OPTIONS.map((option) => (
-                <button
-                  key={option.id}
-                  type="button"
-                  className="gcSegmentedControl__option"
-                  role="radio"
-                  aria-checked={viewMode === option.id}
-                  title={option.title}
-                  disabled={loading || !!error}
-                  onClick={() => {
-                    if (option.id === ATTRIBUTE_INDEX_VIEW_TYPE_LIFECYCLE) {
-                      onQueryChange?.("");
-                    }
-                    setViewMode(option.id);
-                  }}
-                >
-                  {option.label}
-                </button>
-              ))}
+          {!isExportScope ? (
+            <div className="gcDivisionFilterBlock">
+              <span className="gcDivisionFilterLabel" id="attribute-index-view-label">
+                Show
+              </span>
+              <div
+                className="gcSegmentedControl gcSegmentedControl--text gcAttributeIndex__viewToggle"
+                role="radiogroup"
+                aria-labelledby="attribute-index-view-label"
+                title="Filter to resource and data source types added or removed"
+              >
+                {VIEW_OPTIONS.map((option) => (
+                  <button
+                    key={option.id}
+                    type="button"
+                    className="gcSegmentedControl__option"
+                    role="radio"
+                    aria-checked={viewMode === option.id}
+                    title={option.title}
+                    disabled={loading || !!error}
+                    onClick={() => {
+                      if (option.id === ATTRIBUTE_INDEX_VIEW_TYPE_LIFECYCLE) {
+                        onQueryChange?.("");
+                      }
+                      setViewMode(option.id);
+                    }}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          ) : null}
         </div>
       </div>
     </dialog>,

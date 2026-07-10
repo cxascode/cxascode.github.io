@@ -206,23 +206,6 @@ function entryMatchesTypeLifecycleVersionFilter(entry, versionFilter) {
   });
 }
 
-function entryMatchesVersionFilter(entry, versionFilter) {
-  if (!versionFilter) return true;
-
-  const target = normalizeVersionForCompare(versionFilter);
-  if (!target) return true;
-
-  if (Array.isArray(entry.history) && entry.history.length) {
-    return entry.history.some(
-      (item) => normalizeVersionForCompare(item?.version) === target
-    );
-  }
-
-  return [entry.introduced, entry.last_updated, entry.removed].some(
-    (value) => normalizeVersionForCompare(value) === target
-  );
-}
-
 export function isAttributeIndexTypeLifecycleEntry(entry) {
   const type = (entry?.type || "").trim();
   if (type !== "resource" && type !== "data_source") return false;
@@ -275,6 +258,110 @@ export function flattenAttributeIndexTypeLifecycleRows(entries) {
   return rows.sort(compareAttributeIndexTypeLifecycleRows);
 }
 
+function inferAttributeIndexHistoryChange(entry) {
+  if (entry?.removed) return "removed";
+  if (
+    normalizeVersionForCompare(entry?.introduced) &&
+    normalizeVersionForCompare(entry?.introduced) ===
+      normalizeVersionForCompare(entry?.last_updated)
+  ) {
+    return "added";
+  }
+  return "updated";
+}
+
+function flattenEntryHistory(entry) {
+  if (Array.isArray(entry?.history) && entry.history.length) {
+    return entry.history.map((item, historyIndex) => ({
+      type: entry.type,
+      resource: entry.resource,
+      attribute: entry.attribute,
+      status: entry.status,
+      introduced: entry.introduced,
+      version: item?.version || "",
+      change: item?.change || "updated",
+      summary: item?.summary || "",
+      historyIndex,
+    }));
+  }
+
+  return [
+    {
+      type: entry?.type,
+      resource: entry?.resource,
+      attribute: entry?.attribute,
+      status: entry?.status,
+      introduced: entry?.introduced,
+      version: entry?.last_updated || entry?.introduced || entry?.removed || "",
+      change: inferAttributeIndexHistoryChange(entry),
+      summary: entry?.latest_summary || "",
+      historyIndex: 0,
+    },
+  ];
+}
+
+function compareAttributeIndexHistoryRows(a, b) {
+  const versionCompare = compareVersionPartsDesc(
+    versionParts(a?.version),
+    versionParts(b?.version)
+  );
+  if (versionCompare !== 0) return versionCompare;
+
+  const resourceCompare = compareAttributeIndexEntryTieBreak(a, b);
+  if (resourceCompare !== 0) return resourceCompare;
+
+  return (a?.historyIndex ?? 0) - (b?.historyIndex ?? 0);
+}
+
+export function flattenAttributeIndexEntries(entries) {
+  if (!Array.isArray(entries)) return [];
+
+  return entries.flatMap(flattenEntryHistory).sort(compareAttributeIndexHistoryRows);
+}
+
+function historyRowMatchesVersionFilter(row, versionFilter) {
+  if (!versionFilter) return true;
+
+  const target = normalizeVersionForCompare(versionFilter);
+  if (!target) return true;
+
+  return normalizeVersionForCompare(row?.version) === target;
+}
+
+export function filterAttributeIndexHistoryRows(
+  rows,
+  { query = "", typeFilter = "", statusFilter = "", versionFilter = "" } = {}
+) {
+  if (!Array.isArray(rows)) return [];
+
+  const normalizedQuery = query.trim().toLowerCase();
+
+  const filtered = rows.filter((row) => {
+    if (typeFilter && row?.type !== typeFilter) return false;
+    if (statusFilter && row?.status !== statusFilter) return false;
+    if (!historyRowMatchesVersionFilter(row, versionFilter)) return false;
+
+    if (!normalizedQuery) return true;
+
+    const haystack = [
+      row?.type,
+      row?.resource,
+      row?.attribute,
+      row?.status,
+      row?.summary,
+      row?.version,
+      row?.change,
+    ]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+
+    return haystack.includes(normalizedQuery);
+  });
+
+  return filtered.sort(compareAttributeIndexHistoryRows);
+}
+
 export function filterIndexEntries(
   index,
   {
@@ -287,41 +374,46 @@ export function filterIndexEntries(
 ) {
   if (!Array.isArray(index)) return [];
 
-  const normalizedQuery = query.trim().toLowerCase();
+  if (typeLifecycleOnly) {
+    const normalizedQuery = query.trim().toLowerCase();
 
-  const filtered = index.filter((entry) => {
-    if (typeLifecycleOnly && !isAttributeIndexTypeLifecycleEntry(entry)) return false;
-    if (typeFilter && entry?.type !== typeFilter) return false;
-    if (statusFilter && entry?.status !== statusFilter) return false;
-    if (typeLifecycleOnly) {
+    const filtered = index.filter((entry) => {
+      if (!isAttributeIndexTypeLifecycleEntry(entry)) return false;
+      if (typeFilter && entry?.type !== typeFilter) return false;
+      if (statusFilter && entry?.status !== statusFilter) return false;
       if (!entryMatchesTypeLifecycleVersionFilter(entry, versionFilter)) return false;
-    } else if (!entryMatchesVersionFilter(entry, versionFilter)) {
-      return false;
-    }
 
-    if (!normalizedQuery) return true;
+      if (!normalizedQuery) return true;
 
-    const haystack = [
-      entry?.type,
-      entry?.resource,
-      entry?.attribute,
-      entry?.status,
-      entry?.latest_summary,
-      entry?.introduced,
-      entry?.last_updated,
-      entry?.removed,
-      ...(Array.isArray(entry?.history)
-        ? entry.history.flatMap((item) => [item?.version, item?.change, item?.summary])
-        : []),
-    ]
-      .filter(Boolean)
-      .join(" ")
-      .toLowerCase();
+      const haystack = [
+        entry?.type,
+        entry?.resource,
+        entry?.attribute,
+        entry?.status,
+        entry?.latest_summary,
+        entry?.introduced,
+        entry?.last_updated,
+        entry?.removed,
+        ...(Array.isArray(entry?.history)
+          ? entry.history.flatMap((item) => [item?.version, item?.change, item?.summary])
+          : []),
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
 
-    return haystack.includes(normalizedQuery);
+      return haystack.includes(normalizedQuery);
+    });
+
+    return sortAttributeIndexEntries(filtered);
+  }
+
+  return filterAttributeIndexHistoryRows(flattenAttributeIndexEntries(index), {
+    query,
+    typeFilter,
+    statusFilter,
+    versionFilter,
   });
-
-  return sortAttributeIndexEntries(filtered);
 }
 
 export function getIndexFilterOptions(index) {
@@ -377,6 +469,18 @@ export function formatAttributeIndexVersionEventLabel(entry, versionFilter = "")
   return `Changed ${label}`;
 }
 
+export function formatAttributeIndexHistoryRowVersionLabel(row) {
+  const version = (row?.version || "").trim();
+  if (!version) return "";
+
+  const label = toReleaseNotesVersion(version);
+  const change = (row?.change || "").trim().toLowerCase();
+
+  if (change === "removed") return `Removed ${label}`;
+  if (change === "added") return `Introduced ${label}`;
+  return `Changed ${label}`;
+}
+
 export function formatAttributeIndexType(type) {
   if (type === "data_source") return "Data source";
   if (type === "resource") return "Resource";
@@ -402,4 +506,8 @@ export function formatAttributeIndexLastChanged(lastUpdated, introduced) {
 
 export function attributeIndexEntryKey(entry) {
   return `${entry?.type || "unknown"}:${entry?.resource || "unknown"}:${entry?.attribute || "unknown"}`;
+}
+
+export function attributeIndexHistoryRowKey(row) {
+  return `${row?.type || "unknown"}:${row?.resource || "unknown"}:${row?.attribute || "unknown"}:${row?.version || "unknown"}:${row?.historyIndex ?? 0}`;
 }
