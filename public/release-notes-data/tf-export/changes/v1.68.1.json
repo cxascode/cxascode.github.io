@@ -2,6 +2,43 @@
     "version": "v1.68.1",
     "previous": "v1.67.0",
     "resource": "genesyscloud_tf_export",
-    "changes": [],
-    "related_export_changes": []
+    "changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Export continues when resource map building produces warnings only; those warnings are returned with the export result instead of stopping map retrieval early."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When the export filter matches no valid resource types, the resulting error may include warnings collected during map building rather than only a single no-valid-resource-types message."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "The message Building sanitized resource maps is written to standard console output during export."
+        }
+    ],
+    "related_export_changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_flow",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exported flow configurations may differ because per-attribute filepath variable resolution during sanitization was removed."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_flow",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Flow exports no longer apply a post-write instance state attribute update that previously ran during flow export."
+        }
+    ]
 }

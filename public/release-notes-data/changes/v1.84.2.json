@@ -7,47 +7,47 @@
             "resource": "genesyscloud_architect_user_prompt",
             "attribute": "resources",
             "change": "updated",
-            "summary": "When BCP mode is active, the attribute is no longer computed and must be set explicitly in configuration; when BCP mode is not active, it remains optional and computed from the API."
+            "summary": "No longer computed from the API; include this block in configuration when you want Terraform to manage TTS audio resources for the prompt."
         },
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_business_rules_decision_table",
-            "attribute": "input_columns.default_to.value",
+            "attribute": "input_columns.defaults.value",
             "change": "updated",
             "summary": "Now computed as well as optional so unused default fields no longer cause plan/apply inconsistencies when another mutually exclusive default is set."
         },
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_business_rules_decision_table",
-            "attribute": "input_columns.default_to.values",
+            "attribute": "input_columns.defaults.values",
             "change": "updated",
             "summary": "Now computed as well as optional for string-list defaults; documentation clarifies mutual exclusivity with value and special."
         },
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_business_rules_decision_table",
-            "attribute": "input_columns.default_to.special",
+            "attribute": "input_columns.defaults.special",
             "change": "updated",
             "summary": "Now computed as well as optional for special-value defaults; documentation clarifies mutual exclusivity with value and values."
         },
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_business_rules_decision_table",
-            "attribute": "output_columns.default_to.value",
+            "attribute": "output_columns.defaults.value",
             "change": "updated",
             "summary": "Now computed as well as optional so unused default fields no longer cause plan/apply inconsistencies when another mutually exclusive default is set."
         },
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_business_rules_decision_table",
-            "attribute": "output_columns.default_to.values",
+            "attribute": "output_columns.defaults.values",
             "change": "updated",
             "summary": "Now computed as well as optional for string-list defaults; documentation clarifies mutual exclusivity with value and special."
         },
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_business_rules_decision_table",
-            "attribute": "output_columns.default_to.special",
+            "attribute": "output_columns.defaults.special",
             "change": "updated",
             "summary": "Now computed as well as optional for special-value defaults; documentation clarifies mutual exclusivity with value and values."
         },
@@ -150,6 +150,20 @@
             "summary": "imap_settings and graph_api_settings are now read from the API and can be patched on create and update alongside existing mail-from and SMTP settings."
         },
         {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_routing_email_domain",
+            "attribute": "imap_settings.integration_id",
+            "change": "updated",
+            "summary": "Export resolves imap_settings.integration_id to genesyscloud_integration references; blocks without an integration ID are omitted."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_routing_email_domain",
+            "attribute": "graph_api_settings.integration_id",
+            "change": "updated",
+            "summary": "Export resolves graph_api_settings.integration_id to genesyscloud_integration references; blocks without an integration ID are omitted."
+        },
+        {
             "kind": "resource_attribute",
             "resource": "genesyscloud_routing_email_route",
             "attribute": "signature",
@@ -183,6 +197,13 @@
             "attribute": "signature.inclusion_type",
             "change": "added",
             "summary": "When to include the signature; valid values are Draft, Send, and SendOnce."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_routing_email_route",
+            "attribute": "signature.canned_response_id",
+            "change": "updated",
+            "summary": "Export resolves signature.canned_response_id to genesyscloud_responsemanagement_response references."
         }
     ]
 }

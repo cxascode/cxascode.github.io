@@ -17,11 +17,11 @@
             "summary": "Read operations now honor the resource read timeout instead of a fixed 1-minute internal limit."
         },
         {
-            "kind": "export_behavior",
+            "kind": "resource_behavior",
             "resource": "genesyscloud_outbound_contact_list",
             "attribute": null,
             "change": "updated",
-            "summary": "Contact list CSV export now normalizes column headers by stripping invisible Unicode characters and extra quotes, preventing mismatched or malformed system columns such as inin-outbound-id."
+            "summary": "Contact list CSV processing now normalizes column headers by stripping invisible Unicode characters and extra quotes, preventing mismatched or malformed system columns such as inin-outbound-id."
         }
     ]
 }

@@ -54,7 +54,7 @@
         {
             "kind": "resource_behavior",
             "resource": "genesyscloud_webdeployments_configuration",
-            "attribute": "custom_i18n.localized_labels.key",
+            "attribute": "messenger.home_screen.custom_i18n.localized_labels.key",
             "change": "updated",
             "summary": "PushNotificationTitle and PushNotificationBody are now valid localized label keys for push notifications."
         },
@@ -166,7 +166,7 @@
         {
             "kind": "resource_behavior",
             "resource": "genesyscloud_ai_studio_summary_setting",
-            "attribute": "pii.all",
+            "attribute": "piis.all",
             "change": "updated",
             "summary": "Defaults to true when omitted in configuration instead of false."
         },
@@ -203,7 +203,7 @@
             "resource": "genesyscloud_integration_action",
             "attribute": null,
             "change": "updated",
-            "summary": "Exported block labels use category_name instead of the action name alone."
+            "summary": "Exported block labels now use {category}_{name} instead of the action name alone."
         },
         {
             "kind": "export_behavior",
@@ -291,7 +291,7 @@
         },
         {
             "kind": "export_behavior",
-            "resource": "genesyscloud_outbound_wrapupcode_mappings",
+            "resource": "genesyscloud_outbound_wrapupcodemappings",
             "attribute": null,
             "change": "updated",
             "summary": "Singleton org-wide resource is exported using the resource type identifier instead of a generic numeric key."

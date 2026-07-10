@@ -8,7 +8,7 @@
             "resource": "genesyscloud_tf_export",
             "attribute": "export_omit_unresolved_refs",
             "change": "added",
-            "summary": "Optional boolean (defaults to false). When true, optional reference attributes that the exporter cannot resolve to Terraform references are omitted from exported configuration. When false, unresolved references continue to be written as raw GUIDs. Changing this value forces replacement of the export resource."
+            "summary": "Optional boolean (defaults to false). When true, optional reference attributes that could not be resolved to Terraform references during export are omitted from exported configuration. When false, unresolved references are left as raw GUIDs. Changing this value forces replacement of the export resource."
         },
         {
             "kind": "resource_behavior",

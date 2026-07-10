@@ -8,7 +8,7 @@
             "resource": "genesyscloud_tf_export",
             "attribute": "max_concurrent_threads",
             "change": "updated",
-            "summary": "The value set in configuration is now honored; provider max_clients is used only as a fallback when max_concurrent_threads is not explicitly set."
+            "summary": "The value in your genesyscloud_tf_export configuration is now used for export concurrency. Provider max_clients is applied only when max_concurrent_threads is zero or less."
         }
     ],
     "related_export_changes": []

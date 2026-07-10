@@ -16,7 +16,7 @@ Removed:
 - None detected.
 
 Changed:
-- `resources` — When BCP mode is active, this attribute is no longer computed and must be set explicitly in configuration. When BCP mode is not active, it remains optional and computed from the API.
+- `resources` — No longer computed from the API; include this block in configuration when you want Terraform to manage TTS audio resources for the prompt.
 
 #### genesyscloud_business_rules_decision_table
 
@@ -27,12 +27,12 @@ Removed:
 - None detected.
 
 Changed:
-- `input_columns.default_to.value` — Now computed as well as optional so unused default fields no longer cause plan/apply inconsistencies when another mutually exclusive default is set.
-- `input_columns.default_to.values` — Same computed behavior for string-list defaults; documentation clarifies mutual exclusivity with `value` and `special`.
-- `input_columns.default_to.special` — Same computed behavior for special-value defaults; documentation clarifies mutual exclusivity with `value` and `values`.
-- `output_columns.default_to.value` — Same computed behavior as input column defaults.
-- `output_columns.default_to.values` — Same computed behavior as input column defaults.
-- `output_columns.default_to.special` — Same computed behavior as input column defaults.
+- `input_columns.defaults.value` — Now computed as well as optional so unused default fields no longer cause plan/apply inconsistencies when another mutually exclusive default is set.
+- `input_columns.defaults.values` — Same computed behavior for string-list defaults; documentation clarifies mutual exclusivity with `value` and `special`.
+- `input_columns.defaults.special` — Same computed behavior for special-value defaults; documentation clarifies mutual exclusivity with `value` and `values`.
+- `output_columns.defaults.value` — Same computed behavior as input column defaults.
+- `output_columns.defaults.values` — Same computed behavior as input column defaults.
+- `output_columns.defaults.special` — Same computed behavior as input column defaults.
 - `description` — Read now preserves a null description from the API instead of coercing it to an empty string, avoiding null-to-empty-string plan inconsistencies.
 - Create and update timeouts — Default create and update timeouts are now 120 minutes (delete remains 8 minutes, read remains 8 minutes).
 - Create behavior — Failed creates roll back partially created decision tables even after a create timeout, and timeout errors suggest increasing the create timeout in a `timeouts` block.
@@ -86,6 +86,7 @@ Removed:
 
 Changed:
 - Create and update behavior — `imap_settings` and `graph_api_settings` are now read from the API and can be patched on create and update alongside existing mail-from and SMTP settings.
+- Export behavior — `imap_settings.integration_id` and `graph_api_settings.integration_id` resolve to `genesyscloud_integration` references; blocks without an integration ID are omitted from export.
 
 #### genesyscloud_routing_email_route
 
@@ -100,7 +101,7 @@ Removed:
 - None detected.
 
 Changed:
-- None detected.
+- Export behavior — `signature.canned_response_id` resolves to `genesyscloud_responsemanagement_response` references.
 
 ### Resources removed
 None detected.
@@ -120,8 +121,8 @@ None detected.
 ### Upgrade impact
 - Existing configurations are likely unaffected unless you adopt the new routing email, knowledge base, or email route attributes.
 - `genesyscloud_business_rules_decision_table` and `genesyscloud_business_rules_schema` users with null descriptions should see fewer spurious plan diffs; large decision tables benefit from longer default create/update timeouts and more resilient row-add handling during apply.
-- `genesyscloud_architect_user_prompt` behavior changes only when BCP mode is active.
 - Setting `content_search_enabled` on an existing `genesyscloud_knowledge_knowledgebase` to a value different from the org setting will force replacement because the attribute is create-only.
+- Re-export `genesyscloud_case_management_caseplan` resources if you rely on resolved references for `customer_intent.id`.
 
 ---
 

@@ -2,6 +2,14 @@
     "version": "v1.63.0",
     "previous": "v1.62.0",
     "resource": "genesyscloud_tf_export",
-    "changes": [],
+    "changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When tf-export auto-resolves duplicate Terraform block labels for the same resource type, the appended suffix changes from _<numeric_hash> to _BRCM<numeric_hash>. Exported resource block names in this edge case will differ from v1.62.0 output."
+        }
+    ],
     "related_export_changes": []
 }
