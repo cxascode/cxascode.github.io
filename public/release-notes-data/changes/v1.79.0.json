@@ -61,7 +61,21 @@
         {
             "kind": "resource_behavior",
             "resource": "genesyscloud_outbound_contact_list",
+            "attribute": "phone_columns.callable_time_column_name",
+            "change": "updated",
+            "summary": "Plan diffs are suppressed when automatic_time_zone_mapping is true because the API may omit these values."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_outbound_contact_list",
             "attribute": "phone_columns",
+            "change": "updated",
+            "summary": "Read preserves timezone column names from the API response, reducing drift after UI edits or refresh."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_outbound_contact_list",
+            "attribute": "email_columns",
             "change": "updated",
             "summary": "Read preserves timezone column names from the API response, reducing drift after UI edits or refresh."
         },
@@ -117,7 +131,21 @@
         {
             "kind": "resource_behavior",
             "resource": "genesyscloud_outbound_contact_list_template",
+            "attribute": "phone_columns.callable_time_column_name",
+            "change": "updated",
+            "summary": "Plan diffs are suppressed when automatic_time_zone_mapping is true."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_outbound_contact_list_template",
             "attribute": "phone_columns",
+            "change": "updated",
+            "summary": "Read preserves timezone column names from the API and retains existing column settings when the API omits phone or email columns."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_outbound_contact_list_template",
+            "attribute": "email_columns",
             "change": "updated",
             "summary": "Read preserves timezone column names from the API and retains existing column settings when the API omits phone or email columns."
         },
@@ -154,7 +182,7 @@
             "resource": "genesyscloud_outbound_dnclist",
             "attribute": "entries",
             "change": "updated",
-            "summary": "Updating phone entries is rejected unless dnc_source_type is rds (internal DNC list)."
+            "summary": "Updating phone entries is rejected up front unless dnc_source_type is rds (internal DNC list)."
         },
         {
             "kind": "resource_behavior",

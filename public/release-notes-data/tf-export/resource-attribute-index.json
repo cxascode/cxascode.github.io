@@ -10,74 +10,194 @@
     "latest_summary": "Custom file writers for exported resources retry transient failures up to three times with exponential backoff before reporting an error.",
     "history": [
       {
-        "version": "v1.67.0",
+        "version": "v1.61.0",
         "change": "updated",
-        "summary": "Bulk export limits concurrent resource reads to 10 by default, or to the provider max_clients setting when configured."
+        "summary": "Post-export Terraform state verification results are now returned to the user instead of being ignored."
+      },
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "Failures from per-resource custom file writers now surface as Terraform warning diagnostics instead of being logged only."
+      },
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "Exported data source blocks no longer rewrite unresolvable attributes as ${var.*} placeholder references."
+      },
+      {
+        "version": "v1.63.0",
+        "change": "updated",
+        "summary": "When tf-export auto-resolves duplicate Terraform block labels for the same resource type, the appended suffix changes from _<numeric_hash> to _BRCM<numeric_hash>. Exported resource block names in this edge case will differ from v1.62.0 output."
+      },
+      {
+        "version": "v1.64.0",
+        "change": "updated",
+        "summary": "When tf-export resolves depends_on references, dependencies on data sources now include the required data. prefix (for example, data.genesyscloud_<type>.<label> instead of genesyscloud_<type>.<label>)."
+      },
+      {
+        "version": "v1.64.0",
+        "change": "updated",
+        "summary": "When exporting more than one output format in a single run (for example, HCL and JSON together), diagnostics from each export step are now collected and returned together instead of only the last step's result being reported."
+      },
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "JSON multi-file export only writes variables.tf.json when the export defines variables; an empty variables file is no longer created."
+      },
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "JSON multi-file export skips resource-type and data-source files when a type has no exported instances."
+      },
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "Single-file JSON export omits top-level resource, data, and variable sections when those sections would be empty."
+      },
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "Data source instances are no longer tracked in managed-resource type maps during export assembly, preventing empty managed-resource entries for data-source-only types."
+      },
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "Resource state reads during export are synchronized, which may reduce intermittent failures when exporting large configurations."
       },
       {
         "version": "v1.67.0",
         "change": "updated",
-        "summary": "Bulk export writes export_errors.json in the export directory when individual resources fail to export."
+        "summary": "Bulk export limits concurrent API reads to 10 by default, or to the provider max_clients setting when that value is configured."
+      },
+      {
+        "version": "v1.67.0",
+        "change": "updated",
+        "summary": "Individual resource read failures no longer stop export for the rest of that resource type; successfully read resources are still included in the generated output."
+      },
+      {
+        "version": "v1.67.0",
+        "change": "updated",
+        "summary": "When one or more resources fail to export, the exporter writes export_errors.json in the export directory with per-resource details (type, label, ID, error message, and whether the failure was a timeout)."
+      },
+      {
+        "version": "v1.67.0",
+        "change": "updated",
+        "summary": "After export completes, Terraform warnings summarize timeout and non-timeout failure counts and reference export_errors.json; timeout warnings suggest increasing provider token_pool_size and/or token_acquire_timeout."
+      },
+      {
+        "version": "v1.67.0",
+        "change": "updated",
+        "summary": "Timeout failures during per-resource reads are retried up to three times with exponential backoff instead of retrying indefinitely; on the first timeout, the exporter attempts to expand the API client pool before retrying."
+      },
+      {
+        "version": "v1.67.0",
+        "change": "updated",
+        "summary": "Export progress and error messages are emitted through Terraform structured logging when TF_LOG is enabled, rather than standard Go log output."
+      },
+      {
+        "version": "v1.68.1",
+        "change": "updated",
+        "summary": "Export continues when resource map building produces warnings only; those warnings are returned with the export result instead of stopping map retrieval early."
+      },
+      {
+        "version": "v1.68.1",
+        "change": "updated",
+        "summary": "When the export filter matches no valid resource types, the resulting error may include warnings collected during map building rather than only a single no-valid-resource-types message."
+      },
+      {
+        "version": "v1.68.1",
+        "change": "updated",
+        "summary": "The message Building sanitized resource maps is written to standard console output during export."
+      },
+      {
+        "version": "v1.68.6",
+        "change": "updated",
+        "summary": "During export sanitization, attribute values that reference the same resource's own ID are removed from the generated Terraform configuration instead of being written to the export output."
       },
       {
         "version": "v1.70.0",
         "change": "updated",
-        "summary": "When not using the legacy architect flow exporter, exported flow configurations may be more complete because sanitized flow data is preserved during export."
+        "summary": "When use_legacy_architect_flow_exporter is false, the export pipeline now switches to the newer architect flow exporter after the initial flow export step and carries forward sanitized flow data from that step. Exported architect flow configurations may be more complete than in v1.69.3, where that sanitized data was not preserved when the exporter was replaced during per-resource processing."
       },
       {
         "version": "v1.71.0",
         "change": "updated",
-        "summary": "Export work runs concurrently using the configured max_concurrent_threads limit."
+        "summary": "Resource config map building during export now runs concurrently, limited by max_concurrent_threads."
       },
       {
         "version": "v1.73.0",
         "change": "updated",
-        "summary": "Flow dependency resolution is more reliable when exporting resources with add_depends_on enabled, including improved depends_on generation and duplicate-flow handling."
+        "summary": "Flow dependency resolution and depends_on generation are more reliable when add_depends_on is enabled, particularly during concurrent export processing."
       },
       {
-        "version": "v1.74.0",
+        "version": "v1.73.0",
         "change": "updated",
-        "summary": "Flow exports that generate output files use the archy export service to download flow configuration; exports without output files use the legacy flow exporter."
+        "summary": "Dependency lists are merged and written into exported configuration only when valid dependency metadata is returned."
       },
       {
-        "version": "v1.74.0",
+        "version": "v1.73.0",
         "change": "updated",
-        "summary": "Exported teams with no members include member_ids = [] instead of omitting the attribute."
+        "summary": "When TF_LOG is enabled, dependency resolution and depends_on generation emit additional diagnostic messages, including warnings for invalid or unresolved dependency references."
       },
       {
-        "version": "v1.75.0",
+        "version": "v1.76.0",
         "change": "updated",
-        "summary": "Routing queue exports resolve conditional_group_activation.rules.groups.member_group_id references."
+        "summary": "When the exporter cannot resolve a reference attribute to a Terraform resource or data source reference during configuration export, the original ID is now retained in the exported output instead of being cleared."
+      },
+      {
+        "version": "v1.77.0",
+        "change": "updated",
+        "summary": "During dependency resolution, flows exported as data sources (data.genesyscloud_flow) are skipped for dependent resource discovery because they are referenced only and not managed as resources."
+      },
+      {
+        "version": "v1.77.0",
+        "change": "updated",
+        "summary": "During configuration sanitization, reference attributes backed by custom resolvers that can infer a target type from the exported configuration are now converted to Terraform resource or data source references when that type can be determined."
       },
       {
         "version": "v1.77.3",
         "change": "updated",
-        "summary": "Failures in custom file writers for exported resources are reported as errors instead of warnings, causing the export to fail."
+        "summary": "Failures while writing custom export files for a resource are now reported as errors and fail the export run instead of being logged as warnings."
       },
       {
         "version": "v1.77.3",
         "change": "updated",
-        "summary": "Permission errors encountered while listing resources during export are collected and reported at the end of the export run."
+        "summary": "Permission errors encountered while listing resources during export are collected and reported in the end-of-run error summary."
+      },
+      {
+        "version": "v1.77.4",
+        "change": "updated",
+        "summary": "Permission errors logged while listing resources during export are now recorded more reliably when multiple resource types are processed concurrently, improving consistency of the end-of-run error summary."
+      },
+      {
+        "version": "v1.77.4",
+        "change": "updated",
+        "summary": "Export sanitization now invokes custom attribute resolvers that require provider client configuration, which may update exported attribute values where those resolvers are defined."
       },
       {
         "version": "v1.78.0",
         "change": "updated",
-        "summary": "Per-resource JSON files are named data_<resource_type>.json instead of <resource_type>.json."
+        "summary": "Per-resource JSON export files are written as data_<resource_type>.json instead of <resource_type>.json."
       },
       {
         "version": "v1.79.0",
         "change": "updated",
-        "summary": "Resource discovery retries transient failures up to three times with backoff."
+        "summary": "Resource discovery retries transient API failures up to three times with exponential backoff; permission errors are not retried."
       },
       {
         "version": "v1.79.0",
         "change": "updated",
-        "summary": "Concurrent resource retrieval is limited to reduce API rate-limit errors."
+        "summary": "Resource type retrieval during export is now concurrency-limited (default 10), reducing the likelihood of API rate-limit errors."
       },
       {
         "version": "v1.79.0",
         "change": "updated",
-        "summary": "Unresolved GUID references in list attributes can be mapped to data sources via custom resolvers."
+        "summary": "Resource state refresh during export runs concurrently, improving export performance for large environments."
+      },
+      {
+        "version": "v1.80.0",
+        "change": "updated",
+        "summary": "Exported terraform.tfstate entries now include schema_version: 0 in each resource's meta block when the exported block has a type prefix (for example, resource or data)."
       },
       {
         "version": "v1.82.0",
@@ -121,7 +241,7 @@
       {
         "version": "v1.84.0",
         "change": "added",
-        "summary": "Optional boolean (defaults to false). When true, optional reference attributes that the exporter cannot resolve to Terraform references are omitted from exported configuration. When false, unresolved references continue to be written as raw GUIDs. Changing this value forces replacement of the export resource."
+        "summary": "Optional boolean (defaults to false). When true, optional reference attributes that could not be resolved to Terraform references during export are omitted from exported configuration. When false, unresolved references are left as raw GUIDs. Changing this value forces replacement of the export resource."
       },
       {
         "version": "v1.84.0",
@@ -177,17 +297,37 @@
     "last_updated": "v1.79.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Exclusions are applied when exporters are loaded, in addition to the final output pass.",
+    "latest_summary": "When a listed resource type is not included in the export and enable_dependency_resolution is false, the export fails with an error instead of continuing.",
     "history": [
       {
         "version": "v1.78.0",
         "change": "updated",
-        "summary": "Invalid entries are skipped with a warning instead of failing the export; exclusions are applied in a final pass so they work for resource types discovered during dependency resolution."
+        "summary": "Invalid entries (for example, a value with no attribute path after the resource type) are skipped with a warning instead of failing the export."
+      },
+      {
+        "version": "v1.78.0",
+        "change": "updated",
+        "summary": "Exclusions are applied in a final pass before output, so entries still apply to resource types discovered during dependency resolution (enable_dependency_resolution = true)."
+      },
+      {
+        "version": "v1.78.0",
+        "change": "updated",
+        "summary": "Nested attribute paths (for example, resource_type.nested.attribute) are removed from exported configuration maps."
       },
       {
         "version": "v1.79.0",
         "change": "updated",
         "summary": "Exclusions are applied when exporters are loaded, in addition to the final output pass."
+      },
+      {
+        "version": "v1.79.0",
+        "change": "updated",
+        "summary": "Each entry must use resource_type.attribute format; malformed entries fail the export with an error."
+      },
+      {
+        "version": "v1.79.0",
+        "change": "updated",
+        "summary": "When a listed resource type is not included in the export and enable_dependency_resolution is false, the export fails with an error instead of continuing."
       }
     ]
   },
@@ -199,12 +339,17 @@
     "last_updated": "v1.78.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Accepts a resource type without a label suffix (equivalent to type::) to replace all exported instances of that type with data sources.",
+    "latest_summary": "A list entry that is only a resource type name (without :: and label) now matches all exported instances of that type.",
     "history": [
       {
         "version": "v1.78.0",
         "change": "updated",
-        "summary": "Accepts a resource type without a label suffix (equivalent to type::) to replace all exported instances of that type with data sources."
+        "summary": "Description updated to clarify that a resource type alone (equivalent to type::) is a valid match pattern, in addition to resource_type::regular expression."
+      },
+      {
+        "version": "v1.78.0",
+        "change": "updated",
+        "summary": "A list entry that is only a resource type name (without :: and label) now matches all exported instances of that type."
       }
     ]
   },
@@ -216,17 +361,17 @@
     "last_updated": "v1.77.3",
     "removed": null,
     "status": "Active",
-    "latest_summary": "When using exclude_filter_resources or the default export mode, enable_dependency_resolution no longer adds depends_on blocks even when set to true.",
+    "latest_summary": "When using exclude_filter_resources or the default export mode (no include/exclude filter), enable_dependency_resolution no longer adds depends_on blocks, even when set to true.",
     "history": [
       {
         "version": "v1.77.3",
         "change": "updated",
-        "summary": "When using include_filter_resources or include_filter_resources_by_id, enable_dependency_resolution now controls depends_on generation without requiring a non-empty resource-type filter list."
+        "summary": "When using include_filter_resources or include_filter_resources_by_id, setting enable_dependency_resolution to true now generates depends_on blocks without requiring a non-empty resource-type filter list."
       },
       {
         "version": "v1.77.3",
         "change": "updated",
-        "summary": "When using exclude_filter_resources or the default export mode, enable_dependency_resolution no longer adds depends_on blocks even when set to true."
+        "summary": "When using exclude_filter_resources or the default export mode (no include/exclude filter), enable_dependency_resolution no longer adds depends_on blocks, even when set to true."
       }
     ]
   },
@@ -238,17 +383,34 @@
     "last_updated": "v1.77.2",
     "removed": null,
     "status": "Active",
-    "latest_summary": "The value set in configuration is now honored; provider max_clients is used only as a fallback when max_concurrent_threads is not explicitly set.",
+    "latest_summary": "The value in your genesyscloud_tf_export configuration is now used for export concurrency. Provider max_clients is applied only when max_concurrent_threads is zero or less.",
     "history": [
       {
         "version": "v1.71.0",
         "change": "added",
-        "summary": "Optional maximum number of concurrent export threads (default 10). Changing this value forces replacement of the export resource."
+        "summary": "Optional integer (default 10) that sets the maximum number of concurrent threads used during export. This is separate from the provider token pool size. Changing this value requires replacing the genesyscloud_tf_export resource."
       },
       {
         "version": "v1.77.2",
         "change": "updated",
-        "summary": "The value set in configuration is now honored; provider max_clients is used only as a fallback when max_concurrent_threads is not explicitly set."
+        "summary": "The value in your genesyscloud_tf_export configuration is now used for export concurrency. Provider max_clients is applied only when max_concurrent_threads is zero or less."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_tf_export",
+    "attribute": "include_filter_resources_by_id",
+    "introduced": "v1.72.2",
+    "last_updated": "v1.72.2",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When include_filter_resources_by_id is set, the export includes only resources whose type and ID match one of the listed {resourceType}::{resourceId} values.",
+    "history": [
+      {
+        "version": "v1.72.2",
+        "change": "added",
+        "summary": "When include_filter_resources_by_id is set, the export includes only resources whose type and ID match one of the listed {resourceType}::{resourceId} values."
       }
     ]
   },
@@ -260,17 +422,17 @@
     "last_updated": "v1.72.2",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Filter attributes resource_types, include_filter_resources, exclude_filter_resources, and include_filter_resources_by_id are mutually exclusive.",
+    "latest_summary": "Filter selection attributes resource_types, include_filter_resources, exclude_filter_resources, and include_filter_resources_by_id are mutually exclusive.",
     "history": [
       {
         "version": "v1.61.0",
         "change": "updated",
-        "summary": "Export can complete with warnings for non-fatal issues instead of treating all diagnostics as hard failures."
+        "summary": "A successful export can now return warning diagnostics to Terraform instead of discarding them; only errors still stop the export."
       },
       {
         "version": "v1.72.2",
         "change": "updated",
-        "summary": "Filter attributes resource_types, include_filter_resources, exclude_filter_resources, and include_filter_resources_by_id are mutually exclusive."
+        "summary": "Filter selection attributes resource_types, include_filter_resources, exclude_filter_resources, and include_filter_resources_by_id are mutually exclusive."
       }
     ]
   },
@@ -282,12 +444,46 @@
     "last_updated": "v1.72.2",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Optional list of {resourceType}::{resourceId} values to export only specific resources by ID.",
+    "latest_summary": "Optional list of {resourceType}::{resourceId} values to export only specific resources by ID. See the export guide for supported resource types and format details. Changing this attribute forces a new export run.",
     "history": [
       {
         "version": "v1.72.2",
         "change": "added",
-        "summary": "Optional list of {resourceType}::{resourceId} values to export only specific resources by ID."
+        "summary": "Optional list of {resourceType}::{resourceId} values to export only specific resources by ID. See the export guide for supported resource types and format details. Changing this attribute forces a new export run."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_tf_export",
+    "attribute": "max_concurrent_threads",
+    "introduced": "Unknown",
+    "last_updated": "v1.71.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "If max_concurrent_threads is unset or set to 0, export concurrency defaults to 10 (matching the previous fixed concurrency).",
+    "history": [
+      {
+        "version": "v1.71.0",
+        "change": "updated",
+        "summary": "If max_concurrent_threads is unset or set to 0, export concurrency defaults to 10 (matching the previous fixed concurrency)."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_tf_export",
+    "attribute": "use_legacy_architect_flow_exporter",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When use_legacy_architect_flow_exporter is false, architect flows are processed with the new flow exporter, which downloads flow configuration files during export.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "When use_legacy_architect_flow_exporter is false, architect flows are processed with the new flow exporter, which downloads flow configuration files during export."
       }
     ]
   },
@@ -299,12 +495,12 @@
     "last_updated": "v1.61.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Optional boolean (defaults to true). When false, architect flow YAML files are downloaded as part of the export process.",
+    "latest_summary": "Optional boolean (defaults to true, ForceNew). When set to false, architect flow configuration files are downloaded as part of the flow export process.",
     "history": [
       {
         "version": "v1.61.0",
         "change": "added",
-        "summary": "Optional boolean (defaults to true). When false, architect flow YAML files are downloaded as part of the export process."
+        "summary": "Optional boolean (defaults to true, ForceNew). When set to false, architect flow configuration files are downloaded as part of the flow export process."
       }
     ]
   }

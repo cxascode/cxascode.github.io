@@ -2,21 +2,6 @@
     "version": "v1.74.0",
     "previous": "v1.73.0",
     "resource": "genesyscloud_tf_export",
-    "changes": [
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_tf_export",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Flow exports that generate output files use the archy export service to download flow configuration; exports without output files use the legacy flow exporter."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_tf_export",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Exported teams with no members include member_ids = [] instead of omitting the attribute."
-        }
-    ],
+    "changes": [],
     "related_export_changes": []
 }

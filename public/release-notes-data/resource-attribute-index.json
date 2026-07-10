@@ -17,6 +17,57 @@
     ]
   },
   {
+    "type": "export_behavior",
+    "resource": "genesyscloud_routing_email_domain",
+    "attribute": "graph_api_settings.integration_id",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.2",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Export resolves graph_api_settings.integration_id to genesyscloud_integration references; blocks without an integration ID are omitted.",
+    "history": [
+      {
+        "version": "v1.84.2",
+        "change": "updated",
+        "summary": "Export resolves graph_api_settings.integration_id to genesyscloud_integration references; blocks without an integration ID are omitted."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_routing_email_domain",
+    "attribute": "imap_settings.integration_id",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.2",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Export resolves imap_settings.integration_id to genesyscloud_integration references; blocks without an integration ID are omitted.",
+    "history": [
+      {
+        "version": "v1.84.2",
+        "change": "updated",
+        "summary": "Export resolves imap_settings.integration_id to genesyscloud_integration references; blocks without an integration ID are omitted."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_routing_email_route",
+    "attribute": "signature.canned_response_id",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.2",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Export resolves signature.canned_response_id to genesyscloud_responsemanagement_response references.",
+    "history": [
+      {
+        "version": "v1.84.2",
+        "change": "updated",
+        "summary": "Export resolves signature.canned_response_id to genesyscloud_responsemanagement_response references."
+      }
+    ]
+  },
+  {
     "type": "resource",
     "resource": "genesyscloud_architect_user_prompt",
     "attribute": "resources",
@@ -24,12 +75,12 @@
     "last_updated": "v1.84.2",
     "removed": null,
     "status": "Active",
-    "latest_summary": "When BCP mode is active, the attribute is no longer computed and must be set explicitly in configuration; when BCP mode is not active, it remains optional and computed from the API.",
+    "latest_summary": "No longer computed from the API; include this block in configuration when you want Terraform to manage TTS audio resources for the prompt.",
     "history": [
       {
         "version": "v1.84.2",
         "change": "updated",
-        "summary": "When BCP mode is active, the attribute is no longer computed and must be set explicitly in configuration; when BCP mode is not active, it remains optional and computed from the API."
+        "summary": "No longer computed from the API; include this block in configuration when you want Terraform to manage TTS audio resources for the prompt."
       }
     ]
   },
@@ -95,7 +146,7 @@
   {
     "type": "resource",
     "resource": "genesyscloud_business_rules_decision_table",
-    "attribute": "input_columns.default_to.special",
+    "attribute": "input_columns.defaults.special",
     "introduced": "Unknown",
     "last_updated": "v1.84.2",
     "removed": null,
@@ -112,7 +163,7 @@
   {
     "type": "resource",
     "resource": "genesyscloud_business_rules_decision_table",
-    "attribute": "input_columns.default_to.value",
+    "attribute": "input_columns.defaults.value",
     "introduced": "Unknown",
     "last_updated": "v1.84.2",
     "removed": null,
@@ -129,7 +180,7 @@
   {
     "type": "resource",
     "resource": "genesyscloud_business_rules_decision_table",
-    "attribute": "input_columns.default_to.values",
+    "attribute": "input_columns.defaults.values",
     "introduced": "Unknown",
     "last_updated": "v1.84.2",
     "removed": null,
@@ -146,7 +197,7 @@
   {
     "type": "resource",
     "resource": "genesyscloud_business_rules_decision_table",
-    "attribute": "output_columns.default_to.special",
+    "attribute": "output_columns.defaults.special",
     "introduced": "Unknown",
     "last_updated": "v1.84.2",
     "removed": null,
@@ -163,7 +214,7 @@
   {
     "type": "resource",
     "resource": "genesyscloud_business_rules_decision_table",
-    "attribute": "output_columns.default_to.value",
+    "attribute": "output_columns.defaults.value",
     "introduced": "Unknown",
     "last_updated": "v1.84.2",
     "removed": null,
@@ -180,7 +231,7 @@
   {
     "type": "resource",
     "resource": "genesyscloud_business_rules_decision_table",
-    "attribute": "output_columns.default_to.values",
+    "attribute": "output_columns.defaults.values",
     "introduced": "Unknown",
     "last_updated": "v1.84.2",
     "removed": null,
@@ -445,23 +496,6 @@
   {
     "type": "export_behavior",
     "resource": "genesyscloud_outbound_digitalruleset",
-    "attribute": "contact_list_id",
-    "introduced": "Unknown",
-    "last_updated": "v1.84.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Unresolved contact_list_id references can be omitted during export when export omit-unresolved-refs is enabled.",
-    "history": [
-      {
-        "version": "v1.84.0",
-        "change": "updated",
-        "summary": "Unresolved contact_list_id references can be omitted during export when export omit-unresolved-refs is enabled."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
-    "resource": "genesyscloud_outbound_digitalruleset",
     "attribute": "rules.actions.set_content_template_action_settings",
     "introduced": "Unknown",
     "last_updated": "v1.84.0",
@@ -484,12 +518,12 @@
     "last_updated": "v1.84.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Content template IDs are resolved to genesyscloud_responsemanagement_response references during export, and unresolved references can be omitted when export omit-unresolved-refs is enabled.",
+    "latest_summary": "Content template IDs are resolved to genesyscloud_responsemanagement_response references during export.",
     "history": [
       {
         "version": "v1.84.0",
         "change": "updated",
-        "summary": "Content template IDs are resolved to genesyscloud_responsemanagement_response references during export, and unresolved references can be omitted when export omit-unresolved-refs is enabled."
+        "summary": "Content template IDs are resolved to genesyscloud_responsemanagement_response references during export."
       }
     ]
   },
@@ -501,12 +535,12 @@
     "last_updated": "v1.84.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Content template IDs are resolved to genesyscloud_responsemanagement_response references during export, and unresolved references can be omitted when export omit-unresolved-refs is enabled.",
+    "latest_summary": "Content template IDs are resolved to genesyscloud_responsemanagement_response references during export.",
     "history": [
       {
         "version": "v1.84.0",
         "change": "updated",
-        "summary": "Content template IDs are resolved to genesyscloud_responsemanagement_response references during export, and unresolved references can be omitted when export omit-unresolved-refs is enabled."
+        "summary": "Content template IDs are resolved to genesyscloud_responsemanagement_response references during export."
       }
     ]
   },
@@ -603,12 +637,12 @@
     "last_updated": "v1.84.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "New optional setting (default 1, max 75) to fetch list API pages in parallel during large reads and exports.",
+    "latest_summary": "New optional setting (default 1) to fetch list API pages in parallel during large reads; set GENESYSCLOUD_MAX_CONCURRENT_PAGES and increase token_pool_size alongside higher values.",
     "history": [
       {
         "version": "v1.84.0",
         "change": "added",
-        "summary": "New optional setting (default 1, max 75) to fetch list API pages in parallel during large reads and exports."
+        "summary": "New optional setting (default 1) to fetch list API pages in parallel during large reads; set GENESYSCLOUD_MAX_CONCURRENT_PAGES and increase token_pool_size alongside higher values."
       }
     ]
   },
@@ -777,6 +811,55 @@
   },
   {
     "type": "resource",
+    "resource": "genesyscloud_outbound_contact_list",
+    "attribute": "email_columns.contactable_time_column_name",
+    "introduced": "v1.79.0",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Values are now written to and read from the API using the contactable-time column name field, improving round-trip accuracy for contactable-time mappings.",
+    "history": [
+      {
+        "version": "v1.79.0",
+        "change": "added",
+        "summary": "Column name that indicates the timezone to use when checking contactable times; optional and computed."
+      },
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Values are now written to and read from the API using the contactable-time column name field, improving round-trip accuracy for contactable-time mappings."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_outbound_contact_list",
+    "attribute": "phone_columns.callable_time_column_name",
+    "introduced": "v1.79.0",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Values are now written to and read from the API using the callable-time column name field, improving round-trip accuracy for callable-time mappings.",
+    "history": [
+      {
+        "version": "v1.79.0",
+        "change": "added",
+        "summary": "Column name that indicates the timezone to use when checking callable times; optional and computed."
+      },
+      {
+        "version": "v1.79.0",
+        "change": "updated",
+        "summary": "Plan diffs are suppressed when automatic_time_zone_mapping is true because the API may omit these values."
+      },
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Values are now written to and read from the API using the callable-time column name field, improving round-trip accuracy for callable-time mappings."
+      }
+    ]
+  },
+  {
+    "type": "resource",
     "resource": "genesyscloud_outbound_digitalruleset",
     "attribute": "rules.actions.set_content_template_action_settings.email_content_template_id",
     "introduced": "Unknown",
@@ -835,12 +918,17 @@
     "type": "resource",
     "resource": "genesyscloud_routing_queue",
     "attribute": "media_settings_message.enable_inactivity_timeout",
-    "introduced": "Unknown",
+    "introduced": "v1.74.0",
     "last_updated": "v1.84.0",
     "removed": null,
     "status": "Active",
     "latest_summary": "Schema default of false removed; when omitted, the value comes from the API on read.",
     "history": [
+      {
+        "version": "v1.74.0",
+        "change": "added",
+        "summary": "Enable inactivity timeout for message interactions; defaults to false."
+      },
       {
         "version": "v1.84.0",
         "change": "updated",
@@ -922,40 +1010,6 @@
     ]
   },
   {
-    "type": "export_behavior",
-    "resource": "genesyscloud_business_rules_decision_table",
-    "attribute": "rows.inputs.literal.value",
-    "introduced": "Unknown",
-    "last_updated": "v1.83.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Queue IDs referenced in row input literal values are now resolved during export; previous wildcard resolver paths did not match the exporter framework and were skipped silently.",
-    "history": [
-      {
-        "version": "v1.83.0",
-        "change": "updated",
-        "summary": "Queue IDs referenced in row input literal values are now resolved during export; previous wildcard resolver paths did not match the exporter framework and were skipped silently."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
-    "resource": "genesyscloud_business_rules_decision_table",
-    "attribute": "rows.outputs.literal.value",
-    "introduced": "Unknown",
-    "last_updated": "v1.83.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Queue IDs referenced in row output literal values are now resolved during export; previous wildcard resolver paths did not match the exporter framework and were skipped silently.",
-    "history": [
-      {
-        "version": "v1.83.0",
-        "change": "updated",
-        "summary": "Queue IDs referenced in row output literal values are now resolved during export; previous wildcard resolver paths did not match the exporter framework and were skipped silently."
-      }
-    ]
-  },
-  {
     "type": "provider_configuration",
     "resource": "provider",
     "attribute": "aws_region",
@@ -980,7 +1034,7 @@
     "last_updated": "v1.83.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Pagination and name filtering for summary settings now use the correct API parameter order, so list, refresh, and export operations return the expected results.",
+    "latest_summary": "Summary settings are now listed and refreshed with correct pagination and name filtering, so plan and apply return the expected resources instead of missing or mismatched results.",
     "history": [
       {
         "version": "v1.72.2",
@@ -990,7 +1044,24 @@
       {
         "version": "v1.83.0",
         "change": "updated",
-        "summary": "Pagination and name filtering for summary settings now use the correct API parameter order, so list, refresh, and export operations return the expected results."
+        "summary": "Summary settings are now listed and refreshed with correct pagination and name filtering, so plan and apply return the expected resources instead of missing or mismatched results."
+      }
+    ]
+  },
+  {
+    "type": "data_source",
+    "resource": "genesyscloud_integration_action",
+    "attribute": "(resource-level behavior)",
+    "introduced": "Unknown",
+    "last_updated": "v1.82.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Lookups filter by integration_id when provided; ambiguous name errors suggest setting integration_id.",
+    "history": [
+      {
+        "version": "v1.82.0",
+        "change": "updated",
+        "summary": "Lookups filter by integration_id when provided; ambiguous name errors suggest setting integration_id."
       }
     ]
   },
@@ -1002,100 +1073,12 @@
     "last_updated": "v1.82.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Optional argument to disambiguate lookups when multiple built-in data actions share the same name across integration instances.",
+    "latest_summary": "Optional integration ID to disambiguate static data action lookups when names collide across integration instances.",
     "history": [
       {
         "version": "v1.82.0",
         "change": "added",
-        "summary": "Optional argument to disambiguate lookups when multiple built-in data actions share the same name across integration instances."
-      }
-    ]
-  },
-  {
-    "type": "data_source",
-    "resource": "genesyscloud_processautomation_trigger",
-    "attribute": "(resource-level behavior)",
-    "introduced": "Unknown",
-    "last_updated": "v1.82.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Name lookup now follows API pagination links correctly, so triggers beyond the first page can be found.",
-    "history": [
-      {
-        "version": "v1.82.0",
-        "change": "updated",
-        "summary": "Name lookup now follows API pagination links correctly, so triggers beyond the first page can be found."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
-    "resource": "genesyscloud_greeting",
-    "attribute": "general export behavior",
-    "introduced": "Unknown",
-    "last_updated": "v1.82.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Greeting audio files are now written alongside exported configuration and resolved on import using audio_filename and audio_file_content_hash.",
-    "history": [
-      {
-        "version": "v1.82.0",
-        "change": "updated",
-        "summary": "Greeting audio files are now written alongside exported configuration and resolved on import using audio_filename and audio_file_content_hash."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
-    "resource": "genesyscloud_integration_action",
-    "attribute": "general export behavior",
-    "introduced": "Unknown",
-    "last_updated": "v1.82.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Static data action block labels now include the parent integration name as a prefix so duplicate action names across integration instances export with distinct labels.",
-    "history": [
-      {
-        "version": "v1.63.0",
-        "change": "updated",
-        "summary": "Bulk export block labels may include uniqueness hashes when names collide."
-      },
-      {
-        "version": "v1.78.0",
-        "change": "updated",
-        "summary": "Exported block labels use category_name instead of the action name alone."
-      },
-      {
-        "version": "v1.82.0",
-        "change": "updated",
-        "summary": "Built-in static data actions are exported as genesyscloud_integration_action data source blocks instead of managed resources."
-      },
-      {
-        "version": "v1.82.0",
-        "change": "updated",
-        "summary": "Static data action block labels now include the parent integration name as a prefix so duplicate action names across integration instances export with distinct labels."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
-    "resource": "genesyscloud_integration_credential",
-    "attribute": "general export behavior",
-    "introduced": "Unknown",
-    "last_updated": "v1.82.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Integration credentials are no longer skipped when the credential name does not match the Integration-* pattern; export resolves the parent integration by credential ID.",
-    "history": [
-      {
-        "version": "v1.60.0",
-        "change": "updated",
-        "summary": "Exported block labels now use the format Integration-{integration_name} instead of {integration_name}_{credential_name}."
-      },
-      {
-        "version": "v1.82.0",
-        "change": "updated",
-        "summary": "Integration credentials are no longer skipped when the credential name does not match the Integration-* pattern; export resolves the parent integration by credential ID."
+        "summary": "Optional integration ID to disambiguate static data action lookups when names collide across integration instances."
       }
     ]
   },
@@ -1124,12 +1107,12 @@
     "last_updated": "v1.82.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "New Terraform resource for managing case management case plans.",
+    "latest_summary": "Newly registered resource for managing case management caseplans.",
     "history": [
       {
         "version": "v1.82.0",
         "change": "added",
-        "summary": "New Terraform resource for managing case management case plans."
+        "summary": "Newly registered resource for managing case management caseplans."
       }
     ]
   },
@@ -1141,12 +1124,12 @@
     "last_updated": "v1.82.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "New Terraform resource for managing case management stage plans.",
+    "latest_summary": "Newly registered resource for managing case management stageplans.",
     "history": [
       {
         "version": "v1.82.0",
         "change": "added",
-        "summary": "New Terraform resource for managing case management stage plans."
+        "summary": "Newly registered resource for managing case management stageplans."
       }
     ]
   },
@@ -1158,12 +1141,12 @@
     "last_updated": "v1.82.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "New Terraform resource for managing case management step plans.",
+    "latest_summary": "Newly registered resource for managing case management stepplans.",
     "history": [
       {
         "version": "v1.82.0",
         "change": "added",
-        "summary": "New Terraform resource for managing case management step plans."
+        "summary": "Newly registered resource for managing case management stepplans."
       }
     ]
   },
@@ -1175,12 +1158,12 @@
     "last_updated": "v1.82.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Hash of the greeting audio file content, used to detect file changes.",
+    "latest_summary": "Optional computed hash of greeting audio file content used to detect changes.",
     "history": [
       {
         "version": "v1.82.0",
         "change": "added",
-        "summary": "Hash of the greeting audio file content, used to detect file changes."
+        "summary": "Optional computed hash of greeting audio file content used to detect changes."
       }
     ]
   },
@@ -1192,12 +1175,12 @@
     "last_updated": "v1.82.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Path to the greeting audio file used during export and import.",
+    "latest_summary": "Optional computed path to the greeting audio file used during export and import.",
     "history": [
       {
         "version": "v1.82.0",
         "change": "added",
-        "summary": "Path to the greeting audio file used during export and import."
+        "summary": "Optional computed path to the greeting audio file used during export and import."
       }
     ]
   },
@@ -1209,12 +1192,12 @@
     "last_updated": "v1.82.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "New Terraform resource for managing user greetings.",
+    "latest_summary": "Newly registered resource for managing user greetings.",
     "history": [
       {
         "version": "v1.82.0",
         "change": "added",
-        "summary": "New Terraform resource for managing user greetings."
+        "summary": "Newly registered resource for managing user greetings."
       }
     ]
   },
@@ -1226,12 +1209,64 @@
     "last_updated": "v1.82.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "New Terraform resource for managing group greetings.",
+    "latest_summary": "Newly registered resource for managing group greetings.",
     "history": [
       {
         "version": "v1.82.0",
         "change": "added",
-        "summary": "New Terraform resource for managing group greetings."
+        "summary": "Newly registered resource for managing group greetings."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_integration_action",
+    "attribute": "(resource-level behavior)",
+    "introduced": "Unknown",
+    "last_updated": "v1.82.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Publishing an integration action draft now sends the correct version number to the API.",
+    "history": [
+      {
+        "version": "v1.68.2",
+        "change": "updated",
+        "summary": "Function data action categories are created through a draft-and-publish workflow that uploads function_config.file_path, applies function settings, and publishes the draft; file_path is required for these actions."
+      },
+      {
+        "version": "v1.68.2",
+        "change": "updated",
+        "summary": "Function data action categories use the draft workflow on update to upload an updated zip and publish changes."
+      },
+      {
+        "version": "v1.68.2",
+        "change": "updated",
+        "summary": "Read refreshes function_config from the API when the action category is a function data action."
+      },
+      {
+        "version": "v1.68.2",
+        "change": "updated",
+        "summary": "Consistency state validation is no longer performed on refresh, which may surface plan diffs that were previously suppressed."
+      },
+      {
+        "version": "v1.68.3",
+        "change": "updated",
+        "summary": "When updating a function-type integration action, creates or updates the action draft with current integration_id, name, category, secure, contract, and config before uploading the function zip from function_config.file_path."
+      },
+      {
+        "version": "v1.68.3",
+        "change": "updated",
+        "summary": "Retries when the function zip ID is not immediately available after upload, reducing transient apply failures."
+      },
+      {
+        "version": "v1.68.3",
+        "change": "updated",
+        "summary": "Retrieves the latest draft version before publishing, reducing version-mismatch errors during apply."
+      },
+      {
+        "version": "v1.82.0",
+        "change": "updated",
+        "summary": "Publishing an integration action draft now sends the correct version number to the API."
       }
     ]
   },
@@ -1243,12 +1278,12 @@
     "last_updated": "v1.82.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Contact list column containing the agent ID that owns the record; applicable to preview campaigns.",
+    "latest_summary": "Optional contact list column containing the agent ID that owns the record for preview campaigns.",
     "history": [
       {
         "version": "v1.82.0",
         "change": "added",
-        "summary": "Contact list column containing the agent ID that owns the record; applicable to preview campaigns."
+        "summary": "Optional contact list column containing the agent ID that owns the record for preview campaigns."
       }
     ]
   },
@@ -1260,29 +1295,12 @@
     "last_updated": "v1.82.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Computed decimal value returned by the API; use max_calls_per_agent to configure this setting.",
+    "latest_summary": "Computed decimal max calls per agent value returned by the API; configure using max_calls_per_agent.",
     "history": [
       {
         "version": "v1.82.0",
         "change": "added",
-        "summary": "Computed decimal value returned by the API; use max_calls_per_agent to configure this setting."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_outbound_campaignrule",
-    "attribute": "(resource-level behavior)",
-    "introduced": "Unknown",
-    "last_updated": "v1.82.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Terraform validates that condition_groups is present when using v2 processing and that campaign_rule_conditions is present otherwise.",
-    "history": [
-      {
-        "version": "v1.82.0",
-        "change": "updated",
-        "summary": "Terraform validates that condition_groups is present when using v2 processing and that campaign_rule_conditions is present otherwise."
+        "summary": "Computed decimal max calls per agent value returned by the API; configure using max_calls_per_agent."
       }
     ]
   },
@@ -1294,29 +1312,34 @@
     "last_updated": "v1.82.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "No longer unconditionally required; use with legacy rules or use condition_groups when campaign_rule_processing is v2. The two blocks cannot be set together.",
+    "latest_summary": "No longer unconditionally required; use either campaign_rule_conditions or condition_groups with campaign_rule_processing v2, enforced by plan validation.",
     "history": [
       {
         "version": "v1.82.0",
         "change": "updated",
-        "summary": "No longer unconditionally required; use with legacy rules or use condition_groups when campaign_rule_processing is v2. The two blocks cannot be set together."
+        "summary": "No longer unconditionally required; use either campaign_rule_conditions or condition_groups with campaign_rule_processing v2, enforced by plan validation."
       }
     ]
   },
   {
     "type": "resource",
     "resource": "genesyscloud_outbound_campaignrule",
-    "attribute": "campaign_rule_conditions.condition",
+    "attribute": "campaign_rule_conditions.condition_type",
     "introduced": "Unknown",
     "last_updated": "v1.82.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Additional condition types are supported: timeOfDay, dayOfWeek, dayOfMonth, weekDayOfMonth, specificDate, campaignRunTime, and campaignWaitTime.",
+    "latest_summary": "Accepts additional values: timeOfDay, dayOfWeek, dayOfMonth, weekDayOfMonth, specificDate, campaignRunTime, and campaignWaitTime.",
     "history": [
+      {
+        "version": "v1.73.0",
+        "change": "updated",
+        "summary": "Accepts additional condition types: campaignRecordsAttempted, campaignContactsMessaged, campaignBusinessSuccess, campaignBusinessNeutral, campaignBusinessFailure, campaignValidAttempts, and campaignRightPartyContacts."
+      },
       {
         "version": "v1.82.0",
         "change": "updated",
-        "summary": "Additional condition types are supported: timeOfDay, dayOfWeek, dayOfMonth, weekDayOfMonth, specificDate, campaignRunTime, and campaignWaitTime."
+        "summary": "Accepts additional values: timeOfDay, dayOfWeek, dayOfMonth, weekDayOfMonth, specificDate, campaignRunTime, and campaignWaitTime."
       }
     ]
   },
@@ -1328,12 +1351,12 @@
     "last_updated": "v1.82.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Set to v2 to use condition groups instead of flat campaign_rule_conditions.",
+    "latest_summary": "Optional processing algorithm selector; set to v2 to enable condition groups.",
     "history": [
       {
         "version": "v1.82.0",
         "change": "added",
-        "summary": "Set to v2 to use condition groups instead of flat campaign_rule_conditions."
+        "summary": "Optional processing algorithm selector; set to v2 to enable condition groups."
       }
     ]
   },
@@ -1345,12 +1368,46 @@
     "last_updated": "v1.82.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Nested condition groups with match_any_conditions and conditions; required when campaign_rule_processing is v2.",
+    "latest_summary": "Optional list of condition groups used when campaign_rule_processing is v2.",
     "history": [
       {
         "version": "v1.82.0",
         "change": "added",
-        "summary": "Nested condition groups with match_any_conditions and conditions; required when campaign_rule_processing is v2."
+        "summary": "Optional list of condition groups used when campaign_rule_processing is v2."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_outbound_campaignrule",
+    "attribute": "condition_groups.conditions",
+    "introduced": "v1.82.0",
+    "last_updated": "v1.82.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Conditions evaluated within a condition group.",
+    "history": [
+      {
+        "version": "v1.82.0",
+        "change": "added",
+        "summary": "Conditions evaluated within a condition group."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_outbound_campaignrule",
+    "attribute": "condition_groups.match_any_conditions",
+    "introduced": "v1.82.0",
+    "last_updated": "v1.82.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Whether any condition in the group must match for the group to evaluate as true.",
+    "history": [
+      {
+        "version": "v1.82.0",
+        "change": "added",
+        "summary": "Whether any condition in the group must match for the group to evaluate as true."
       }
     ]
   },
@@ -1362,199 +1419,165 @@
     "last_updated": "v1.82.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Execution control with frequency onEachTrigger or oncePerDay and optional time_zone_id for daily runs.",
+    "latest_summary": "Optional execution control settings for the campaign rule.",
     "history": [
       {
         "version": "v1.82.0",
         "change": "added",
-        "summary": "Execution control with frequency onEachTrigger or oncePerDay and optional time_zone_id for daily runs."
+        "summary": "Optional execution control settings for the campaign rule."
       }
     ]
   },
   {
     "type": "resource",
-    "resource": "genesyscloud_routing_queue",
-    "attribute": "media_settings_call.auto_answer_alert_tone_seconds",
+    "resource": "genesyscloud_outbound_campaignrule",
+    "attribute": "execution_settings.frequency",
     "introduced": "v1.82.0",
     "last_updated": "v1.82.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Duration to play the alerting tone for auto-answer call interactions.",
+    "latest_summary": "Execution frequency; valid values are onEachTrigger and oncePerDay.",
     "history": [
       {
         "version": "v1.82.0",
         "change": "added",
-        "summary": "Duration to play the alerting tone for auto-answer call interactions."
+        "summary": "Execution frequency; valid values are onEachTrigger and oncePerDay."
       }
     ]
   },
   {
     "type": "resource",
-    "resource": "genesyscloud_routing_queue",
-    "attribute": "media_settings_call.manual_answer_alert_tone_seconds",
+    "resource": "genesyscloud_outbound_campaignrule",
+    "attribute": "execution_settings.time_zone_id",
     "introduced": "v1.82.0",
     "last_updated": "v1.82.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Duration to play the alerting tone for manual-answer call interactions.",
+    "latest_summary": "Time zone used when frequency is oncePerDay.",
     "history": [
       {
         "version": "v1.82.0",
         "change": "added",
-        "summary": "Duration to play the alerting tone for manual-answer call interactions."
+        "summary": "Time zone used when frequency is oncePerDay."
       }
     ]
   },
   {
     "type": "resource",
     "resource": "genesyscloud_routing_queue",
-    "attribute": "media_settings_call.sub_type_settings",
+    "attribute": "call_media_settings.auto_answer_alert_tone_seconds",
+    "introduced": "v1.82.0",
+    "last_updated": "v1.82.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional duration in seconds to play the alerting tone for auto-answer call interactions.",
+    "history": [
+      {
+        "version": "v1.82.0",
+        "change": "added",
+        "summary": "Optional duration in seconds to play the alerting tone for auto-answer call interactions."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "call_media_settings.manual_answer_alert_tone_seconds",
+    "introduced": "v1.82.0",
+    "last_updated": "v1.82.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional duration in seconds to play the alerting tone for manual-answer call interactions.",
+    "history": [
+      {
+        "version": "v1.82.0",
+        "change": "added",
+        "summary": "Optional duration in seconds to play the alerting tone for manual-answer call interactions."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "call_media_settings.sub_type_settings",
     "introduced": "Unknown",
     "last_updated": "v1.82.0",
     "removed": "v1.82.0",
     "status": "Removed",
-    "latest_summary": "Removed from call media settings; subtype configuration is not supported on this block.",
+    "latest_summary": "Subtype-specific settings are not supported on call media settings.",
     "history": [
       {
         "version": "v1.82.0",
         "change": "removed",
-        "summary": "Removed from call media settings; subtype configuration is not supported on this block."
+        "summary": "Subtype-specific settings are not supported on call media settings."
       }
     ]
   },
   {
     "type": "resource",
     "resource": "genesyscloud_routing_queue",
-    "attribute": "media_settings_callback.sub_type_settings",
+    "attribute": "callback_media_settings.sub_type_settings",
     "introduced": "Unknown",
     "last_updated": "v1.82.0",
     "removed": "v1.82.0",
     "status": "Removed",
-    "latest_summary": "Removed from callback media settings.",
+    "latest_summary": "Subtype-specific settings are not supported on callback media settings.",
     "history": [
       {
         "version": "v1.82.0",
         "change": "removed",
-        "summary": "Removed from callback media settings."
+        "summary": "Subtype-specific settings are not supported on callback media settings."
       }
     ]
   },
   {
     "type": "resource",
     "resource": "genesyscloud_routing_queue",
-    "attribute": "media_settings_chat.auto_answer_alert_tone_seconds",
+    "attribute": "email_media_settings.auto_answer_alert_tone_seconds",
     "introduced": "v1.82.0",
     "last_updated": "v1.82.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Duration to play the alerting tone for auto-answer chat interactions.",
+    "latest_summary": "Optional duration in seconds to play the alerting tone for auto-answer email interactions.",
     "history": [
       {
         "version": "v1.82.0",
         "change": "added",
-        "summary": "Duration to play the alerting tone for auto-answer chat interactions."
+        "summary": "Optional duration in seconds to play the alerting tone for auto-answer email interactions."
       }
     ]
   },
   {
     "type": "resource",
     "resource": "genesyscloud_routing_queue",
-    "attribute": "media_settings_chat.manual_answer_alert_tone_seconds",
+    "attribute": "email_media_settings.manual_answer_alert_tone_seconds",
     "introduced": "v1.82.0",
     "last_updated": "v1.82.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Duration to play the alerting tone for manual-answer chat interactions.",
+    "latest_summary": "Optional duration in seconds to play the alerting tone for manual-answer email interactions.",
     "history": [
       {
         "version": "v1.82.0",
         "change": "added",
-        "summary": "Duration to play the alerting tone for manual-answer chat interactions."
+        "summary": "Optional duration in seconds to play the alerting tone for manual-answer email interactions."
       }
     ]
   },
   {
     "type": "resource",
     "resource": "genesyscloud_routing_queue",
-    "attribute": "media_settings_chat.sub_type_settings",
-    "introduced": "Unknown",
-    "last_updated": "v1.82.0",
-    "removed": "v1.82.0",
-    "status": "Removed",
-    "latest_summary": "Removed from chat media settings.",
-    "history": [
-      {
-        "version": "v1.82.0",
-        "change": "removed",
-        "summary": "Removed from chat media settings."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_routing_queue",
-    "attribute": "media_settings_email.auto_answer_alert_tone_seconds",
+    "attribute": "message_media_settings.sub_type_settings.enable_inactivity_timeout",
     "introduced": "v1.82.0",
     "last_updated": "v1.82.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Duration to play the alerting tone for auto-answer email interactions.",
+    "latest_summary": "Optional flag to enable inactivity timeout for an individual message media subtype.",
     "history": [
       {
         "version": "v1.82.0",
         "change": "added",
-        "summary": "Duration to play the alerting tone for auto-answer email interactions."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_routing_queue",
-    "attribute": "media_settings_email.manual_answer_alert_tone_seconds",
-    "introduced": "v1.82.0",
-    "last_updated": "v1.82.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Duration to play the alerting tone for manual-answer email interactions.",
-    "history": [
-      {
-        "version": "v1.82.0",
-        "change": "added",
-        "summary": "Duration to play the alerting tone for manual-answer email interactions."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_routing_queue",
-    "attribute": "media_settings_email.sub_type_settings",
-    "introduced": "Unknown",
-    "last_updated": "v1.82.0",
-    "removed": "v1.82.0",
-    "status": "Removed",
-    "latest_summary": "Removed from email media settings.",
-    "history": [
-      {
-        "version": "v1.82.0",
-        "change": "removed",
-        "summary": "Removed from email media settings."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_routing_queue",
-    "attribute": "media_settings_message.sub_type_settings.enable_inactivity_timeout",
-    "introduced": "v1.82.0",
-    "last_updated": "v1.82.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Per-subtype inactivity timeout flag for digital message channels.",
-    "history": [
-      {
-        "version": "v1.82.0",
-        "change": "added",
-        "summary": "Per-subtype inactivity timeout flag for digital message channels."
+        "summary": "Optional flag to enable inactivity timeout for an individual message media subtype."
       }
     ]
   },
@@ -2408,38 +2431,6 @@
     ]
   },
   {
-    "type": "export_behavior",
-    "resource": "genesyscloud_outbound_contact_list",
-    "attribute": "general export behavior",
-    "introduced": "Unknown",
-    "last_updated": "v1.79.2",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Contact list CSV export now normalizes column headers by stripping invisible Unicode characters and extra quotes, preventing mismatched or malformed system columns such as inin-outbound-id.",
-    "history": [
-      {
-        "version": "v1.63.0",
-        "change": "updated",
-        "summary": "Bulk export for contacts waits longer with exponential backoff before retrieving signed export URLs."
-      },
-      {
-        "version": "v1.66.0",
-        "change": "updated",
-        "summary": "Bulk export contact download uses exponential backoff starting at 2 seconds and retries on HTTP 400 while waiting for the signed export URL."
-      },
-      {
-        "version": "v1.78.0",
-        "change": "updated",
-        "summary": "Exported contact CSV files keep only column_names plus inin-outbound-id, stripping system-generated columns that can cause import failures when moving lists between orgs."
-      },
-      {
-        "version": "v1.79.2",
-        "change": "updated",
-        "summary": "Contact list CSV export now normalizes column headers by stripping invisible Unicode characters and extra quotes, preventing mismatched or malformed system columns such as inin-outbound-id."
-      }
-    ]
-  },
-  {
     "type": "resource",
     "resource": "genesyscloud_business_rules_decision_table",
     "attribute": "timeouts.read",
@@ -2458,6 +2449,23 @@
         "version": "v1.79.2",
         "change": "updated",
         "summary": "Read operations now honor the resource read timeout instead of a fixed 1-minute internal limit."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_outbound_contact_list",
+    "attribute": "(resource-level behavior)",
+    "introduced": "Unknown",
+    "last_updated": "v1.79.2",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Contact list CSV processing now normalizes column headers by stripping invisible Unicode characters and extra quotes, preventing mismatched or malformed system columns such as inin-outbound-id.",
+    "history": [
+      {
+        "version": "v1.79.2",
+        "change": "updated",
+        "summary": "Contact list CSV processing now normalizes column headers by stripping invisible Unicode characters and extra quotes, preventing mismatched or malformed system columns such as inin-outbound-id."
       }
     ]
   },
@@ -2664,12 +2672,34 @@
       {
         "version": "v1.75.1",
         "change": "updated",
-        "summary": "Create, update, and read fail when list nesting exceeds 9 levels or table nesting exceeds the allowed depth (1 level by default; up to 3 levels when the ENABLE_NESTED_TABLES environment variable is set for the provider process)."
+        "summary": "Create, update, and read fail when list nesting exceeds 9 levels or when table content exceeds the supported depth (one table level; nested tables inside cells are not supported)."
       },
       {
         "version": "v1.79.0",
         "change": "updated",
         "summary": "Deleting a variation publishes the parent knowledge document version using the correct knowledge base and document identifiers when other variations remain."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_outbound_contact_list",
+    "attribute": "email_columns",
+    "introduced": "Unknown",
+    "last_updated": "v1.79.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Read preserves timezone column names from the API response, reducing drift after UI edits or refresh.",
+    "history": [
+      {
+        "version": "v1.77.2",
+        "change": "updated",
+        "summary": "Now documented as required when both phone_columns and whats_app_columns are empty."
+      },
+      {
+        "version": "v1.79.0",
+        "change": "updated",
+        "summary": "Read preserves timezone column names from the API response, reducing drift after UI edits or refresh."
       }
     ]
   },
@@ -2693,23 +2723,6 @@
   {
     "type": "resource",
     "resource": "genesyscloud_outbound_contact_list",
-    "attribute": "email_columns.contactable_time_column_name",
-    "introduced": "v1.79.0",
-    "last_updated": "v1.79.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Column name that indicates the timezone to use when checking contactable times; optional and computed.",
-    "history": [
-      {
-        "version": "v1.79.0",
-        "change": "added",
-        "summary": "Column name that indicates the timezone to use when checking contactable times; optional and computed."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_outbound_contact_list",
     "attribute": "phone_columns",
     "introduced": "Unknown",
     "last_updated": "v1.79.0",
@@ -2720,7 +2733,7 @@
       {
         "version": "v1.77.2",
         "change": "updated",
-        "summary": "Description updated; this block is required when both email_columns and whats_app_columns are empty."
+        "summary": "Now documented as required when both email_columns and whats_app_columns are empty."
       },
       {
         "version": "v1.79.0",
@@ -2731,18 +2744,18 @@
   },
   {
     "type": "resource",
-    "resource": "genesyscloud_outbound_contact_list",
-    "attribute": "phone_columns.callable_time_column_name",
-    "introduced": "v1.79.0",
+    "resource": "genesyscloud_outbound_contact_list_template",
+    "attribute": "email_columns",
+    "introduced": "Unknown",
     "last_updated": "v1.79.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Column name that indicates the timezone to use when checking callable times; optional and computed.",
+    "latest_summary": "Read preserves timezone column names from the API and retains existing column settings when the API omits phone or email columns.",
     "history": [
       {
         "version": "v1.79.0",
-        "change": "added",
-        "summary": "Column name that indicates the timezone to use when checking callable times; optional and computed."
+        "change": "updated",
+        "summary": "Read preserves timezone column names from the API and retains existing column settings when the API omits phone or email columns."
       }
     ]
   },
@@ -2827,12 +2840,17 @@
     "last_updated": "v1.79.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Column name that indicates the timezone to use when checking callable times; optional and computed.",
+    "latest_summary": "Plan diffs are suppressed when automatic_time_zone_mapping is true.",
     "history": [
       {
         "version": "v1.79.0",
         "change": "added",
         "summary": "Column name that indicates the timezone to use when checking callable times; optional and computed."
+      },
+      {
+        "version": "v1.79.0",
+        "change": "updated",
+        "summary": "Plan diffs are suppressed when automatic_time_zone_mapping is true."
       }
     ]
   },
@@ -2871,7 +2889,7 @@
     "last_updated": "v1.79.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Updating phone entries is rejected unless dnc_source_type is rds (internal DNC list).",
+    "latest_summary": "Updating phone entries is rejected up front unless dnc_source_type is rds (internal DNC list).",
     "history": [
       {
         "version": "v1.76.0",
@@ -2896,7 +2914,7 @@
       {
         "version": "v1.79.0",
         "change": "updated",
-        "summary": "Updating phone entries is rejected unless dnc_source_type is rds (internal DNC list)."
+        "summary": "Updating phone entries is rejected up front unless dnc_source_type is rds (internal DNC list)."
       }
     ]
   },
@@ -3040,22 +3058,17 @@
       {
         "version": "v1.76.1",
         "change": "updated",
-        "summary": "Dependent consumer resolution for published flows now requires the flow to have a type; flows without a type are skipped when building export dependency lists."
-      },
-      {
-        "version": "v1.76.1",
-        "change": "updated",
-        "summary": "Consumed resource dependencies missing an ID or type are skipped instead of being included in export dependency resolution."
+        "summary": "Dependency resolution during export now requires a published version with a defined flow type before dependent resources are discovered; dependent consumer entries missing an ID or type are skipped."
       },
       {
         "version": "v1.76.2",
         "change": "updated",
-        "summary": "Dependency pagination metadata is handled safely; export no longer fails when the consumed-resources API response omits PageCount."
+        "summary": "Dependency resolution during export no longer requires page count metadata from the API; when page count is omitted, paging continues with the default count instead of failing."
       },
       {
         "version": "v1.76.2",
         "change": "updated",
-        "summary": "Consumed resource dependencies missing a name are skipped during export dependency resolution."
+        "summary": "Dependent consumer entries missing a name are skipped during dependency discovery, in addition to entries missing an ID or type."
       },
       {
         "version": "v1.77.0",
@@ -3065,7 +3078,17 @@
       {
         "version": "v1.77.0",
         "change": "updated",
-        "summary": "Flows exported as data sources are skipped during dependency resolution because they are referenced but not managed."
+        "summary": "Exported flow dependency metadata is sorted consistently for deterministic depends_on output."
+      },
+      {
+        "version": "v1.77.2",
+        "change": "updated",
+        "summary": "Flow export jobs now include the published flow version when available, targeting the correct published revision."
+      },
+      {
+        "version": "v1.77.2",
+        "change": "updated",
+        "summary": "Flow listing and export operations retry more reliably when the API rate-limits requests or returns transient export job failures."
       },
       {
         "version": "v1.78.0",
@@ -3195,6 +3218,28 @@
   },
   {
     "type": "export_behavior",
+    "resource": "genesyscloud_integration_action",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.78.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Exported block labels now use {category}_{name} instead of the action name alone.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "updated",
+        "summary": "Bulk export block labels may include uniqueness hashes when names collide."
+      },
+      {
+        "version": "v1.78.0",
+        "change": "updated",
+        "summary": "Exported block labels now use {category}_{name} instead of the action name alone."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
     "resource": "genesyscloud_organization_authentication_settings",
     "attribute": "general export behavior",
     "introduced": "Unknown",
@@ -3207,6 +3252,33 @@
         "version": "v1.78.0",
         "change": "updated",
         "summary": "Singleton org-wide resource is exported using the resource type identifier instead of a generic numeric key."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_outbound_contact_list",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.78.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Exported contact CSV files keep only column_names plus inin-outbound-id, stripping system-generated columns that can cause import failures when moving lists between orgs.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "updated",
+        "summary": "Bulk export for contacts waits longer with exponential backoff before retrieving signed export URLs."
+      },
+      {
+        "version": "v1.66.0",
+        "change": "updated",
+        "summary": "Bulk export contact download uses exponential backoff starting at 2 seconds and retries on HTTP 400 while waiting for the signed export URL."
+      },
+      {
+        "version": "v1.78.0",
+        "change": "updated",
+        "summary": "Exported contact CSV files keep only column_names plus inin-outbound-id, stripping system-generated columns that can cause import failures when moving lists between orgs."
       }
     ]
   },
@@ -3229,7 +3301,7 @@
   },
   {
     "type": "export_behavior",
-    "resource": "genesyscloud_outbound_wrapupcode_mappings",
+    "resource": "genesyscloud_outbound_wrapupcodemappings",
     "attribute": "general export behavior",
     "introduced": "Unknown",
     "last_updated": "v1.78.0",
@@ -3410,7 +3482,7 @@
   {
     "type": "resource",
     "resource": "genesyscloud_ai_studio_summary_setting",
-    "attribute": "pii.all",
+    "attribute": "piis.all",
     "introduced": "Unknown",
     "last_updated": "v1.78.0",
     "removed": null,
@@ -3539,23 +3611,6 @@
   {
     "type": "resource",
     "resource": "genesyscloud_webdeployments_configuration",
-    "attribute": "custom_i18n.localized_labels.key",
-    "introduced": "Unknown",
-    "last_updated": "v1.78.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "PushNotificationTitle and PushNotificationBody are now valid localized label keys for push notifications.",
-    "history": [
-      {
-        "version": "v1.78.0",
-        "change": "updated",
-        "summary": "PushNotificationTitle and PushNotificationBody are now valid localized label keys for push notifications."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_webdeployments_configuration",
     "attribute": "messenger.apps.conversations.notifications",
     "introduced": "v1.78.0",
     "last_updated": "v1.78.0",
@@ -3601,6 +3656,23 @@
         "version": "v1.78.0",
         "change": "added",
         "summary": "Whether file attachments are enabled in messenger."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_webdeployments_configuration",
+    "attribute": "messenger.home_screen.custom_i18n.localized_labels.key",
+    "introduced": "Unknown",
+    "last_updated": "v1.78.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "PushNotificationTitle and PushNotificationBody are now valid localized label keys for push notifications.",
+    "history": [
+      {
+        "version": "v1.78.0",
+        "change": "updated",
+        "summary": "PushNotificationTitle and PushNotificationBody are now valid localized label keys for push notifications."
       }
     ]
   },
@@ -4228,67 +4300,6 @@
     ]
   },
   {
-    "type": "export_behavior",
-    "resource": "genesyscloud_architect_flow",
-    "attribute": "general export behavior",
-    "introduced": "Unknown",
-    "last_updated": "v1.77.2",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Export retries rate-limited API responses (HTTP 429) when listing flows and creating export jobs, and retries transient export-job failures that can occur under heavy API load.",
-    "history": [
-      {
-        "version": "v1.66.0",
-        "change": "updated",
-        "summary": "Bulk export block labels now use {type}_{name}."
-      },
-      {
-        "version": "v1.77.2",
-        "change": "updated",
-        "summary": "Flow YAML downloads now request the flow's published version when one is available, which can improve export success for published flows."
-      },
-      {
-        "version": "v1.77.2",
-        "change": "updated",
-        "summary": "Export retries rate-limited API responses (HTTP 429) when listing flows and creating export jobs, and retries transient export-job failures that can occur under heavy API load."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
-    "resource": "genesyscloud_outbound_contact_list",
-    "attribute": "whats_app_columns",
-    "introduced": "Unknown",
-    "last_updated": "v1.77.2",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Exported configurations include whats_app_columns blocks when WhatsApp columns exist on the contact list.",
-    "history": [
-      {
-        "version": "v1.77.2",
-        "change": "updated",
-        "summary": "Exported configurations include whats_app_columns blocks when WhatsApp columns exist on the contact list."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_outbound_contact_list",
-    "attribute": "email_columns",
-    "introduced": "Unknown",
-    "last_updated": "v1.77.2",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Description updated; this block is required when both phone_columns and whats_app_columns are empty.",
-    "history": [
-      {
-        "version": "v1.77.2",
-        "change": "updated",
-        "summary": "Description updated; this block is required when both phone_columns and whats_app_columns are empty."
-      }
-    ]
-  },
-  {
     "type": "resource",
     "resource": "genesyscloud_outbound_contact_list",
     "attribute": "whats_app_columns",
@@ -4296,46 +4307,12 @@
     "last_updated": "v1.77.2",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Optional set block (forces replacement when changed) to designate which contact-list columns hold WhatsApp contacts; at least one of phone_columns, email_columns, or whats_app_columns must be configured.",
+    "latest_summary": "Optional block set for WhatsApp contact columns (column_name, type). Changing this attribute forces replacement. At least one of phone_columns, email_columns, or whats_app_columns must be configured.",
     "history": [
       {
         "version": "v1.77.2",
         "change": "added",
-        "summary": "Optional set block (forces replacement when changed) to designate which contact-list columns hold WhatsApp contacts; at least one of phone_columns, email_columns, or whats_app_columns must be configured."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_outbound_contact_list",
-    "attribute": "whats_app_columns.column_name",
-    "introduced": "v1.77.2",
-    "last_updated": "v1.77.2",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Required column name for a WhatsApp contact field within the whats_app_columns block.",
-    "history": [
-      {
-        "version": "v1.77.2",
-        "change": "added",
-        "summary": "Required column name for a WhatsApp contact field within the whats_app_columns block."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_outbound_contact_list",
-    "attribute": "whats_app_columns.type",
-    "introduced": "v1.77.2",
-    "last_updated": "v1.77.2",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Required WhatsApp column type (for example, work or personal) within the whats_app_columns block.",
-    "history": [
-      {
-        "version": "v1.77.2",
-        "change": "added",
-        "summary": "Required WhatsApp column type (for example, work or personal) within the whats_app_columns block."
+        "summary": "Optional block set for WhatsApp contact columns (column_name, type). Changing this attribute forces replacement. At least one of phone_columns, email_columns, or whats_app_columns must be configured."
       }
     ]
   },
@@ -4578,6 +4555,23 @@
     ]
   },
   {
+    "type": "export_behavior",
+    "resource": "genesyscloud_knowledge_document",
+    "attribute": "labels",
+    "introduced": "Unknown",
+    "last_updated": "v1.76.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Label references in exported configuration now match on the original label name, fixing resolution for labels whose names contain spaces.",
+    "history": [
+      {
+        "version": "v1.76.0",
+        "change": "updated",
+        "summary": "Label references in exported configuration now match on the original label name, fixing resolution for labels whose names contain spaces."
+      }
+    ]
+  },
+  {
     "type": "resource",
     "resource": "genesyscloud_conversations_settings",
     "attribute": "(resource-level behavior)",
@@ -4625,6 +4619,23 @@
         "version": "v1.76.0",
         "change": "updated",
         "summary": "Provider-side validation no longer restricts threshold values to the range 0\u20131000000."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_knowledge_document_variation",
+    "attribute": "knowledge_document_variation.document_version",
+    "introduced": "Unknown",
+    "last_updated": "v1.75.1",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Omitted from generated export configuration.",
+    "history": [
+      {
+        "version": "v1.75.1",
+        "change": "updated",
+        "summary": "Omitted from generated export configuration."
       }
     ]
   },
@@ -5294,23 +5305,6 @@
   {
     "type": "resource",
     "resource": "genesyscloud_knowledge_document_variation",
-    "attribute": "knowledge_document_variation.body.blocks.table.rows.cells.blocks.table",
-    "introduced": "v1.75.1",
-    "last_updated": "v1.75.1",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Nested table content in the cell when nested tables are allowed.",
-    "history": [
-      {
-        "version": "v1.75.1",
-        "change": "added",
-        "summary": "Nested table content in the cell when nested tables are allowed."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_knowledge_document_variation",
     "attribute": "knowledge_document_variation.body.blocks.table.rows.cells.blocks.text",
     "introduced": "v1.75.1",
     "last_updated": "v1.75.1",
@@ -5333,12 +5327,12 @@
     "last_updated": "v1.75.1",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Cell content block type; valid values are Text, Image, Video, OrderedList, UnorderedList, Paragraph, and Table when nested tables are allowed.",
+    "latest_summary": "Cell content block type; valid values are Text, Image, Video, OrderedList, UnorderedList, and Paragraph.",
     "history": [
       {
         "version": "v1.75.1",
         "change": "added",
-        "summary": "Cell content block type; valid values are Text, Image, Video, OrderedList, UnorderedList, Paragraph, and Table when nested tables are allowed."
+        "summary": "Cell content block type; valid values are Text, Image, Video, OrderedList, UnorderedList, and Paragraph."
       }
     ]
   },
@@ -5905,23 +5899,6 @@
   },
   {
     "type": "data_source",
-    "resource": "genesyscloud_speechandtextanalytics_dictionaryfeedback",
-    "attribute": "(resource-level behavior)",
-    "introduced": "v1.75.0",
-    "last_updated": "v1.75.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "New Terraform data source for speech and text analytics dictionary feedback.",
-    "history": [
-      {
-        "version": "v1.75.0",
-        "change": "added",
-        "summary": "New Terraform data source for speech and text analytics dictionary feedback."
-      }
-    ]
-  },
-  {
-    "type": "data_source",
     "resource": "genesyscloud_workforcemanagement_businessunits",
     "attribute": "(resource-level behavior)",
     "introduced": "v1.75.0",
@@ -6315,11 +6292,6 @@
     "latest_summary": "When adding members partially fails, state is synced with successfully added members and apply must be re-run to retry failures.",
     "history": [
       {
-        "version": "v1.74.0",
-        "change": "updated",
-        "summary": "Teams with no members now return an empty list in state instead of null."
-      },
-      {
         "version": "v1.75.0",
         "change": "updated",
         "summary": "When adding members partially fails, state is synced with successfully added members and apply must be re-run to retry failures."
@@ -6370,6 +6342,11 @@
     "status": "Active",
     "latest_summary": "Query parameters excluded from the query string.",
     "history": [
+      {
+        "version": "v1.67.0",
+        "change": "updated",
+        "summary": "Deprecated; has no effect and will be removed in a later version."
+      },
       {
         "version": "v1.75.0",
         "change": "added",
@@ -6439,6 +6416,11 @@
     "latest_summary": "Query parameters used for search tracking.",
     "history": [
       {
+        "version": "v1.67.0",
+        "change": "updated",
+        "summary": "Deprecated; has no effect and will be removed in a later version."
+      },
+      {
         "version": "v1.75.0",
         "change": "added",
         "summary": "Query parameters used for search tracking."
@@ -6455,6 +6437,11 @@
     "status": "Active",
     "latest_summary": "Keep the URL fragment in tracking; defaults to false.",
     "history": [
+      {
+        "version": "v1.67.0",
+        "change": "updated",
+        "summary": "Deprecated; has no effect and will be removed in a later version."
+      },
       {
         "version": "v1.75.0",
         "change": "added",
@@ -6476,6 +6463,125 @@
         "version": "v1.75.0",
         "change": "added",
         "summary": "New Terraform resource for workforce management business units."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_workforcemanagement_businessunits",
+    "attribute": "division_id",
+    "introduced": "Unknown",
+    "last_updated": "v1.75.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Also computed; populated from the API when not set in configuration.",
+    "history": [
+      {
+        "version": "v1.75.0",
+        "change": "updated",
+        "summary": "Also computed; populated from the API when not set in configuration."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_workforcemanagement_businessunits",
+    "attribute": "name",
+    "introduced": "Unknown",
+    "last_updated": "v1.75.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Now required.",
+    "history": [
+      {
+        "version": "v1.75.0",
+        "change": "updated",
+        "summary": "Now required."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_workforcemanagement_businessunits",
+    "attribute": "settings",
+    "introduced": "Unknown",
+    "last_updated": "v1.75.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Now required.",
+    "history": [
+      {
+        "version": "v1.75.0",
+        "change": "updated",
+        "summary": "Now required."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_workforcemanagement_businessunits",
+    "attribute": "settings.metadata",
+    "introduced": "Unknown",
+    "last_updated": "v1.75.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "No longer required in configuration; read-only and populated from the API.",
+    "history": [
+      {
+        "version": "v1.75.0",
+        "change": "updated",
+        "summary": "No longer required in configuration; read-only and populated from the API."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_workforcemanagement_businessunits",
+    "attribute": "settings.metadata.version",
+    "introduced": "v1.75.0",
+    "last_updated": "v1.75.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Version metadata used to prevent conflicts on concurrent edits; populated from the API.",
+    "history": [
+      {
+        "version": "v1.75.0",
+        "change": "added",
+        "summary": "Version metadata used to prevent conflicts on concurrent edits; populated from the API."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_workforcemanagement_businessunits",
+    "attribute": "settings.scheduling",
+    "introduced": "Unknown",
+    "last_updated": "v1.75.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Nested block and its sub-attributes are also computed from the API.",
+    "history": [
+      {
+        "version": "v1.75.0",
+        "change": "updated",
+        "summary": "Nested block and its sub-attributes are also computed from the API."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_workforcemanagement_businessunits",
+    "attribute": "settings.short_term_forecasting",
+    "introduced": "Unknown",
+    "last_updated": "v1.75.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Nested block and default_history_weeks are also computed from the API.",
+    "history": [
+      {
+        "version": "v1.75.0",
+        "change": "updated",
+        "summary": "Nested block and default_history_weeks are also computed from the API."
       }
     ]
   },
@@ -6516,13 +6622,18 @@
   {
     "type": "resource",
     "resource": "genesyscloud_routing_queue",
-    "attribute": "message_media_settings",
+    "attribute": "media_settings_message",
     "introduced": "Unknown",
     "last_updated": "v1.74.0",
     "removed": null,
     "status": "Active",
     "latest_summary": "Uses a message-specific block schema; alerting_timeout_sec must be at least 7, service_level_percentage must be between 0 and 1, and service_level_duration_ms must be at least 1000.",
     "history": [
+      {
+        "version": "v1.60.0",
+        "change": "updated",
+        "summary": "Message media settings are now mapped with message-specific read and write logic, including sub_type_settings and service-level fields."
+      },
       {
         "version": "v1.74.0",
         "change": "updated",
@@ -6533,24 +6644,7 @@
   {
     "type": "resource",
     "resource": "genesyscloud_routing_queue",
-    "attribute": "message_media_settings.enable_inactivity_timeout",
-    "introduced": "v1.74.0",
-    "last_updated": "v1.74.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Enable inactivity timeout for message interactions.",
-    "history": [
-      {
-        "version": "v1.74.0",
-        "change": "added",
-        "summary": "Enable inactivity timeout for message interactions."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_routing_queue",
-    "attribute": "message_media_settings.inactivity_timeout_settings",
+    "attribute": "media_settings_message.inactivity_timeout_settings",
     "introduced": "v1.74.0",
     "last_updated": "v1.74.0",
     "removed": null,
@@ -6567,7 +6661,7 @@
   {
     "type": "resource",
     "resource": "genesyscloud_routing_queue",
-    "attribute": "message_media_settings.inactivity_timeout_settings.action_type",
+    "attribute": "media_settings_message.inactivity_timeout_settings.action_type",
     "introduced": "v1.74.0",
     "last_updated": "v1.74.0",
     "removed": null,
@@ -6584,7 +6678,7 @@
   {
     "type": "resource",
     "resource": "genesyscloud_routing_queue",
-    "attribute": "message_media_settings.inactivity_timeout_settings.flow_id",
+    "attribute": "media_settings_message.inactivity_timeout_settings.flow_id",
     "introduced": "v1.74.0",
     "last_updated": "v1.74.0",
     "removed": null,
@@ -6601,7 +6695,7 @@
   {
     "type": "resource",
     "resource": "genesyscloud_routing_queue",
-    "attribute": "message_media_settings.inactivity_timeout_settings.timeout_seconds",
+    "attribute": "media_settings_message.inactivity_timeout_settings.timeout_seconds",
     "introduced": "v1.74.0",
     "last_updated": "v1.74.0",
     "removed": null,
@@ -6612,23 +6706,6 @@
         "version": "v1.74.0",
         "change": "added",
         "summary": "Timeout in seconds before the inactivity action runs."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_routing_queue",
-    "attribute": "message_media_settings.sub_type_settings",
-    "introduced": "v1.74.0",
-    "last_updated": "v1.74.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Per-subtype auto-answer settings for digital message channels.",
-    "history": [
-      {
-        "version": "v1.74.0",
-        "change": "added",
-        "summary": "Per-subtype auto-answer settings for digital message channels."
       }
     ]
   },
@@ -6657,12 +6734,29 @@
     "last_updated": "v1.74.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "When true, workitems are automatically terminated when they enter this status.",
+    "latest_summary": "When true, workitems are automatically terminated when they enter this status (typically used for Closed category statuses).",
     "history": [
       {
         "version": "v1.74.0",
         "change": "added",
-        "summary": "When true, workitems are automatically terminated when they enter this status."
+        "summary": "When true, workitems are automatically terminated when they enter this status (typically used for Closed category statuses)."
+      }
+    ]
+  },
+  {
+    "type": "state_behavior",
+    "resource": "genesyscloud_team",
+    "attribute": "member_ids",
+    "introduced": "Unknown",
+    "last_updated": "v1.74.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Teams with no members now return an empty list in state instead of null.",
+    "history": [
+      {
+        "version": "v1.74.0",
+        "change": "updated",
+        "summary": "Teams with no members now return an empty list in state instead of null."
       }
     ]
   },
@@ -7086,23 +7180,6 @@
         "version": "v1.73.0",
         "change": "added",
         "summary": "SMS messaging rate (positive integer)."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_outbound_campaignrule",
-    "attribute": "campaign_rule_conditions.condition_type",
-    "introduced": "Unknown",
-    "last_updated": "v1.73.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Accepts additional condition types: campaignRecordsAttempted, campaignContactsMessaged, campaignBusinessSuccess, campaignBusinessNeutral, campaignBusinessFailure, campaignValidAttempts, and campaignRightPartyContacts.",
-    "history": [
-      {
-        "version": "v1.73.0",
-        "change": "updated",
-        "summary": "Accepts additional condition types: campaignRecordsAttempted, campaignContactsMessaged, campaignBusinessSuccess, campaignBusinessNeutral, campaignBusinessFailure, campaignValidAttempts, and campaignRightPartyContacts."
       }
     ]
   },
@@ -9210,53 +9287,6 @@
   {
     "type": "resource",
     "resource": "genesyscloud_integration_action",
-    "attribute": "(resource-level behavior)",
-    "introduced": "Unknown",
-    "last_updated": "v1.68.3",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Retrieves the latest draft version before publishing, reducing version-mismatch errors during apply.",
-    "history": [
-      {
-        "version": "v1.68.2",
-        "change": "updated",
-        "summary": "Function data action categories are created through a draft-and-publish workflow that uploads function_config.file_path, applies function settings, and publishes the draft; file_path is required for these actions."
-      },
-      {
-        "version": "v1.68.2",
-        "change": "updated",
-        "summary": "Function data action categories use the draft workflow on update to upload an updated zip and publish changes."
-      },
-      {
-        "version": "v1.68.2",
-        "change": "updated",
-        "summary": "Read refreshes function_config from the API when the action category is a function data action."
-      },
-      {
-        "version": "v1.68.2",
-        "change": "updated",
-        "summary": "Consistency state validation is no longer performed on refresh, which may surface plan diffs that were previously suppressed."
-      },
-      {
-        "version": "v1.68.3",
-        "change": "updated",
-        "summary": "When updating a function-type integration action, creates or updates the action draft with current integration_id, name, category, secure, contract, and config before uploading the function zip from function_config.file_path."
-      },
-      {
-        "version": "v1.68.3",
-        "change": "updated",
-        "summary": "Retries when the function zip ID is not immediately available after upload, reducing transient apply failures."
-      },
-      {
-        "version": "v1.68.3",
-        "change": "updated",
-        "summary": "Retrieves the latest draft version before publishing, reducing version-mismatch errors during apply."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_integration_action",
     "attribute": "function_config.file_path",
     "introduced": "v1.68.2",
     "last_updated": "v1.68.3",
@@ -9426,6 +9456,33 @@
         "version": "v1.68.2",
         "change": "added",
         "summary": "Optional and computed ID of the uploaded zip file containing function code."
+      }
+    ]
+  },
+  {
+    "type": "data_source",
+    "resource": "genesyscloud_flow",
+    "attribute": "(resource-level behavior)",
+    "introduced": "Unknown",
+    "last_updated": "v1.68.1",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Flow lookup by name retries for up to 30 seconds (previously 5 seconds) before returning an error.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "When multiple flows share the same name, lookup uses type to select the matching flow; if multiple matches exist and none match the requested type, lookup fails with an error."
+      },
+      {
+        "version": "v1.67.0",
+        "change": "updated",
+        "summary": "Flow lookup by name now includes flows with virtual agent enabled in addition to standard flows."
+      },
+      {
+        "version": "v1.68.1",
+        "change": "updated",
+        "summary": "Flow lookup by name retries for up to 30 seconds (previously 5 seconds) before returning an error."
       }
     ]
   },
@@ -9683,6 +9740,11 @@
         "summary": "New resource for managing worktype status transition rules."
       },
       {
+        "version": "v1.64.0",
+        "change": "updated",
+        "summary": "Destroy preserves destination statuses not managed in Terraform state and adjusts default_destination_status_id handling."
+      },
+      {
         "version": "v1.67.0",
         "change": "updated",
         "summary": "Update retries automatically on HTTP 409 conflict responses."
@@ -9703,6 +9765,23 @@
         "version": "v1.66.0",
         "change": "updated",
         "summary": "Returns a retryable error when no extension pool matches the requested start and end numbers."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_architect_flow",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.66.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Bulk export block labels now use {type}_{name}.",
+    "history": [
+      {
+        "version": "v1.66.0",
+        "change": "updated",
+        "summary": "Bulk export block labels now use {type}_{name}."
       }
     ]
   },
@@ -10213,67 +10292,6 @@
     ]
   },
   {
-    "type": "export_behavior",
-    "resource": "genesyscloud_routing_sms_address",
-    "attribute": "general export behavior",
-    "introduced": "Unknown",
-    "last_updated": "v1.64.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Bulk export may use postal_code as the block label when name is absent.",
-    "history": [
-      {
-        "version": "v1.64.0",
-        "change": "updated",
-        "summary": "Bulk export may use postal_code as the block label when name is absent."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
-    "resource": "genesyscloud_user",
-    "attribute": "addresses.phone_numbers.extension_pool_id",
-    "introduced": "Unknown",
-    "last_updated": "v1.64.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Bulk export resolves extension_pool_id to genesyscloud_telephony_providers_edges_extension_pool references.",
-    "history": [
-      {
-        "version": "v1.64.0",
-        "change": "updated",
-        "summary": "Bulk export resolves extension_pool_id to genesyscloud_telephony_providers_edges_extension_pool references."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
-    "resource": "provider export",
-    "attribute": "general export behavior",
-    "introduced": "Unknown",
-    "last_updated": "v1.64.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Bulk export depends_on references to data sources now use the data. prefix.",
-    "history": [
-      {
-        "version": "v1.60.0",
-        "change": "updated",
-        "summary": "Bulk resource export limits concurrent API operations to the configured token_pool_size."
-      },
-      {
-        "version": "v1.61.0",
-        "change": "updated",
-        "summary": "Export no longer substitutes unresolvable attributes on data source blocks with ${var...} placeholders."
-      },
-      {
-        "version": "v1.64.0",
-        "change": "updated",
-        "summary": "Bulk export depends_on references to data sources now use the data. prefix."
-      }
-    ]
-  },
-  {
     "type": "resource",
     "resource": "genesyscloud_externalcontacts_organization",
     "attribute": "primary_contact_id",
@@ -10659,7 +10677,7 @@
   },
   {
     "type": "resource",
-    "resource": "genesyscloud_scripts",
+    "resource": "genesyscloud_script",
     "attribute": "division_id",
     "introduced": "v1.64.0",
     "last_updated": "v1.64.0",
@@ -11379,23 +11397,6 @@
   {
     "type": "data_source",
     "resource": "genesyscloud_flow",
-    "attribute": "(resource-level behavior)",
-    "introduced": "Unknown",
-    "last_updated": "v1.61.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "When multiple flows share the same name, lookup uses type to select the matching flow.",
-    "history": [
-      {
-        "version": "v1.61.0",
-        "change": "updated",
-        "summary": "When multiple flows share the same name, lookup uses type to select the matching flow."
-      }
-    ]
-  },
-  {
-    "type": "data_source",
-    "resource": "genesyscloud_flow",
     "attribute": "type",
     "introduced": "Unknown",
     "last_updated": "v1.61.0",
@@ -11452,12 +11453,12 @@
     "last_updated": "v1.61.0",
     "removed": "v1.61.0",
     "status": "Removed",
-    "latest_summary": "Removed from shared media settings blocks such as media_settings_chat, media_settings_message, and media_settings_email.",
+    "latest_summary": "Removed from non-callback media settings blocks such as media_settings_chat, media_settings_message, and media_settings_email.",
     "history": [
       {
         "version": "v1.61.0",
         "change": "removed",
-        "summary": "Removed from shared media settings blocks such as media_settings_chat, media_settings_message, and media_settings_email."
+        "summary": "Removed from non-callback media settings blocks such as media_settings_chat, media_settings_message, and media_settings_email."
       }
     ]
   },
@@ -11469,12 +11470,12 @@
     "last_updated": "v1.61.0",
     "removed": "v1.61.0",
     "status": "Removed",
-    "latest_summary": "Removed from shared media settings blocks such as media_settings_chat, media_settings_message, and media_settings_email.",
+    "latest_summary": "Removed from non-callback media settings blocks such as media_settings_chat, media_settings_message, and media_settings_email.",
     "history": [
       {
         "version": "v1.61.0",
         "change": "removed",
-        "summary": "Removed from shared media settings blocks such as media_settings_chat, media_settings_message, and media_settings_email."
+        "summary": "Removed from non-callback media settings blocks such as media_settings_chat, media_settings_message, and media_settings_email."
       }
     ]
   },
@@ -11503,12 +11504,12 @@
     "last_updated": "v1.61.0",
     "removed": "v1.61.0",
     "status": "Removed",
-    "latest_summary": "Removed from shared media settings blocks such as media_settings_chat, media_settings_message, and media_settings_email.",
+    "latest_summary": "Removed from non-callback media settings blocks such as media_settings_chat, media_settings_message, and media_settings_email.",
     "history": [
       {
         "version": "v1.61.0",
         "change": "removed",
-        "summary": "Removed from shared media settings blocks such as media_settings_chat, media_settings_message, and media_settings_email."
+        "summary": "Removed from non-callback media settings blocks such as media_settings_chat, media_settings_message, and media_settings_email."
       }
     ]
   },
@@ -11571,12 +11572,12 @@
     "last_updated": "v1.61.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Resource operations no longer require the ENABLE_STANDALONE_OUTBOUND_ROUTES environment variable.",
+    "latest_summary": "Resource operations no longer require the ENABLE_STANDALONE_OUTBOUND_ROUTES environment variable for create, read, update, delete, export, or data source lookup.",
     "history": [
       {
         "version": "v1.61.0",
         "change": "updated",
-        "summary": "Resource operations no longer require the ENABLE_STANDALONE_OUTBOUND_ROUTES environment variable."
+        "summary": "Resource operations no longer require the ENABLE_STANDALONE_OUTBOUND_ROUTES environment variable for create, read, update, delete, export, or data source lookup."
       }
     ]
   },
@@ -11615,6 +11616,91 @@
     ]
   },
   {
+    "type": "export_behavior",
+    "resource": "genesyscloud_integration_credential",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.60.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Exported block labels now use the format Integration-{integration_name} instead of {integration_name}_{credential_name}.",
+    "history": [
+      {
+        "version": "v1.60.0",
+        "change": "updated",
+        "summary": "Exported block labels now use the format Integration-{integration_name} instead of {integration_name}_{credential_name}."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "provider export",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.60.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Bulk resource export limits concurrent API operations to the configured token_pool_size.",
+    "history": [
+      {
+        "version": "v1.60.0",
+        "change": "updated",
+        "summary": "Bulk resource export limits concurrent API operations to the configured token_pool_size."
+      }
+    ]
+  },
+  {
+    "type": "provider_configuration",
+    "resource": "provider",
+    "attribute": "sdk_client_pool_debug",
+    "introduced": "v1.60.0",
+    "last_updated": "v1.60.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional boolean that enables debug logging for token pool operations.",
+    "history": [
+      {
+        "version": "v1.60.0",
+        "change": "added",
+        "summary": "Optional boolean that enables debug logging for token pool operations."
+      }
+    ]
+  },
+  {
+    "type": "provider_configuration",
+    "resource": "provider",
+    "attribute": "token_acquire_timeout",
+    "introduced": "v1.60.0",
+    "last_updated": "v1.60.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional duration for waiting on an available OAuth client from the token pool (default 5m).",
+    "history": [
+      {
+        "version": "v1.60.0",
+        "change": "added",
+        "summary": "Optional duration for waiting on an available OAuth client from the token pool (default 5m)."
+      }
+    ]
+  },
+  {
+    "type": "provider_configuration",
+    "resource": "provider",
+    "attribute": "token_init_timeout",
+    "introduced": "v1.60.0",
+    "last_updated": "v1.60.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional duration for initializing the token pool at provider startup (default 10m).",
+    "history": [
+      {
+        "version": "v1.60.0",
+        "change": "added",
+        "summary": "Optional duration for initializing the token pool at provider startup (default 10m)."
+      }
+    ]
+  },
+  {
     "type": "resource",
     "resource": "genesyscloud_group",
     "attribute": "calls_enabled",
@@ -11628,23 +11714,6 @@
         "version": "v1.60.0",
         "change": "added",
         "summary": "Optional boolean (defaults to true) that controls whether calls can be placed to the group."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_routing_queue",
-    "attribute": "media_settings_message",
-    "introduced": "Unknown",
-    "last_updated": "v1.60.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Message media settings are now mapped with message-specific read and write logic, including sub_type_settings and service-level fields.",
-    "history": [
-      {
-        "version": "v1.60.0",
-        "change": "updated",
-        "summary": "Message media settings are now mapped with message-specific read and write logic, including sub_type_settings and service-level fields."
       }
     ]
   }

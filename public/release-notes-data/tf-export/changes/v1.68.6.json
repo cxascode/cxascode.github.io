@@ -2,6 +2,22 @@
     "version": "v1.68.6",
     "previous": "v1.68.5",
     "resource": "genesyscloud_tf_export",
-    "changes": [],
-    "related_export_changes": []
+    "changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "During export sanitization, attribute values that reference the same resource's own ID are removed from the generated Terraform configuration instead of being written to the export output."
+        }
+    ],
+    "related_export_changes": [
+        {
+            "kind": "export_behavior",
+            "resource": null,
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exported resource blocks may omit attributes whose value matched that resource's own ID, so re-exported .tf files can differ from output produced by v1.68.5 when those self-referential values were previously included."
+        }
+    ]
 }

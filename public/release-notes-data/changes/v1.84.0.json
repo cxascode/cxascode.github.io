@@ -7,7 +7,7 @@
             "resource": null,
             "attribute": "max_concurrent_pages",
             "change": "added",
-            "summary": "New optional setting (default 1, max 75) to fetch list API pages in parallel during large reads and exports."
+            "summary": "New optional setting (default 1) to fetch list API pages in parallel during large reads; set GENESYSCLOUD_MAX_CONCURRENT_PAGES and increase token_pool_size alongside higher values."
         },
         {
             "kind": "provider_configuration",
@@ -73,6 +73,20 @@
             "summary": "Optional name for each callable-time block; populated from the API on read."
         },
         {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_outbound_contact_list",
+            "attribute": "phone_columns.callable_time_column_name",
+            "change": "updated",
+            "summary": "Values are now written to and read from the API using the callable-time column name field, improving round-trip accuracy for callable-time mappings."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_outbound_contact_list",
+            "attribute": "email_columns.contactable_time_column_name",
+            "change": "updated",
+            "summary": "Values are now written to and read from the API using the contactable-time column name field, improving round-trip accuracy for contactable-time mappings."
+        },
+        {
             "kind": "resource_attribute",
             "resource": "genesyscloud_outbound_digitalruleset",
             "attribute": "rules.actions.set_content_template_action_settings.sms_content_template_id",
@@ -91,21 +105,14 @@
             "resource": "genesyscloud_outbound_digitalruleset",
             "attribute": "rules.actions.set_content_template_action_settings.sms_content_template_id",
             "change": "updated",
-            "summary": "Content template IDs are resolved to genesyscloud_responsemanagement_response references during export, and unresolved references can be omitted when export omit-unresolved-refs is enabled."
+            "summary": "Content template IDs are resolved to genesyscloud_responsemanagement_response references during export."
         },
         {
             "kind": "export_behavior",
             "resource": "genesyscloud_outbound_digitalruleset",
             "attribute": "rules.actions.set_content_template_action_settings.email_content_template_id",
             "change": "updated",
-            "summary": "Content template IDs are resolved to genesyscloud_responsemanagement_response references during export, and unresolved references can be omitted when export omit-unresolved-refs is enabled."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_outbound_digitalruleset",
-            "attribute": "contact_list_id",
-            "change": "updated",
-            "summary": "Unresolved contact_list_id references can be omitted during export when export omit-unresolved-refs is enabled."
+            "summary": "Content template IDs are resolved to genesyscloud_responsemanagement_response references during export."
         },
         {
             "kind": "export_behavior",

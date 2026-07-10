@@ -8,14 +8,42 @@
             "resource": "genesyscloud_tf_export",
             "attribute": null,
             "change": "updated",
-            "summary": "Bulk export limits concurrent resource reads to 10 by default, or to the provider max_clients setting when configured."
+            "summary": "Bulk export limits concurrent API reads to 10 by default, or to the provider max_clients setting when that value is configured."
         },
         {
             "kind": "export_behavior",
             "resource": "genesyscloud_tf_export",
             "attribute": null,
             "change": "updated",
-            "summary": "Bulk export writes export_errors.json in the export directory when individual resources fail to export."
+            "summary": "Individual resource read failures no longer stop export for the rest of that resource type; successfully read resources are still included in the generated output."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When one or more resources fail to export, the exporter writes export_errors.json in the export directory with per-resource details (type, label, ID, error message, and whether the failure was a timeout)."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "After export completes, Terraform warnings summarize timeout and non-timeout failure counts and reference export_errors.json; timeout warnings suggest increasing provider token_pool_size and/or token_acquire_timeout."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Timeout failures during per-resource reads are retried up to three times with exponential backoff instead of retrying indefinitely; on the first timeout, the exporter attempts to expand the API client pool before retrying."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Export progress and error messages are emitted through Terraform structured logging when TF_LOG is enabled, rather than standard Go log output."
         }
     ],
     "related_export_changes": []

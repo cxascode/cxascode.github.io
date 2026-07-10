@@ -11,26 +11,48 @@
             "summary": "Exclusions are applied when exporters are loaded, in addition to the final output pass."
         },
         {
-            "kind": "export_behavior",
+            "kind": "resource_behavior",
             "resource": "genesyscloud_tf_export",
-            "attribute": null,
+            "attribute": "exclude_attributes",
             "change": "updated",
-            "summary": "Resource discovery retries transient failures up to three times with backoff."
+            "summary": "Each entry must use resource_type.attribute format; malformed entries fail the export with an error."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "exclude_attributes",
+            "change": "updated",
+            "summary": "When a listed resource type is not included in the export and enable_dependency_resolution is false, the export fails with an error instead of continuing."
         },
         {
             "kind": "export_behavior",
             "resource": "genesyscloud_tf_export",
             "attribute": null,
             "change": "updated",
-            "summary": "Concurrent resource retrieval is limited to reduce API rate-limit errors."
+            "summary": "Resource discovery retries transient API failures up to three times with exponential backoff; permission errors are not retried."
         },
         {
             "kind": "export_behavior",
             "resource": "genesyscloud_tf_export",
             "attribute": null,
             "change": "updated",
-            "summary": "Unresolved GUID references in list attributes can be mapped to data sources via custom resolvers."
+            "summary": "Resource type retrieval during export is now concurrency-limited (default 10), reducing the likelihood of API rate-limit errors."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Resource state refresh during export runs concurrently, improving export performance for large environments."
         }
     ],
-    "related_export_changes": []
+    "related_export_changes": [
+        {
+            "kind": "export_behavior",
+            "resource": null,
+            "attribute": null,
+            "change": "updated",
+            "summary": "Unresolved GUID values in list-type reference attributes can be mapped to ${data.<type>.<label>.id} references when a resource exporter defines a custom data-source resolver for that attribute."
+        }
+    ]
 }

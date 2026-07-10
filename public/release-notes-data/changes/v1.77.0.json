@@ -98,7 +98,7 @@
             "resource": "genesyscloud_flow",
             "attribute": null,
             "change": "updated",
-            "summary": "Flows exported as data sources are skipped during dependency resolution because they are referenced but not managed."
+            "summary": "Exported flow dependency metadata is sorted consistently for deterministic depends_on output."
         },
         {
             "kind": "export_behavior",

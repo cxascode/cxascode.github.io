@@ -350,7 +350,7 @@
             "resource": "genesyscloud_knowledge_document_variation",
             "attribute": "knowledge_document_variation.body.blocks.table.rows.cells.blocks.type",
             "change": "added",
-            "summary": "Cell content block type; valid values are Text, Image, Video, OrderedList, UnorderedList, Paragraph, and Table when nested tables are allowed."
+            "summary": "Cell content block type; valid values are Text, Image, Video, OrderedList, UnorderedList, and Paragraph."
         },
         {
             "kind": "resource_attribute",
@@ -386,13 +386,6 @@
             "attribute": "knowledge_document_variation.body.blocks.table.rows.cells.blocks.paragraph",
             "change": "added",
             "summary": "Paragraph content in the cell."
-        },
-        {
-            "kind": "resource_attribute",
-            "resource": "genesyscloud_knowledge_document_variation",
-            "attribute": "knowledge_document_variation.body.blocks.table.rows.cells.blocks.table",
-            "change": "added",
-            "summary": "Nested table content in the cell when nested tables are allowed."
         },
         {
             "kind": "resource_attribute",
@@ -532,7 +525,14 @@
             "resource": "genesyscloud_knowledge_document_variation",
             "attribute": null,
             "change": "updated",
-            "summary": "Create, update, and read fail when list nesting exceeds 9 levels or table nesting exceeds the allowed depth (1 level by default; up to 3 levels when the ENABLE_NESTED_TABLES environment variable is set for the provider process)."
+            "summary": "Create, update, and read fail when list nesting exceeds 9 levels or when table content exceeds the supported depth (one table level; nested tables inside cells are not supported)."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_knowledge_document_variation",
+            "attribute": "knowledge_document_variation.document_version",
+            "change": "updated",
+            "summary": "Omitted from generated export configuration."
         }
     ]
 }

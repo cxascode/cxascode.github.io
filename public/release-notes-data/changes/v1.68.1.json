@@ -78,6 +78,13 @@
             "attribute": null,
             "change": "updated",
             "summary": "Create updates the latest saved version instead of failing when the API returns HTTP 409 because the latest version is not Production Ready."
+        },
+        {
+            "kind": "data_source_behavior",
+            "resource": "genesyscloud_flow",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Flow lookup by name retries for up to 30 seconds (previously 5 seconds) before returning an error."
         }
     ]
 }

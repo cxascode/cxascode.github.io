@@ -18,13 +18,6 @@
         },
         {
             "kind": "data_source",
-            "resource": "genesyscloud_speechandtextanalytics_dictionaryfeedback",
-            "attribute": null,
-            "change": "added",
-            "summary": "New Terraform data source for speech and text analytics dictionary feedback."
-        },
-        {
-            "kind": "data_source",
             "resource": "genesyscloud_workforcemanagement_businessunits",
             "attribute": null,
             "change": "added",
@@ -204,6 +197,55 @@
             "attribute": "division_id",
             "change": "added",
             "summary": "Division for the extension pool; optional on create/update and populated from the API on read."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_workforcemanagement_businessunits",
+            "attribute": "settings.metadata.version",
+            "change": "added",
+            "summary": "Version metadata used to prevent conflicts on concurrent edits; populated from the API."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_workforcemanagement_businessunits",
+            "attribute": "name",
+            "change": "updated",
+            "summary": "Now required."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_workforcemanagement_businessunits",
+            "attribute": "settings",
+            "change": "updated",
+            "summary": "Now required."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_workforcemanagement_businessunits",
+            "attribute": "division_id",
+            "change": "updated",
+            "summary": "Also computed; populated from the API when not set in configuration."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_workforcemanagement_businessunits",
+            "attribute": "settings.metadata",
+            "change": "updated",
+            "summary": "No longer required in configuration; read-only and populated from the API."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_workforcemanagement_businessunits",
+            "attribute": "settings.short_term_forecasting",
+            "change": "updated",
+            "summary": "Nested block and default_history_weeks are also computed from the API."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_workforcemanagement_businessunits",
+            "attribute": "settings.scheduling",
+            "change": "updated",
+            "summary": "Nested block and its sub-attributes are also computed from the API."
         },
         {
             "kind": "state_behavior",
