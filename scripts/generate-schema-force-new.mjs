@@ -8,7 +8,7 @@ import {
   SCHEMA_FORCE_NEW_DIR,
   resolvePublicDataDir,
 } from "./lib/public-data-paths.mjs";
-import { scanProviderForceNewAttributes } from "./lib/schema-force-new-scan.mjs";
+import { scanProviderSchemaAttributeCatalog } from "./lib/provider-schema-scan.mjs";
 
 const REPO_ROOT = path.resolve(import.meta.dirname, "..");
 const DEFAULT_PROVIDER_ROOT = path.resolve(
@@ -63,9 +63,7 @@ async function listDependencyVersions() {
 }
 
 function buildPayload(providerRoot) {
-  return {
-    forceNewAttributes: scanProviderForceNewAttributes(providerRoot),
-  };
+  return scanProviderSchemaAttributeCatalog(providerRoot);
 }
 
 function countForceNewAttributes(payload) {
