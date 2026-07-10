@@ -7,11 +7,12 @@ import {
   ATTRIBUTE_INDEX_SCOPE_PROVIDER,
   ATTRIBUTE_INDEX_VIEW_ALL,
   ATTRIBUTE_INDEX_VIEW_TYPE_LIFECYCLE,
+  buildProviderAttributeHistoryRows,
   fetchResourceAttributeIndex,
+  fetchTfExportBlockLabelHistory,
   filterIndexEntries,
   ATTRIBUTE_INDEX_TYPE_LIFECYCLE_ADDED,
   ATTRIBUTE_INDEX_TYPE_LIFECYCLE_REMOVED,
-  flattenAttributeIndexEntries,
   flattenAttributeIndexTypeLifecycleRows,
   formatAttributeIndexHistoryRowVersionLabel,
   formatAttributeIndexTypeLifecycleKind,
@@ -21,6 +22,7 @@ import {
   getAttributeIndexTypeLifecycleVersionOptions,
   getIndexVersionOptions,
   isAttributeIndexTypeLifecycleEntry,
+  isExportBlockLabelHistoryRow,
 } from "./resourceAttributeIndex.js";
 import { TF_EXPORT_RESOURCE, toReleaseNotesVersion } from "./releaseNotes.js";
 
@@ -106,7 +108,7 @@ function LifecycleTableBodyRows({
             <button
               type="button"
               className="gcAttributeIndexLifecycle__link"
-              onClick={() => onSelectResource(row.resource)}
+              onClick={() => onSelectResource(row.resource, { version: row.version })}
             >
               <code>{row.resource}</code>
             </button>
@@ -136,6 +138,7 @@ export default function AttributeIndexDialog({
   const dialogRef = useRef(null);
   const [scope, setScope] = useState(ATTRIBUTE_INDEX_SCOPE_PROVIDER);
   const [index, setIndex] = useState([]);
+  const [blockLabelChanges, setBlockLabelChanges] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
@@ -177,11 +180,20 @@ export default function AttributeIndexDialog({
       try {
         setLoading(true);
         setError("");
-        const data = await fetchResourceAttributeIndex(scope);
-        if (!cancelled) setIndex(data);
+        const [data, blockLabels] = await Promise.all([
+          fetchResourceAttributeIndex(scope),
+          scope === ATTRIBUTE_INDEX_SCOPE_PROVIDER
+            ? fetchTfExportBlockLabelHistory()
+            : Promise.resolve([]),
+        ]);
+        if (!cancelled) {
+          setIndex(data);
+          setBlockLabelChanges(blockLabels);
+        }
       } catch (e) {
         if (!cancelled) {
           setIndex([]);
+          setBlockLabelChanges([]);
           setError(String(e));
         }
       } finally {
@@ -194,12 +206,18 @@ export default function AttributeIndexDialog({
     };
   }, [open, scope]);
 
+  const providerBlockLabelChanges =
+    scope === ATTRIBUTE_INDEX_SCOPE_PROVIDER ? blockLabelChanges : null;
+
   const scopedIndex = useMemo(() => {
     if (typeLifecycleOnly) {
       return index.filter(isAttributeIndexTypeLifecycleEntry);
     }
-    return flattenAttributeIndexEntries(index);
-  }, [index, typeLifecycleOnly]);
+    if (providerBlockLabelChanges === null) {
+      return buildProviderAttributeHistoryRows(index, []);
+    }
+    return buildProviderAttributeHistoryRows(index, providerBlockLabelChanges);
+  }, [index, providerBlockLabelChanges, typeLifecycleOnly]);
 
   const lifecycleRows = useMemo(() => {
     if (!typeLifecycleOnly) return [];
@@ -239,8 +257,9 @@ export default function AttributeIndexDialog({
             typeFilter,
             versionFilter,
             typeLifecycleOnly: false,
+            blockLabelChanges: providerBlockLabelChanges,
           }),
-    [index, query, typeFilter, versionFilter, typeLifecycleOnly]
+    [index, query, typeFilter, versionFilter, typeLifecycleOnly, providerBlockLabelChanges]
   );
 
   const hasActiveFilters = typeLifecycleOnly
@@ -263,9 +282,9 @@ export default function AttributeIndexDialog({
     !error && !loading && typeLifecycleOnly && visibleLifecycleRows.length > 0;
 
   const handleClose = useCallback(
-    (nextResourceType) => {
+    (nextResourceType, options = {}) => {
       setTypeFilter("");
-      onClose?.(nextResourceType);
+      onClose?.(nextResourceType, options);
     },
     [onClose]
   );
@@ -277,12 +296,12 @@ export default function AttributeIndexDialog({
     setViewMode(ATTRIBUTE_INDEX_VIEW_ALL);
   };
 
-  const handleSelectResource = (resourceType) => {
+  const handleSelectResource = (resourceType, { version } = {}) => {
     if (!resourceType) return;
     if (knownTypes instanceof Set && !knownTypes.has(resourceType)) return;
 
-    onSelectResource?.(resourceType);
-    handleClose(resourceType);
+    onSelectResource?.(resourceType, { version });
+    handleClose(resourceType, { version });
   };
 
   return createPortal(
@@ -439,17 +458,18 @@ export default function AttributeIndexDialog({
                     (!(knownTypes instanceof Set) || knownTypes.has(row.resource));
                   const versionEventLabel = formatAttributeIndexHistoryRowVersionLabel(row);
                   const summary = (row.summary || "").trim();
+                  const isBlockLabelRow = isExportBlockLabelHistoryRow(row);
 
                   return (
                     <button
                       key={attributeIndexHistoryRowKey(row)}
                       type="button"
-                      className={`gcAttributeIndex__row ${canSelect ? "" : "isStatic"}`}
-                      onClick={() => handleSelectResource(row.resource)}
+                      className={`gcAttributeIndex__row ${canSelect ? "" : "isStatic"} ${isBlockLabelRow ? "isExportBlockLabel" : ""}`}
+                      onClick={() => handleSelectResource(row.resource, { version: row.version })}
                       disabled={!canSelect}
                       title={
                         canSelect
-                          ? `Open ${row.resource} in the explorer`
+                          ? `Open ${row.resource} in the explorer${row.version ? ` at ${toReleaseNotesVersion(row.version)}` : ""}`
                           : isExportScope
                             ? `${TF_EXPORT_RESOURCE} attribute history`
                             : `${row.resource} is not in the dependency explorer`
@@ -460,7 +480,9 @@ export default function AttributeIndexDialog({
                         <code className="gcAttributeIndex__attribute">{row.attribute}</code>
                       </div>
                       <div className="gcAttributeIndex__rowMeta">
-                        <span className="gcAttributeHistory__type">
+                        <span
+                          className={`gcAttributeHistory__type ${isBlockLabelRow ? "gcAttributeHistory__type--exportBlockLabel" : ""}`}
+                        >
                           {formatAttributeIndexType(row.type)}
                         </span>
                         <StatusBadge status={row.status} />
@@ -506,6 +528,7 @@ export default function AttributeIndexDialog({
                     onClick={() => {
                       if (option.id === ATTRIBUTE_INDEX_VIEW_TYPE_LIFECYCLE) {
                         onQueryChange?.("");
+                        setTypeFilter("");
                       }
                       setViewMode(option.id);
                     }}

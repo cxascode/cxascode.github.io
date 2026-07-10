@@ -5,13 +5,21 @@ import {
   TF_EXPORT_DATA_PATH,
   toReleaseNotesVersion,
 } from "./releaseNotes.js";
+import {
+  ATTRIBUTE_INDEX_TYPE_EXPORT_BLOCK_LABEL,
+  mergeExportBlockLabelHistoryRows,
+} from "../scripts/lib/tf-export-block-label-history.mjs";
 
 const BASE = import.meta.env.BASE_URL;
+
+export const TF_EXPORT_BLOCK_LABEL_HISTORY_URL = `${BASE}tf-export-block-label-history.json`;
+
+export { ATTRIBUTE_INDEX_TYPE_EXPORT_BLOCK_LABEL };
 
 export const ATTRIBUTE_INDEX_MIN_VERSION = "v1.60.0";
 
 export const ATTRIBUTE_INDEX_DESCRIPTION =
-  `This list is generated from the release notes available on this site. Introduced is omitted when the item existed before ${ATTRIBUTE_INDEX_MIN_VERSION}.`;
+  `This list is generated from the release notes available on this site. Export resource name rows reflect include_filter_resources naming patterns from generated export template data and from export release notes when template diffs do not capture the change. Introduced is omitted when the item existed before ${ATTRIBUTE_INDEX_MIN_VERSION}.`;
 
 export const ATTRIBUTE_INDEX_SCOPE_PROVIDER = RELEASE_NOTES_SCOPE_PROVIDER;
 export const ATTRIBUTE_INDEX_SCOPE_EXPORT = RELEASE_NOTES_SCOPE_EXPORT;
@@ -56,6 +64,26 @@ export const RESOURCE_ATTRIBUTE_INDEX_MD_URL = attributeIndexMarkdownUrl(
 );
 
 const indexCache = new Map();
+let blockLabelHistoryCache = null;
+
+export async function fetchTfExportBlockLabelHistory() {
+  if (blockLabelHistoryCache) return blockLabelHistoryCache;
+
+  try {
+    const res = await fetch(TF_EXPORT_BLOCK_LABEL_HISTORY_URL, { cache: "no-store" });
+    if (!res.ok) {
+      blockLabelHistoryCache = [];
+      return blockLabelHistoryCache;
+    }
+
+    const json = await res.json();
+    blockLabelHistoryCache = Array.isArray(json?.changes) ? json.changes : [];
+    return blockLabelHistoryCache;
+  } catch {
+    blockLabelHistoryCache = [];
+    return blockLabelHistoryCache;
+  }
+}
 
 export async function fetchResourceAttributeIndex(scope = ATTRIBUTE_INDEX_SCOPE_PROVIDER) {
   if (indexCache.has(scope)) return indexCache.get(scope);
@@ -157,6 +185,12 @@ export function getIndexVersionOptions(index) {
   const versions = new Set();
 
   for (const entry of index) {
+    const rowVersion = (entry?.version || "").trim();
+    if (rowVersion) {
+      versions.add(rowVersion);
+      continue;
+    }
+
     if (Array.isArray(entry.history)) {
       for (const item of entry.history) {
         const version = (item?.version || "").trim();
@@ -319,6 +353,13 @@ export function flattenAttributeIndexEntries(entries) {
   return entries.flatMap(flattenEntryHistory).sort(compareAttributeIndexHistoryRows);
 }
 
+export function buildProviderAttributeHistoryRows(entries, blockLabelChanges = []) {
+  return mergeExportBlockLabelHistoryRows(
+    flattenAttributeIndexEntries(entries),
+    blockLabelChanges
+  ).sort(compareAttributeIndexHistoryRows);
+}
+
 function historyRowMatchesVersionFilter(row, versionFilter) {
   if (!versionFilter) return true;
 
@@ -351,6 +392,8 @@ export function filterAttributeIndexHistoryRows(
       row?.summary,
       row?.version,
       row?.change,
+      row?.placeholderBefore,
+      row?.placeholderAfter,
     ]
       .filter(Boolean)
       .join(" ")
@@ -370,6 +413,7 @@ export function filterIndexEntries(
     statusFilter = "",
     versionFilter = "",
     typeLifecycleOnly = false,
+    blockLabelChanges = null,
   } = {}
 ) {
   if (!Array.isArray(index)) return [];
@@ -408,7 +452,12 @@ export function filterIndexEntries(
     return sortAttributeIndexEntries(filtered);
   }
 
-  return filterAttributeIndexHistoryRows(flattenAttributeIndexEntries(index), {
+  const rows =
+    blockLabelChanges === null
+      ? flattenAttributeIndexEntries(index)
+      : buildProviderAttributeHistoryRows(index, blockLabelChanges);
+
+  return filterAttributeIndexHistoryRows(rows, {
     query,
     typeFilter,
     statusFilter,
@@ -485,8 +534,15 @@ export function formatAttributeIndexType(type) {
   if (type === "data_source") return "Data source";
   if (type === "resource") return "Resource";
   if (type === "export_behavior") return "Export behavior";
+  if (type === "import_behavior") return "Import behavior";
+  if (type === "state_behavior") return "State behavior";
+  if (type === ATTRIBUTE_INDEX_TYPE_EXPORT_BLOCK_LABEL) return "Export resource name";
   if (type === "provider_configuration") return "Provider configuration";
   return type || "Unknown";
+}
+
+export function isExportBlockLabelHistoryRow(row) {
+  return row?.type === ATTRIBUTE_INDEX_TYPE_EXPORT_BLOCK_LABEL;
 }
 
 export function formatAttributeIndexIntroducedLabel(value) {

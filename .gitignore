@@ -31,6 +31,7 @@ public/spreadsheet-templates/
 public/lab-packages/
 public/tf-export-resource-names/
 public/tf-export-singletons/
+public/tf-export-block-label-history.json
 .cache-meta/
 .cache/provider-source/
 .cache/lab-package-staging/

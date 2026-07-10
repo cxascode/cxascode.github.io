@@ -1810,6 +1810,16 @@ button.gcDocsPill {
   opacity: 0.92;
 }
 
+.gcAttributeIndex__row.isExportBlockLabel {
+  border-color: rgba(0, 102, 204, 0.35);
+  background: rgba(0, 102, 204, 0.04);
+}
+
+.gcAttributeHistory__type--exportBlockLabel {
+  color: var(--gc-blue);
+  font-weight: 700;
+}
+
 .gcAttributeIndex__rowMain {
   display: flex;
   flex-wrap: wrap;

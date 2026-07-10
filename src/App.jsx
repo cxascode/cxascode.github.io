@@ -103,6 +103,18 @@ function acceptVersionFromUrl(versionFromUrl, availableVersions, dialog = "") {
   return dialog === DIALOG_ATTRIBUTE_INDEX;
 }
 
+function normalizeVersionFromHistoryEntry(value) {
+  return (value || "").trim().replace(/^v/i, "");
+}
+
+function resolveSelectableVersionFromHistory(value, availableVersions) {
+  const bare = normalizeVersionFromHistoryEntry(value);
+  if (!bare || !Array.isArray(availableVersions) || !availableVersions.includes(bare)) {
+    return "";
+  }
+  return bare;
+}
+
 const TF_EXPORT_NAMES_LATEST_URL = latestJsonUrl(TF_EXPORT_RESOURCE_NAMES_DIR);
 const TF_EXPORT_NAMES_VERSION_URL = (v) => versionedJsonUrl(TF_EXPORT_RESOURCE_NAMES_DIR, v);
 const TF_EXPORT_SINGLETONS_LATEST_URL = latestJsonUrl(TF_EXPORT_SINGLETONS_DIR);
@@ -970,7 +982,7 @@ export default function App() {
   }, []);
 
   const closeDialogs = useCallback(
-    (nextResourceType) => {
+    (nextResourceType, { version: entryVersion } = {}) => {
       setOrderDialogOpen(false);
       setReleaseNotesDialogOpen(false);
       setSiteUpdatesDialogOpen(false);
@@ -985,9 +997,19 @@ export default function App() {
           ? nextResourceType.trim()
           : activeType;
 
-      replaceDialogInUrl("", resource, selectedVersionRef.current);
+      const resolvedVersion =
+        resolveSelectableVersionFromHistory(entryVersion, availableVersions) ||
+        selectedVersionRef.current;
+
+      if (resolvedVersion !== selectedVersionRef.current) {
+        skipNextUrlSyncRef.current = true;
+        setSelectedVersion(resolvedVersion);
+        selectedVersionRef.current = resolvedVersion;
+      }
+
+      replaceDialogInUrl("", resource, resolvedVersion);
     },
-    [activeType]
+    [activeType, availableVersions]
   );
 
   useEffect(() => {
