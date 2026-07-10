@@ -91,6 +91,7 @@ jobs:
             public/lab-packages
             public/tf-export-resource-names
             public/tf-export-singletons
+            public/tf-export-block-label-history.json
             public/gui-menu-paths.json
             .cache-meta
             .cache/provider-source

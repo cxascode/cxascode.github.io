@@ -8,6 +8,7 @@ import {
   TF_EXPORT_RESOURCE_NAMES_DIR,
   resolvePublicDataDir,
 } from "./lib/public-data-paths.mjs";
+import { generateTfExportBlockLabelHistory } from "./generate-tf-export-block-label-history.mjs";
 import { scanProviderBlockLabels } from "./lib/tf-export-block-label.mjs";
 
 const REPO_ROOT = path.resolve(import.meta.dirname, "..");
@@ -142,6 +143,11 @@ async function generateAll() {
   console.log(
     `tf-export-resource-names index updated (${versions.length} versions, latest ${latest})`
   );
+
+  const blockLabelHistory = await generateTfExportBlockLabelHistory();
+  console.log(
+    `tf-export block label history updated (${blockLabelHistory.changeCount} placeholder changes).`
+  );
 }
 
 async function main() {
@@ -203,6 +209,7 @@ async function main() {
     const versions = await listDependencyVersions();
     if (versions.length > 0) {
       await writeIndexAndLatest(versions);
+      await generateTfExportBlockLabelHistory();
     }
     return;
   }
