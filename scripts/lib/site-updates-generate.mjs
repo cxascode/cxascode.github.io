@@ -17,6 +17,9 @@ const DATA_ONLY_PATHS = [
   /^public\/tf-export-singletons\//,
   /^public\/spreadsheet-templates\//,
   /^public\/lab-packages\//,
+  /^scripts\/generate-spreadsheet-template\.mjs$/,
+  /^scripts\/lib\/(lab-export-scope|priority-group-keywords)\.mjs$/,
+  /^src\/artifactDownloads\.js$/,
   /^public\/overrides\.json$/,
   /^public\/provider-env-vars\.json$/,
   /^public\/sitemap\.(xml|txt)$/,
@@ -45,7 +48,7 @@ const SITE_UPDATES_INFRA_PATHS = [
 
 /** Commit subjects that describe hidden or permalink-only features. */
 const HIDDEN_FEATURE_SUBJECT_RE =
-  /\b(lab files?|lab package|cx as code lab|spreadsheet|practice zip|\/labfiles|\/spreadsheet|\/roles|role template|site updates?|site notes?|env vars?|environment variables?)\b/i;
+  /\b(lab files?|lab package|cx as code lab|spreadsheet|repo recommendations?|practice zip|\/labfiles|\/spreadsheet|\/roles|role template|site updates?|site notes?|env vars?|environment variables?)\b/i;
 
 /** Repo, lab-package, or build-pipeline changes — not explorer UI for end users. */
 const INTERNAL_SITE_UPDATE_SUBJECT_RE =
@@ -435,7 +438,6 @@ export async function generateSiteUpdates(options = parseArgs()) {
   const files = changedFiles(base, head);
   const visibleFiles = files.filter(isUserVisiblePath);
   const subjects = commitSubjects(base, head);
-  const hints = featureHints(visibleFiles);
 
   if (!options.force && visibleFiles.length === 0) {
     console.log(
@@ -444,7 +446,7 @@ export async function generateSiteUpdates(options = parseArgs()) {
     return { wrote: false, reason: "no-user-visible", base, head, files };
   }
 
-  if (!options.force && subjects.length === 0 && hints.length === 0) {
+  if (!options.force && subjects.length === 0) {
     console.log("Site updates: only data or chore changes detected; skipping.");
     return { wrote: false, reason: "no-notable-changes", base, head, files };
   }
