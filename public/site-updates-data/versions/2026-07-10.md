@@ -4,3 +4,7 @@
 ### What's new
 
 - Added export resource name type to attribute history
+
+### What's new
+
+- Adding forcenew attributes to the site
