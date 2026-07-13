@@ -8,6 +8,8 @@
     "bootstrap-local-dev": "node scripts/bootstrap-local-dev.mjs",
     "download-provider-versions": "scripts/download-provider-versions.sh",
     "generate-spreadsheet-template": "node scripts/generate-spreadsheet-template.mjs",
+    "build-spreadsheet-templates": "node scripts/build-spreadsheet-templates.mjs",
+    "generate-supported-resources-spreadsheet": "node scripts/generate-supported-resources-spreadsheet.mjs",
     "generate-lab-package": "node scripts/generate-lab-package.mjs",
     "generate-tf-export-resource-names": "node scripts/generate-tf-export-resource-names.mjs",
     "generate-tf-export-block-label-history": "node scripts/generate-tf-export-block-label-history.mjs",

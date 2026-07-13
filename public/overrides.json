@@ -85,6 +85,9 @@
     "genesyscloud_bcp_tf_exporter",
     "genesyscloud_tf_export"
   ],
+  "hiddenSupportedResourcesMenuLinks": [
+    "#/admin/wfm/historicalImportV2"
+  ],
   "deprecatedResourceTypes": [
     "genesyscloud_journey_outcome",
     "genesyscloud_journey_outcome_predictor",

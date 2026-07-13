@@ -148,6 +148,7 @@ if [[ "${RUN_GENERATORS}" == "true" ]]; then
   node scripts/verify-tf-export-env-vars.mjs
   node scripts/write-merged-dependency-tree.mjs
   node scripts/generate-spreadsheet-template.mjs --latest="${latest}"
+  node scripts/generate-supported-resources-spreadsheet.mjs --latest="${latest}"
   node scripts/generate-lab-package.mjs --latest="${latest}"
 fi
 

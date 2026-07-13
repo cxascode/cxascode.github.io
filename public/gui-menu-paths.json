@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-10T21:37:17.878Z",
+  "generatedAt": "2026-07-13T16:53:37.703Z",
   "permissionsSource": "public/resource-permissions-json/1.84.2.json",
   "permissionsUnion": {
     "fromVersion": "1.76.0",
@@ -8,145 +8,2345 @@
     "resourceTypeCount": 144,
     "minVersion": "1.76.0"
   },
-  "guiMenuPaths": {
-    "genesyscloud_ai_studio_summary_setting": "Orchestration > AI Studio > Summaries",
-    "genesyscloud_architect_datatable": "Orchestration > Orchestration Assets > Data Tables",
-    "genesyscloud_architect_datatable_row": "Orchestration > Orchestration Assets > Data Tables",
-    "genesyscloud_architect_emergencygroup": "Orchestration > Routing > Emergency Groups",
-    "genesyscloud_architect_grammar": "Orchestration > Architect > Grammars",
-    "genesyscloud_architect_grammar_language": "Orchestration > Architect > Grammars",
-    "genesyscloud_architect_ivr": "Orchestration > Routing > Call Routing",
-    "genesyscloud_architect_schedulegroups": "Orchestration > Routing > Operating Schedule Groups",
-    "genesyscloud_architect_schedules": "Orchestration > Routing > Operating Schedules",
-    "genesyscloud_architect_user_prompt": "Orchestration > Architect",
-    "genesyscloud_auth_division": "User Management > Divisions",
-    "genesyscloud_auth_role": "User Management > Roles and Permissions",
-    "genesyscloud_business_rules_decision_table": "Orchestration > Rule-Based Decisions > Decision Tables",
-    "genesyscloud_business_rules_schema": "Orchestration > Rule-Based Decisions > Rules Schemas",
-    "genesyscloud_case_management_caseplan": "Orchestration > Work Automation > Caseplans",
-    "genesyscloud_case_management_caseplan_create_version": "Orchestration > Work Automation > Caseplans",
-    "genesyscloud_case_management_caseplan_publish": "Orchestration > Work Automation > Caseplans",
-    "genesyscloud_conversations_messaging_integrations_apple": "Digital and Telephony > Message > Platform Integrations",
-    "genesyscloud_conversations_messaging_integrations_instagram": "Digital and Telephony > Message > Platform Integrations",
-    "genesyscloud_conversations_messaging_integrations_open": "Digital and Telephony > Message > Platform Integrations",
-    "genesyscloud_conversations_messaging_integrations_whatsapp": "Digital and Telephony > Message > Platform Integrations",
-    "genesyscloud_conversations_messaging_settings": "Digital and Telephony > Message > Platform Configurations",
-    "genesyscloud_conversations_messaging_settings_default": "Digital and Telephony > Message > Platform Configurations",
-    "genesyscloud_conversations_messaging_supportedcontent": "Digital and Telephony > Message > Supported Content Profiles",
-    "genesyscloud_conversations_messaging_supportedcontent_default": "Digital and Telephony > Message > Supported Content Profiles",
-    "genesyscloud_conversations_settings": "Account > Organization Settings",
-    "genesyscloud_customer_intent": "Orchestration > Enrichments > Customer Intents",
-    "genesyscloud_employeeperformance_externalmetrics_definitions": "Performance Management > Employee Engagement > External Metric Definitions",
-    "genesyscloud_externalcontacts_contact": "Contacts > External Contacts and Organizations",
-    "genesyscloud_externalcontacts_external_source": "Contacts > External Sources",
-    "genesyscloud_externalcontacts_organization": "Contacts > External Contacts and Organizations",
-    "genesyscloud_flow": "Orchestration > Architect",
-    "genesyscloud_flow_loglevel": "Orchestration > Architect",
-    "genesyscloud_flow_milestone": "Orchestration > Orchestration Assets > Flow Milestones",
-    "genesyscloud_flow_outcome": "Orchestration > Orchestration Assets > Flow Outcomes",
-    "genesyscloud_group": "User Management > Groups",
-    "genesyscloud_group_roles": "User Management > Groups",
-    "genesyscloud_guide": "Orchestration > AI Studio > Guides",
-    "genesyscloud_guide_version": "Orchestration > AI Studio > Guides",
-    "genesyscloud_idp_adfs": "IT and Integrations > Single Sign-on",
-    "genesyscloud_idp_generic": "IT and Integrations > Single Sign-on",
-    "genesyscloud_idp_gsuite": "IT and Integrations > Single Sign-on",
-    "genesyscloud_idp_okta": "IT and Integrations > Single Sign-on",
-    "genesyscloud_idp_onelogin": "IT and Integrations > Single Sign-on",
-    "genesyscloud_idp_ping": "IT and Integrations > Single Sign-on",
-    "genesyscloud_idp_salesforce": "IT and Integrations > Single Sign-on",
-    "genesyscloud_integration": "IT and Integrations > Integrations",
-    "genesyscloud_integration_action": "IT and Integrations > Data Actions",
-    "genesyscloud_integration_action_draft": "IT and Integrations > Data Actions",
-    "genesyscloud_integration_credential": "IT and Integrations > Integrations",
-    "genesyscloud_integration_custom_auth_action": "IT and Integrations > Data Actions",
-    "genesyscloud_integration_facebook": "Digital and Telephony > Message > Platform Integrations",
-    "genesyscloud_intent_category": "Orchestration > Enrichments > Customer Intents",
-    "genesyscloud_intents_categories": "Orchestration > Enrichments > Customer Intents",
-    "genesyscloud_intents_customerintents": "Orchestration > Enrichments > Customer Intents",
-    "genesyscloud_journey_action_map": "Orchestration > Predictive Engagement > Action Maps",
-    "genesyscloud_journey_action_template": "Orchestration > Predictive Engagement > Action Library",
-    "genesyscloud_journey_outcome": "Orchestration > Enrichments > Outcomes",
-    "genesyscloud_journey_outcome_predictor": "Orchestration > Enrichments > Outcomes",
-    "genesyscloud_journey_segment": "Orchestration > Enrichments > Customer Segments",
-    "genesyscloud_journey_view_schedule": "Journey Management",
-    "genesyscloud_journey_views": "Journey Management",
-    "genesyscloud_knowledge_category": "Knowledge > Categories and Labels",
-    "genesyscloud_knowledge_document": "Knowledge > Articles",
-    "genesyscloud_knowledge_document_variation": "Knowledge > Articles",
-    "genesyscloud_knowledge_knowledgebase": "Knowledge > Articles",
-    "genesyscloud_knowledge_label": "Knowledge > Categories and Labels",
-    "genesyscloud_learning_modules": "Performance Management > Employee Engagement > Development and Feedback",
-    "genesyscloud_location": "User Management > Locations",
-    "genesyscloud_oauth_client": "IT and Integrations > OAuth",
-    "genesyscloud_organization_authentication_settings": "Account > Organization Settings",
-    "genesyscloud_organization_presence_definition": "Account > Organization Settings",
-    "genesyscloud_orgauthorization_pairing": "User Management > Authorized Organizations",
-    "genesyscloud_outbound_attempt_limit": "Digital and Telephony > Outbound > List Management",
-    "genesyscloud_outbound_callabletimeset": "Digital and Telephony > Outbound > Contactable Time Sets",
-    "genesyscloud_outbound_callanalysisresponseset": "Digital and Telephony > Outbound > Call Analysis Responses",
-    "genesyscloud_outbound_campaign": "Digital and Telephony > Outbound > Campaign Management",
-    "genesyscloud_outbound_campaignrule": "Digital and Telephony > Outbound > Rule Management",
-    "genesyscloud_outbound_contact_list": "Digital and Telephony > Outbound > List Management",
-    "genesyscloud_outbound_contact_list_contact": "Digital and Telephony > Outbound > List Management",
-    "genesyscloud_outbound_contact_list_template": "Digital and Telephony > Outbound > List Management",
-    "genesyscloud_outbound_contactlistfilter": "Digital and Telephony > Outbound > List Management",
-    "genesyscloud_outbound_digitalruleset": "Digital and Telephony > Outbound > Rule Management",
-    "genesyscloud_outbound_dnclist": "Digital and Telephony > Outbound > List Management",
-    "genesyscloud_outbound_filespecificationtemplate": "Digital and Telephony > Outbound > List Management",
-    "genesyscloud_outbound_messagingcampaign": "Digital and Telephony > Outbound > Campaign Management",
-    "genesyscloud_outbound_ruleset": "Digital and Telephony > Outbound > Rule Management",
-    "genesyscloud_outbound_sequence": "Digital and Telephony > Outbound > Campaign Management",
-    "genesyscloud_outbound_settings": "Digital and Telephony > Outbound > Outbound Settings",
-    "genesyscloud_outbound_wrapupcodemappings": "Digital and Telephony > Outbound > Wrap-up Code Mappings",
-    "genesyscloud_processautomation_trigger": "Orchestration > Triggers",
-    "genesyscloud_quality_forms_evaluation": "Conversation Intelligence > Quality Management > Evaluation Forms",
-    "genesyscloud_quality_forms_survey": "Conversation Intelligence > Quality Management > Customer Surveys",
-    "genesyscloud_recording_media_retention_policy": "Conversation Intelligence > Recording and Policies > Policies",
-    "genesyscloud_responsemanagement_library": "Digital and Telephony > Interaction Assets > Canned Responses",
-    "genesyscloud_responsemanagement_response": "Digital and Telephony > Interaction Assets > Canned Responses",
-    "genesyscloud_responsemanagement_responseasset": "Digital and Telephony > Interaction Assets > Response Assets",
-    "genesyscloud_routing_email_domain": "Digital and Telephony > Email",
-    "genesyscloud_routing_email_route": "Digital and Telephony > Email",
-    "genesyscloud_routing_language": "User Management > ACD Skills and Languages",
-    "genesyscloud_routing_queue": "User Management > Queues",
-    "genesyscloud_routing_queue_conditional_group_activation": "User Management > Queues",
-    "genesyscloud_routing_queue_conditional_group_routing": "User Management > Queues",
-    "genesyscloud_routing_queue_outbound_email_address": "User Management > Queues",
-    "genesyscloud_routing_settings": "Conversation Intelligence > Speech and Text Analytics > Speech and Text Configuration",
-    "genesyscloud_routing_skill": "User Management > ACD Skills and Languages",
-    "genesyscloud_routing_skill_group": "User Management > Groups",
-    "genesyscloud_routing_sms_address": "Digital and Telephony > Message > SMS Number Inventory",
-    "genesyscloud_routing_utilization": "Digital and Telephony > Interaction Assets > Utilization",
-    "genesyscloud_routing_utilization_label": "Digital and Telephony > Interaction Assets > Utilization",
-    "genesyscloud_routing_wrapupcode": "Digital and Telephony > Interaction Assets > Wrap-up Codes",
-    "genesyscloud_script": "Digital and Telephony > Interaction Assets > Scripts",
-    "genesyscloud_speechandtextanalytics_dictionaryfeedback": "Conversation Intelligence > Speech and Text Analytics > Dictionary Management",
-    "genesyscloud_speechandtextanalytics_topic": "Conversation Intelligence > Speech and Text Analytics > Topics",
-    "genesyscloud_task_management_workbin": "Orchestration > Work Automation > Workbins",
-    "genesyscloud_task_management_workitem": "Workspace > Task List",
-    "genesyscloud_task_management_workitem_schema": "Orchestration > Work Automation > Custom Attributes",
-    "genesyscloud_task_management_worktype": "Orchestration > Work Automation > Worktypes",
-    "genesyscloud_task_management_worktype_flow_datebased_rule": "Orchestration > Work Automation > Worktypes",
-    "genesyscloud_task_management_worktype_flow_onattributechange_rule": "Orchestration > Work Automation > Worktypes",
-    "genesyscloud_task_management_worktype_flow_oncreate_rule": "Orchestration > Work Automation > Worktypes",
-    "genesyscloud_task_management_worktype_status": "Orchestration > Work Automation > Worktypes",
-    "genesyscloud_task_management_worktype_status_transition": "Orchestration > Work Automation > Worktypes",
-    "genesyscloud_team": "User Management > Work Teams",
-    "genesyscloud_telephony_providers_edges_did_pool": "Digital and Telephony > Telephony > DID Numbers",
-    "genesyscloud_telephony_providers_edges_edge_group": "Digital and Telephony > Telephony > Edge Groups",
-    "genesyscloud_telephony_providers_edges_extension_pool": "Digital and Telephony > Telephony > Extensions",
-    "genesyscloud_telephony_providers_edges_phone": "Digital and Telephony > Telephony > Phone Management",
-    "genesyscloud_telephony_providers_edges_phonebasesettings": "Digital and Telephony > Telephony > Phone Management",
-    "genesyscloud_telephony_providers_edges_site": "Digital and Telephony > Telephony > Sites",
-    "genesyscloud_telephony_providers_edges_site_outbound_route": "Digital and Telephony > Telephony > Sites",
-    "genesyscloud_telephony_providers_edges_trunk": "Digital and Telephony > Telephony > Trunks",
-    "genesyscloud_telephony_providers_edges_trunkbasesettings": "Digital and Telephony > Telephony > Trunks",
-    "genesyscloud_user": "User Management > Users",
-    "genesyscloud_user_roles": "User Management > Users",
-    "genesyscloud_users_rules": "User Management > Users Rules",
-    "genesyscloud_webdeployments_configuration": "Digital and Telephony > Message > Messenger Configurations",
-    "genesyscloud_webdeployments_deployment": "Digital and Telephony > Message > Messenger Deployments",
-    "genesyscloud_workforcemanagement_businessunits": "Workforce Management > Workforce Management Configuration > Business Units"
-  }
+  "menuCatalog": [
+    {
+      "path": "Journey Management",
+      "link": "/journey-management",
+      "titleKey": "navBar.commandView.journeyManagement.title",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=journey:views:view",
+      "destinationKind": "app-config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_journey_view_schedule",
+        "genesyscloud_journey_views"
+      ]
+    },
+    {
+      "path": "Workforce Management > Forecasting > Main Forecast",
+      "link": "#/admin/wfm/main-forecast",
+      "titleKey": "navBar.commandView.wfm.subMenu.forecasting.subMenu.mainForecast",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:mainForecast:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Forecasting > Forecasts",
+      "link": "#/admin/wfm/forecasting/forecasts",
+      "titleKey": "navBar.commandView.wfm.subMenu.forecasting.subMenu.forecasts",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:shortTermForecast:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Capacity Planning > Staffing Requirements",
+      "link": "#/admin/wfm/capacity-planning/staffing-requirements",
+      "titleKey": "navBar.commandView.wfm.subMenu.capacityPlanning.subMenu.staffingRequirements",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:longTermStaffing:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Capacity Planning > Capacity Plans",
+      "link": "#/admin/wfm/capacity-planning/capacity-plans",
+      "titleKey": "navBar.commandView.wfm.subMenu.capacityPlanning.subMenu.capacityPlans",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:capacityPlan:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Scheduling > Schedules",
+      "link": "#/admin/wfm/schedules",
+      "titleKey": "navBar.commandView.wfm.subMenu.scheduling.subMenu.schedules",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:publishedSchedule:view | policy=wfm:schedule:administer | policy=wfm:schedule:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Scheduling > Activity Plans",
+      "link": "#/admin/wfm/activityplans",
+      "titleKey": "navBar.commandView.wfm.subMenu.scheduling.subMenu.activityPlans",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:activityPlan:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Scheduling > Shift Trades",
+      "link": "#/admin/wfm/shiftTrades",
+      "titleKey": "navBar.commandView.wfm.subMenu.scheduling.subMenu.shiftTrades",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:shiftTradeRequest:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Scheduling > Opportunities",
+      "link": "#/admin/wfm/opportunities",
+      "titleKey": "navBar.commandView.wfm.subMenu.scheduling.subMenu.opportunities",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:opportunitiesQuery:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Knowledge > Articles",
+      "link": "#/admin/knowledge/knowledgeBases/articles",
+      "titleKey": "navBar.commandView.knowledge.subMenu.articles",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=knowledge:knowledgebase:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_knowledge_document",
+        "genesyscloud_knowledge_document_variation",
+        "genesyscloud_knowledge_knowledgebase"
+      ]
+    },
+    {
+      "path": "Knowledge > Sources",
+      "link": "#/admin/knowledge/knowledgeBases/sources",
+      "titleKey": "navBar.commandView.knowledge.subMenu.sources",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=knowledge:knowledgebase:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Knowledge > Knowledge Activity",
+      "link": "#/admin/knowledge/knowledgeBases/activity",
+      "titleKey": "navBar.commandView.knowledge.subMenu.activity",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=knowledge:knowledgebase:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Knowledge > Optimizer",
+      "link": "#/admin/knowledge/optimizer",
+      "titleKey": "navBar.commandView.knowledge.subMenu.optimizer",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=knowledge:knowledgebase:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Account > Digital Data Filtering Rules",
+      "link": "#/admin/dataprivacy/maskingrules",
+      "titleKey": "navBar.commandView.account.subMenu.digitalDataFiltering",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=billing:subscription:add | policy=billing:subscription:create | policy=billing:subscription:edit | policy=billing:subscription:read | policy=billing:subscription:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Account > Multi-Org Overview",
+      "link": "#/admin/multi-org-management",
+      "titleKey": "navBar.commandView.account.subMenu.multiOrgOverview",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=adminNotice:failoverNotice:add | policy=multiOrg:pairing:view | policy=multiOrg:replication:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Account > Organization Pairing",
+      "link": "#/admin/multi-org-management/org-pairing",
+      "titleKey": "navBar.commandView.account.subMenu.orgPairing",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=multiOrg:pairing:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Account > Organization Settings",
+      "link": "#/admin/organization",
+      "titleKey": "navBar.commandView.account.subMenu.organizationSettings",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=integrations:integration:* | policy=telephony:plugin:all",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_conversations_settings",
+        "genesyscloud_organization_authentication_settings",
+        "genesyscloud_organization_presence_definition"
+      ]
+    },
+    {
+      "path": "Account > Replication",
+      "link": "#/admin/multi-org-management/replication",
+      "titleKey": "navBar.commandView.account.subMenu.replication",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=multiOrg:replication:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Account > Subscription",
+      "link": "#/admin/billing/summary",
+      "titleKey": "navBar.commandView.account.subMenu.subscription",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=billing:subscription:add | policy=billing:subscription:create | policy=billing:subscription:edit | policy=billing:subscription:read | policy=billing:subscription:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Account > Usage",
+      "link": "#/admin/usage",
+      "titleKey": "navBar.commandView.account.subMenu.usage",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=billing:usage:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Account > User Switching",
+      "link": "#/admin/multi-org-management/user-switching",
+      "titleKey": "navBar.commandView.account.subMenu.userSwitchingConfiguration",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=adminNotice:failoverNotice:add",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Activity",
+      "link": "#/activity",
+      "titleKey": "navBar.commandView.activity",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=ui:agentActivity:view | policy=ui:supervisorActivity:view",
+      "destinationKind": "activity",
+      "includeInSupportedResources": false,
+      "skipReason": "Activity or status view; not an admin configuration page.",
+      "resourceTypes": []
+    },
+    {
+      "path": "Analytics > Analytics Explorer",
+      "link": "#/analyticsexplorer",
+      "titleKey": "navBar.commandView.analytics.subMenu.analyticsExplorer",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=analyticsExplorer:dashboard:manage | policy=analyticsExplorer:dashboard:view",
+      "destinationKind": "analytics",
+      "includeInSupportedResources": false,
+      "skipReason": "Analytics explorer; not an admin configuration page.",
+      "resourceTypes": []
+    },
+    {
+      "path": "Analytics > Analytics Settings",
+      "link": "#/admin/contact-center/analytics/settings",
+      "titleKey": "navBar.commandView.analytics.subMenu.analyticsSettings",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=analytics:insightConfigurations:edit",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Analytics > Anomaly Detection",
+      "link": "#/admin/anomaly-detection/anomalies",
+      "titleKey": "navBar.commandView.analytics.subMenu.anomalyDetection",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=signals:anomalyDetectionMonitoredQueues:view | policy=signals:anomalyDetectionSettings:view | policy=signals:queueAnomalyQuery:view | policy=signals:queueAnomalySummary:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Contacts > Custom Fields",
+      "link": "#/admin/custom-fields-v2/contacts",
+      "titleKey": "navBar.commandView.contacts.subMenu.customFields",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=externalContacts:customFields:add | policy=externalContacts:customFields:edit",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Contacts > External Contacts and Organizations",
+      "link": "#/contactsAndOrganizations",
+      "titleKey": "navBar.commandView.contacts.subMenu.externalContactsAndOrgs",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=externalContacts:contact:view | policy=externalContacts:externalOrganization:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_externalcontacts_contact",
+        "genesyscloud_externalcontacts_organization"
+      ]
+    },
+    {
+      "path": "Contacts > External Sources",
+      "link": "#/admin/external-sources",
+      "titleKey": "navBar.commandView.contacts.subMenu.externalSources",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=externalContacts:externalSource:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_externalcontacts_external_source"
+      ]
+    },
+    {
+      "path": "Contacts > Identity Resolution",
+      "link": "#/admin/identity-resolution",
+      "titleKey": "navBar.commandView.contacts.subMenu.identityResolution",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=admin",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Conversation Intelligence > Quality Management > Agent Checklists",
+      "link": "#/quality/admin/agent-checklists-ui",
+      "titleKey": "navBar.commandView.conversationIntelligence.subMenu.qualityManagement.subMenu.agentChecklist",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=assistants:agentchecklist:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Conversation Intelligence > Quality Management > Agent Evaluations",
+      "link": "#/admin/quality/agentEvaluations",
+      "titleKey": "navBar.commandView.conversationIntelligence.subMenu.qualityManagement.subMenu.agentEvaluations",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=quality:evaluation:add",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Conversation Intelligence > Quality Management > Calibration Evaluations",
+      "link": "#/admin/quality/calibrations",
+      "titleKey": "navBar.commandView.conversationIntelligence.subMenu.qualityManagement.subMenu.calibrationEvaluations",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=quality:calibration:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Conversation Intelligence > Quality Management > Customer Surveys",
+      "link": "#/admin/quality/surveyForms",
+      "titleKey": "navBar.commandView.conversationIntelligence.subMenu.qualityManagement.subMenu.customerSurveys",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=quality:surveyForm:add | policy=quality:surveyForm:delete | policy=quality:surveyForm:edit",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_quality_forms_survey"
+      ]
+    },
+    {
+      "path": "Conversation Intelligence > Quality Management > Evaluation Forms",
+      "link": "#/admin/quality/evaluationForms",
+      "titleKey": "navBar.commandView.conversationIntelligence.subMenu.qualityManagement.subMenu.evaluationForms",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=quality:evaluationForm:add | policy=quality:evaluationForm:delete | policy=quality:evaluationForm:edit",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_quality_forms_evaluation"
+      ]
+    },
+    {
+      "path": "Conversation Intelligence > Quality Management > Evaluators",
+      "link": "#/admin/quality/evaluators",
+      "titleKey": "navBar.commandView.conversationIntelligence.subMenu.qualityManagement.subMenu.evaluators",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=quality:evaluation:add",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Conversation Intelligence > Recording and Policies > Encryption Keys",
+      "link": "#/admin/quality/encryptionKeys",
+      "titleKey": "navBar.commandView.conversationIntelligence.subMenu.recordingAndPolicies.subMenu.encryptionKeys",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=conversation:encryptionKey:view | policy=recording:encryptionKey:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Conversation Intelligence > Recording and Policies > Policies",
+      "link": "#/admin/quality/policies/mediaRetention",
+      "titleKey": "navBar.commandView.conversationIntelligence.subMenu.recordingAndPolicies.subMenu.policies",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=recording:crossPlatformRetentionPolicy:view | policy=recording:retentionPolicy:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_recording_media_retention_policy"
+      ]
+    },
+    {
+      "path": "Conversation Intelligence > Recording and Policies > Recording Management",
+      "link": "#/admin/quality/recordingManagement",
+      "titleKey": "navBar.commandView.conversationIntelligence.subMenu.recordingAndPolicies.subMenu.recordingManagement",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=recording:orphanRecording:view | policy=recording:screenRecording:stop | policy=recording:screenRecording:view | policy=recording:settings:editRegionalStorage | policy=recording:settings:editScreenRecordings | policy=recording:settings:editUrlExpiration",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Conversation Intelligence > Speech and Text Analytics > Dictionary Management",
+      "link": "#/quality/admin/dictionary-management",
+      "titleKey": "navBar.commandView.conversationIntelligence.subMenu.speechAndTextAnalytics.subMenu.dictionarymanagement",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=speechAndTextAnalytics:dictionaryterm:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_speechandtextanalytics_dictionaryfeedback"
+      ]
+    },
+    {
+      "path": "Conversation Intelligence > Speech and Text Analytics > Interaction Categories",
+      "link": "#/quality/admin/sta-category-definitions/categories",
+      "titleKey": "navBar.commandView.conversationIntelligence.subMenu.speechAndTextAnalytics.subMenu.interactionCategories",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=speechAndTextAnalytics:category:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Conversation Intelligence > Speech and Text Analytics > Interaction Reprocessing",
+      "link": "#/quality/admin/reprocess-interactions",
+      "titleKey": "navBar.commandView.conversationIntelligence.subMenu.speechAndTextAnalytics.subMenu.interactionReprocessing",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=speechAndTextAnalytics:reprocessInteractions:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Conversation Intelligence > Speech and Text Analytics > Programs",
+      "link": "#/programs-definitions/programs",
+      "titleKey": "navBar.commandView.conversationIntelligence.subMenu.speechAndTextAnalytics.subMenu.programs",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=speechAndTextAnalytics:program:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Conversation Intelligence > Speech and Text Analytics > Sentiment Feedback",
+      "link": "#/quality/admin/sentiment-feedback",
+      "titleKey": "navBar.commandView.conversationIntelligence.subMenu.speechAndTextAnalytics.subMenu.sentimentFeedback",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=speechAndTextAnalytics:feedback:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Conversation Intelligence > Speech and Text Analytics > Speech and Text Configuration",
+      "link": "#/quality/admin/speech-and-text-analytics",
+      "titleKey": "navBar.commandView.conversationIntelligence.subMenu.speechAndTextAnalytics.subMenu.speechAndTextConfig",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=routing:transcriptionSettings:view | policy=speechAndTextAnalytics:program:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_routing_settings"
+      ]
+    },
+    {
+      "path": "Conversation Intelligence > Speech and Text Analytics > Topic Miner",
+      "link": "#/quality/admin/topic-miner",
+      "titleKey": "navBar.commandView.conversationIntelligence.subMenu.speechAndTextAnalytics.subMenu.topicMiner",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=languageUnderstanding:miner:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Conversation Intelligence > Speech and Text Analytics > Topics",
+      "link": "#/topics-definitions/topics",
+      "titleKey": "navBar.commandView.conversationIntelligence.subMenu.speechAndTextAnalytics.subMenu.topics",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=speechAndTextAnalytics:topic:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_speechandtextanalytics_topic"
+      ]
+    },
+    {
+      "path": "Digital and Telephony > Email",
+      "link": "#/admin/organization/email/domains",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.email",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=routing:email:manage",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_routing_email_domain",
+        "genesyscloud_routing_email_route"
+      ]
+    },
+    {
+      "path": "Digital and Telephony > Interaction Assets > Assistants",
+      "link": "#/admin/assistants/list",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.interactionAssets.subMenu.assistants",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=assistants:assistant:add | policy=assistants:assistant:delete | policy=assistants:assistant:edit",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Digital and Telephony > Interaction Assets > Canned Responses",
+      "link": "#/admin/responseManagement/responses",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.interactionAssets.subMenu.cannedResponses",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=responses:library:edit",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_responsemanagement_library",
+        "genesyscloud_responsemanagement_response"
+      ]
+    },
+    {
+      "path": "Digital and Telephony > Interaction Assets > Custom KPIs",
+      "link": "#/admin/predictive-routing/custom-kpis",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.interactionAssets.subMenu.customKpis",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=routing:keyPerformanceIndicator:add | policy=routing:keyPerformanceIndicator:edit",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Digital and Telephony > Interaction Assets > Panel Manager",
+      "link": "#/admin/contact-center/panel-settings",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.interactionAssets.subMenu.panelManager",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=agentUI:defaultPanels:edit",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Digital and Telephony > Interaction Assets > Response Assets",
+      "link": "#/admin/responseManagement/assets",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.interactionAssets.subMenu.responseAssets",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=responseAssets:asset:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_responsemanagement_responseasset"
+      ]
+    },
+    {
+      "path": "Digital and Telephony > Interaction Assets > Script Templates",
+      "link": "#/admin/scriptTemplates",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.interactionAssets.subMenu.scriptTemplates",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=scripter:script:edit",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Digital and Telephony > Interaction Assets > Scripts",
+      "link": "#/admin/scripts",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.interactionAssets.subMenu.scripts",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=scripter:script:add | policy=scripter:script:delete | policy=scripter:script:edit | policy=scripter:script:search | policy=scripter:script:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_script"
+      ]
+    },
+    {
+      "path": "Digital and Telephony > Interaction Assets > Utilization",
+      "link": "#/admin/contact-center/utilization",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.interactionAssets.subMenu.utilization",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=routing:utilization:manage | policy=routing:utilization:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_routing_utilization",
+        "genesyscloud_routing_utilization_label"
+      ]
+    },
+    {
+      "path": "Digital and Telephony > Interaction Assets > Widgets",
+      "link": "#/admin/integrations/widgets",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.interactionAssets.subMenu.widgets",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=webchat:deployment:create | policy=webchat:deployment:read | policy=webchat:deployment:update | policy=widgets:deployment:create | policy=widgets:deployment:read | policy=widgets:deployment:update | policy=widgets:deployment:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Digital and Telephony > Interaction Assets > Wrap-up Codes",
+      "link": "#/admin/admin/organization/_wrapupCodesV2",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.interactionAssets.subMenu.wrapupCodes",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=routing:wrapupCode:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_routing_wrapupcode"
+      ]
+    },
+    {
+      "path": "Digital and Telephony > Message > Messenger Configurations",
+      "link": "#/admin/messenger/configurations",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.message.subMenu.messengerConfigurations",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=webDeployments:configuration:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_webdeployments_configuration"
+      ]
+    },
+    {
+      "path": "Digital and Telephony > Message > Messenger Deployments",
+      "link": "#/admin/messenger/deployments",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.message.subMenu.messengerDeployments",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=webDeployments:deployment:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_webdeployments_deployment"
+      ]
+    },
+    {
+      "path": "Digital and Telephony > Message > Platform Configurations",
+      "link": "#/admin/messaging/platform-configs",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.message.subMenu.platformConfigurations",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=messaging:facebookIntegration:view | policy=messaging:integration:add | policy=messaging:integration:delete | policy=messaging:integration:edit | policy=messaging:integration:view | policy=messaging:lineIntegration:view | policy=messaging:twitterIntegration:view | policy=messaging:whatsAppIntegration:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_conversations_messaging_settings",
+        "genesyscloud_conversations_messaging_settings_default"
+      ]
+    },
+    {
+      "path": "Digital and Telephony > Message > Platform Integrations",
+      "link": "#/admin/messaging/platforms",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.message.subMenu.platformIntegrations",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=messaging:facebookIntegration:view | policy=messaging:integration:add | policy=messaging:integration:delete | policy=messaging:integration:edit | policy=messaging:integration:view | policy=messaging:lineIntegration:view | policy=messaging:twitterIntegration:view | policy=messaging:whatsAppIntegration:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_conversations_messaging_integrations_apple",
+        "genesyscloud_conversations_messaging_integrations_instagram",
+        "genesyscloud_conversations_messaging_integrations_open",
+        "genesyscloud_conversations_messaging_integrations_whatsapp",
+        "genesyscloud_integration_facebook"
+      ]
+    },
+    {
+      "path": "Digital and Telephony > Message > SMS Number Inventory",
+      "link": "#/admin/messaging/sms-numbers",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.message.subMenu.smsNumberInventory",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=sms:phoneNumber:add | policy=sms:phoneNumber:create | policy=sms:phoneNumber:delete | policy=sms:phoneNumber:edit | policy=sms:phoneNumber:read | policy=sms:phoneNumber:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_routing_sms_address"
+      ]
+    },
+    {
+      "path": "Digital and Telephony > Message > Supported Content Profiles",
+      "link": "#/admin/messaging/supported-content-profiles",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.message.subMenu.supportedContentProfiles",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=messaging:supportedContent:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_conversations_messaging_supportedcontent",
+        "genesyscloud_conversations_messaging_supportedcontent_default"
+      ]
+    },
+    {
+      "path": "Digital and Telephony > Message > Threading Timeline",
+      "link": "#/admin/messaging/threading-timeline",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.message.subMenu.threadingTimeline",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=conversation:threadingTimeline:edit | policy=conversation:threadingTimeline:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Digital and Telephony > Outbound > Call Analysis Responses",
+      "link": "#/admin/outbound/admin/callResponses",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.outbound.subMenu.callAnalysisResponses",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=outbound:responseSet:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_outbound_callanalysisresponseset"
+      ]
+    },
+    {
+      "path": "Digital and Telephony > Outbound > Campaign Management",
+      "link": "#/admin/outbound/admin/campaignManagement",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.outbound.subMenu.campaignManagement",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=outbound:campaign:view | policy=outbound:emailCampaign:view | policy=outbound:messagingCampaign:view | policy=outbound:whatsAppCampaign:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_outbound_campaign",
+        "genesyscloud_outbound_messagingcampaign",
+        "genesyscloud_outbound_sequence"
+      ]
+    },
+    {
+      "path": "Digital and Telephony > Outbound > Contactable Time Sets",
+      "link": "#/admin/outbound/admin/timeSets",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.outbound.subMenu.contactableTimeSets",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=outbound:callableTimeSet:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_outbound_callabletimeset"
+      ]
+    },
+    {
+      "path": "Digital and Telephony > Outbound > Event Viewer",
+      "link": "#/admin/outbound/admin/eventViewer",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.outbound.subMenu.eventViewer",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=outbound:eventLog:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Digital and Telephony > Outbound > List Management",
+      "link": "#/admin/outbound/admin/lists",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.outbound.subMenu.listManagement",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=outbound:contactList:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_outbound_attempt_limit",
+        "genesyscloud_outbound_contact_list",
+        "genesyscloud_outbound_contact_list_contact",
+        "genesyscloud_outbound_contact_list_template",
+        "genesyscloud_outbound_contactlistfilter",
+        "genesyscloud_outbound_dnclist",
+        "genesyscloud_outbound_filespecificationtemplate"
+      ]
+    },
+    {
+      "path": "Digital and Telephony > Outbound > Outbound Campaigns",
+      "link": "#/admin/outbound/dashboards/outboundCampaigns",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.outbound.subMenu.outboundCampaigns",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=outbound:campaign:view",
+      "destinationKind": "dashboard",
+      "includeInSupportedResources": false,
+      "skipReason": "Dashboard or report view; not an admin configuration page.",
+      "resourceTypes": []
+    },
+    {
+      "path": "Digital and Telephony > Outbound > Outbound Settings",
+      "link": "#/admin/outbound/admin/outboundSettings",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.outbound.subMenu.outboundSettings",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=outbound:settings:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_outbound_settings"
+      ]
+    },
+    {
+      "path": "Digital and Telephony > Outbound > Rule Management",
+      "link": "#/admin/outbound/admin/ruleManagement",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.outbound.subMenu.ruleManagement",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=outbound:ruleSet:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_outbound_campaignrule",
+        "genesyscloud_outbound_digitalruleset",
+        "genesyscloud_outbound_ruleset"
+      ]
+    },
+    {
+      "path": "Digital and Telephony > Outbound > Wrap-up Code Mappings",
+      "link": "#/admin/outbound/admin/wrapupMappings",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.outbound.subMenu.wrapupCodesMappings",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=outbound:wrapUpCodeMapping:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_outbound_wrapupcodemappings"
+      ]
+    },
+    {
+      "path": "Digital and Telephony > Social > Social Escalation Rules",
+      "link": "#/admin/escalation-rules",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.social.subMenu.socialEscalationRules",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=socialmedia:escalationRules:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Digital and Telephony > Social > Social Listening",
+      "link": "#/admin/topics",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.social.subMenu.socialListening",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=socialmedia:topic:edit",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Digital and Telephony > Telephony > Caller ID Groups",
+      "link": "#/admin/telephony/caller-id-groups",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.callerIdGroups",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=telephony:callerIdGroup:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Digital and Telephony > Telephony > Certificate Authorities",
+      "link": "#/admin/telephony/certificate-authorities",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.certificateAuthorities",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=telephony:plugin:all",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Digital and Telephony > Telephony > Cloud Media",
+      "link": "#/admin/telephony/cloud-media",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.cloudMedia",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=telephonyUI:cloudMedia:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Digital and Telephony > Telephony > DID Numbers",
+      "link": "#/admin/telephony/did",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.didNumbers",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=telephony:plugin:all",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_telephony_providers_edges_did_pool"
+      ]
+    },
+    {
+      "path": "Digital and Telephony > Telephony > Direct Inward Dialing",
+      "link": "#/admin/telephony/did",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.directInwardDialing",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=telephony:didGroup:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Digital and Telephony > Telephony > Edge Groups",
+      "link": "#/admin/telephony/edge-groups",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.edgeGroups",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=telephony:plugin:all",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_telephony_providers_edges_edge_group"
+      ]
+    },
+    {
+      "path": "Digital and Telephony > Telephony > Extensions",
+      "link": "#/admin/telephony/extensions",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.extensions",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=telephony:extensionPool:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_telephony_providers_edges_extension_pool"
+      ]
+    },
+    {
+      "path": "Digital and Telephony > Telephony > Global Telephony Settings",
+      "link": "#/admin/telephony/settings",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.globalTelephonySettings",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=telephony:alertablePresences:view | policy=telephony:plugin:all | policy=telephony:settings:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Digital and Telephony > Telephony > Metrics",
+      "link": "#/admin/telephony/metrics",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.metrics",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=telephony:plugin:all",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Digital and Telephony > Telephony > Number Management",
+      "link": "#/admin/telecom/numbers",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.numberManagement",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=purecloudvoice:number:view | policy=purecloudvoiceinternal:number:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Digital and Telephony > Telephony > Number Redirection",
+      "link": "#/admin/telecom/number-redirection",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.numberRedirection",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=telephony:numberRouting:view | policy=telephony:organizationLink:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Digital and Telephony > Telephony > Phone Management",
+      "link": "#/admin/telephony/phone-management",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.phoneManagement",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=telephony:plugin:all",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_telephony_providers_edges_phone",
+        "genesyscloud_telephony_providers_edges_phonebasesettings"
+      ]
+    },
+    {
+      "path": "Digital and Telephony > Telephony > Prefix Blocking",
+      "link": "#/admin/telecom/prefix-blocking",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.prefixBlocking",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=telephony:prefix:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Digital and Telephony > Telephony > Premises Edges",
+      "link": "#/admin/telephony/edges",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.premisesEdges",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=telephony:plugin:all",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Digital and Telephony > Telephony > Sites",
+      "link": "#/admin/telephony/sites",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.sites",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=telephony:plugin:all",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_telephony_providers_edges_site",
+        "genesyscloud_telephony_providers_edges_site_outbound_route"
+      ]
+    },
+    {
+      "path": "Digital and Telephony > Telephony > Topology",
+      "link": "#/admin/telephony/topology",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.topology",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=telephony:plugin:all",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Digital and Telephony > Telephony > Trunks",
+      "link": "#/admin/telephony/trunks",
+      "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.trunks",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=telephony:plugin:all",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_telephony_providers_edges_trunk",
+        "genesyscloud_telephony_providers_edges_trunkbasesettings"
+      ]
+    },
+    {
+      "path": "Home",
+      "link": "#/home",
+      "titleKey": "navBar.commandView.goHome",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=ui:agentActivity:view | policy=ui:supervisorActivity:view | policy=ui:supervisorQueueDetails:view",
+      "destinationKind": "other",
+      "includeInSupportedResources": false,
+      "skipReason": "Navigation landing page; not a resource configuration destination.",
+      "resourceTypes": []
+    },
+    {
+      "path": "IT and Integrations > API Usage",
+      "link": "#/admin/platformusage/api",
+      "titleKey": "navBar.commandView.itAndIntegrations.subMenu.apiUsage",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=oauth:client:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "IT and Integrations > AudioHook Monitors",
+      "link": "#/admin/integrations/audiohook/monitors",
+      "titleKey": "navBar.commandView.itAndIntegrations.subMenu.audioHookMonitors",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=integration:audioHookMonitor:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "IT and Integrations > Audit Viewer",
+      "link": "#/admin/troubleshooting/auditviewer",
+      "titleKey": "navBar.commandView.itAndIntegrations.subMenu.auditViewer",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=audits:audit:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "IT and Integrations > Authorized Applications",
+      "link": "#/admin/access-management/authorized-apps",
+      "titleKey": "navBar.commandView.itAndIntegrations.subMenu.authorizedApplications",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=oauth:client:authorize",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "IT and Integrations > Clients",
+      "link": "#/partners/ui/clients",
+      "titleKey": "navBar.commandView.itAndIntegrations.subMenu.clients",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=affiliateOrganization:clients:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "IT and Integrations > Data Actions",
+      "link": "#/admin/integrations/actions",
+      "titleKey": "navBar.commandView.itAndIntegrations.subMenu.dataActions",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=integrations:action:view | policy=integrations:integration:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_integration_action",
+        "genesyscloud_integration_action_draft",
+        "genesyscloud_integration_custom_auth_action"
+      ]
+    },
+    {
+      "path": "IT and Integrations > Disconnect Interactions",
+      "link": "#/admin/routing/disconnectInteractions",
+      "titleKey": "navBar.commandView.itAndIntegrations.subMenu.disconnectInteractions",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=conversation:communication:disconnect",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "IT and Integrations > Documents",
+      "link": "#/admin/contentManagement/admin/workspaces",
+      "titleKey": "navBar.commandView.itAndIntegrations.subMenu.documents",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=content_management_admin",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "IT and Integrations > Integrations",
+      "link": "#/admin/integrations/apps",
+      "titleKey": "navBar.commandView.itAndIntegrations.subMenu.integrations",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=integrations:integration:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_integration",
+        "genesyscloud_integration_credential"
+      ]
+    },
+    {
+      "path": "IT and Integrations > Log Capture",
+      "link": "#/admin/troubleshooting/logcapture",
+      "titleKey": "navBar.commandView.itAndIntegrations.subMenu.logCapture",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=troubleshooting:logCapture:add | policy=troubleshooting:logCapture:delete | policy=troubleshooting:logCapture:edit | policy=troubleshooting:logCapture:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "IT and Integrations > OAuth",
+      "link": "#/admin/access-management/oauth-clients",
+      "titleKey": "navBar.commandView.itAndIntegrations.subMenu.oAuth",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=oauth:client:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_oauth_client"
+      ]
+    },
+    {
+      "path": "IT and Integrations > Operational Console",
+      "link": "#/admin/troubleshooting/operational-console",
+      "titleKey": "navBar.commandView.itAndIntegrations.subMenu.operationalConsole",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=usage:events:view | policy=usage:eventsquery:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "IT and Integrations > Single Sign-on",
+      "link": "#/admin/identity/providers",
+      "titleKey": "navBar.commandView.itAndIntegrations.subMenu.singleSignon",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=sso:provider:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_idp_adfs",
+        "genesyscloud_idp_generic",
+        "genesyscloud_idp_gsuite",
+        "genesyscloud_idp_okta",
+        "genesyscloud_idp_onelogin",
+        "genesyscloud_idp_ping",
+        "genesyscloud_idp_salesforce"
+      ]
+    },
+    {
+      "path": "Knowledge > Categories and Labels",
+      "link": "#/admin/knowledge/knowledgeBases/categories",
+      "titleKey": "navBar.commandView.knowledge.subMenu.categoriesAndLabels",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=knowledge:knowledgebase:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_knowledge_category",
+        "genesyscloud_knowledge_label"
+      ]
+    },
+    {
+      "path": "Knowledge > Knowledge Configuration",
+      "link": "#/admin/knowledge/knowledgeConfiguration/configurations",
+      "titleKey": "navBar.commandView.knowledge.subMenu.configuration",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=knowledge:knowledgeSetting:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "My Activity > Leaderboard",
+      "link": "#/activity/leaderboard",
+      "titleKey": "navBar.commandView.myActivity.subMenu.leaderboard",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=gamification:leaderboard:view",
+      "destinationKind": "activity",
+      "includeInSupportedResources": false,
+      "skipReason": "Activity or status view; not an admin configuration page.",
+      "resourceTypes": []
+    },
+    {
+      "path": "My Activity > Schedule",
+      "link": "#/activity/schedule",
+      "titleKey": "navBar.commandView.myActivity.subMenu.schedule",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:agentSchedule:view",
+      "destinationKind": "activity",
+      "includeInSupportedResources": false,
+      "skipReason": "Activity or status view; not an admin configuration page.",
+      "resourceTypes": []
+    },
+    {
+      "path": "My Activity > Schedule Bid",
+      "link": "#/activity/workplan",
+      "titleKey": "navBar.commandView.myActivity.subMenu.scheduleBid",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:agentScheduleBid:submit | policy=wfm:agentWorkPlanBid:submit",
+      "destinationKind": "activity",
+      "includeInSupportedResources": false,
+      "skipReason": "Activity or status view; not an admin configuration page.",
+      "resourceTypes": []
+    },
+    {
+      "path": "My Activity > Scorecard",
+      "link": "#/activity/scorecard",
+      "titleKey": "navBar.commandView.myActivity.subMenu.scorecard",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=gamification:scorecard:view",
+      "destinationKind": "activity",
+      "includeInSupportedResources": false,
+      "skipReason": "Activity or status view; not an admin configuration page.",
+      "resourceTypes": []
+    },
+    {
+      "path": "My Activity > Work Plan",
+      "link": "#/activity/workplan",
+      "titleKey": "navBar.commandView.myActivity.subMenu.workPlan",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:agentWorkPlanBid:submit",
+      "destinationKind": "activity",
+      "includeInSupportedResources": false,
+      "skipReason": "Activity or status view; not an admin configuration page.",
+      "resourceTypes": []
+    },
+    {
+      "path": "Orchestration > AI Studio > Agent Copilots",
+      "link": "#/admin/copilots",
+      "titleKey": "navBar.commandView.orchestration.subMenu.aiStudio.subMenu.agentCopilots",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=assistants:copilot:edit",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Orchestration > AI Studio > Agentic Virtual Agents",
+      "link": "#/admin/ai-studio/agentic-virtual-agents",
+      "titleKey": "navBar.commandView.orchestration.subMenu.aiStudio.subMenu.agenticVirtualAgents",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=agentic:virtualAgent:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Orchestration > AI Studio > Genesys Cloud Copilot Configuration",
+      "link": "#/admin/ai-studio/copilot-configuration",
+      "titleKey": "navBar.commandView.orchestration.subMenu.aiStudio.subMenu.copilotConfiguration",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=audits:audit:view | policy=copilot:settings:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Orchestration > AI Studio > Guides",
+      "link": "#/admin/ai-studio/guides",
+      "titleKey": "navBar.commandView.orchestration.subMenu.aiStudio.subMenu.guides",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=aiStudio:guide:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_guide",
+        "genesyscloud_guide_version"
+      ]
+    },
+    {
+      "path": "Orchestration > AI Studio > Response Refinement",
+      "link": "#/admin/ai-studio/refine-response",
+      "titleKey": "navBar.commandView.orchestration.subMenu.aiStudio.subMenu.refineResponse",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=aiStudio:refinement:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Orchestration > AI Studio > Summaries",
+      "link": "#/admin/ai-studio/summary-workbench",
+      "titleKey": "navBar.commandView.orchestration.subMenu.aiStudio.subMenu.summaryWorkbench",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=aiStudio:summaryConfig:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_ai_studio_summary_setting"
+      ]
+    },
+    {
+      "path": "Orchestration > Architect",
+      "link": "/architect",
+      "titleKey": "navBar.commandView.orchestration.subMenu.architect",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=architect:ui:view",
+      "destinationKind": "app-config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_architect_grammar",
+        "genesyscloud_architect_grammar_language",
+        "genesyscloud_architect_user_prompt",
+        "genesyscloud_flow",
+        "genesyscloud_flow_loglevel"
+      ]
+    },
+    {
+      "path": "Orchestration > Enrichments > Customer Intents",
+      "link": "#/admin/intent-taxonomy-ui",
+      "titleKey": "navBar.commandView.orchestration.subMenu.enrichments.subMenu.customerIntents",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=externalContacts:customerIntentTaxonomy:edit",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_customer_intent",
+        "genesyscloud_intent_category",
+        "genesyscloud_intents_categories",
+        "genesyscloud_intents_customerintents"
+      ]
+    },
+    {
+      "path": "Orchestration > Enrichments > Customer Segments",
+      "link": "#/admin/journey/segment",
+      "titleKey": "navBar.commandView.orchestration.subMenu.enrichments.subMenu.customerSegments",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=journey:segment:edit",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_journey_segment"
+      ]
+    },
+    {
+      "path": "Orchestration > Enrichments > Outcomes",
+      "link": "#/admin/journey/outcome",
+      "titleKey": "navBar.commandView.orchestration.subMenu.enrichments.subMenu.outcomes",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=journey:outcome:edit",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_journey_outcome",
+        "genesyscloud_journey_outcome_predictor"
+      ]
+    },
+    {
+      "path": "Orchestration > Orchestration Assets > Data Tables",
+      "link": "#/admin/routing/datatables",
+      "titleKey": "navBar.commandView.orchestration.subMenu.orchestrationAssets.subMenu.dataTables",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=architect:datatable:add | policy=architect:datatable:delete | policy=architect:datatable:edit | policy=architect:datatable:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_architect_datatable",
+        "genesyscloud_architect_datatable_row"
+      ]
+    },
+    {
+      "path": "Orchestration > Orchestration Assets > Flow Milestones",
+      "link": "#/admin/routing/flowmilestones",
+      "titleKey": "navBar.commandView.orchestration.subMenu.orchestrationAssets.subMenu.flowMilestones",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=architect:flowMilestone:add | policy=architect:flowMilestone:delete | policy=architect:flowMilestone:edit | policy=architect:flowMilestone:view | policy=conversation:customAttributes:schemaView | policy=conversation:customAttributes:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_flow_milestone"
+      ]
+    },
+    {
+      "path": "Orchestration > Orchestration Assets > Flow Outcomes",
+      "link": "#/admin/routing/flowoutcomes",
+      "titleKey": "navBar.commandView.orchestration.subMenu.orchestrationAssets.subMenu.flowOutcomes",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=architect:flowOutcome:add | policy=architect:flowOutcome:edit | policy=architect:flowOutcome:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_flow_outcome"
+      ]
+    },
+    {
+      "path": "Orchestration > Predictive Engagement > Action Library",
+      "link": "#/admin/embed/library/action-template",
+      "titleKey": "navBar.commandView.orchestration.subMenu.predictiveEngagement.subMenu.actionLibrary",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=journey:actiontemplate:edit",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_journey_action_template"
+      ]
+    },
+    {
+      "path": "Orchestration > Predictive Engagement > Action Map Report",
+      "link": "#/admin/embed/analytics/action-map",
+      "titleKey": "navBar.commandView.orchestration.subMenu.predictiveEngagement.subMenu.actionMapReport",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=analytics:journeyAggregate:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Orchestration > Predictive Engagement > Action Maps",
+      "link": "#/admin/embed/engagement/action-map",
+      "titleKey": "navBar.commandView.orchestration.subMenu.predictiveEngagement.subMenu.actionMaps",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=journey:actionmap:edit",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_journey_action_map"
+      ]
+    },
+    {
+      "path": "Orchestration > Predictive Engagement > Live Now",
+      "link": "#/admin/live-now",
+      "titleKey": "navBar.commandView.orchestration.subMenu.predictiveEngagement.subMenu.liveNow",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=journey:recentsessions:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Orchestration > Predictive Engagement > Predictive Engagement Settings",
+      "link": "#/admin/embed/global-settings",
+      "titleKey": "navBar.commandView.orchestration.subMenu.predictiveEngagement.subMenu.predectiveEngagementSettings",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=journey:settings:edit",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Orchestration > Predictive Engagement > Visitor Activity Report",
+      "link": "#/admin/embed/analytics/visitor-activity",
+      "titleKey": "navBar.commandView.orchestration.subMenu.predictiveEngagement.subMenu.visitorActivityReport",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=analytics:journeyAggregate:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Orchestration > Routing > Call Routing",
+      "link": "#/admin/routing/ivrs",
+      "titleKey": "navBar.commandView.orchestration.subMenu.routing.subMenu.callRouting",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=routing:callRoute:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_architect_ivr"
+      ]
+    },
+    {
+      "path": "Orchestration > Routing > Emergency Groups",
+      "link": "#/admin/routing/emergency-groups",
+      "titleKey": "navBar.commandView.orchestration.subMenu.routing.subMenu.emergencyGroups",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=routing:emergencyGroup:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_architect_emergencygroup"
+      ]
+    },
+    {
+      "path": "Orchestration > Routing > Message Routing",
+      "link": "#/admin/routing/sms",
+      "titleKey": "navBar.commandView.orchestration.subMenu.routing.subMenu.messageRouting",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=routing:message:manage",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Orchestration > Routing > Operating Schedule Groups",
+      "link": "#/admin/routing/scheduling/schedule-groups",
+      "titleKey": "navBar.commandView.orchestration.subMenu.routing.subMenu.operatingScheduleGroups",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=routing:scheduleGroup:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_architect_schedulegroups"
+      ]
+    },
+    {
+      "path": "Orchestration > Routing > Operating Schedules",
+      "link": "#/admin/routing/scheduling/schedules",
+      "titleKey": "navBar.commandView.orchestration.subMenu.routing.subMenu.operatingSchedules",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=routing:schedule:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_architect_schedules"
+      ]
+    },
+    {
+      "path": "Orchestration > Routing > Revenue KPIs",
+      "link": "#/admin/predictive-routing/revenue-kpis",
+      "titleKey": "navBar.commandView.orchestration.subMenu.routing.subMenu.revenueKpis",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=routing:keyPerformanceIndicator:add | policy=routing:keyPerformanceIndicator:edit",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Orchestration > Rule-Based Decisions > Decision Tables",
+      "link": "#/admin/decision-tables",
+      "titleKey": "navBar.commandView.orchestration.subMenu.ruleBasedDecisions.subMenu.decisionTables",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=businessrules:decisionTable:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_business_rules_decision_table"
+      ]
+    },
+    {
+      "path": "Orchestration > Rule-Based Decisions > Rules Schemas",
+      "link": "#/admin/rules-schemas",
+      "titleKey": "navBar.commandView.orchestration.subMenu.ruleBasedDecisions.subMenu.rulesSchemas",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=businessrules:businessRulesSchema:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_business_rules_schema"
+      ]
+    },
+    {
+      "path": "Orchestration > Triggers",
+      "link": "#/admin/triggers",
+      "titleKey": "navBar.commandView.orchestration.subMenu.triggers.title",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=processautomation:trigger:add | policy=processautomation:trigger:delete | policy=processautomation:trigger:edit | policy=processautomation:trigger:test | policy=processautomation:trigger:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_processautomation_trigger"
+      ]
+    },
+    {
+      "path": "Orchestration > Work Automation > Caseplans",
+      "link": "#/admin/caseplans",
+      "titleKey": "navBar.commandView.orchestration.subMenu.workAutomation.subMenu.caseplans",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=caseManagement:caseplan:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_case_management_caseplan",
+        "genesyscloud_case_management_caseplan_create_version",
+        "genesyscloud_case_management_caseplan_publish"
+      ]
+    },
+    {
+      "path": "Orchestration > Work Automation > Custom Attributes",
+      "link": "#/admin/custom-attributes",
+      "titleKey": "navBar.commandView.orchestration.subMenu.workAutomation.subMenu.customAttributes",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=workitems:workitemSchema:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_task_management_workitem_schema"
+      ]
+    },
+    {
+      "path": "Orchestration > Work Automation > Workbins",
+      "link": "#/admin/workbins",
+      "titleKey": "navBar.commandView.orchestration.subMenu.workAutomation.subMenu.workbins",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=workitems:workbin:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_task_management_workbin"
+      ]
+    },
+    {
+      "path": "Orchestration > Work Automation > Worktypes",
+      "link": "#/admin/worktypes",
+      "titleKey": "navBar.commandView.orchestration.subMenu.workAutomation.subMenu.worktypes",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=workitems:worktype:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_task_management_worktype",
+        "genesyscloud_task_management_worktype_flow_datebased_rule",
+        "genesyscloud_task_management_worktype_flow_onattributechange_rule",
+        "genesyscloud_task_management_worktype_flow_oncreate_rule",
+        "genesyscloud_task_management_worktype_status",
+        "genesyscloud_task_management_worktype_status_transition"
+      ]
+    },
+    {
+      "path": "Performance Management > Adherence Adjustments",
+      "link": "#/admin/wfm/adherence/adjustments",
+      "titleKey": "navBar.commandView.performanceManagement.subMenu.adherenceAdjustments",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:adherenceAdjustments:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Performance Management > Decision Metric Import",
+      "link": "#/admin/performance/decisionMetrics",
+      "titleKey": "navBar.commandView.performanceManagement.subMenu.decisionMetrics",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:decisionMetrics:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Performance Management > Employee Engagement > Development and Feedback",
+      "link": "#/admin/performance/modules",
+      "titleKey": "navBar.commandView.performanceManagement.subMenu.employeeEngagement.subMenu.developmentAndFeedback",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=learning:module:edit",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_learning_modules"
+      ]
+    },
+    {
+      "path": "Performance Management > Employee Engagement > External Metric Definitions",
+      "link": "#/admin/performance/external-metric-definitions",
+      "titleKey": "navBar.commandView.performanceManagement.subMenu.employeeEngagement.subMenu.externalMetricDefinitions",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=employeePerformance:externalMetricDefinition:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_employeeperformance_externalmetrics_definitions"
+      ]
+    },
+    {
+      "path": "Performance Management > Employee Engagement > Gamification Contests",
+      "link": "#/admin/performance/gamification-contests",
+      "titleKey": "navBar.commandView.performanceManagement.subMenu.employeeEngagement.subMenu.gamificationContests",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=gamification:contest:view | policy=gamification:contest:viewAll",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Performance Management > Employee Engagement > Gamification Profiles",
+      "link": "#/admin/performance/gamification-profiles",
+      "titleKey": "navBar.commandView.performanceManagement.subMenu.employeeEngagement.subMenu.gamificationProfiles",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=gamification:profile:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Performance Management > Employee Engagement > Gamification Settings",
+      "link": "#/admin/performance/gamification-settings",
+      "titleKey": "navBar.commandView.performanceManagement.subMenu.employeeEngagement.subMenu.gamificationSettings",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=gamification:profile:update",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Performance Management > Employee Engagement > Real-Time Supervision",
+      "link": "#/admin/performance/realtime-supervision",
+      "titleKey": "navBar.commandView.performanceManagement.subMenu.employeeEngagement.subMenu.realTimeSupervision",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=realtimeMonitor:settings:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Performance Management > Historical Adherence",
+      "link": "#/admin/wfm/adherence/historicalV2/historical-adherence",
+      "titleKey": "navBar.commandView.performanceManagement.subMenu.historicalAdherence",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:historicalAdherence:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Performance Management > Historical Shrinkage",
+      "link": "#/admin/wfm/shrinkage/historical",
+      "titleKey": "navBar.commandView.performanceManagement.subMenu.historicalShrinkage",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:shrinkage:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Performance Management > Intraday Monitoring",
+      "link": "#/admin/wfm/intradayMonitoring",
+      "titleKey": "navBar.commandView.performanceManagement.subMenu.intradayManagement",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:intraday:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Performance Management > Real-Time Adherence",
+      "link": "#/admin/wfm/adherence/realtime",
+      "titleKey": "navBar.commandView.performanceManagement.subMenu.realTimeAdherence",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:realtimeAdherence:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Performance Management > Scorecard Insights",
+      "link": "#/activity/scorecard-insights",
+      "titleKey": "navBar.commandView.performanceManagement.subMenu.scorecardInsights",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=gamification:insights:viewAll",
+      "destinationKind": "activity",
+      "includeInSupportedResources": false,
+      "skipReason": "Activity or status view; not an admin configuration page.",
+      "resourceTypes": []
+    },
+    {
+      "path": "Profile",
+      "link": "#/",
+      "titleKey": "navBar.commandView.profile",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=ui:agentActivity:view | policy=ui:supervisorActivity:view | policy=ui:supervisorQueueDetails:view",
+      "destinationKind": "other",
+      "includeInSupportedResources": false,
+      "skipReason": "Navigation landing page; not a resource configuration destination.",
+      "resourceTypes": []
+    },
+    {
+      "path": "User Management > Access Policies",
+      "link": "#/admin/people-permissions/policies",
+      "titleKey": "navBar.commandView.userManagement.subMenu.accessPolicies",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=authorization:policy:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "User Management > ACD Skills and Languages",
+      "link": "#/admin/directory/acdSkills",
+      "titleKey": "navBar.commandView.userManagement.subMenu.acdSkills",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=routing:skill:manage | policy=routing:skill:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_routing_language",
+        "genesyscloud_routing_skill"
+      ]
+    },
+    {
+      "path": "User Management > Authorized Organizations",
+      "link": "#/admin/auth-orgs",
+      "titleKey": "navBar.commandView.userManagement.subMenu.authorizedOrgs",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=authorization:orgTrustee:view | policy=authorization:orgTrustor:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_orgauthorization_pairing"
+      ]
+    },
+    {
+      "path": "User Management > Divisions",
+      "link": "#/admin/people-permissions/divisions",
+      "titleKey": "navBar.commandView.userManagement.subMenu.divisions",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=authorization:division:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_auth_division"
+      ]
+    },
+    {
+      "path": "User Management > Groups",
+      "link": "#/admin/groups",
+      "titleKey": "navBar.commandView.userManagement.subMenu.groups",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=admin | policy=group_administration",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_group",
+        "genesyscloud_group_roles",
+        "genesyscloud_routing_skill_group"
+      ]
+    },
+    {
+      "path": "User Management > Locations",
+      "link": "#/admin/directory/locations",
+      "titleKey": "navBar.commandView.userManagement.subMenu.locations",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=admin | policy=location_administration",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_location"
+      ]
+    },
+    {
+      "path": "User Management > Profile Fields",
+      "link": "#/admin/directory/fields",
+      "titleKey": "navBar.commandView.userManagement.subMenu.profileFields",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=admin | policy=field_administration",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "User Management > Queues",
+      "link": "#/admin/admin/organization/_queuesV2",
+      "titleKey": "navBar.commandView.userManagement.subMenu.queues",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=routing:queue:edit | policy=routing:queue:readonly | policy=routing:queueMember:manage",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_routing_queue",
+        "genesyscloud_routing_queue_conditional_group_activation",
+        "genesyscloud_routing_queue_conditional_group_routing",
+        "genesyscloud_routing_queue_outbound_email_address"
+      ]
+    },
+    {
+      "path": "User Management > Roles and Permissions",
+      "link": "#/admin/people-permissions/roles",
+      "titleKey": "navBar.commandView.userManagement.subMenu.rolesAndPermissions",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=authorization:role:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_auth_role"
+      ]
+    },
+    {
+      "path": "User Management > User Directory",
+      "link": "#/search-v2",
+      "titleKey": "navBar.commandView.userManagement.subMenu.userDirectory",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=ui:myOrganization:view",
+      "destinationKind": "other",
+      "includeInSupportedResources": false,
+      "skipReason": "Search or directory browse view; not a resource configuration destination.",
+      "resourceTypes": []
+    },
+    {
+      "path": "User Management > Users",
+      "link": "#/admin/users",
+      "titleKey": "navBar.commandView.userManagement.subMenu.users",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=admin | policy=authorization:grant:add | policy=authorization:grant:delete | policy=authorization:grant:edit | policy=authorization:grant:view | policy=authorization:role:add | policy=authorization:role:delete | policy=authorization:role:edit | policy=authorization:role:view | policy=directory:user:edit | policy=person_administration | policy=routing:skill:assign | policy=user_administration | policy=user_manager",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_user",
+        "genesyscloud_user_roles"
+      ]
+    },
+    {
+      "path": "User Management > Users Rules",
+      "link": "#/admin/user-rules",
+      "titleKey": "navBar.commandView.userManagement.subMenu.usersRules",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=users:rules:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_users_rules"
+      ]
+    },
+    {
+      "path": "User Management > Work Teams",
+      "link": "#/admin/teams",
+      "titleKey": "navBar.commandView.userManagement.subMenu.workTeams",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=groups:team:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_team"
+      ]
+    },
+    {
+      "path": "Workforce Management > Capacity Planning > Decisions Data Download",
+      "link": "#/admin/wfm/decisionsDataDownload",
+      "titleKey": "navBar.commandView.wfm.subMenu.capacityPlanning.subMenu.decisionsDataDownload",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfp:decisionsDataDownload:download",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Forecasting > Historical Data Import",
+      "link": "#/admin/wfm/historicalImportV2",
+      "titleKey": "navBar.commandView.wfm.subMenu.forecasting.subMenu.historicalDataImport",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:historicalData:upload",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Scheduling > Time-Off Limits",
+      "link": "#/admin/wfm/timeOffLimits",
+      "titleKey": "navBar.commandView.wfm.subMenu.scheduling.subMenu.timeOffLimits",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:timeOffLimit:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Scheduling > Time-Off Plans",
+      "link": "#/admin/wfm/timeOffPlans",
+      "titleKey": "navBar.commandView.wfm.subMenu.scheduling.subMenu.timeOffPlans",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:timeOffPlan:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Scheduling > Time-Off Requests",
+      "link": "#/admin/wfm/time-off/requests",
+      "titleKey": "navBar.commandView.wfm.subMenu.scheduling.subMenu.timeOffRequests",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:timeOffRequest:administer | policy=wfm:timeOffRequest:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Work Plan Configuration > Schedule Bids",
+      "link": "#/admin/wfm/workPlanV2/bids",
+      "titleKey": "navBar.commandView.wfm.subMenu.workPlanConfig.subMenu.scheduleBids",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:scheduleBid:administer | policy=wfm:scheduleBid:view | policy=wfm:workPlanBid:administer | policy=wfm:workPlanBid:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Work Plan Configuration > Work Plan Assignments",
+      "link": "#/admin/wfm/workPlanV2/assignments",
+      "titleKey": "navBar.commandView.wfm.subMenu.workPlanConfig.subMenu.workPlanAssignments",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:workPlan:administer | policy=wfm:workPlan:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Work Plan Configuration > Work Plan Bids",
+      "link": "#/admin/wfm/workPlanV2/bids",
+      "titleKey": "navBar.commandView.wfm.subMenu.workPlanConfig.subMenu.workPlanBids",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:workPlanBid:administer | policy=wfm:workPlanBid:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Work Plan Configuration > Work Plan Rotations",
+      "link": "#/admin/wfm/workPlanRotations",
+      "titleKey": "navBar.commandView.wfm.subMenu.workPlanConfig.subMenu.workPlanRotations",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:workPlanRotation:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Work Plan Configuration > Work Plans",
+      "link": "#/admin/wfm/workPlans",
+      "titleKey": "navBar.commandView.wfm.subMenu.workPlanConfig.subMenu.workPlans",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:workPlan:administer | policy=wfm:workPlan:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Workforce Management Configuration > Activity Codes",
+      "link": "#/admin/wfm/activityCodes",
+      "titleKey": "navBar.commandView.wfm.subMenu.wfmConfig.subMenu.activityCodes",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:activityCode:administer | policy=wfm:activityCode:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Workforce Management Configuration > Agents",
+      "link": "#/admin/wfm/agents",
+      "titleKey": "navBar.commandView.wfm.subMenu.wfmConfig.subMenu.agents",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:agent:administer | policy=wfm:agent:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Workforce Management Configuration > Business Units",
+      "link": "#/admin/wfm/businessUnits",
+      "titleKey": "navBar.commandView.wfm.subMenu.wfmConfig.subMenu.businessUnits",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:businessUnit:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": [
+        "genesyscloud_workforcemanagement_businessunits"
+      ]
+    },
+    {
+      "path": "Workforce Management > Workforce Management Configuration > Management Units",
+      "link": "#/admin/wfm/managementUnits",
+      "titleKey": "navBar.commandView.wfm.subMenu.wfmConfig.subMenu.managementUnits",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:managementUnit:administer | policy=wfm:managementUnit:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Workforce Management Configuration > Planning Groups",
+      "link": "#/admin/wfm/planningGroups",
+      "titleKey": "navBar.commandView.wfm.subMenu.wfmConfig.subMenu.planningGroups",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:planningGroup:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Workforce Management Configuration > Service Goal Templates",
+      "link": "#/admin/wfm/serviceGoalTemplates",
+      "titleKey": "navBar.commandView.wfm.subMenu.wfmConfig.subMenu.serviceGoalTemplates",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:serviceGoalTemplate:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Workforce Management Configuration > Staffing Groups",
+      "link": "#/admin/wfm/staffingGroups",
+      "titleKey": "navBar.commandView.wfm.subMenu.wfmConfig.subMenu.staffingGroups",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:staffingGroup:view",
+      "destinationKind": "config",
+      "includeInSupportedResources": true,
+      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Workspace > Agent Workspace",
+      "link": "#/agent-ui",
+      "titleKey": "navBar.commandView.workspace.subMenu.agentWorkspace",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=routing:agent:onqueue",
+      "destinationKind": "agent",
+      "includeInSupportedResources": false,
+      "skipReason": "Agent workspace view; not an admin configuration page.",
+      "resourceTypes": []
+    },
+    {
+      "path": "Workspace > Cases",
+      "link": "#/agent/task-management/cases",
+      "titleKey": "navBar.commandView.workspace.subMenu.caseList",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=caseManagement:case:view | policy=caseManagement:queryJob:add | policy=caseManagement:queryJob:view | policy=caseManagement:queryJobResults:view",
+      "destinationKind": "agent",
+      "includeInSupportedResources": false,
+      "skipReason": "Agent workspace view; not an admin configuration page.",
+      "resourceTypes": []
+    },
+    {
+      "path": "Workspace > Parked Conversations",
+      "link": "#/agent/task-management/parked-conversations",
+      "titleKey": "navBar.commandView.workspace.subMenu.taskListConversations",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=conversation:email:park | policy=conversation:message:park",
+      "destinationKind": "agent",
+      "includeInSupportedResources": false,
+      "skipReason": "Agent workspace view; not an admin configuration page.",
+      "resourceTypes": []
+    },
+    {
+      "path": "Workspace > Task List",
+      "link": "#/agent/task-management/workitems",
+      "titleKey": "navBar.commandView.workspace.subMenu.taskListWorkitems",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=workitems:queryJob:add | policy=workitems:queryJob:view | policy=workitems:queryJobResults:view | policy=workitems:workitem:view",
+      "destinationKind": "agent",
+      "includeInSupportedResources": false,
+      "skipReason": "Agent workspace view; not an admin configuration page.",
+      "resourceTypes": [
+        "genesyscloud_task_management_workitem"
+      ]
+    }
+  ]
 }

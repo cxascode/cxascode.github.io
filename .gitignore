@@ -28,6 +28,7 @@ public/dependency-tree-merged-json/
 public/resource-permissions-json/
 public/resource-permissions-tf/
 public/spreadsheet-templates/
+public/supported-resources-templates/
 public/lab-packages/
 public/tf-export-resource-names/
 public/tf-export-singletons/

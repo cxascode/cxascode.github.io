@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import {
   combineTfExportBlockLabelChanges,
   TF_EXPORT_BLOCK_LABEL_HISTORY_FILENAME,
@@ -31,7 +32,18 @@ async function loadVersionMapsFromDir(dir) {
 
     const filePath = path.join(dir, entry);
     const raw = await fs.readFile(filePath, "utf8");
-    const json = JSON.parse(raw);
+    if (!raw.trim()) {
+      throw new Error(`Empty JSON file: ${filePath}`);
+    }
+
+    let json;
+    try {
+      json = JSON.parse(raw);
+    } catch (err) {
+      throw new Error(
+        `Invalid JSON in ${filePath}: ${err instanceof Error ? err.message : String(err)}`
+      );
+    }
     versionMaps.push({
       version: entry.replace(/\.json$/, ""),
       map: json?.tfExportResourceNames && typeof json.tfExportResourceNames === "object"
@@ -63,7 +75,11 @@ async function main() {
   );
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+const isMainModule = process.argv[1] === fileURLToPath(import.meta.url);
+
+if (isMainModule) {
+  main().catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
+}
