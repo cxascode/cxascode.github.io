@@ -1,0 +1,48 @@
+---
+description: When user marks a feature private, hidden, or shareable — update site-feature-policy.mjs
+alwaysApply: true
+---
+
+# Site feature visibility (private / hidden / shareable)
+
+When the user says a feature is **private**, **hidden**, **not shown on the site**, **permalink-only**, **shareable** (link-only), or similar — update **`scripts/lib/site-feature-policy.mjs`** (`SITE_FEATURES`). Do not scatter regexes or path lists in other files.
+
+## User says → you do
+
+| User intent | `visibility` | Also wire |
+|-------------|--------------|-----------|
+| private / hidden permalink (like `/spreadsheet`, `/labfiles`) | `hidden` | `appPermalinks.js`, `artifactDownloads.js`, `App.jsx` download handler if new |
+| shareable download link (like `/roles/...`) | `shareable` | same app wiring; `scrubKeywords` usually empty |
+| valid route but not promoted (like `/env-vars`) | `semi-public` | SEO/sitemap as needed |
+| normal explorer feature | `public` | sitemap if dialog |
+
+## Registry entry template
+
+```js
+{
+  id: "feature-id",
+  visibility: "hidden",
+  permalink: { segment: "feature-id" },
+  siteUpdates: {
+    commitKeywords: ["feature name", "/feature-id"],
+    scrubKeywords: ["feature name", "/feature-id"],
+    dataOnlyPaths: [
+      /^public\/feature-templates\//,
+      /^scripts\/generate-feature\.mjs$/,
+    ],
+  },
+},
+```
+
+Infer `commitKeywords`, `scrubKeywords`, and `dataOnlyPaths` from the files you create or change (generators, `public/` output dirs, templates).
+
+## Build consumers (read policy — do not duplicate)
+
+- `scripts/lib/site-updates-generate.mjs` — site updates filter + scrub
+- `scripts/write-sitemap.mjs` — `PUBLIC_SITEMAP_DIALOG_PATHS` only
+
+After adding a hidden feature, no manual site-updates regex edits are needed. CI scrub runs automatically.
+
+## Quick check
+
+Hidden features must **not** appear in auto-generated `public/site-updates-data/`. If user asks to verify, run `npm run generate-site-updates -- --scrub`.

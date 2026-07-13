@@ -1,17 +1,14 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
+import { PUBLIC_SITEMAP_DIALOG_PATHS } from "./lib/site-feature-policy.mjs";
+
 const SITE_ORIGIN = "https://cxascode.github.io";
 const PUBLIC_DIR = path.resolve("public");
 const ROOT_DIR = path.resolve(".");
 const lastmod = new Date().toISOString().slice(0, 10);
 
-const DIALOG_PATHS = [
-  "/release-notes",
-  "/site-updates",
-  "/creation-order",
-  "/attribute-index",
-];
+const DIALOG_PATHS = PUBLIC_SITEMAP_DIALOG_PATHS;
 
 async function loadResourcePaths() {
   const [latestRaw, overridesRaw] = await Promise.all([

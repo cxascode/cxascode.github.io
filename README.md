@@ -74,7 +74,20 @@ All generators read `public/overrides.json` unless `--overrides=` is passed (spr
 | `npm run generate-schema-force-new` | `public/schema-force-new/{version}.json` | Same pattern as tf-export resource names |
 | `npm run generate-gui-menu-paths` | `public/gui-menu-paths.json` (slim), `.cache-meta/gui-menu-paths-debug.json` (full catalog) | Genesys Cloud `admin/menu.json` plus Directory command-nav. `--latest=X.Y.Z`, `--union-permissions` (default in CI), `--no-union-permissions`, `--menu=`, `--permissions=`, `--directory-base=`, `--directory-bundle=`, `--directory-translations=`, `--no-directory-nav`, `--stdout` (full JSON). |
 | `npm run verify-tf-export-env-vars` | Updates `public/provider-env-vars.json` | `--version=X.Y.Z`, `--latest=X.Y.Z`. Auto-appends new provider env vars; **exits non-zero** until each is triaged (`export-template` or `providerEnvVarsIgnore`). Runs in CI after upstream refresh. |
-| `npm run generate-site-updates` | `public/site-updates-data/` | `--base`, `--head`, `--date=YYYY-MM-DD`, `--dry-run`, `--force`. Normally CI-only on push to `main`; use locally to preview changelog entries from a commit range. |
+| `npm run generate-site-updates` | `public/site-updates-data/` | `--base`, `--head`, `--date=YYYY-MM-DD`, `--dry-run`, `--force`, `--scrub`. Normally CI-only on push to `main`; use locally to preview changelog entries from a commit range. `--scrub` re-filters auto-generated entries using `scripts/lib/site-feature-policy.mjs`. |
+
+### Site feature policy (hidden vs public)
+
+**Single registry:** `scripts/lib/site-feature-policy.mjs`
+
+When you add a download permalink or other feature that should **not** appear in Site updates, add one entry to `SITE_FEATURES` with:
+
+- `visibility`: `hidden` (private permalink like `/spreadsheet`, `/labfiles`, `/supported-resources`), `shareable` (link-only like `/roles/...`), `semi-public`, or `public`
+- `siteUpdates.commitKeywords` — git commit subjects to ignore
+- `siteUpdates.scrubKeywords` — text to strip from auto-generated site-update markdown
+- `siteUpdates.dataOnlyPaths` — paths that never trigger “user-visible change” on their own
+
+Site updates, sitemap dialog paths, and scrub logic derive from this file. Add new build consumers here instead of one-off regexes elsewhere.
 
 ### Related scripts (no npm alias)
 
