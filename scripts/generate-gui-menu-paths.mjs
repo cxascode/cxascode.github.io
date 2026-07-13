@@ -1,6 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { loadDirectoryCommandNav } from "./lib/directory-command-nav.mjs";
+import { buildMenuCatalog } from "./lib/supported-resources-menu-destination.mjs";
+import { attachResourceTypesToMenuCatalog } from "../src/guiMenuPaths.js";
 import { MIN_RESOURCE_PERMISSIONS_VERSION } from "./lib/public-data-path-constants.mjs";
 
 const PUBLIC_DIR = path.resolve("public");
@@ -206,12 +208,6 @@ const DIRECTORY_TITLE_KEY_HINTS = {
   ],
   trunks: ["telephony_providers_edges_trunk", "telephony_providers_edges_trunkbasesettings"],
   externalMetricDefinitions: ["employeeperformance_externalmetrics_definitions"],
-};
-
-// Architect app pages not present in directory command-nav; extend parent link breadcrumb.
-const RESOURCE_MENU_PATH_EXTENSIONS = {
-  genesyscloud_architect_grammar: " > Grammars",
-  genesyscloud_architect_grammar_language: " > Grammars",
 };
 
 const DIRECTORY_TITLE_KEY_MATCH_BONUS = 250_000;
@@ -612,24 +608,6 @@ function preferDirectoryEquivalentPath(path, menuRows) {
     return leafNorm === sourceLeafNorm;
   });
   return directoryRow?.path || normalizedPath;
-}
-
-function extendMenuPath(resourceType, menuPath) {
-  const extension = RESOURCE_MENU_PATH_EXTENSIONS[resourceType];
-  if (!extension || !menuPath) return menuPath;
-  const suffix = extension.replace(/^\s*>\s*/, "");
-  if (menuPath.endsWith(suffix)) return menuPath;
-  return `${menuPath}${extension}`;
-}
-
-function finalizeMenuMatch(resourceType, match) {
-  if (!match) return match;
-  const menuPath = extendMenuPath(resourceType, match.menuPath);
-  if (menuPath === match.menuPath) return match;
-  return {
-    ...match,
-    menuPath,
-  };
 }
 
 function translationKeysFromResourceType(resourceType) {
@@ -1508,15 +1486,9 @@ function buildMapping(
       continue;
     }
 
-    let match = finalizeMenuMatch(
-      resourceType,
-      bestMenuMatch(resourceType, uniquePermissions, menuRows, translationIndex)
-    );
+    let match = bestMenuMatch(resourceType, uniquePermissions, menuRows, translationIndex);
     if (!match && !permissionOnly) {
-      match = finalizeMenuMatch(
-        resourceType,
-        bestTranslationFallbackMatch(resource, uniquePermissions, menuRows, translationIndex)
-      );
+      match = bestTranslationFallbackMatch(resource, uniquePermissions, menuRows, translationIndex);
     }
 
     if (match) {
@@ -1561,7 +1533,16 @@ function mergeMenuRows(previousRows, generatedRows) {
     const key = `${row.path}\0${authorize}`;
     if (seen.has(key)) continue;
     seen.add(key);
-    merged.push({ path: row.path, authorize });
+
+    const mergedRow = { path: row.path, authorize };
+    if (typeof row.link === "string" && row.link.trim()) mergedRow.link = row.link.trim();
+    if (typeof row.titleKey === "string" && row.titleKey.trim()) {
+      mergedRow.titleKey = row.titleKey.trim();
+    }
+    if (typeof row.menuSource === "string" && row.menuSource.trim()) {
+      mergedRow.menuSource = row.menuSource.trim();
+    }
+    merged.push(mergedRow);
   }
 
   return merged;
@@ -1772,11 +1753,16 @@ async function loadPermissionOverrides() {
 }
 
 function buildPublicOutput(fullOutput) {
+  const menuCatalog = attachResourceTypesToMenuCatalog(
+    fullOutput.menuCatalog,
+    fullOutput.guiMenuPaths
+  );
+
   return {
     generatedAt: fullOutput.generatedAt,
     permissionsSource: fullOutput.permissionsSource,
     permissionsUnion: fullOutput.permissionsUnion ?? null,
-    guiMenuPaths: fullOutput.guiMenuPaths,
+    menuCatalog,
   };
 }
 
@@ -1895,6 +1881,7 @@ async function main() {
     permissionResourceTypes
   );
   const menuRows = mergeMenuRows(previous?.menuRows, generated.menuRows);
+  const menuCatalog = buildMenuCatalog(generated.menuRows, directoryNav.menuRows);
 
   const unionResourceTypes = new Set(
     (permissionsJson.resources || []).map((resource) => getResourceType(resource)).filter(Boolean)
@@ -1912,11 +1899,13 @@ async function main() {
     menuSource,
     directoryNavSource: directoryNav.sources,
     directoryCommandNavEntries: directoryNav.commandNavEntryCount,
+    directoryMenuRows: directoryNav.menuRows,
     permissionsSource: path.relative(process.cwd(), latestPermissionsPath),
     permissionsUnion,
     generatedAt: new Date().toISOString(),
     guiMenuPaths,
     guiMenuPathCatalog,
+    menuCatalog,
     menuRows,
     guiMenuPathsIgnore,
   };
@@ -1929,7 +1918,7 @@ async function main() {
   await writeGuiMenuPathOutputs(output);
 
   console.log(
-    `Wrote ${path.relative(process.cwd(), OUTPUT_PATH)} (public, ${Object.keys(guiMenuPaths).length} guiMenuPaths) and ${path.relative(process.cwd(), DEBUG_OUTPUT_PATH)} (debug catalog, ${menuRows.length} menuRows, ${directoryNav.menuRows.length} directory command-nav rows, ${mappedCount}/${totalResources} mapped this run, ${permissionResourceTypes.size} in latest permissions, ${unmappedCount} unmapped)`
+    `Wrote ${path.relative(process.cwd(), OUTPUT_PATH)} (public, ${menuCatalog.length} menuCatalog entries, ${Object.keys(guiMenuPaths).length} mapped resource types) and ${path.relative(process.cwd(), DEBUG_OUTPUT_PATH)} (debug catalog, ${menuRows.length} menuRows, ${directoryNav.menuRows.length} directory command-nav rows, ${mappedCount}/${totalResources} mapped this run, ${permissionResourceTypes.size} in latest permissions, ${unmappedCount} unmapped)`
   );
   console.log(
     `Match methods: permission=${generated.matchMethodCounts.permission}, path-affinity=${generated.matchMethodCounts["path-affinity"]}, translation=${translationMapped} (resource-type=${generated.matchMethodCounts["translation-resource-type"]}, entity=${generated.matchMethodCounts["translation-entity"]}, scope=${generated.matchMethodCounts["translation-scope"]}, resource=${generated.matchMethodCounts["translation-resource"]})`

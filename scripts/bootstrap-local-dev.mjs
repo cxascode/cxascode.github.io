@@ -10,6 +10,7 @@ const DEP_DIR = path.join(PUBLIC_DIR, "dependency-tree-json");
 const PERM_JSON_DIR = path.join(PUBLIC_DIR, "resource-permissions-json");
 const PERM_TF_DIR = path.join(PUBLIC_DIR, "resource-permissions-tf");
 const SPREADSHEET_DIR = path.join(PUBLIC_DIR, "spreadsheet-templates");
+const SUPPORTED_RESOURCES_DIR = path.join(PUBLIC_DIR, "supported-resources-templates");
 
 const DEP_LATEST_PATH = path.join(DEP_DIR, "latest.json");
 const RW_LATEST_PATH = path.join(PERM_TF_DIR, "latest-read-write-role.tf");
@@ -146,7 +147,12 @@ async function runGenerator(latest) {
   await runScript("scripts/generate-schema-force-new.mjs");
   await runScript("scripts/verify-tf-export-env-vars.mjs");
   await runScript("scripts/write-merged-dependency-tree.mjs");
+  await runScript("scripts/build-spreadsheet-templates.mjs");
   await runScript("scripts/generate-spreadsheet-template.mjs", [
+    `--latest=${latest}`,
+    "--force",
+  ]);
+  await runScript("scripts/generate-supported-resources-spreadsheet.mjs", [
     `--latest=${latest}`,
     "--force",
   ]);
@@ -162,6 +168,7 @@ async function main() {
   await ensureDir(PERM_JSON_DIR);
   await ensureDir(PERM_TF_DIR);
   await ensureDir(SPREADSHEET_DIR);
+  await ensureDir(SUPPORTED_RESOURCES_DIR);
 
   // Clean up retired top-level aliases if they still exist from previous layout.
   await removeIfExists(path.join(PUBLIC_DIR, "dependency_tree.json"));

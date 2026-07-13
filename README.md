@@ -56,17 +56,18 @@ Reference for `package.json` scripts. CI behavior is described in [Deploy workfl
 | Script | What it does |
 |--------|----------------|
 | `npm run bootstrap-local-dev` | **Lightweight local setup.** Downloads the **latest** `dependency_tree-*.json` and `resource_permissions-*.json` from `MyPureCloud/terraform-provider-genesyscloud` (when present), refreshes `public/dependency-tree-json/index.json` and `latest.json`, then runs all generators below. Optional `--latest=X.Y.Z` to pin the version. Use `GH_TOKEN` or `GITHUB_TOKEN` to avoid API rate limits. |
-| `npm run download-provider-versions` | **Full version history**, like CI bootstrap. Downloads every cached provider version ≥ min versions into `public/dependency-tree-json/` and `public/resource-permissions-json/`. Skips files that already exist and validate. Environment variables: `DOWNLOAD_PERMISSIONS=false` (dependency trees only), `RUN_GENERATORS=false` (download only), `MIN_DEP_VERSION`, `MIN_PERM_VERSION`, `GH_TOKEN`. When `RUN_GENERATORS=true` (default), runs permissions TF, tf-export, verify, spreadsheet, and lab generators for the latest version. |
+| `npm run download-provider-versions` | **Full version history**, like CI bootstrap. Downloads every cached provider version ≥ min versions into `public/dependency-tree-json/` and `public/resource-permissions-json/`. Skips files that already exist and validate. Environment variables: `DOWNLOAD_PERMISSIONS=false` (dependency trees only), `RUN_GENERATORS=false` (download only), `MIN_DEP_VERSION`, `MIN_PERM_VERSION`, `GH_TOKEN`. When `RUN_GENERATORS=true` (default), runs permissions TF, tf-export, verify, spreadsheet, supported-resources spreadsheet, and lab generators for the latest version. |
 
 **When to use which:** `bootstrap-local-dev` is enough for day-to-day app work. Use `download-provider-versions` when you need the full multi-version cache locally (spreadsheet/lab artifacts for older provider versions, or debugging version-specific output).
 
 ### Generators
 
-All generators read `public/overrides.json` unless `--overrides=` is passed (spreadsheet only). Spreadsheet and lab scripts support **`--incremental`** (skip unchanged versions) and **`--force`** (rebuild all). CI passes `--incremental`; add `--force` locally to match `force_deploy`.
+All generators read `public/overrides.json` unless `--overrides=` is passed (spreadsheet only). Spreadsheet, supported-resources spreadsheet, and lab scripts support **`--incremental`** (skip unchanged versions) and **`--force`** (rebuild all). CI passes `--incremental`; add `--force` locally to match `force_deploy`.
 
 | Script | Output | Common flags |
 |--------|--------|--------------|
 | `npm run generate-spreadsheet-template` | `public/spreadsheet-templates/{version}-cx-as-code-template.xlsx`, `latest-cx-as-code-template.xlsx` | `--latest=X.Y.Z`, `--incremental`, `--force`, `--overrides=path` |
+| `npm run generate-supported-resources-spreadsheet` | `public/supported-resources-templates/{version}-supported-resources.xlsx`, `latest-supported-resources.xlsx` | `--latest=X.Y.Z`, `--incremental`, `--force` |
 | `npm run generate-lab-package` | `public/lab-packages/{version}-cx-as-code-lab.zip`, `latest-cx-as-code-lab.zip` | `--latest=X.Y.Z`, `--incremental`, `--force` |
 | `npm run generate-tf-export-resource-names` | `public/tf-export-resource-names/{version}.json` | No args: all cached versions. `--version=X.Y.Z`, `--latest=X.Y.Z`, `--provider=path`, `--verify`, `--stdout` |
 | `npm run generate-tf-export-singletons` | `public/tf-export-singletons/{version}.json` | Same pattern as tf-export resource names |
@@ -117,12 +118,13 @@ npm run download-provider-versions
 - `dependencyNotes` — per resource type, Markdown note (GFM) shown at the bottom of Resource Type Details when that type is selected. Use `\n` in JSON for line breaks (not `\\n`).
 - `guiMenuPaths` — optional per-type override for Genesys Cloud admin menu paths shown in Resource Type Details and the GUI list view; wins over `public/gui-menu-paths.json`
 - `hiddenResourceTypes` — resource types omitted from the left-hand list (still appear in Depends on / Dependency for when referenced)
+- `hiddenSupportedResourcesMenuLinks` — Directory `link` values from `gui-menu-paths.json` `menuCatalog` omitted from the supported-resources spreadsheet only (does not affect `/spreadsheet` deploy template)
 - `spreadsheetTemplates` — spreadsheet program layer: `out` (out-of-scope types; column 5 label `"out"`, cols 7–8 blank), `repoAssignments` (repo → comma-separated resource types for column 8), `repoDeployOrder` (ordered repo names → Priority column 1-based deploy wave). Unassigned in-scope types show `TBD` in column 8. Rows sort by priority, then alpha; `TBD` before out-of-scope. Also the source of truth for `exclude_filter_resources` in the lab `exportpipeline/main.tf` (minus any types listed in that file's `replace_with_datasource` block, and minus `nonExportableResourceTypes`).
 - **Division aware** — badge when **Depends on** includes `genesyscloud_auth_division`; list filter **Division Aware** → *Yes* / *No* (blank = all types; same heuristic)
 - `deprecatedResourceTypes` — **Deprecated** badge in resource details; **Notes** column in spreadsheet templates (`Deprecated`)
-- `nonExportableResourceTypes` — **Non-exportable** badge in resource details; **Notes** column in spreadsheet templates (`Non-exportable`); omitted from lab `exclude_filter_resources` (cannot be exported, so exclusion is unnecessary)
-- **Singleton** — badge in resource details; **Notes** column in spreadsheet templates (`Org-wide singleton`)
-- **Changing these attributes recreates the resource** — detail row in resource details; **Notes** column in spreadsheet templates (`Recreates if attrib(s) changed: attr1, attr2`)
+- `nonExportableResourceTypes` — **Cannot be exported** badge in resource details; **Notes** column in spreadsheet templates (`Cannot be exported`); omitted from lab `exclude_filter_resources` (cannot be exported, so exclusion is unnecessary)
+- **Singleton** — badge in resource details; **Notes** column in spreadsheet templates (`Only one per org`)
+- **Changing these attributes recreates the resource** — detail row in resource details; **Recreate attributes** column in spreadsheet templates (`group_ids, user_ids`)
 
 Examples:
 
@@ -349,3 +351,14 @@ Hidden permalink download (same pattern as `/spreadsheet` and `/roles/...`):
 
 - `/labfiles/latest`
 - `/labfiles/v1.82.0`
+
+## supported-resources-templates/
+
+`public/supported-resources-templates/` is **generated** from `public/gui-menu-paths.json` `menuCatalog` and each cached `dependency-tree-json/{version}.json`. It lists Directory config destinations (menu path, supported yes/no, mapped resource types) for configuration coverage review — separate from the deploy `/spreadsheet` template.
+
+**Local:** `npm run generate-supported-resources-spreadsheet` (optionally `-- --incremental` or `-- --force`; see [npm scripts](#npm-scripts)). Also runs from `bootstrap-local-dev` and CI.
+
+Hidden permalink download (same pattern as `/spreadsheet` and `/labfiles`):
+
+- `/supported-resources/latest`
+- `/supported-resources/v1.84.2`

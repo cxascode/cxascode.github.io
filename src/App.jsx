@@ -14,7 +14,7 @@ import {
   RESOURCE_NAME_PLACEHOLDER,
 } from "./tfExportTemplate.js";
 import {
-  normalizeGeneratedGuiMenuPaths,
+  normalizeGuiMenuPathsDocument,
   resolveGuiMenuPath,
 } from "./guiMenuPaths.js";
 import {
@@ -42,6 +42,7 @@ import {
   ARTIFACT_READ_ONLY_ROLE,
   ARTIFACT_READ_WRITE_ROLE,
   ARTIFACT_SPREADSHEET,
+  ARTIFACT_SUPPORTED_RESOURCES,
   artifactDownloadFilename,
   downloadUrlArtifact,
 } from "./artifactDownloads.js";
@@ -66,6 +67,7 @@ import {
   readLabFilesDownloadFromLocation,
   readRoleDownloadFromLocation,
   readSpreadsheetDownloadFromLocation,
+  readSupportedResourcesDownloadFromLocation,
   roleDownloadPathname,
   ROLE_READ_ONLY_SEGMENT,
   ROLE_READ_WRITE_SEGMENT,
@@ -228,6 +230,7 @@ function isRoleDownloadSupported(version) {
  *     "<resource_type>": "Admin > Menu > Path (overrides public/gui-menu-paths.json)"
  *   },
  *   "hiddenResourceTypes": ["genesyscloud_bcp_tf_exporter", ...]
+ *   "hiddenSupportedResourcesMenuLinks": ["#/admin/wfm/schedules", ...]
  *   "deprecatedResourceTypes": ["genesyscloud_journey_outcome", ...]
  *   "nonExportableResourceTypes": ["genesyscloud_outbound_contact_list_contact", ...]
  *   "spreadsheetTemplates": {
@@ -489,7 +492,7 @@ export default function App() {
           setOverrides(overridesJson);
           setProviderEnvVarCatalog(envVarsJson);
           setGeneratedGuiMenuPaths(
-            normalizeGeneratedGuiMenuPaths(guiMenuPathsJson?.guiMenuPaths)
+            normalizeGuiMenuPathsDocument(guiMenuPathsJson)
           );
         }
       } catch (e) {
@@ -942,6 +945,7 @@ export default function App() {
   const [attributeIndexDialogOpen, setAttributeIndexDialogOpen] = useState(false);
   const [envVarsDialogOpen, setEnvVarsDialogOpen] = useState(false);
   const spreadsheetPermalinkRef = useRef("");
+  const supportedResourcesPermalinkRef = useRef("");
   const labFilesPermalinkRef = useRef("");
   const roleDownloadPermalinkRef = useRef("");
   const newestListedReleaseRef = useRef("");
@@ -1142,6 +1146,36 @@ export default function App() {
     return true;
   }, []);
 
+  const handleSupportedResourcesPermalink = useCallback(() => {
+    const version = readSupportedResourcesDownloadFromLocation();
+    if (version === null) {
+      supportedResourcesPermalinkRef.current = "";
+      return false;
+    }
+
+    const permalinkKey = window.location.pathname;
+    if (supportedResourcesPermalinkRef.current === permalinkKey) return true;
+
+    supportedResourcesPermalinkRef.current = permalinkKey;
+
+    void downloadUrlArtifact(
+      ARTIFACT_SUPPORTED_RESOURCES,
+      version,
+      newestListedReleaseRef.current
+    ).finally(() => {
+      if (readSupportedResourcesDownloadFromLocation() === null) {
+        supportedResourcesPermalinkRef.current = "";
+        return;
+      }
+
+      skipNextUrlSyncRef.current = true;
+      replaceDialogInUrl("", readResourceTypeFromLocation(), readVersionFromLocation() || "latest");
+      supportedResourcesPermalinkRef.current = "";
+    });
+
+    return true;
+  }, []);
+
   const handleLabFilesPermalink = useCallback(() => {
     const version = readLabFilesDownloadFromLocation();
     if (version === null) {
@@ -1210,6 +1244,7 @@ export default function App() {
   useEffect(() => {
     const syncFromLocation = () => {
       if (handleSpreadsheetPermalink()) return;
+      if (handleSupportedResourcesPermalink()) return;
       if (handleLabFilesPermalink()) return;
       if (handleRoleDownloadPermalink()) return;
 
@@ -1245,6 +1280,7 @@ export default function App() {
     };
 
     handleSpreadsheetPermalink();
+    handleSupportedResourcesPermalink();
     handleLabFilesPermalink();
     handleRoleDownloadPermalink();
     window.addEventListener("popstate", syncFromLocation);
@@ -1253,6 +1289,7 @@ export default function App() {
     allTypes,
     availableVersions,
     handleSpreadsheetPermalink,
+    handleSupportedResourcesPermalink,
     handleLabFilesPermalink,
     handleRoleDownloadPermalink,
     syncAttributeIndexFromUrl,
@@ -1411,7 +1448,7 @@ export default function App() {
       {isSingleton ? (
         <span
           className="gcSingletonBadge"
-          title="Org-wide singleton — only one instance exists per organization."
+          title="Only one per org — a single instance can exist for the organization."
         >
           Singleton
         </span>
@@ -1429,7 +1466,7 @@ export default function App() {
           className="gcNonExportableBadge"
           title="This provider resource type cannot be exported with genesyscloud_tf_export."
         >
-          Non-exportable
+          Cannot be exported
         </span>
       ) : null}
     </>

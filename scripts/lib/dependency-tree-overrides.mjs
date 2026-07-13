@@ -10,6 +10,19 @@ export function getHiddenResourceTypes(overrides) {
   );
 }
 
+/** Menu link URLs omitted from the supported-resources spreadsheet only. */
+export function getHiddenSupportedResourcesMenuLinks(overrides) {
+  const hidden = overrides?.hiddenSupportedResourcesMenuLinks;
+  if (!Array.isArray(hidden)) return new Set();
+
+  return new Set(
+    hidden
+      .filter((entry) => typeof entry === "string")
+      .map((entry) => entry.trim())
+      .filter(Boolean)
+  );
+}
+
 export function getDeprecatedResourceTypes(overrides) {
   const deprecated = overrides?.deprecatedResourceTypes;
   if (!Array.isArray(deprecated)) return new Set();
