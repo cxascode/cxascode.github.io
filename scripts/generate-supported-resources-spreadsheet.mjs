@@ -233,21 +233,27 @@ function parseMenuPathTiers(menuPath) {
     .filter(Boolean);
 
   if (segments.length === 0) {
-    return { section: "", group: "", item: "" };
+    return { section: "", group: "", item: "", depth: 0 };
   }
 
   if (segments.length === 1) {
-    return { section: segments[0], group: "", item: segments[0] };
+    return { section: segments[0], group: "", item: segments[0], depth: 1 };
   }
 
   if (segments.length === 2) {
-    return { section: segments[0], group: "", item: segments[1] };
+    return {
+      section: segments[0],
+      group: segments[1],
+      item: segments[1],
+      depth: 2,
+    };
   }
 
   return {
     section: segments[0],
     group: segments[1],
     item: segments[segments.length - 1],
+    depth: 3,
   };
 }
 
@@ -272,7 +278,7 @@ function buildNestedRows(orderedMenuPaths, entriesByPath) {
       continue;
     }
 
-    const { section, group, item } = parseMenuPathTiers(menuPath);
+    const { section, group, item, depth } = parseMenuPathTiers(menuPath);
 
     if (section !== currentSection) {
       rows.push({ kind: "section", label: section });
@@ -281,7 +287,9 @@ function buildNestedRows(orderedMenuPaths, entriesByPath) {
     }
 
     if (group && group !== currentGroup) {
-      rows.push({ kind: "subsection", label: group });
+      if (depth >= 3) {
+        rows.push({ kind: "subsection", label: group });
+      }
       currentGroup = group;
     } else if (!group) {
       currentGroup = "";
@@ -291,6 +299,7 @@ function buildNestedRows(orderedMenuPaths, entriesByPath) {
       kind: "path",
       item,
       group,
+      depth,
       supported: entry.supported,
       resourceTypes: entry.resourceTypes,
     });
@@ -386,10 +395,17 @@ async function writeWorkbook(rows, outPath) {
       continue;
     }
 
-    row.outlineLevel = entry.group ? 2 : 1;
-    maxOutlineLevel = Math.max(maxOutlineLevel, row.outlineLevel);
-    styleLeafMenuCell(row.getCell(1), { indent: entry.group ? 2 : 1 });
-    row.getCell(1).value = entry.item;
+    const menuCell = row.getCell(1);
+    if (entry.depth === 2) {
+      row.outlineLevel = 1;
+      maxOutlineLevel = Math.max(maxOutlineLevel, 1);
+      styleSubsectionCell(menuCell);
+    } else {
+      row.outlineLevel = entry.group ? 2 : 1;
+      maxOutlineLevel = Math.max(maxOutlineLevel, row.outlineLevel);
+      styleLeafMenuCell(menuCell, { indent: entry.group ? 2 : 1 });
+    }
+    menuCell.value = entry.item;
     row.getCell(2).value = entry.supported;
     row.getCell(3).value = entry.resourceTypes.join(", ");
     styleDataCell(row.getCell(2));
