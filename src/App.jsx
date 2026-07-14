@@ -17,6 +17,7 @@ import {
   normalizeGuiMenuPathsDocument,
   resolveGuiMenuPath,
 } from "./guiMenuPaths.js";
+import generatedGuiMenuPathsDocument from "./gui-menu-paths.json";
 import {
   isSingletonTfExportResource,
   normalizeSingletonResourceTypes,
@@ -97,7 +98,6 @@ const INDEX_URL = indexJsonUrl(DEPENDENCY_TREE_DIR);
 const LATEST_URL = latestJsonUrl(DEPENDENCY_TREE_DIR);
 const OVERRIDES_URL = publicDataUrl("", "overrides.json");
 const PROVIDER_ENV_VARS_URL = publicDataUrl("", "provider-env-vars.json");
-const GUI_MENU_PATHS_URL = publicDataUrl("", "gui-menu-paths.json");
 const VERSION_URL = (v) => versionedJsonUrl(DEPENDENCY_TREE_DIR, v);
 
 function attributeIndexVersionFromUrl(versionFromUrl) {
@@ -227,7 +227,7 @@ function isRoleDownloadSupported(version) {
  *     "<resource_type>": "Markdown note shown in Resource Type Details"
  *   },
  *   "guiMenuPaths": {
- *     "<resource_type>": "Admin > Menu > Path (overrides public/gui-menu-paths.json)"
+ *     "<resource_type>": "Admin > Menu > Path (overrides src/gui-menu-paths.json)"
  *   },
  *   "hiddenResourceTypes": ["genesyscloud_bcp_tf_exporter", ...]
  *   "supportedResourcesAdminExclusionKeywords": ["wfm/schedules", "troubleshooting", ...]
@@ -432,7 +432,10 @@ export default function App() {
 
   const [raw, setRaw] = useState(null);
   const [overrides, setOverrides] = useState(null);
-  const [generatedGuiMenuPaths, setGeneratedGuiMenuPaths] = useState({});
+  const generatedGuiMenuPaths = useMemo(
+    () => normalizeGuiMenuPathsDocument(generatedGuiMenuPathsDocument),
+    []
+  );
   const [providerEnvVarCatalog, setProviderEnvVarCatalog] = useState(null);
   const [tfExportResourceNames, setTfExportResourceNames] = useState({});
   const [tfExportSingletonTypes, setTfExportSingletonTypes] = useState(() => new Set());
@@ -465,10 +468,9 @@ export default function App() {
 
     (async () => {
       try {
-        const [overridesRes, envVarsRes, guiMenuPathsRes] = await Promise.all([
+        const [overridesRes, envVarsRes] = await Promise.all([
           fetch(OVERRIDES_URL, { cache: "no-store" }),
           fetch(PROVIDER_ENV_VARS_URL, { cache: "no-store" }),
-          fetch(GUI_MENU_PATHS_URL, { cache: "no-store" }),
         ]);
 
         if (!overridesRes.ok) {
@@ -483,18 +485,14 @@ export default function App() {
           );
         }
 
-        const [overridesJson, envVarsJson, guiMenuPathsJson] = await Promise.all([
+        const [overridesJson, envVarsJson] = await Promise.all([
           overridesRes.json(),
           envVarsRes.json(),
-          guiMenuPathsRes.ok ? guiMenuPathsRes.json() : Promise.resolve(null),
         ]);
 
         if (!cancelled) {
           setOverrides(overridesJson);
           setProviderEnvVarCatalog(envVarsJson);
-          setGeneratedGuiMenuPaths(
-            normalizeGuiMenuPathsDocument(guiMenuPathsJson)
-          );
         }
       } catch (e) {
         if (!cancelled) setError(String(e));

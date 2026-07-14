@@ -31,6 +31,7 @@ import {
   resolveSpreadsheetRepoName,
 } from "./lib/priority-group-keywords.mjs";
 import {
+  GUI_MENU_PATHS_RELATIVE_PATH,
   isDependencyTreeVersionJsonFilename,
   MIN_SINGLETON_FLAG_VERSION,
   SCHEMA_FORCE_NEW_DIR,
@@ -260,7 +261,7 @@ function buildResourceRows(raw, overrides, tfExportCatalog, generatedGuiMenuPath
 }
 
 async function loadGeneratedGuiMenuPaths() {
-  const guiMenuPathsPath = path.join(PUBLIC_DIR, "gui-menu-paths.json");
+  const guiMenuPathsPath = path.join(REPO_ROOT, GUI_MENU_PATHS_RELATIVE_PATH);
   try {
     const parsed = JSON.parse(await fs.readFile(guiMenuPathsPath, "utf8"));
     return normalizeGuiMenuPathsDocument(parsed);

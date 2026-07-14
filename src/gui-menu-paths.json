@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-14T12:08:38.590Z",
+  "generatedAt": "2026-07-14T18:16:18.755Z",
   "permissionsSource": "public/resource-permissions-json/1.84.2.json",
   "permissionsUnion": {
     "fromVersion": "1.76.0",
@@ -110,12 +110,13 @@
     },
     {
       "path": "Activity",
-      "link": "#/timeline",
+      "link": "#/activity",
       "titleKey": "navBar.commandView.activity",
       "menuSource": "directory-command-nav",
-      "authorize": "policy=ui:agentActivity:view | policy=ui:supervisorActivity:view | policy=ui:supervisorQueueDetails:view",
+      "authorize": "policy=ui:agentActivity:view | policy=ui:supervisorActivity:view",
       "featureToggles": [
-        "WEM-1368_Queue-Performance-Widget"
+        "WEM-1368_Queue-Performance-Widget",
+        "WEM-1476_Agent-Activity-Migration"
       ],
       "includeInSupportedResources": false,
       "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
@@ -324,15 +325,15 @@
     },
     {
       "path": "Conversation Intelligence > Speech and Text Analytics > Programs",
-      "link": "#/topics-definitions/programs",
+      "link": "#/programs-definitions/programs",
       "titleKey": "navBar.commandView.conversationIntelligence.subMenu.speechAndTextAnalytics.subMenu.programs",
       "menuSource": "directory-command-nav",
       "authorize": "policy=speechAndTextAnalytics:program:view",
       "featureToggles": [
-        "GIA-26602_TDUI_Vue_3_Migration"
+        "GIA-26602_TDUI_Vue_3_Migration",
+        "GIA-29936_PDUI"
       ],
-      "includeInSupportedResources": false,
-      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
+      "includeInSupportedResources": true,
       "resourceTypes": []
     },
     {
@@ -1100,8 +1101,7 @@
       "featureToggles": [
         "DX.GKC-5121.CX2DX-migration-force-cx"
       ],
-      "includeInSupportedResources": false,
-      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
+      "includeInSupportedResources": true,
       "resourceTypes": []
     },
     {
@@ -1114,8 +1114,7 @@
         "DX.GKC-5121.CX2DX-migration-force-cx",
         "GKC-26947_disable-knowledge-v3-for-EUSC"
       ],
-      "includeInSupportedResources": false,
-      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
+      "includeInSupportedResources": true,
       "resourceTypes": []
     },
     {
@@ -1127,8 +1126,7 @@
       "featureToggles": [
         "DX.GKC-5121.CX2DX-migration-force-cx"
       ],
-      "includeInSupportedResources": false,
-      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
+      "includeInSupportedResources": true,
       "resourceTypes": []
     },
     {
@@ -1140,8 +1138,7 @@
       "featureToggles": [
         "DX.GKC-5121.CX2DX-migration-force-cx"
       ],
-      "includeInSupportedResources": false,
-      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
+      "includeInSupportedResources": true,
       "resourceTypes": []
     },
     {
@@ -1766,7 +1763,7 @@
     },
     {
       "path": "User Management > Authorized Organizations",
-      "link": "#/admin/people-permissions/authorized-orgs",
+      "link": "#/admin/auth-orgs",
       "titleKey": "navBar.commandView.userManagement.subMenu.authorizedOrgs",
       "menuSource": "directory-command-nav",
       "authorize": "policy=authorization:orgTrustee:view | policy=authorization:orgTrustor:view",
@@ -1859,7 +1856,7 @@
     },
     {
       "path": "User Management > Users",
-      "link": "#/admin/directory/peopleV3",
+      "link": "#/admin/users",
       "titleKey": "navBar.commandView.userManagement.subMenu.users",
       "menuSource": "directory-command-nav",
       "authorize": "policy=admin | policy=authorization:grant:add | policy=authorization:grant:delete | policy=authorization:grant:edit | policy=authorization:grant:view | policy=authorization:role:add | policy=authorization:role:delete | policy=authorization:role:edit | policy=authorization:role:view | policy=directory:user:edit | policy=person_administration | policy=routing:skill:assign | policy=user_administration | policy=user_manager",
@@ -1927,10 +1924,10 @@
     },
     {
       "path": "Workforce Management > Forecasting > Forecasts",
-      "link": "#/admin/wfm/forecasts",
+      "link": "#/admin/wfm/forecasting/forecasts",
       "titleKey": "navBar.commandView.wfm.subMenu.forecasting.subMenu.forecasts",
       "menuSource": "directory-command-nav",
-      "authorize": "policy=wfm:shortTermForecast:administer | policy=wfm:shortTermForecast:view",
+      "authorize": "policy=wfm:shortTermForecast:view",
       "featureToggles": [
         "WEM-1539_forecast_list"
       ],
@@ -2016,7 +2013,7 @@
     },
     {
       "path": "Workforce Management > Scheduling > Time-Off Requests",
-      "link": "#/admin/wfm/timeOffRequests",
+      "link": "#/admin/wfm/time-off/requests",
       "titleKey": "navBar.commandView.wfm.subMenu.scheduling.subMenu.timeOffRequests",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:timeOffRequest:administer | policy=wfm:timeOffRequest:view",

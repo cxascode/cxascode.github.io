@@ -17,6 +17,7 @@ import {
   writeStamp,
 } from "./lib/generated-artifact-incremental.mjs";
 import {
+  GUI_MENU_PATHS_RELATIVE_PATH,
   isDependencyTreeVersionJsonFilename,
   SUPPORTED_RESOURCES_TEMPLATES_DIR,
 } from "./lib/public-data-path-constants.mjs";
@@ -38,14 +39,14 @@ const PUBLIC_DIR = path.resolve("public");
 const INPUT_DIR = path.join(PUBLIC_DIR, "dependency-tree-json");
 const OUTPUT_DIR = path.join(PUBLIC_DIR, SUPPORTED_RESOURCES_TEMPLATES_DIR);
 const DEFAULT_OVERRIDES_PATH = path.join(PUBLIC_DIR, "overrides.json");
-const GUI_MENU_PATHS_PATH = path.join(PUBLIC_DIR, "gui-menu-paths.json");
 const REPO_ROOT = path.resolve(import.meta.dirname, "..");
+const GUI_MENU_PATHS_PATH = path.join(REPO_ROOT, GUI_MENU_PATHS_RELATIVE_PATH);
 const STAMP_DIR = path.resolve(REPO_ROOT, ".cache-meta/artifact-stamps/supported-resources");
 const UNMAPPED_MENU_PATH = "TBD";
 
 const SUPPORTED_RESOURCES_GLOBAL_INPUT_RELATIVE_PATHS = [
   "public/overrides.json",
-  "public/gui-menu-paths.json",
+  GUI_MENU_PATHS_RELATIVE_PATH,
   "scripts/templates/cx-as-code-supported-resources-template.xlsx",
   "scripts/lib/spreadsheet-styles.mjs",
   "scripts/lib/dependency-tree-overrides.mjs",

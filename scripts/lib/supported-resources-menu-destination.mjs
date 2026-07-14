@@ -1,3 +1,4 @@
+import { mergeDirectoryMenuRowsByPath } from "./directory-command-nav.mjs";
 import {
   getSupportedResourcesAdminExclusionKeywords,
   getSupportedResourcesFeatureToggleKeywords,
@@ -161,7 +162,7 @@ export function isAdminConfigLink(link) {
  *
  * Supported-resources funnel (v2):
  * 1. Known CX as Code mappings always win → include
- * 2. Exclude unmapped feature toggles (unless toggle matches supportedResourcesFeatureToggleKeywords)
+ * 2. Exclude unmapped feature toggles, except names matching supportedResourcesFeatureToggleKeywords → include
  * 3. Exclude non-admin (link does not contain "admin")
  * 4. Exclude admin links matching supportedResourcesAdminExclusionKeywords
  * 5. Remaining admin links → include
@@ -179,10 +180,10 @@ export function resolveMenuCatalogEntry(
   }
 
   const hasToggles = Array.isArray(featureToggles) && featureToggles.length > 0;
-  if (
-    hasToggles &&
-    !featureToggleBypassesPreviewExclusion(featureToggles, toggleAllowKeywords)
-  ) {
+  if (hasToggles) {
+    if (featureToggleBypassesPreviewExclusion(featureToggles, toggleAllowKeywords)) {
+      return includedResult();
+    }
     return excludedResult(SKIP_REASON.PREVIEW_TOGGLE);
   }
 
@@ -357,15 +358,13 @@ export function partitionMenuPathsForSpreadsheet(
  */
 export function buildMenuCatalog(directoryMenuRows, overrides = null) {
   const classifierOptions = getClassifierOptions(overrides);
+  const mergedRows = mergeDirectoryMenuRowsByPath(directoryMenuRows);
 
   const catalog = [];
-  const seen = new Set();
 
-  for (const row of directoryMenuRows || []) {
+  for (const row of mergedRows) {
     const menuPath = typeof row?.path === "string" ? row.path.trim() : "";
-    if (!menuPath || seen.has(menuPath)) continue;
-
-    seen.add(menuPath);
+    if (!menuPath) continue;
 
     const featureToggles =
       Array.isArray(row.featureToggles) && row.featureToggles.length > 0

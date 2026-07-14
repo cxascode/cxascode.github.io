@@ -77,7 +77,7 @@ function normalizeKeywordList(keywords) {
 
 /**
  * Feature-toggle name substrings that bypass preview exclusion (step 2).
- * Unmapped toggle-gated paths whose toggle contains any keyword continue through the funnel.
+ * Unmapped toggle-gated paths whose toggle contains any keyword are included on the sheet.
  */
 export function getSupportedResourcesFeatureToggleKeywords(overrides) {
   const custom = overrides?.supportedResourcesFeatureToggleKeywords;
