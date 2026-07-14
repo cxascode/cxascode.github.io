@@ -85,8 +85,39 @@
     "genesyscloud_bcp_tf_exporter",
     "genesyscloud_tf_export"
   ],
-  "hiddenSupportedResourcesMenuLinks": [
-    "#/admin/wfm/historicalImportV2"
+  "supportedResourcesAdminExclusionKeywords": [
+    "adherence",
+    "agent-ui",
+    "agentEvaluations",
+    "billing",
+    "calibrations",
+    "cloud-media",
+    "dashboards",
+    "edges",
+    "embed/analytics",
+    "encryptionKeys",
+    "evaluators",
+    "eventViewer",
+    "historicalImportV2",
+    "intradayMonitoring",
+    "live-now",
+    "main-forecast",
+    "partners",
+    "search-v2",
+    "shiftTrades",
+    "shrinkage",
+    "task-management",
+    "telecom",
+    "topology",
+    "troubleshooting",
+    "usage",
+    "wfm/schedules"
+  ],
+  "supportedResourcesFeatureToggleKeywords": [
+    "AI-1365",
+    "GKC-5121",
+    "GIA-26602",
+    "GIA-29936"
   ],
   "deprecatedResourceTypes": [
     "genesyscloud_journey_outcome",

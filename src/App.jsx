@@ -230,7 +230,8 @@ function isRoleDownloadSupported(version) {
  *     "<resource_type>": "Admin > Menu > Path (overrides public/gui-menu-paths.json)"
  *   },
  *   "hiddenResourceTypes": ["genesyscloud_bcp_tf_exporter", ...]
- *   "hiddenSupportedResourcesMenuLinks": ["#/admin/wfm/schedules", ...]
+ *   "supportedResourcesAdminExclusionKeywords": ["wfm/schedules", "troubleshooting", ...]
+ *   "supportedResourcesFeatureToggleKeywords": ["AI-1365", ...]
  *   "deprecatedResourceTypes": ["genesyscloud_journey_outcome", ...]
  *   "nonExportableResourceTypes": ["genesyscloud_outbound_contact_list_contact", ...]
  *   "spreadsheetTemplates": {

@@ -10,18 +10,80 @@ export function getHiddenResourceTypes(overrides) {
   );
 }
 
-/** Menu link URLs omitted from the supported-resources spreadsheet only. */
-export function getHiddenSupportedResourcesMenuLinks(overrides) {
-  const hidden = overrides?.hiddenSupportedResourcesMenuLinks;
-  if (!Array.isArray(hidden)) return new Set();
+/** Default link substrings that exclude admin routes from supported-resources (override in overrides.json). */
+export const DEFAULT_SUPPORTED_RESOURCES_ADMIN_EXCLUSION_KEYWORDS = [
+  "troubleshooting",
+  "platformusage",
+  "embed/analytics",
+  "live-now",
+  "billing/summary",
+  "#/admin/usage",
+  "wfm/adherence",
+  "wfm/shrinkage",
+  "intradayMonitoring",
+  "main-forecast",
+  "wfm/schedules",
+  "shiftTrades",
+  "workPlanV2/assignments",
+  "historicalImportV2",
+  "quality/agentEvaluations",
+  "quality/calibrations",
+  "quality/evaluators",
+  "quality/encryptionKeys",
+  "telephony/cloud-media",
+  "telephony/edges",
+  "telephony/topology",
+  "telecom/numbers",
+  "outbound/admin/eventViewer",
+  "routing/disconnectInteractions",
+];
 
-  return new Set(
-    hidden
-      .filter((entry) => typeof entry === "string")
-      .map((entry) => entry.trim())
-      .filter(Boolean)
-  );
+function normalizeAdminExclusionKeywordList(keywords) {
+  if (!Array.isArray(keywords)) return null;
+  return keywords
+    .filter((entry) => typeof entry === "string" && entry.trim())
+    .map((entry) => entry.trim());
 }
+
+/**
+ * Admin link substrings excluded from supported-resources after the admin/non-admin split.
+ */
+export function getSupportedResourcesAdminExclusionKeywords(overrides) {
+  const custom =
+    overrides?.supportedResourcesAdminExclusionKeywords ||
+    overrides?.supportedResourcesDestinationKeywords;
+
+  if (Array.isArray(custom)) {
+    return normalizeAdminExclusionKeywordList(custom) || [...DEFAULT_SUPPORTED_RESOURCES_ADMIN_EXCLUSION_KEYWORDS];
+  }
+
+  if (custom && typeof custom === "object") {
+    const flattened = Object.values(custom).flatMap((entry) =>
+      Array.isArray(entry) ? entry : []
+    );
+    const normalized = normalizeAdminExclusionKeywordList(flattened);
+    if (normalized?.length) return normalized;
+  }
+
+  return [...DEFAULT_SUPPORTED_RESOURCES_ADMIN_EXCLUSION_KEYWORDS];
+}
+
+function normalizeKeywordList(keywords) {
+  if (!Array.isArray(keywords)) return null;
+  return keywords
+    .filter((entry) => typeof entry === "string" && entry.trim())
+    .map((entry) => entry.trim());
+}
+
+/**
+ * Feature-toggle name substrings that bypass preview exclusion (step 2).
+ * Unmapped toggle-gated paths whose toggle contains any keyword continue through the funnel.
+ */
+export function getSupportedResourcesFeatureToggleKeywords(overrides) {
+  const custom = overrides?.supportedResourcesFeatureToggleKeywords;
+  return normalizeKeywordList(custom) || [];
+}
+
 
 export function getDeprecatedResourceTypes(overrides) {
   const deprecated = overrides?.deprecatedResourceTypes;

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T16:53:37.703Z",
+  "generatedAt": "2026-07-14T12:08:38.590Z",
   "permissionsSource": "public/resource-permissions-json/1.84.2.json",
   "permissionsUnion": {
     "fromVersion": "1.76.0",
@@ -10,164 +10,12 @@
   },
   "menuCatalog": [
     {
-      "path": "Journey Management",
-      "link": "/journey-management",
-      "titleKey": "navBar.commandView.journeyManagement.title",
-      "menuSource": "directory-command-nav",
-      "authorize": "policy=journey:views:view",
-      "destinationKind": "app-config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
-      "resourceTypes": [
-        "genesyscloud_journey_view_schedule",
-        "genesyscloud_journey_views"
-      ]
-    },
-    {
-      "path": "Workforce Management > Forecasting > Main Forecast",
-      "link": "#/admin/wfm/main-forecast",
-      "titleKey": "navBar.commandView.wfm.subMenu.forecasting.subMenu.mainForecast",
-      "menuSource": "directory-command-nav",
-      "authorize": "policy=wfm:mainForecast:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
-      "resourceTypes": []
-    },
-    {
-      "path": "Workforce Management > Forecasting > Forecasts",
-      "link": "#/admin/wfm/forecasting/forecasts",
-      "titleKey": "navBar.commandView.wfm.subMenu.forecasting.subMenu.forecasts",
-      "menuSource": "directory-command-nav",
-      "authorize": "policy=wfm:shortTermForecast:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
-      "resourceTypes": []
-    },
-    {
-      "path": "Workforce Management > Capacity Planning > Staffing Requirements",
-      "link": "#/admin/wfm/capacity-planning/staffing-requirements",
-      "titleKey": "navBar.commandView.wfm.subMenu.capacityPlanning.subMenu.staffingRequirements",
-      "menuSource": "directory-command-nav",
-      "authorize": "policy=wfm:longTermStaffing:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
-      "resourceTypes": []
-    },
-    {
-      "path": "Workforce Management > Capacity Planning > Capacity Plans",
-      "link": "#/admin/wfm/capacity-planning/capacity-plans",
-      "titleKey": "navBar.commandView.wfm.subMenu.capacityPlanning.subMenu.capacityPlans",
-      "menuSource": "directory-command-nav",
-      "authorize": "policy=wfm:capacityPlan:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
-      "resourceTypes": []
-    },
-    {
-      "path": "Workforce Management > Scheduling > Schedules",
-      "link": "#/admin/wfm/schedules",
-      "titleKey": "navBar.commandView.wfm.subMenu.scheduling.subMenu.schedules",
-      "menuSource": "directory-command-nav",
-      "authorize": "policy=wfm:publishedSchedule:view | policy=wfm:schedule:administer | policy=wfm:schedule:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
-      "resourceTypes": []
-    },
-    {
-      "path": "Workforce Management > Scheduling > Activity Plans",
-      "link": "#/admin/wfm/activityplans",
-      "titleKey": "navBar.commandView.wfm.subMenu.scheduling.subMenu.activityPlans",
-      "menuSource": "directory-command-nav",
-      "authorize": "policy=wfm:activityPlan:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
-      "resourceTypes": []
-    },
-    {
-      "path": "Workforce Management > Scheduling > Shift Trades",
-      "link": "#/admin/wfm/shiftTrades",
-      "titleKey": "navBar.commandView.wfm.subMenu.scheduling.subMenu.shiftTrades",
-      "menuSource": "directory-command-nav",
-      "authorize": "policy=wfm:shiftTradeRequest:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
-      "resourceTypes": []
-    },
-    {
-      "path": "Workforce Management > Scheduling > Opportunities",
-      "link": "#/admin/wfm/opportunities",
-      "titleKey": "navBar.commandView.wfm.subMenu.scheduling.subMenu.opportunities",
-      "menuSource": "directory-command-nav",
-      "authorize": "policy=wfm:opportunitiesQuery:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
-      "resourceTypes": []
-    },
-    {
-      "path": "Knowledge > Articles",
-      "link": "#/admin/knowledge/knowledgeBases/articles",
-      "titleKey": "navBar.commandView.knowledge.subMenu.articles",
-      "menuSource": "directory-command-nav",
-      "authorize": "policy=knowledge:knowledgebase:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
-      "resourceTypes": [
-        "genesyscloud_knowledge_document",
-        "genesyscloud_knowledge_document_variation",
-        "genesyscloud_knowledge_knowledgebase"
-      ]
-    },
-    {
-      "path": "Knowledge > Sources",
-      "link": "#/admin/knowledge/knowledgeBases/sources",
-      "titleKey": "navBar.commandView.knowledge.subMenu.sources",
-      "menuSource": "directory-command-nav",
-      "authorize": "policy=knowledge:knowledgebase:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
-      "resourceTypes": []
-    },
-    {
-      "path": "Knowledge > Knowledge Activity",
-      "link": "#/admin/knowledge/knowledgeBases/activity",
-      "titleKey": "navBar.commandView.knowledge.subMenu.activity",
-      "menuSource": "directory-command-nav",
-      "authorize": "policy=knowledge:knowledgebase:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
-      "resourceTypes": []
-    },
-    {
-      "path": "Knowledge > Optimizer",
-      "link": "#/admin/knowledge/optimizer",
-      "titleKey": "navBar.commandView.knowledge.subMenu.optimizer",
-      "menuSource": "directory-command-nav",
-      "authorize": "policy=knowledge:knowledgebase:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
-      "resourceTypes": []
-    },
-    {
       "path": "Account > Digital Data Filtering Rules",
       "link": "#/admin/dataprivacy/maskingrules",
       "titleKey": "navBar.commandView.account.subMenu.digitalDataFiltering",
       "menuSource": "directory-command-nav",
       "authorize": "policy=billing:subscription:add | policy=billing:subscription:create | policy=billing:subscription:edit | policy=billing:subscription:read | policy=billing:subscription:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -176,9 +24,12 @@
       "titleKey": "navBar.commandView.account.subMenu.multiOrgOverview",
       "menuSource": "directory-command-nav",
       "authorize": "policy=adminNotice:failoverNotice:add | policy=multiOrg:pairing:view | policy=multiOrg:replication:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "featureToggles": [
+        "PURE-6225_mrmo_replication",
+        "PURE-6270_failover_conductor"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -187,9 +38,12 @@
       "titleKey": "navBar.commandView.account.subMenu.orgPairing",
       "menuSource": "directory-command-nav",
       "authorize": "policy=multiOrg:pairing:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "featureToggles": [
+        "PURE-6225_mrmo_replication",
+        "PURE-6270_failover_conductor"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -198,9 +52,7 @@
       "titleKey": "navBar.commandView.account.subMenu.organizationSettings",
       "menuSource": "directory-command-nav",
       "authorize": "policy=integrations:integration:* | policy=telephony:plugin:all",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_conversations_settings",
         "genesyscloud_organization_authentication_settings",
@@ -213,9 +65,11 @@
       "titleKey": "navBar.commandView.account.subMenu.replication",
       "menuSource": "directory-command-nav",
       "authorize": "policy=multiOrg:replication:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "featureToggles": [
+        "PURE-6225_mrmo_replication"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -224,9 +78,8 @@
       "titleKey": "navBar.commandView.account.subMenu.subscription",
       "menuSource": "directory-command-nav",
       "authorize": "policy=billing:subscription:add | policy=billing:subscription:create | policy=billing:subscription:edit | policy=billing:subscription:read | policy=billing:subscription:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "includeInSupportedResources": false,
+      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
       "resourceTypes": []
     },
     {
@@ -235,9 +88,11 @@
       "titleKey": "navBar.commandView.account.subMenu.usage",
       "menuSource": "directory-command-nav",
       "authorize": "policy=billing:usage:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "featureToggles": [
+        "PURE-6828_refinery_launch"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -246,20 +101,24 @@
       "titleKey": "navBar.commandView.account.subMenu.userSwitchingConfiguration",
       "menuSource": "directory-command-nav",
       "authorize": "policy=adminNotice:failoverNotice:add",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "featureToggles": [
+        "PURE-6270_failover_conductor"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
       "path": "Activity",
-      "link": "#/activity",
+      "link": "#/timeline",
       "titleKey": "navBar.commandView.activity",
       "menuSource": "directory-command-nav",
-      "authorize": "policy=ui:agentActivity:view | policy=ui:supervisorActivity:view",
-      "destinationKind": "activity",
+      "authorize": "policy=ui:agentActivity:view | policy=ui:supervisorActivity:view | policy=ui:supervisorQueueDetails:view",
+      "featureToggles": [
+        "WEM-1368_Queue-Performance-Widget"
+      ],
       "includeInSupportedResources": false,
-      "skipReason": "Activity or status view; not an admin configuration page.",
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -268,9 +127,11 @@
       "titleKey": "navBar.commandView.analytics.subMenu.analyticsExplorer",
       "menuSource": "directory-command-nav",
       "authorize": "policy=analyticsExplorer:dashboard:manage | policy=analyticsExplorer:dashboard:view",
-      "destinationKind": "analytics",
+      "featureToggles": [
+        "PURE-7428_embedded-analytics"
+      ],
       "includeInSupportedResources": false,
-      "skipReason": "Analytics explorer; not an admin configuration page.",
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -279,9 +140,7 @@
       "titleKey": "navBar.commandView.analytics.subMenu.analyticsSettings",
       "menuSource": "directory-command-nav",
       "authorize": "policy=analytics:insightConfigurations:edit",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -290,9 +149,11 @@
       "titleKey": "navBar.commandView.analytics.subMenu.anomalyDetection",
       "menuSource": "directory-command-nav",
       "authorize": "policy=signals:anomalyDetectionMonitoredQueues:view | policy=signals:anomalyDetectionSettings:view | policy=signals:queueAnomalyQuery:view | policy=signals:queueAnomalySummary:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "featureToggles": [
+        "WEM-1310_QueueAnomalyDetection"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -301,9 +162,7 @@
       "titleKey": "navBar.commandView.contacts.subMenu.customFields",
       "menuSource": "directory-command-nav",
       "authorize": "policy=externalContacts:customFields:add | policy=externalContacts:customFields:edit",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -312,9 +171,7 @@
       "titleKey": "navBar.commandView.contacts.subMenu.externalContactsAndOrgs",
       "menuSource": "directory-command-nav",
       "authorize": "policy=externalContacts:contact:view | policy=externalContacts:externalOrganization:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_externalcontacts_contact",
         "genesyscloud_externalcontacts_organization"
@@ -326,9 +183,7 @@
       "titleKey": "navBar.commandView.contacts.subMenu.externalSources",
       "menuSource": "directory-command-nav",
       "authorize": "policy=externalContacts:externalSource:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_externalcontacts_external_source"
       ]
@@ -339,9 +194,7 @@
       "titleKey": "navBar.commandView.contacts.subMenu.identityResolution",
       "menuSource": "directory-command-nav",
       "authorize": "policy=admin",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -350,9 +203,7 @@
       "titleKey": "navBar.commandView.conversationIntelligence.subMenu.qualityManagement.subMenu.agentChecklist",
       "menuSource": "directory-command-nav",
       "authorize": "policy=assistants:agentchecklist:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -361,9 +212,8 @@
       "titleKey": "navBar.commandView.conversationIntelligence.subMenu.qualityManagement.subMenu.agentEvaluations",
       "menuSource": "directory-command-nav",
       "authorize": "policy=quality:evaluation:add",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "includeInSupportedResources": false,
+      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
       "resourceTypes": []
     },
     {
@@ -372,9 +222,8 @@
       "titleKey": "navBar.commandView.conversationIntelligence.subMenu.qualityManagement.subMenu.calibrationEvaluations",
       "menuSource": "directory-command-nav",
       "authorize": "policy=quality:calibration:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "includeInSupportedResources": false,
+      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
       "resourceTypes": []
     },
     {
@@ -383,9 +232,7 @@
       "titleKey": "navBar.commandView.conversationIntelligence.subMenu.qualityManagement.subMenu.customerSurveys",
       "menuSource": "directory-command-nav",
       "authorize": "policy=quality:surveyForm:add | policy=quality:surveyForm:delete | policy=quality:surveyForm:edit",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_quality_forms_survey"
       ]
@@ -396,9 +243,7 @@
       "titleKey": "navBar.commandView.conversationIntelligence.subMenu.qualityManagement.subMenu.evaluationForms",
       "menuSource": "directory-command-nav",
       "authorize": "policy=quality:evaluationForm:add | policy=quality:evaluationForm:delete | policy=quality:evaluationForm:edit",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_quality_forms_evaluation"
       ]
@@ -409,9 +254,8 @@
       "titleKey": "navBar.commandView.conversationIntelligence.subMenu.qualityManagement.subMenu.evaluators",
       "menuSource": "directory-command-nav",
       "authorize": "policy=quality:evaluation:add",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "includeInSupportedResources": false,
+      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
       "resourceTypes": []
     },
     {
@@ -420,9 +264,8 @@
       "titleKey": "navBar.commandView.conversationIntelligence.subMenu.recordingAndPolicies.subMenu.encryptionKeys",
       "menuSource": "directory-command-nav",
       "authorize": "policy=conversation:encryptionKey:view | policy=recording:encryptionKey:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "includeInSupportedResources": false,
+      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
       "resourceTypes": []
     },
     {
@@ -431,9 +274,7 @@
       "titleKey": "navBar.commandView.conversationIntelligence.subMenu.recordingAndPolicies.subMenu.policies",
       "menuSource": "directory-command-nav",
       "authorize": "policy=recording:crossPlatformRetentionPolicy:view | policy=recording:retentionPolicy:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_recording_media_retention_policy"
       ]
@@ -444,9 +285,7 @@
       "titleKey": "navBar.commandView.conversationIntelligence.subMenu.recordingAndPolicies.subMenu.recordingManagement",
       "menuSource": "directory-command-nav",
       "authorize": "policy=recording:orphanRecording:view | policy=recording:screenRecording:stop | policy=recording:screenRecording:view | policy=recording:settings:editRegionalStorage | policy=recording:settings:editScreenRecordings | policy=recording:settings:editUrlExpiration",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -455,9 +294,7 @@
       "titleKey": "navBar.commandView.conversationIntelligence.subMenu.speechAndTextAnalytics.subMenu.dictionarymanagement",
       "menuSource": "directory-command-nav",
       "authorize": "policy=speechAndTextAnalytics:dictionaryterm:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_speechandtextanalytics_dictionaryfeedback"
       ]
@@ -468,9 +305,7 @@
       "titleKey": "navBar.commandView.conversationIntelligence.subMenu.speechAndTextAnalytics.subMenu.interactionCategories",
       "menuSource": "directory-command-nav",
       "authorize": "policy=speechAndTextAnalytics:category:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -479,20 +314,25 @@
       "titleKey": "navBar.commandView.conversationIntelligence.subMenu.speechAndTextAnalytics.subMenu.interactionReprocessing",
       "menuSource": "directory-command-nav",
       "authorize": "policy=speechAndTextAnalytics:reprocessInteractions:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "featureToggles": [
+        "WEM-1083_staReprocessInteractions",
+        "WEM-885_ReprocessInteractionsUI"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
       "path": "Conversation Intelligence > Speech and Text Analytics > Programs",
-      "link": "#/programs-definitions/programs",
+      "link": "#/topics-definitions/programs",
       "titleKey": "navBar.commandView.conversationIntelligence.subMenu.speechAndTextAnalytics.subMenu.programs",
       "menuSource": "directory-command-nav",
       "authorize": "policy=speechAndTextAnalytics:program:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "featureToggles": [
+        "GIA-26602_TDUI_Vue_3_Migration"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -501,9 +341,7 @@
       "titleKey": "navBar.commandView.conversationIntelligence.subMenu.speechAndTextAnalytics.subMenu.sentimentFeedback",
       "menuSource": "directory-command-nav",
       "authorize": "policy=speechAndTextAnalytics:feedback:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -512,9 +350,7 @@
       "titleKey": "navBar.commandView.conversationIntelligence.subMenu.speechAndTextAnalytics.subMenu.speechAndTextConfig",
       "menuSource": "directory-command-nav",
       "authorize": "policy=routing:transcriptionSettings:view | policy=speechAndTextAnalytics:program:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_routing_settings"
       ]
@@ -525,9 +361,7 @@
       "titleKey": "navBar.commandView.conversationIntelligence.subMenu.speechAndTextAnalytics.subMenu.topicMiner",
       "menuSource": "directory-command-nav",
       "authorize": "policy=languageUnderstanding:miner:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -536,9 +370,7 @@
       "titleKey": "navBar.commandView.conversationIntelligence.subMenu.speechAndTextAnalytics.subMenu.topics",
       "menuSource": "directory-command-nav",
       "authorize": "policy=speechAndTextAnalytics:topic:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_speechandtextanalytics_topic"
       ]
@@ -549,9 +381,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.email",
       "menuSource": "directory-command-nav",
       "authorize": "policy=routing:email:manage",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_routing_email_domain",
         "genesyscloud_routing_email_route"
@@ -563,9 +393,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.interactionAssets.subMenu.assistants",
       "menuSource": "directory-command-nav",
       "authorize": "policy=assistants:assistant:add | policy=assistants:assistant:delete | policy=assistants:assistant:edit",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -574,9 +402,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.interactionAssets.subMenu.cannedResponses",
       "menuSource": "directory-command-nav",
       "authorize": "policy=responses:library:edit",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_responsemanagement_library",
         "genesyscloud_responsemanagement_response"
@@ -588,9 +414,12 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.interactionAssets.subMenu.customKpis",
       "menuSource": "directory-command-nav",
       "authorize": "policy=routing:keyPerformanceIndicator:add | policy=routing:keyPerformanceIndicator:edit",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "featureToggles": [
+        "AI-1435_CustomRevenueKpis",
+        "gpr.AP-8265.showCustomKpiLink"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -599,9 +428,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.interactionAssets.subMenu.panelManager",
       "menuSource": "directory-command-nav",
       "authorize": "policy=agentUI:defaultPanels:edit",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -610,9 +437,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.interactionAssets.subMenu.responseAssets",
       "menuSource": "directory-command-nav",
       "authorize": "policy=responseAssets:asset:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_responsemanagement_responseasset"
       ]
@@ -623,9 +448,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.interactionAssets.subMenu.scriptTemplates",
       "menuSource": "directory-command-nav",
       "authorize": "policy=scripter:script:edit",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -634,9 +457,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.interactionAssets.subMenu.scripts",
       "menuSource": "directory-command-nav",
       "authorize": "policy=scripter:script:add | policy=scripter:script:delete | policy=scripter:script:edit | policy=scripter:script:search | policy=scripter:script:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_script"
       ]
@@ -647,9 +468,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.interactionAssets.subMenu.utilization",
       "menuSource": "directory-command-nav",
       "authorize": "policy=routing:utilization:manage | policy=routing:utilization:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_routing_utilization",
         "genesyscloud_routing_utilization_label"
@@ -661,9 +480,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.interactionAssets.subMenu.widgets",
       "menuSource": "directory-command-nav",
       "authorize": "policy=webchat:deployment:create | policy=webchat:deployment:read | policy=webchat:deployment:update | policy=widgets:deployment:create | policy=widgets:deployment:read | policy=widgets:deployment:update | policy=widgets:deployment:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -672,9 +489,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.interactionAssets.subMenu.wrapupCodes",
       "menuSource": "directory-command-nav",
       "authorize": "policy=routing:wrapupCode:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_routing_wrapupcode"
       ]
@@ -685,9 +500,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.message.subMenu.messengerConfigurations",
       "menuSource": "directory-command-nav",
       "authorize": "policy=webDeployments:configuration:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_webdeployments_configuration"
       ]
@@ -698,9 +511,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.message.subMenu.messengerDeployments",
       "menuSource": "directory-command-nav",
       "authorize": "policy=webDeployments:deployment:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_webdeployments_deployment"
       ]
@@ -711,9 +522,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.message.subMenu.platformConfigurations",
       "menuSource": "directory-command-nav",
       "authorize": "policy=messaging:facebookIntegration:view | policy=messaging:integration:add | policy=messaging:integration:delete | policy=messaging:integration:edit | policy=messaging:integration:view | policy=messaging:lineIntegration:view | policy=messaging:twitterIntegration:view | policy=messaging:whatsAppIntegration:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_conversations_messaging_settings",
         "genesyscloud_conversations_messaging_settings_default"
@@ -725,9 +534,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.message.subMenu.platformIntegrations",
       "menuSource": "directory-command-nav",
       "authorize": "policy=messaging:facebookIntegration:view | policy=messaging:integration:add | policy=messaging:integration:delete | policy=messaging:integration:edit | policy=messaging:integration:view | policy=messaging:lineIntegration:view | policy=messaging:twitterIntegration:view | policy=messaging:whatsAppIntegration:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_conversations_messaging_integrations_apple",
         "genesyscloud_conversations_messaging_integrations_instagram",
@@ -742,9 +549,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.message.subMenu.smsNumberInventory",
       "menuSource": "directory-command-nav",
       "authorize": "policy=sms:phoneNumber:add | policy=sms:phoneNumber:create | policy=sms:phoneNumber:delete | policy=sms:phoneNumber:edit | policy=sms:phoneNumber:read | policy=sms:phoneNumber:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_routing_sms_address"
       ]
@@ -755,9 +560,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.message.subMenu.supportedContentProfiles",
       "menuSource": "directory-command-nav",
       "authorize": "policy=messaging:supportedContent:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_conversations_messaging_supportedcontent",
         "genesyscloud_conversations_messaging_supportedcontent_default"
@@ -769,9 +572,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.message.subMenu.threadingTimeline",
       "menuSource": "directory-command-nav",
       "authorize": "policy=conversation:threadingTimeline:edit | policy=conversation:threadingTimeline:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -780,9 +581,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.outbound.subMenu.callAnalysisResponses",
       "menuSource": "directory-command-nav",
       "authorize": "policy=outbound:responseSet:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_outbound_callanalysisresponseset"
       ]
@@ -793,9 +592,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.outbound.subMenu.campaignManagement",
       "menuSource": "directory-command-nav",
       "authorize": "policy=outbound:campaign:view | policy=outbound:emailCampaign:view | policy=outbound:messagingCampaign:view | policy=outbound:whatsAppCampaign:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_outbound_campaign",
         "genesyscloud_outbound_messagingcampaign",
@@ -808,9 +605,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.outbound.subMenu.contactableTimeSets",
       "menuSource": "directory-command-nav",
       "authorize": "policy=outbound:callableTimeSet:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_outbound_callabletimeset"
       ]
@@ -821,9 +616,8 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.outbound.subMenu.eventViewer",
       "menuSource": "directory-command-nav",
       "authorize": "policy=outbound:eventLog:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "includeInSupportedResources": false,
+      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
       "resourceTypes": []
     },
     {
@@ -832,9 +626,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.outbound.subMenu.listManagement",
       "menuSource": "directory-command-nav",
       "authorize": "policy=outbound:contactList:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_outbound_attempt_limit",
         "genesyscloud_outbound_contact_list",
@@ -851,9 +643,8 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.outbound.subMenu.outboundCampaigns",
       "menuSource": "directory-command-nav",
       "authorize": "policy=outbound:campaign:view",
-      "destinationKind": "dashboard",
       "includeInSupportedResources": false,
-      "skipReason": "Dashboard or report view; not an admin configuration page.",
+      "skipReason": "Non-admin link; dashboard or report view.",
       "resourceTypes": []
     },
     {
@@ -862,9 +653,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.outbound.subMenu.outboundSettings",
       "menuSource": "directory-command-nav",
       "authorize": "policy=outbound:settings:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_outbound_settings"
       ]
@@ -875,9 +664,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.outbound.subMenu.ruleManagement",
       "menuSource": "directory-command-nav",
       "authorize": "policy=outbound:ruleSet:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_outbound_campaignrule",
         "genesyscloud_outbound_digitalruleset",
@@ -890,9 +677,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.outbound.subMenu.wrapupCodesMappings",
       "menuSource": "directory-command-nav",
       "authorize": "policy=outbound:wrapUpCodeMapping:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_outbound_wrapupcodemappings"
       ]
@@ -903,9 +688,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.social.subMenu.socialEscalationRules",
       "menuSource": "directory-command-nav",
       "authorize": "policy=socialmedia:escalationRules:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -914,9 +697,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.social.subMenu.socialListening",
       "menuSource": "directory-command-nav",
       "authorize": "policy=socialmedia:topic:edit",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -925,9 +706,11 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.callerIdGroups",
       "menuSource": "directory-command-nav",
       "authorize": "policy=telephony:callerIdGroup:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "featureToggles": [
+        "PURE-3963_caller_id_groups"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -936,9 +719,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.certificateAuthorities",
       "menuSource": "directory-command-nav",
       "authorize": "policy=telephony:plugin:all",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -947,9 +728,8 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.cloudMedia",
       "menuSource": "directory-command-nav",
       "authorize": "policy=telephonyUI:cloudMedia:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "includeInSupportedResources": false,
+      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
       "resourceTypes": []
     },
     {
@@ -958,9 +738,10 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.didNumbers",
       "menuSource": "directory-command-nav",
       "authorize": "policy=telephony:plugin:all",
-      "destinationKind": "config",
+      "featureToggles": [
+        "PURE-3796_DIDGroups"
+      ],
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_telephony_providers_edges_did_pool"
       ]
@@ -971,9 +752,11 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.directInwardDialing",
       "menuSource": "directory-command-nav",
       "authorize": "policy=telephony:didGroup:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "featureToggles": [
+        "PURE-3796_DIDGroups"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -982,9 +765,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.edgeGroups",
       "menuSource": "directory-command-nav",
       "authorize": "policy=telephony:plugin:all",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_telephony_providers_edges_edge_group"
       ]
@@ -995,9 +776,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.extensions",
       "menuSource": "directory-command-nav",
       "authorize": "policy=telephony:extensionPool:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_telephony_providers_edges_extension_pool"
       ]
@@ -1008,9 +787,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.globalTelephonySettings",
       "menuSource": "directory-command-nav",
       "authorize": "policy=telephony:alertablePresences:view | policy=telephony:plugin:all | policy=telephony:settings:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -1019,9 +796,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.metrics",
       "menuSource": "directory-command-nav",
       "authorize": "policy=telephony:plugin:all",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -1030,9 +805,8 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.numberManagement",
       "menuSource": "directory-command-nav",
       "authorize": "policy=purecloudvoice:number:view | policy=purecloudvoiceinternal:number:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "includeInSupportedResources": false,
+      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
       "resourceTypes": []
     },
     {
@@ -1041,9 +815,11 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.numberRedirection",
       "menuSource": "directory-command-nav",
       "authorize": "policy=telephony:numberRouting:view | policy=telephony:organizationLink:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "featureToggles": [
+        "PURE-5788_GCV_Disaster_Recovery"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -1052,9 +828,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.phoneManagement",
       "menuSource": "directory-command-nav",
       "authorize": "policy=telephony:plugin:all",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_telephony_providers_edges_phone",
         "genesyscloud_telephony_providers_edges_phonebasesettings"
@@ -1066,9 +840,11 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.prefixBlocking",
       "menuSource": "directory-command-nav",
       "authorize": "policy=telephony:prefix:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "featureToggles": [
+        "PURE-7224_Prefix"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -1077,9 +853,8 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.premisesEdges",
       "menuSource": "directory-command-nav",
       "authorize": "policy=telephony:plugin:all",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "includeInSupportedResources": false,
+      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
       "resourceTypes": []
     },
     {
@@ -1088,9 +863,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.sites",
       "menuSource": "directory-command-nav",
       "authorize": "policy=telephony:plugin:all",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_telephony_providers_edges_site",
         "genesyscloud_telephony_providers_edges_site_outbound_route"
@@ -1102,9 +875,8 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.topology",
       "menuSource": "directory-command-nav",
       "authorize": "policy=telephony:plugin:all",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "includeInSupportedResources": false,
+      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
       "resourceTypes": []
     },
     {
@@ -1113,9 +885,7 @@
       "titleKey": "navBar.commandView.digitalAndTelephony.subMenu.telephony.subMenu.trunks",
       "menuSource": "directory-command-nav",
       "authorize": "policy=telephony:plugin:all",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_telephony_providers_edges_trunk",
         "genesyscloud_telephony_providers_edges_trunkbasesettings"
@@ -1127,9 +897,12 @@
       "titleKey": "navBar.commandView.goHome",
       "menuSource": "directory-command-nav",
       "authorize": "policy=ui:agentActivity:view | policy=ui:supervisorActivity:view | policy=ui:supervisorQueueDetails:view",
-      "destinationKind": "other",
+      "featureToggles": [
+        "WEM-1368_Queue-Performance-Widget",
+        "WEM-1476_Agent-Activity-Migration"
+      ],
       "includeInSupportedResources": false,
-      "skipReason": "Navigation landing page; not a resource configuration destination.",
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -1138,9 +911,8 @@
       "titleKey": "navBar.commandView.itAndIntegrations.subMenu.apiUsage",
       "menuSource": "directory-command-nav",
       "authorize": "policy=oauth:client:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "includeInSupportedResources": false,
+      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
       "resourceTypes": []
     },
     {
@@ -1149,9 +921,11 @@
       "titleKey": "navBar.commandView.itAndIntegrations.subMenu.audioHookMonitors",
       "menuSource": "directory-command-nav",
       "authorize": "policy=integration:audioHookMonitor:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "featureToggles": [
+        "PURE-5110_AudioHook-Monitor-Config"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -1160,9 +934,8 @@
       "titleKey": "navBar.commandView.itAndIntegrations.subMenu.auditViewer",
       "menuSource": "directory-command-nav",
       "authorize": "policy=audits:audit:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "includeInSupportedResources": false,
+      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
       "resourceTypes": []
     },
     {
@@ -1171,9 +944,7 @@
       "titleKey": "navBar.commandView.itAndIntegrations.subMenu.authorizedApplications",
       "menuSource": "directory-command-nav",
       "authorize": "policy=oauth:client:authorize",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -1182,9 +953,8 @@
       "titleKey": "navBar.commandView.itAndIntegrations.subMenu.clients",
       "menuSource": "directory-command-nav",
       "authorize": "policy=affiliateOrganization:clients:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "includeInSupportedResources": false,
+      "skipReason": "Non-admin link; partner portal view.",
       "resourceTypes": []
     },
     {
@@ -1193,9 +963,7 @@
       "titleKey": "navBar.commandView.itAndIntegrations.subMenu.dataActions",
       "menuSource": "directory-command-nav",
       "authorize": "policy=integrations:action:view | policy=integrations:integration:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_integration_action",
         "genesyscloud_integration_action_draft",
@@ -1208,9 +976,7 @@
       "titleKey": "navBar.commandView.itAndIntegrations.subMenu.disconnectInteractions",
       "menuSource": "directory-command-nav",
       "authorize": "policy=conversation:communication:disconnect",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -1219,9 +985,7 @@
       "titleKey": "navBar.commandView.itAndIntegrations.subMenu.documents",
       "menuSource": "directory-command-nav",
       "authorize": "policy=content_management_admin",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -1230,9 +994,7 @@
       "titleKey": "navBar.commandView.itAndIntegrations.subMenu.integrations",
       "menuSource": "directory-command-nav",
       "authorize": "policy=integrations:integration:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_integration",
         "genesyscloud_integration_credential"
@@ -1244,9 +1006,8 @@
       "titleKey": "navBar.commandView.itAndIntegrations.subMenu.logCapture",
       "menuSource": "directory-command-nav",
       "authorize": "policy=troubleshooting:logCapture:add | policy=troubleshooting:logCapture:delete | policy=troubleshooting:logCapture:edit | policy=troubleshooting:logCapture:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "includeInSupportedResources": false,
+      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
       "resourceTypes": []
     },
     {
@@ -1255,9 +1016,7 @@
       "titleKey": "navBar.commandView.itAndIntegrations.subMenu.oAuth",
       "menuSource": "directory-command-nav",
       "authorize": "policy=oauth:client:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_oauth_client"
       ]
@@ -1268,9 +1027,8 @@
       "titleKey": "navBar.commandView.itAndIntegrations.subMenu.operationalConsole",
       "menuSource": "directory-command-nav",
       "authorize": "policy=usage:events:view | policy=usage:eventsquery:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "includeInSupportedResources": false,
+      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
       "resourceTypes": []
     },
     {
@@ -1279,9 +1037,7 @@
       "titleKey": "navBar.commandView.itAndIntegrations.subMenu.singleSignon",
       "menuSource": "directory-command-nav",
       "authorize": "policy=sso:provider:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_idp_adfs",
         "genesyscloud_idp_generic",
@@ -1293,18 +1049,60 @@
       ]
     },
     {
+      "path": "Journey Management",
+      "link": "/journey-management",
+      "titleKey": "navBar.commandView.journeyManagement.title",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=journey:views:view",
+      "includeInSupportedResources": true,
+      "resourceTypes": [
+        "genesyscloud_journey_view_schedule",
+        "genesyscloud_journey_views"
+      ]
+    },
+    {
+      "path": "Knowledge > Articles",
+      "link": "#/admin/knowledge/knowledgeBases/articles",
+      "titleKey": "navBar.commandView.knowledge.subMenu.articles",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=knowledge:knowledgebase:view",
+      "featureToggles": [
+        "DX.GKC-5121.CX2DX-migration-force-cx"
+      ],
+      "includeInSupportedResources": true,
+      "resourceTypes": [
+        "genesyscloud_knowledge_document",
+        "genesyscloud_knowledge_document_variation",
+        "genesyscloud_knowledge_knowledgebase"
+      ]
+    },
+    {
       "path": "Knowledge > Categories and Labels",
       "link": "#/admin/knowledge/knowledgeBases/categories",
       "titleKey": "navBar.commandView.knowledge.subMenu.categoriesAndLabels",
       "menuSource": "directory-command-nav",
       "authorize": "policy=knowledge:knowledgebase:view",
-      "destinationKind": "config",
+      "featureToggles": [
+        "DX.GKC-5121.CX2DX-migration-force-cx"
+      ],
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_knowledge_category",
         "genesyscloud_knowledge_label"
       ]
+    },
+    {
+      "path": "Knowledge > Knowledge Activity",
+      "link": "#/admin/knowledge/knowledgeBases/activity",
+      "titleKey": "navBar.commandView.knowledge.subMenu.activity",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=knowledge:knowledgebase:view",
+      "featureToggles": [
+        "DX.GKC-5121.CX2DX-migration-force-cx"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
+      "resourceTypes": []
     },
     {
       "path": "Knowledge > Knowledge Configuration",
@@ -1312,9 +1110,38 @@
       "titleKey": "navBar.commandView.knowledge.subMenu.configuration",
       "menuSource": "directory-command-nav",
       "authorize": "policy=knowledge:knowledgeSetting:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "featureToggles": [
+        "DX.GKC-5121.CX2DX-migration-force-cx",
+        "GKC-26947_disable-knowledge-v3-for-EUSC"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
+      "resourceTypes": []
+    },
+    {
+      "path": "Knowledge > Optimizer",
+      "link": "#/admin/knowledge/optimizer",
+      "titleKey": "navBar.commandView.knowledge.subMenu.optimizer",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=knowledge:knowledgebase:view",
+      "featureToggles": [
+        "DX.GKC-5121.CX2DX-migration-force-cx"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
+      "resourceTypes": []
+    },
+    {
+      "path": "Knowledge > Sources",
+      "link": "#/admin/knowledge/knowledgeBases/sources",
+      "titleKey": "navBar.commandView.knowledge.subMenu.sources",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=knowledge:knowledgebase:view",
+      "featureToggles": [
+        "DX.GKC-5121.CX2DX-migration-force-cx"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -1323,9 +1150,11 @@
       "titleKey": "navBar.commandView.myActivity.subMenu.leaderboard",
       "menuSource": "directory-command-nav",
       "authorize": "policy=gamification:leaderboard:view",
-      "destinationKind": "activity",
+      "featureToggles": [
+        "WEM-1476_Agent-Activity-Migration"
+      ],
       "includeInSupportedResources": false,
-      "skipReason": "Activity or status view; not an admin configuration page.",
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -1334,9 +1163,11 @@
       "titleKey": "navBar.commandView.myActivity.subMenu.schedule",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:agentSchedule:view",
-      "destinationKind": "activity",
+      "featureToggles": [
+        "WEM-1476_Agent-Activity-Migration"
+      ],
       "includeInSupportedResources": false,
-      "skipReason": "Activity or status view; not an admin configuration page.",
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -1345,9 +1176,12 @@
       "titleKey": "navBar.commandView.myActivity.subMenu.scheduleBid",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:agentScheduleBid:submit | policy=wfm:agentWorkPlanBid:submit",
-      "destinationKind": "activity",
+      "featureToggles": [
+        "WEM-1362_ScheduleBids",
+        "WEM-1476_Agent-Activity-Migration"
+      ],
       "includeInSupportedResources": false,
-      "skipReason": "Activity or status view; not an admin configuration page.",
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -1356,9 +1190,11 @@
       "titleKey": "navBar.commandView.myActivity.subMenu.scorecard",
       "menuSource": "directory-command-nav",
       "authorize": "policy=gamification:scorecard:view",
-      "destinationKind": "activity",
+      "featureToggles": [
+        "WEM-1476_Agent-Activity-Migration"
+      ],
       "includeInSupportedResources": false,
-      "skipReason": "Activity or status view; not an admin configuration page.",
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -1367,9 +1203,12 @@
       "titleKey": "navBar.commandView.myActivity.subMenu.workPlan",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:agentWorkPlanBid:submit",
-      "destinationKind": "activity",
+      "featureToggles": [
+        "WEM-1362_ScheduleBids",
+        "WEM-1476_Agent-Activity-Migration"
+      ],
       "includeInSupportedResources": false,
-      "skipReason": "Activity or status view; not an admin configuration page.",
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -1378,9 +1217,7 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.aiStudio.subMenu.agentCopilots",
       "menuSource": "directory-command-nav",
       "authorize": "policy=assistants:copilot:edit",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -1389,9 +1226,10 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.aiStudio.subMenu.agenticVirtualAgents",
       "menuSource": "directory-command-nav",
       "authorize": "policy=agentic:virtualAgent:view",
-      "destinationKind": "config",
+      "featureToggles": [
+        "AI-1365_agentic_virtual_agents"
+      ],
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -1400,9 +1238,11 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.aiStudio.subMenu.copilotConfiguration",
       "menuSource": "directory-command-nav",
       "authorize": "policy=audits:audit:view | policy=copilot:settings:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "featureToggles": [
+        "AI-1390_Copilot_Configuration"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -1411,9 +1251,7 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.aiStudio.subMenu.guides",
       "menuSource": "directory-command-nav",
       "authorize": "policy=aiStudio:guide:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_guide",
         "genesyscloud_guide_version"
@@ -1425,9 +1263,11 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.aiStudio.subMenu.refineResponse",
       "menuSource": "directory-command-nav",
       "authorize": "policy=aiStudio:refinement:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "featureToggles": [
+        "AI-1402_email_refinement_with_ai"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -1436,9 +1276,7 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.aiStudio.subMenu.summaryWorkbench",
       "menuSource": "directory-command-nav",
       "authorize": "policy=aiStudio:summaryConfig:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_ai_studio_summary_setting"
       ]
@@ -1449,9 +1287,7 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.architect",
       "menuSource": "directory-command-nav",
       "authorize": "policy=architect:ui:view",
-      "destinationKind": "app-config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_architect_grammar",
         "genesyscloud_architect_grammar_language",
@@ -1466,9 +1302,7 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.enrichments.subMenu.customerIntents",
       "menuSource": "directory-command-nav",
       "authorize": "policy=externalContacts:customerIntentTaxonomy:edit",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_customer_intent",
         "genesyscloud_intent_category",
@@ -1482,9 +1316,7 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.enrichments.subMenu.customerSegments",
       "menuSource": "directory-command-nav",
       "authorize": "policy=journey:segment:edit",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_journey_segment"
       ]
@@ -1495,9 +1327,10 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.enrichments.subMenu.outcomes",
       "menuSource": "directory-command-nav",
       "authorize": "policy=journey:outcome:edit",
-      "destinationKind": "config",
+      "featureToggles": [
+        "AI-1331_journey-outcomes-deprecation"
+      ],
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_journey_outcome",
         "genesyscloud_journey_outcome_predictor"
@@ -1509,9 +1342,7 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.orchestrationAssets.subMenu.dataTables",
       "menuSource": "directory-command-nav",
       "authorize": "policy=architect:datatable:add | policy=architect:datatable:delete | policy=architect:datatable:edit | policy=architect:datatable:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_architect_datatable",
         "genesyscloud_architect_datatable_row"
@@ -1523,9 +1354,10 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.orchestrationAssets.subMenu.flowMilestones",
       "menuSource": "directory-command-nav",
       "authorize": "policy=architect:flowMilestone:add | policy=architect:flowMilestone:delete | policy=architect:flowMilestone:edit | policy=architect:flowMilestone:view | policy=conversation:customAttributes:schemaView | policy=conversation:customAttributes:view",
-      "destinationKind": "config",
+      "featureToggles": [
+        "PURE-5564_CCA"
+      ],
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_flow_milestone"
       ]
@@ -1536,9 +1368,7 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.orchestrationAssets.subMenu.flowOutcomes",
       "menuSource": "directory-command-nav",
       "authorize": "policy=architect:flowOutcome:add | policy=architect:flowOutcome:edit | policy=architect:flowOutcome:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_flow_outcome"
       ]
@@ -1549,9 +1379,7 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.predictiveEngagement.subMenu.actionLibrary",
       "menuSource": "directory-command-nav",
       "authorize": "policy=journey:actiontemplate:edit",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_journey_action_template"
       ]
@@ -1562,9 +1390,8 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.predictiveEngagement.subMenu.actionMapReport",
       "menuSource": "directory-command-nav",
       "authorize": "policy=analytics:journeyAggregate:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "includeInSupportedResources": false,
+      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
       "resourceTypes": []
     },
     {
@@ -1573,9 +1400,7 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.predictiveEngagement.subMenu.actionMaps",
       "menuSource": "directory-command-nav",
       "authorize": "policy=journey:actionmap:edit",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_journey_action_map"
       ]
@@ -1586,9 +1411,8 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.predictiveEngagement.subMenu.liveNow",
       "menuSource": "directory-command-nav",
       "authorize": "policy=journey:recentsessions:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "includeInSupportedResources": false,
+      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
       "resourceTypes": []
     },
     {
@@ -1597,9 +1421,7 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.predictiveEngagement.subMenu.predectiveEngagementSettings",
       "menuSource": "directory-command-nav",
       "authorize": "policy=journey:settings:edit",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -1608,9 +1430,8 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.predictiveEngagement.subMenu.visitorActivityReport",
       "menuSource": "directory-command-nav",
       "authorize": "policy=analytics:journeyAggregate:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "includeInSupportedResources": false,
+      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
       "resourceTypes": []
     },
     {
@@ -1619,9 +1440,7 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.routing.subMenu.callRouting",
       "menuSource": "directory-command-nav",
       "authorize": "policy=routing:callRoute:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_architect_ivr"
       ]
@@ -1632,9 +1451,7 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.routing.subMenu.emergencyGroups",
       "menuSource": "directory-command-nav",
       "authorize": "policy=routing:emergencyGroup:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_architect_emergencygroup"
       ]
@@ -1645,9 +1462,7 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.routing.subMenu.messageRouting",
       "menuSource": "directory-command-nav",
       "authorize": "policy=routing:message:manage",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -1656,9 +1471,7 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.routing.subMenu.operatingScheduleGroups",
       "menuSource": "directory-command-nav",
       "authorize": "policy=routing:scheduleGroup:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_architect_schedulegroups"
       ]
@@ -1669,9 +1482,7 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.routing.subMenu.operatingSchedules",
       "menuSource": "directory-command-nav",
       "authorize": "policy=routing:schedule:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_architect_schedules"
       ]
@@ -1682,9 +1493,12 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.routing.subMenu.revenueKpis",
       "menuSource": "directory-command-nav",
       "authorize": "policy=routing:keyPerformanceIndicator:add | policy=routing:keyPerformanceIndicator:edit",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "featureToggles": [
+        "AI-1435_CustomRevenueKpis",
+        "gpr.AP-8265.showCustomKpiLink"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -1693,9 +1507,7 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.ruleBasedDecisions.subMenu.decisionTables",
       "menuSource": "directory-command-nav",
       "authorize": "policy=businessrules:decisionTable:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_business_rules_decision_table"
       ]
@@ -1706,9 +1518,7 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.ruleBasedDecisions.subMenu.rulesSchemas",
       "menuSource": "directory-command-nav",
       "authorize": "policy=businessrules:businessRulesSchema:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_business_rules_schema"
       ]
@@ -1719,9 +1529,7 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.triggers.title",
       "menuSource": "directory-command-nav",
       "authorize": "policy=processautomation:trigger:add | policy=processautomation:trigger:delete | policy=processautomation:trigger:edit | policy=processautomation:trigger:test | policy=processautomation:trigger:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_processautomation_trigger"
       ]
@@ -1732,9 +1540,11 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.workAutomation.subMenu.caseplans",
       "menuSource": "directory-command-nav",
       "authorize": "policy=caseManagement:caseplan:view",
-      "destinationKind": "config",
+      "featureToggles": [
+        "PURE-6320_case_management",
+        "PURE-7138_caseplan_builder"
+      ],
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_case_management_caseplan",
         "genesyscloud_case_management_caseplan_create_version",
@@ -1747,9 +1557,7 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.workAutomation.subMenu.customAttributes",
       "menuSource": "directory-command-nav",
       "authorize": "policy=workitems:workitemSchema:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_task_management_workitem_schema"
       ]
@@ -1760,9 +1568,7 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.workAutomation.subMenu.workbins",
       "menuSource": "directory-command-nav",
       "authorize": "policy=workitems:workbin:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_task_management_workbin"
       ]
@@ -1773,9 +1579,7 @@
       "titleKey": "navBar.commandView.orchestration.subMenu.workAutomation.subMenu.worktypes",
       "menuSource": "directory-command-nav",
       "authorize": "policy=workitems:worktype:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_task_management_worktype",
         "genesyscloud_task_management_worktype_flow_datebased_rule",
@@ -1791,9 +1595,11 @@
       "titleKey": "navBar.commandView.performanceManagement.subMenu.adherenceAdjustments",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:adherenceAdjustments:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "featureToggles": [
+        "WEM-893_Adherence_Adjustments"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -1802,9 +1608,11 @@
       "titleKey": "navBar.commandView.performanceManagement.subMenu.decisionMetrics",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:decisionMetrics:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "featureToggles": [
+        "WEM-1385_DecisionMetrics"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -1813,9 +1621,7 @@
       "titleKey": "navBar.commandView.performanceManagement.subMenu.employeeEngagement.subMenu.developmentAndFeedback",
       "menuSource": "directory-command-nav",
       "authorize": "policy=learning:module:edit",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_learning_modules"
       ]
@@ -1826,9 +1632,7 @@
       "titleKey": "navBar.commandView.performanceManagement.subMenu.employeeEngagement.subMenu.externalMetricDefinitions",
       "menuSource": "directory-command-nav",
       "authorize": "policy=employeePerformance:externalMetricDefinition:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_employeeperformance_externalmetrics_definitions"
       ]
@@ -1839,9 +1643,7 @@
       "titleKey": "navBar.commandView.performanceManagement.subMenu.employeeEngagement.subMenu.gamificationContests",
       "menuSource": "directory-command-nav",
       "authorize": "policy=gamification:contest:view | policy=gamification:contest:viewAll",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -1850,9 +1652,7 @@
       "titleKey": "navBar.commandView.performanceManagement.subMenu.employeeEngagement.subMenu.gamificationProfiles",
       "menuSource": "directory-command-nav",
       "authorize": "policy=gamification:profile:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -1861,9 +1661,7 @@
       "titleKey": "navBar.commandView.performanceManagement.subMenu.employeeEngagement.subMenu.gamificationSettings",
       "menuSource": "directory-command-nav",
       "authorize": "policy=gamification:profile:update",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -1872,9 +1670,11 @@
       "titleKey": "navBar.commandView.performanceManagement.subMenu.employeeEngagement.subMenu.realTimeSupervision",
       "menuSource": "directory-command-nav",
       "authorize": "policy=realtimeMonitor:settings:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "featureToggles": [
+        "WEM-437_screen-monitoring"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -1883,9 +1683,8 @@
       "titleKey": "navBar.commandView.performanceManagement.subMenu.historicalAdherence",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:historicalAdherence:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "includeInSupportedResources": false,
+      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
       "resourceTypes": []
     },
     {
@@ -1894,9 +1693,8 @@
       "titleKey": "navBar.commandView.performanceManagement.subMenu.historicalShrinkage",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:shrinkage:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "includeInSupportedResources": false,
+      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
       "resourceTypes": []
     },
     {
@@ -1905,9 +1703,8 @@
       "titleKey": "navBar.commandView.performanceManagement.subMenu.intradayManagement",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:intraday:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "includeInSupportedResources": false,
+      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
       "resourceTypes": []
     },
     {
@@ -1916,9 +1713,8 @@
       "titleKey": "navBar.commandView.performanceManagement.subMenu.realTimeAdherence",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:realtimeAdherence:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "includeInSupportedResources": false,
+      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
       "resourceTypes": []
     },
     {
@@ -1927,9 +1723,11 @@
       "titleKey": "navBar.commandView.performanceManagement.subMenu.scorecardInsights",
       "menuSource": "directory-command-nav",
       "authorize": "policy=gamification:insights:viewAll",
-      "destinationKind": "activity",
+      "featureToggles": [
+        "WEM-1476_Agent-Activity-Migration"
+      ],
       "includeInSupportedResources": false,
-      "skipReason": "Activity or status view; not an admin configuration page.",
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -1938,9 +1736,11 @@
       "titleKey": "navBar.commandView.profile",
       "menuSource": "directory-command-nav",
       "authorize": "policy=ui:agentActivity:view | policy=ui:supervisorActivity:view | policy=ui:supervisorQueueDetails:view",
-      "destinationKind": "other",
+      "featureToggles": [
+        "WEM-1368_Queue-Performance-Widget"
+      ],
       "includeInSupportedResources": false,
-      "skipReason": "Navigation landing page; not a resource configuration destination.",
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -1949,9 +1749,7 @@
       "titleKey": "navBar.commandView.userManagement.subMenu.accessPolicies",
       "menuSource": "directory-command-nav",
       "authorize": "policy=authorization:policy:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -1960,9 +1758,7 @@
       "titleKey": "navBar.commandView.userManagement.subMenu.acdSkills",
       "menuSource": "directory-command-nav",
       "authorize": "policy=routing:skill:manage | policy=routing:skill:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_routing_language",
         "genesyscloud_routing_skill"
@@ -1970,13 +1766,14 @@
     },
     {
       "path": "User Management > Authorized Organizations",
-      "link": "#/admin/auth-orgs",
+      "link": "#/admin/people-permissions/authorized-orgs",
       "titleKey": "navBar.commandView.userManagement.subMenu.authorizedOrgs",
       "menuSource": "directory-command-nav",
       "authorize": "policy=authorization:orgTrustee:view | policy=authorization:orgTrustor:view",
-      "destinationKind": "config",
+      "featureToggles": [
+        "iam-admin-ui.authorized-orgs"
+      ],
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_orgauthorization_pairing"
       ]
@@ -1987,9 +1784,7 @@
       "titleKey": "navBar.commandView.userManagement.subMenu.divisions",
       "menuSource": "directory-command-nav",
       "authorize": "policy=authorization:division:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_auth_division"
       ]
@@ -2000,9 +1795,7 @@
       "titleKey": "navBar.commandView.userManagement.subMenu.groups",
       "menuSource": "directory-command-nav",
       "authorize": "policy=admin | policy=group_administration",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_group",
         "genesyscloud_group_roles",
@@ -2015,9 +1808,7 @@
       "titleKey": "navBar.commandView.userManagement.subMenu.locations",
       "menuSource": "directory-command-nav",
       "authorize": "policy=admin | policy=location_administration",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_location"
       ]
@@ -2028,9 +1819,7 @@
       "titleKey": "navBar.commandView.userManagement.subMenu.profileFields",
       "menuSource": "directory-command-nav",
       "authorize": "policy=admin | policy=field_administration",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -2039,9 +1828,7 @@
       "titleKey": "navBar.commandView.userManagement.subMenu.queues",
       "menuSource": "directory-command-nav",
       "authorize": "policy=routing:queue:edit | policy=routing:queue:readonly | policy=routing:queueMember:manage",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_routing_queue",
         "genesyscloud_routing_queue_conditional_group_activation",
@@ -2055,9 +1842,7 @@
       "titleKey": "navBar.commandView.userManagement.subMenu.rolesAndPermissions",
       "menuSource": "directory-command-nav",
       "authorize": "policy=authorization:role:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_auth_role"
       ]
@@ -2068,20 +1853,20 @@
       "titleKey": "navBar.commandView.userManagement.subMenu.userDirectory",
       "menuSource": "directory-command-nav",
       "authorize": "policy=ui:myOrganization:view",
-      "destinationKind": "other",
       "includeInSupportedResources": false,
-      "skipReason": "Search or directory browse view; not a resource configuration destination.",
+      "skipReason": "Non-admin link; not in the configuration coverage map.",
       "resourceTypes": []
     },
     {
       "path": "User Management > Users",
-      "link": "#/admin/users",
+      "link": "#/admin/directory/peopleV3",
       "titleKey": "navBar.commandView.userManagement.subMenu.users",
       "menuSource": "directory-command-nav",
       "authorize": "policy=admin | policy=authorization:grant:add | policy=authorization:grant:delete | policy=authorization:grant:edit | policy=authorization:grant:view | policy=authorization:role:add | policy=authorization:role:delete | policy=authorization:role:edit | policy=authorization:role:view | policy=directory:user:edit | policy=person_administration | policy=routing:skill:assign | policy=user_administration | policy=user_manager",
-      "destinationKind": "config",
+      "featureToggles": [
+        "PAUI-80.PeopleUiDecomposition"
+      ],
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_user",
         "genesyscloud_user_roles"
@@ -2093,9 +1878,7 @@
       "titleKey": "navBar.commandView.userManagement.subMenu.usersRules",
       "menuSource": "directory-command-nav",
       "authorize": "policy=users:rules:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_users_rules"
       ]
@@ -2106,12 +1889,19 @@
       "titleKey": "navBar.commandView.userManagement.subMenu.workTeams",
       "menuSource": "directory-command-nav",
       "authorize": "policy=groups:team:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_team"
       ]
+    },
+    {
+      "path": "Workforce Management > Capacity Planning > Capacity Plans",
+      "link": "#/admin/wfm/capacity-planning/capacity-plans",
+      "titleKey": "navBar.commandView.wfm.subMenu.capacityPlanning.subMenu.capacityPlans",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:capacityPlan:view",
+      "includeInSupportedResources": true,
+      "resourceTypes": []
     },
     {
       "path": "Workforce Management > Capacity Planning > Decisions Data Download",
@@ -2119,9 +1909,33 @@
       "titleKey": "navBar.commandView.wfm.subMenu.capacityPlanning.subMenu.decisionsDataDownload",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfp:decisionsDataDownload:download",
-      "destinationKind": "config",
+      "featureToggles": [
+        "wfpDecisionsDataDownloadDecomp"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Capacity Planning > Staffing Requirements",
+      "link": "#/admin/wfm/capacity-planning/staffing-requirements",
+      "titleKey": "navBar.commandView.wfm.subMenu.capacityPlanning.subMenu.staffingRequirements",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:longTermStaffing:view",
       "includeInSupportedResources": true,
-      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Forecasting > Forecasts",
+      "link": "#/admin/wfm/forecasts",
+      "titleKey": "navBar.commandView.wfm.subMenu.forecasting.subMenu.forecasts",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:shortTermForecast:administer | policy=wfm:shortTermForecast:view",
+      "featureToggles": [
+        "WEM-1539_forecast_list"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -2130,9 +1944,56 @@
       "titleKey": "navBar.commandView.wfm.subMenu.forecasting.subMenu.historicalDataImport",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:historicalData:upload",
-      "destinationKind": "config",
+      "includeInSupportedResources": false,
+      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Forecasting > Main Forecast",
+      "link": "#/admin/wfm/main-forecast",
+      "titleKey": "navBar.commandView.wfm.subMenu.forecasting.subMenu.mainForecast",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:mainForecast:view",
+      "includeInSupportedResources": false,
+      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Scheduling > Activity Plans",
+      "link": "#/admin/wfm/activityplans",
+      "titleKey": "navBar.commandView.wfm.subMenu.scheduling.subMenu.activityPlans",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:activityPlan:view",
       "includeInSupportedResources": true,
-      "skipReason": null,
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Scheduling > Opportunities",
+      "link": "#/admin/wfm/opportunities",
+      "titleKey": "navBar.commandView.wfm.subMenu.scheduling.subMenu.opportunities",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:opportunitiesQuery:view",
+      "includeInSupportedResources": true,
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Scheduling > Schedules",
+      "link": "#/admin/wfm/schedules",
+      "titleKey": "navBar.commandView.wfm.subMenu.scheduling.subMenu.schedules",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:publishedSchedule:view | policy=wfm:schedule:administer | policy=wfm:schedule:view",
+      "includeInSupportedResources": false,
+      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "resourceTypes": []
+    },
+    {
+      "path": "Workforce Management > Scheduling > Shift Trades",
+      "link": "#/admin/wfm/shiftTrades",
+      "titleKey": "navBar.commandView.wfm.subMenu.scheduling.subMenu.shiftTrades",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=wfm:shiftTradeRequest:view",
+      "includeInSupportedResources": false,
+      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
       "resourceTypes": []
     },
     {
@@ -2141,9 +2002,7 @@
       "titleKey": "navBar.commandView.wfm.subMenu.scheduling.subMenu.timeOffLimits",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:timeOffLimit:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -2152,20 +2011,20 @@
       "titleKey": "navBar.commandView.wfm.subMenu.scheduling.subMenu.timeOffPlans",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:timeOffPlan:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
       "path": "Workforce Management > Scheduling > Time-Off Requests",
-      "link": "#/admin/wfm/time-off/requests",
+      "link": "#/admin/wfm/timeOffRequests",
       "titleKey": "navBar.commandView.wfm.subMenu.scheduling.subMenu.timeOffRequests",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:timeOffRequest:administer | policy=wfm:timeOffRequest:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "featureToggles": [
+        "WEM-1384_SequentialTORApproval"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -2174,9 +2033,11 @@
       "titleKey": "navBar.commandView.wfm.subMenu.workPlanConfig.subMenu.scheduleBids",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:scheduleBid:administer | policy=wfm:scheduleBid:view | policy=wfm:workPlanBid:administer | policy=wfm:workPlanBid:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "featureToggles": [
+        "WEM-1362_ScheduleBids"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -2185,9 +2046,7 @@
       "titleKey": "navBar.commandView.wfm.subMenu.workPlanConfig.subMenu.workPlanAssignments",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:workPlan:administer | policy=wfm:workPlan:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -2196,9 +2055,11 @@
       "titleKey": "navBar.commandView.wfm.subMenu.workPlanConfig.subMenu.workPlanBids",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:workPlanBid:administer | policy=wfm:workPlanBid:view",
-      "destinationKind": "config",
-      "includeInSupportedResources": true,
-      "skipReason": null,
+      "featureToggles": [
+        "WEM-1362_ScheduleBids"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -2207,9 +2068,7 @@
       "titleKey": "navBar.commandView.wfm.subMenu.workPlanConfig.subMenu.workPlanRotations",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:workPlanRotation:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -2218,9 +2077,7 @@
       "titleKey": "navBar.commandView.wfm.subMenu.workPlanConfig.subMenu.workPlans",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:workPlan:administer | policy=wfm:workPlan:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -2229,9 +2086,7 @@
       "titleKey": "navBar.commandView.wfm.subMenu.wfmConfig.subMenu.activityCodes",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:activityCode:administer | policy=wfm:activityCode:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -2240,9 +2095,7 @@
       "titleKey": "navBar.commandView.wfm.subMenu.wfmConfig.subMenu.agents",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:agent:administer | policy=wfm:agent:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -2251,9 +2104,7 @@
       "titleKey": "navBar.commandView.wfm.subMenu.wfmConfig.subMenu.businessUnits",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:businessUnit:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": [
         "genesyscloud_workforcemanagement_businessunits"
       ]
@@ -2264,9 +2115,7 @@
       "titleKey": "navBar.commandView.wfm.subMenu.wfmConfig.subMenu.managementUnits",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:managementUnit:administer | policy=wfm:managementUnit:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -2275,9 +2124,7 @@
       "titleKey": "navBar.commandView.wfm.subMenu.wfmConfig.subMenu.planningGroups",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:planningGroup:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -2286,9 +2133,7 @@
       "titleKey": "navBar.commandView.wfm.subMenu.wfmConfig.subMenu.serviceGoalTemplates",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:serviceGoalTemplate:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -2297,9 +2142,7 @@
       "titleKey": "navBar.commandView.wfm.subMenu.wfmConfig.subMenu.staffingGroups",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:staffingGroup:view",
-      "destinationKind": "config",
       "includeInSupportedResources": true,
-      "skipReason": null,
       "resourceTypes": []
     },
     {
@@ -2308,9 +2151,8 @@
       "titleKey": "navBar.commandView.workspace.subMenu.agentWorkspace",
       "menuSource": "directory-command-nav",
       "authorize": "policy=routing:agent:onqueue",
-      "destinationKind": "agent",
       "includeInSupportedResources": false,
-      "skipReason": "Agent workspace view; not an admin configuration page.",
+      "skipReason": "Non-admin link; agent workspace view.",
       "resourceTypes": []
     },
     {
@@ -2319,9 +2161,12 @@
       "titleKey": "navBar.commandView.workspace.subMenu.caseList",
       "menuSource": "directory-command-nav",
       "authorize": "policy=caseManagement:case:view | policy=caseManagement:queryJob:add | policy=caseManagement:queryJob:view | policy=caseManagement:queryJobResults:view",
-      "destinationKind": "agent",
+      "featureToggles": [
+        "PURE-7203_case_list",
+        "PURE-7203_case_list_ui"
+      ],
       "includeInSupportedResources": false,
-      "skipReason": "Agent workspace view; not an admin configuration page.",
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
@@ -2330,9 +2175,8 @@
       "titleKey": "navBar.commandView.workspace.subMenu.taskListConversations",
       "menuSource": "directory-command-nav",
       "authorize": "policy=conversation:email:park | policy=conversation:message:park",
-      "destinationKind": "agent",
       "includeInSupportedResources": false,
-      "skipReason": "Agent workspace view; not an admin configuration page.",
+      "skipReason": "Non-admin link; agent workspace view.",
       "resourceTypes": []
     },
     {
@@ -2341,9 +2185,11 @@
       "titleKey": "navBar.commandView.workspace.subMenu.taskListWorkitems",
       "menuSource": "directory-command-nav",
       "authorize": "policy=workitems:queryJob:add | policy=workitems:queryJob:view | policy=workitems:queryJobResults:view | policy=workitems:workitem:view",
-      "destinationKind": "agent",
-      "includeInSupportedResources": false,
-      "skipReason": "Agent workspace view; not an admin configuration page.",
+      "featureToggles": [
+        "PURE-7203_case_list",
+        "PURE-7203_case_list_ui"
+      ],
+      "includeInSupportedResources": true,
       "resourceTypes": [
         "genesyscloud_task_management_workitem"
       ]

@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { loadDirectoryCommandNav } from "./lib/directory-command-nav.mjs";
-import { buildMenuCatalog } from "./lib/supported-resources-menu-destination.mjs";
+import { buildMenuCatalog, finalizeMenuCatalog } from "./lib/supported-resources-menu-destination.mjs";
 import { attachResourceTypesToMenuCatalog } from "../src/guiMenuPaths.js";
 import { MIN_RESOURCE_PERMISSIONS_VERSION } from "./lib/public-data-path-constants.mjs";
 
@@ -1542,6 +1542,9 @@ function mergeMenuRows(previousRows, generatedRows) {
     if (typeof row.menuSource === "string" && row.menuSource.trim()) {
       mergedRow.menuSource = row.menuSource.trim();
     }
+    if (Array.isArray(row.featureToggles) && row.featureToggles.length > 0) {
+      mergedRow.featureToggles = [...row.featureToggles];
+    }
     merged.push(mergedRow);
   }
 
@@ -1710,6 +1713,19 @@ function unionPermissionsMinVersion() {
   return getArgValue("union-permissions") || MIN_RESOURCE_PERMISSIONS_VERSION;
 }
 
+async function loadOverridesDocument() {
+  const overridesPath = path.resolve(getArgValue("overrides") || DEFAULT_OVERRIDES_PATH);
+
+  try {
+    return await readJson(overridesPath);
+  } catch (err) {
+    if (err?.code === "ENOENT") {
+      return {};
+    }
+    throw err;
+  }
+}
+
 async function loadGuiMenuPathOverrides() {
   const overridesPath = path.resolve(getArgValue("overrides") || DEFAULT_OVERRIDES_PATH);
 
@@ -1752,10 +1768,10 @@ async function loadPermissionOverrides() {
   }
 }
 
-function buildPublicOutput(fullOutput) {
-  const menuCatalog = attachResourceTypesToMenuCatalog(
-    fullOutput.menuCatalog,
-    fullOutput.guiMenuPaths
+function buildPublicOutput(fullOutput, overrides = null) {
+  const menuCatalog = finalizeMenuCatalog(
+    attachResourceTypesToMenuCatalog(fullOutput.menuCatalog, fullOutput.guiMenuPaths),
+    overrides
   );
 
   return {
@@ -1779,8 +1795,8 @@ async function loadPreviousOutput() {
   return null;
 }
 
-async function writeGuiMenuPathOutputs(fullOutput) {
-  const publicOutput = buildPublicOutput(fullOutput);
+async function writeGuiMenuPathOutputs(fullOutput, overrides = null) {
+  const publicOutput = buildPublicOutput(fullOutput, overrides);
 
   await fs.mkdir(PUBLIC_DIR, { recursive: true });
   await fs.mkdir(path.dirname(DEBUG_OUTPUT_PATH), { recursive: true });
@@ -1827,12 +1843,13 @@ async function loadDirectoryNav(menuSource) {
 }
 
 async function main() {
-  const [{ json: menuJson, source: menuSource }, permissionOverrides, guiMenuPathOverrides, previous] =
+  const [{ json: menuJson, source: menuSource }, permissionOverrides, guiMenuPathOverrides, previous, overridesDoc] =
     await Promise.all([
       loadMenuJson(),
       loadPermissionOverrides(),
       loadGuiMenuPathOverrides(),
       loadPreviousOutput(),
+      loadOverridesDocument(),
     ]);
 
   const directoryNav = await loadDirectoryNav(menuSource);
@@ -1881,7 +1898,7 @@ async function main() {
     permissionResourceTypes
   );
   const menuRows = mergeMenuRows(previous?.menuRows, generated.menuRows);
-  const menuCatalog = buildMenuCatalog(generated.menuRows, directoryNav.menuRows);
+  const menuCatalog = buildMenuCatalog(directoryNav.menuRows, overridesDoc);
 
   const unionResourceTypes = new Set(
     (permissionsJson.resources || []).map((resource) => getResourceType(resource)).filter(Boolean)
@@ -1915,7 +1932,7 @@ async function main() {
     return;
   }
 
-  await writeGuiMenuPathOutputs(output);
+  await writeGuiMenuPathOutputs(output, overridesDoc);
 
   console.log(
     `Wrote ${path.relative(process.cwd(), OUTPUT_PATH)} (public, ${menuCatalog.length} menuCatalog entries, ${Object.keys(guiMenuPaths).length} mapped resource types) and ${path.relative(process.cwd(), DEBUG_OUTPUT_PATH)} (debug catalog, ${menuRows.length} menuRows, ${directoryNav.menuRows.length} directory command-nav rows, ${mappedCount}/${totalResources} mapped this run, ${permissionResourceTypes.size} in latest permissions, ${unmappedCount} unmapped)`

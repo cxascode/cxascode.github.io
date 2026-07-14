@@ -6,7 +6,7 @@ import {
   getSupportedResourcesMenuPaths,
   resolveGuiMenuPath,
 } from "../src/guiMenuPaths.js";
-import { getHiddenResourceTypes, getHiddenSupportedResourcesMenuLinks } from "./lib/dependency-tree-overrides.mjs";
+import { getHiddenResourceTypes } from "./lib/dependency-tree-overrides.mjs";
 import {
   combinedInputsHash,
   getArgValue,
@@ -254,7 +254,6 @@ function buildNestedRows(orderedMenuPaths, entriesByPath) {
   const rows = [];
   let currentSection = "";
   let currentGroup = "";
-  const seenSections = new Set();
 
   for (const menuPath of orderedMenuPaths) {
     const entry = entriesByPath.get(menuPath);
@@ -275,10 +274,7 @@ function buildNestedRows(orderedMenuPaths, entriesByPath) {
     const { section, group, item } = parseMenuPathTiers(menuPath);
 
     if (section !== currentSection) {
-      if (!seenSections.has(section)) {
-        rows.push({ kind: "section", label: section });
-        seenSections.add(section);
-      }
+      rows.push({ kind: "section", label: section });
       currentSection = section;
       currentGroup = "";
     }
@@ -446,9 +442,7 @@ async function generateSupportedResourcesForVersion({
   }));
 
   const { catalogByNorm } = collectMenuPaths(menuCatalogRows, generatedGuiMenuPaths);
-  const spreadsheetMenuPaths = getSupportedResourcesMenuPaths(menuCatalog, {
-    hiddenMenuLinks: getHiddenSupportedResourcesMenuLinks(overrides),
-  });
+  const spreadsheetMenuPaths = getSupportedResourcesMenuPaths(menuCatalog);
 
   if (menuCatalog.length === 0 || spreadsheetMenuPaths.length === 0) {
     throw new Error(
