@@ -77,12 +77,9 @@ export function normalizeGuiMenuPathsDocument(doc) {
   return normalizeGeneratedGuiMenuPaths(doc.guiMenuPaths);
 }
 
-export function getSupportedResourcesMenuPaths(menuCatalog, { hiddenMenuLinks } = {}) {
-  const hidden = hiddenMenuLinks instanceof Set ? hiddenMenuLinks : new Set();
-
+export function getSupportedResourcesMenuPaths(menuCatalog) {
   return normalizeMenuCatalog(menuCatalog)
     .filter((entry) => entry.includeInSupportedResources !== false)
-    .filter((entry) => !entry.link || !hidden.has(entry.link))
     .map((entry) => entry.path.trim());
 }
 
