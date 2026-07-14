@@ -3,10 +3,14 @@ import path from "node:path";
 import { loadDirectoryCommandNav } from "./lib/directory-command-nav.mjs";
 import { buildMenuCatalog, finalizeMenuCatalog } from "./lib/supported-resources-menu-destination.mjs";
 import { attachResourceTypesToMenuCatalog } from "../src/guiMenuPaths.js";
-import { MIN_RESOURCE_PERMISSIONS_VERSION } from "./lib/public-data-path-constants.mjs";
+import {
+  GUI_MENU_PATHS_RELATIVE_PATH,
+  MIN_RESOURCE_PERMISSIONS_VERSION,
+} from "./lib/public-data-path-constants.mjs";
 
 const PUBLIC_DIR = path.resolve("public");
-const OUTPUT_PATH = path.join(PUBLIC_DIR, "gui-menu-paths.json");
+const REPO_ROOT = path.resolve(import.meta.dirname, "..");
+const OUTPUT_PATH = path.join(REPO_ROOT, GUI_MENU_PATHS_RELATIVE_PATH);
 const DEBUG_OUTPUT_PATH = path.resolve(".cache-meta/gui-menu-paths-debug.json");
 const PERMISSIONS_DIR = path.join(PUBLIC_DIR, "resource-permissions-json");
 const DEFAULT_OVERRIDES_PATH = path.join(PUBLIC_DIR, "overrides.json");
@@ -1798,7 +1802,7 @@ async function loadPreviousOutput() {
 async function writeGuiMenuPathOutputs(fullOutput, overrides = null) {
   const publicOutput = buildPublicOutput(fullOutput, overrides);
 
-  await fs.mkdir(PUBLIC_DIR, { recursive: true });
+  await fs.mkdir(path.dirname(OUTPUT_PATH), { recursive: true });
   await fs.mkdir(path.dirname(DEBUG_OUTPUT_PATH), { recursive: true });
 
   await Promise.all([
@@ -1935,7 +1939,7 @@ async function main() {
   await writeGuiMenuPathOutputs(output, overridesDoc);
 
   console.log(
-    `Wrote ${path.relative(process.cwd(), OUTPUT_PATH)} (public, ${menuCatalog.length} menuCatalog entries, ${Object.keys(guiMenuPaths).length} mapped resource types) and ${path.relative(process.cwd(), DEBUG_OUTPUT_PATH)} (debug catalog, ${menuRows.length} menuRows, ${directoryNav.menuRows.length} directory command-nav rows, ${mappedCount}/${totalResources} mapped this run, ${permissionResourceTypes.size} in latest permissions, ${unmappedCount} unmapped)`
+    `Wrote ${path.relative(process.cwd(), OUTPUT_PATH)} (app bundle, ${menuCatalog.length} menuCatalog entries, ${Object.keys(guiMenuPaths).length} mapped resource types) and ${path.relative(process.cwd(), DEBUG_OUTPUT_PATH)} (debug catalog, ${menuRows.length} menuRows, ${directoryNav.menuRows.length} directory command-nav rows, ${mappedCount}/${totalResources} mapped this run, ${permissionResourceTypes.size} in latest permissions, ${unmappedCount} unmapped)`
   );
   console.log(
     `Match methods: permission=${generated.matchMethodCounts.permission}, path-affinity=${generated.matchMethodCounts["path-affinity"]}, translation=${translationMapped} (resource-type=${generated.matchMethodCounts["translation-resource-type"]}, entity=${generated.matchMethodCounts["translation-entity"]}, scope=${generated.matchMethodCounts["translation-scope"]}, resource=${generated.matchMethodCounts["translation-resource"]})`

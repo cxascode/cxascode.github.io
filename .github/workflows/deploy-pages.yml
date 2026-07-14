@@ -94,7 +94,7 @@ jobs:
             public/tf-export-singletons
             public/schema-force-new
             public/tf-export-block-label-history.json
-            public/gui-menu-paths.json
+            src/gui-menu-paths.json
             .cache-meta
             .cache/provider-source
           key: versions-${{ runner.os }}-${{ github.ref_name }}-${{ github.run_id }}

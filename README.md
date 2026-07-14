@@ -72,7 +72,7 @@ All generators read `public/overrides.json` unless `--overrides=` is passed (spr
 | `npm run generate-tf-export-resource-names` | `public/tf-export-resource-names/{version}.json` | No args: all cached versions. `--version=X.Y.Z`, `--latest=X.Y.Z`, `--provider=path`, `--verify`, `--stdout` |
 | `npm run generate-tf-export-singletons` | `public/tf-export-singletons/{version}.json` | Same pattern as tf-export resource names |
 | `npm run generate-schema-force-new` | `public/schema-force-new/{version}.json` | Same pattern as tf-export resource names |
-| `npm run generate-gui-menu-paths` | `public/gui-menu-paths.json` (slim), `.cache-meta/gui-menu-paths-debug.json` (full catalog) | Genesys Cloud `admin/menu.json` plus Directory command-nav. `--latest=X.Y.Z`, `--union-permissions` (default in CI), `--no-union-permissions`, `--menu=`, `--permissions=`, `--directory-base=`, `--directory-bundle=`, `--directory-translations=`, `--no-directory-nav`, `--stdout` (full JSON). |
+| `npm run generate-gui-menu-paths` | `src/gui-menu-paths.json` (app bundle), `.cache-meta/gui-menu-paths-debug.json` (full catalog) | Genesys Cloud `admin/menu.json` plus Directory command-nav. `--latest=X.Y.Z`, `--union-permissions` (default in CI), `--no-union-permissions`, `--menu=`, `--permissions=`, `--directory-base=`, `--directory-bundle=`, `--directory-translations=`, `--no-directory-nav`, `--stdout` (full JSON). |
 | `npm run verify-tf-export-env-vars` | Updates `public/provider-env-vars.json` | `--version=X.Y.Z`, `--latest=X.Y.Z`. Auto-appends new provider env vars; **exits non-zero** until each is triaged (`export-template` or `providerEnvVarsIgnore`). Runs in CI after upstream refresh. |
 | `npm run generate-site-updates` | `public/site-updates-data/` | `--base`, `--head`, `--date=YYYY-MM-DD`, `--dry-run`, `--force`, `--scrub`. Normally CI-only on push to `main`; use locally to preview changelog entries from a commit range. `--scrub` re-filters auto-generated entries using `scripts/lib/site-feature-policy.mjs`. |
 
@@ -129,10 +129,10 @@ npm run download-provider-versions
 - `tfExportResourceNames` — optional per-type override for **genesyscloud_tf_export template** filter placeholders; wins over the generated map in `tf-export-resource-names.json`
 - `tfExportNote` — default Markdown note (GFM) shown in the **genesyscloud_tf_export template** panel when a resource type is selected. Use `\n` in JSON for line breaks (not `\\n`).
 - `dependencyNotes` — per resource type, Markdown note (GFM) shown at the bottom of Resource Type Details when that type is selected. Use `\n` in JSON for line breaks (not `\\n`).
-- `guiMenuPaths` — optional per-type override for Genesys Cloud admin menu paths shown in Resource Type Details and the GUI list view; wins over `public/gui-menu-paths.json`
+- `guiMenuPaths` — optional per-type override for Genesys Cloud admin menu paths shown in Resource Type Details and the GUI list view; wins over `src/gui-menu-paths.json`
 - `hiddenResourceTypes` — resource types omitted from the left-hand list (still appear in Depends on / Dependency for when referenced)
 - `supportedResourcesAdminExclusionKeywords` — link substrings that exclude admin routes from the supported-resources spreadsheet; see `public/overrides.json`
-- `supportedResourcesFeatureToggleKeywords` — feature-toggle name substrings that bypass preview exclusion (unmapped toggle-gated paths continue through the funnel); see `public/overrides.json`
+- `supportedResourcesFeatureToggleKeywords` — feature-toggle name substrings on the public allowlist (unmapped toggle-gated paths are included on the sheet); see `public/overrides.json`
 - `spreadsheetTemplates` — spreadsheet program layer: `out` (out-of-scope types; column 5 label `"out"`, cols 7–8 blank), `repoAssignments` (repo → comma-separated resource types for column 8), `repoDeployOrder` (ordered repo names → Priority column 1-based deploy wave). Unassigned in-scope types show `TBD` in column 8. Rows sort by priority, then alpha; `TBD` before out-of-scope. Also the source of truth for `exclude_filter_resources` in the lab `exportpipeline/main.tf` (minus any types listed in that file's `replace_with_datasource` block, and minus `nonExportableResourceTypes`).
 - **Division aware** — badge when **Depends on** includes `genesyscloud_auth_division`; list filter **Division Aware** → *Yes* / *No* (blank = all types; same heuristic)
 - `deprecatedResourceTypes` — **Deprecated** badge in resource details; **Notes** column in spreadsheet templates (`Deprecated`)
@@ -276,7 +276,7 @@ node scripts/generate-schema-force-new.mjs --provider=/path/to/genesyscloud --st
 
 ## gui-menu-paths.json
 
-`public/gui-menu-paths.json` is the **slim generated** GUI menu path map shipped to the site (~15 KB). The app and spreadsheet generator load `guiMenuPaths` from this file and apply `overrides.json` → `guiMenuPaths` on top (same pattern as `tfExportResourceNames`).
+`src/gui-menu-paths.json` is the **slim generated** menu catalog and path index, **bundled with the app** (not served as a static URL under `/gui-menu-paths.json`). The explorer imports it at build time; generators read it from disk. Apply `overrides.json` → `guiMenuPaths` on top for per-type path overrides (same pattern as `tfExportResourceNames`).
 
 The full mapping catalog (~200 KB) is written to **`.cache-meta/gui-menu-paths-debug.json`** (Actions cache only, not deployed). Use `--stdout` for the full JSON locally.
 
@@ -370,12 +370,12 @@ Hidden permalink download (same pattern as `/spreadsheet` and `/roles/...`):
 
 ## supported-resources-templates/
 
-`public/supported-resources-templates/` is **generated** from `public/gui-menu-paths.json` `menuCatalog` and each cached `dependency-tree-json/{version}.json`. It lists Directory config destinations (menu path, supported yes/no, mapped resource types) for configuration coverage review — separate from the deploy `/spreadsheet` template.
+`public/supported-resources-templates/` is **generated** from `src/gui-menu-paths.json` `menuCatalog` and each cached `dependency-tree-json/{version}.json`. It lists Directory config destinations (menu path, supported yes/no, mapped resource types) for configuration coverage review — separate from the deploy `/spreadsheet` template.
 
 **Supported-resources funnel** (applied at `generate-gui-menu-paths`; excluded rows record the matching rule in `menuCatalog` → `skipReason`):
 
 1. **Mapped** — known resource-type mappings always win → on sheet
-2. **Preview toggle** — unmapped feature toggles → off sheet (`skipReason` mentions feature toggle), unless the toggle name contains a `supportedResourcesFeatureToggleKeywords` entry → continue through steps 3–5
+2. **Preview toggle** — unmapped feature toggles → off sheet, unless the toggle name contains a `supportedResourcesFeatureToggleKeywords` entry → on sheet
 3. **Non-admin** — link does not contain `"admin"` → off sheet (`skipReason` mentions non-admin)
 4. **Admin exclusion** — admin link matches `supportedResourcesAdminExclusionKeywords` → off sheet
 5. **Admin config** — remaining admin links → on sheet

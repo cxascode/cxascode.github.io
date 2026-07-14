@@ -160,6 +160,55 @@ export function buildDirectoryMenuRows(bundleText, directoryTranslations) {
   return [...byAuthLink.values()].sort((a, b) => a.path.localeCompare(b.path));
 }
 
+/**
+ * Directory sometimes emits multiple command-nav rows for one menu path during link
+ * migrations (different link, overlapping or distinct hide toggles). Collapse to one row
+ * per path: union featureToggles; prefer the link from the row with the most toggles,
+ * then the later row when counts tie (usually the migration target).
+ */
+export function mergeDirectoryMenuRowsByPath(directoryMenuRows) {
+  const order = [];
+  const byPath = new Map();
+
+  for (const row of directoryMenuRows || []) {
+    const menuPath = typeof row?.path === "string" ? row.path.trim() : "";
+    if (!menuPath) continue;
+
+    const rowToggles = Array.isArray(row.featureToggles)
+      ? row.featureToggles.filter((entry) => typeof entry === "string" && entry.trim())
+      : [];
+    const existing = byPath.get(menuPath);
+
+    if (!existing) {
+      byPath.set(menuPath, {
+        ...row,
+        path: menuPath,
+        ...(rowToggles.length ? { featureToggles: [...rowToggles] } : {}),
+        linkToggleCount: rowToggles.length,
+      });
+      order.push(menuPath);
+      continue;
+    }
+
+    const mergedToggles = new Set([...(existing.featureToggles || []), ...rowToggles]);
+    if (mergedToggles.size > 0) {
+      existing.featureToggles = [...mergedToggles].sort((a, b) => a.localeCompare(b));
+    }
+
+    if (rowToggles.length >= existing.linkToggleCount) {
+      existing.link = row.link || existing.link;
+      existing.titleKey = row.titleKey || existing.titleKey;
+      existing.authorize = row.authorize || existing.authorize;
+      existing.linkToggleCount = rowToggles.length;
+    }
+  }
+
+  return order.map((menuPath) => {
+    const { linkToggleCount, ...row } = byPath.get(menuPath);
+    return row;
+  });
+}
+
 async function fetchText(url, label) {
   const response = await fetch(url, {
     headers: { Accept: "*/*", "User-Agent": "cxascode-gui-menu-paths" },

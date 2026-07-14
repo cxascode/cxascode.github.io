@@ -1,6 +1,6 @@
 /**
  * Resolve the Genesys Cloud admin GUI menu path for a resource type.
- * Uses overrides.json guiMenuPaths when present, otherwise public/gui-menu-paths.json menuCatalog.
+ * Uses overrides.json guiMenuPaths when present, otherwise src/gui-menu-paths.json menuCatalog.
  */
 export function resolveGuiMenuPath(resourceType, overrides, generatedGuiMenuPaths) {
   const type = (resourceType || "").trim();
@@ -63,7 +63,7 @@ export function buildGuiMenuPathIndex(menuCatalog) {
 }
 
 /**
- * Load generated gui-menu-paths.json into a resource-type -> menu path index.
+ * Load generated src/gui-menu-paths.json into a resource-type -> menu path index.
  * Supports the consolidated menuCatalog shape and legacy guiMenuPaths map.
  */
 export function normalizeGuiMenuPathsDocument(doc) {

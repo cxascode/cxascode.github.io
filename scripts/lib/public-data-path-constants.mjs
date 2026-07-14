@@ -1,5 +1,9 @@
 export const PUBLIC_DIR_NAME = "public";
 
+/** Generated menu catalog + path index; bundled with the app (not served as a static URL). */
+export const GUI_MENU_PATHS_JSON = "gui-menu-paths.json";
+export const GUI_MENU_PATHS_RELATIVE_PATH = `src/${GUI_MENU_PATHS_JSON}`;
+
 export const DEPENDENCY_TREE_DIR = "dependency-tree-json";
 export const DEPENDENCY_TREE_MERGED_DIR = "dependency-tree-merged-json";
 export const RESOURCE_PERMISSIONS_JSON_DIR = "resource-permissions-json";
