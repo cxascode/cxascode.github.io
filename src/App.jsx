@@ -7,6 +7,7 @@ import AttributeIndexDialog from "./AttributeIndexDialog.jsx";
 import ReleaseNotesDialog from "./ReleaseNotesDialog.jsx";
 import SiteUpdatesDialog from "./SiteUpdatesDialog.jsx";
 import ResourceReleaseChanges from "./ResourceReleaseChanges.jsx";
+import DependencyTagList from "./DependencyTagList.jsx";
 import {
   buildTfExportTemplate,
   resolveProviderEnvVars,
@@ -1395,7 +1396,6 @@ export default function App() {
     setQuery("");
     setDivisionFilter(DIVISION_FILTER_ALL);
     setSelectedType("");
-    searchRef.current?.focus();
   };
 
   const handleResourceListKeyDown = useCallback(
@@ -1973,18 +1973,7 @@ export default function App() {
                 <div className="gcPanel__body">
                   {activeType ? (
                     dependsOn.length ? (
-                      dependsOn.map((t) => (
-                        <button
-                          key={t}
-                          className="gcPill"
-                          onClick={() => {
-                            setSelectedType(t);
-                          }}
-                          type="button"
-                        >
-                          {t}
-                        </button>
-                      ))
+                      <DependencyTagList types={dependsOn} onSelectType={setSelectedType} />
                     ) : (
                       <div className="gcMuted">No dependencies found.</div>
                     )
@@ -2002,18 +1991,7 @@ export default function App() {
                 <div className="gcPanel__body">
                   {activeType ? (
                     dependencyFor.length ? (
-                      dependencyFor.map((t) => (
-                        <button
-                          key={t}
-                          className="gcPill"
-                          onClick={() => {
-                            setSelectedType(t);
-                          }}
-                          type="button"
-                        >
-                          {t}
-                        </button>
-                      ))
+                      <DependencyTagList types={dependencyFor} onSelectType={setSelectedType} />
                     ) : (
                       <div className="gcMuted">Nothing depends on this.</div>
                     )
