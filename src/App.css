@@ -768,7 +768,6 @@ button.gcHeaderLink:disabled {
 .gcSingletonBadge,
 .gcDeprecatedBadge,
 .gcNonExportableBadge,
-.gcPill,
 .gcAttributeHistory__status,
 .gcAttributeIndexLifecycle__status,
 .gcProviderEnvVars__status,
@@ -1140,15 +1139,52 @@ button.gcHeaderLink:disabled {
   color: var(--gc-subtle);
 }
 
-.gcPill {
-  border: 1px solid var(--gc-border);
-  background: #fff;
-  cursor: pointer;
-  margin: 0 8px 8px 0;
+.gcDependencyTagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.gcPill:hover {
-  background: rgba(0, 0, 0, 0.03);
+.gcDependencyTag {
+  margin: 0;
+  padding: 0;
+}
+
+/* Admin tags-input rect shape — grey track like export template toggles. */
+.gcDependencyTag__button {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0 6px;
+  min-height: 22px;
+  border: 1px solid var(--gc-border);
+  border-radius: 2px;
+  background: #f0f3f6;
+  color: var(--gc-text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: var(--gc-action-font-size);
+  font-weight: 400;
+  line-height: 1.2;
+  cursor: pointer;
+  text-align: left;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.gcDependencyTag__button:hover,
+.gcDependencyTag__button:focus-visible {
+  background: var(--gc-surface);
+  color: var(--gc-blue);
+  box-shadow: 0 1px 2px rgba(31, 45, 61, 0.08);
+  outline: none;
+}
+
+.gcDependencyTag__label {
+  display: inline;
 }
 
 .gcFooter {
