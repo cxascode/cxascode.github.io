@@ -1394,6 +1394,7 @@ export default function App() {
   const clearSearch = () => {
     setQuery("");
     setDivisionFilter(DIVISION_FILTER_ALL);
+    setSelectedType("");
     searchRef.current?.focus();
   };
 
@@ -1680,7 +1681,11 @@ export default function App() {
                   type="button"
                   className="gcClearButton"
                   onClick={clearSearch}
-                  disabled={showDependencyLoading || !!error || (!query && !divisionFilter)}
+                  disabled={
+                    showDependencyLoading ||
+                    !!error ||
+                    (!query && !selectedType && !divisionFilter)
+                  }
                 >
                   Clear
                 </button>
