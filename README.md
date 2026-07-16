@@ -282,7 +282,7 @@ The full mapping catalog (~200 KB) is written to **`.cache-meta/gui-menu-paths-d
 
 **Generate:** `npm run generate-gui-menu-paths -- --latest=X.Y.Z --union-permissions` (CI, bootstrap, and `download-provider-versions.sh` pass `--union-permissions` so paths cover every resource type that ever appeared in cached `resource_permissions-*.json` since **1.76.0**, while still fetching live Genesys nav each run).
 
-**Public file fields:** `guiMenuPaths`, `menuCatalog`, `generatedAt`, `permissionsSource`, `permissionsUnion`.
+**Bundled file fields (`src/gui-menu-paths.json`):** `menuCatalog`, `permissionsSource`, `permissionsUnion`.
 
 - **`menuCatalog`** — Directory command-nav destinations in nav order. Each entry has `includeInSupportedResources` and, when excluded, `skipReason` explaining which funnel rule applied (see [supported-resources-templates](#supported-resources-templates)). Rules are configured in `overrides.json` → `supportedResourcesAdminExclusionKeywords` and baked at `generate-gui-menu-paths` time.
 
@@ -290,6 +290,8 @@ The full mapping catalog (~200 KB) is written to **`.cache-meta/gui-menu-paths-d
 - **`guiMenuPaths`** — lookup map (`resource_type` → menu path). Same shape as `overrides.json` → `guiMenuPaths`. Types removed from **latest** permissions but mapped via the union are kept; debug catalog entries for those show `retired: true`.
 
 **Debug file only** (`.cache-meta/gui-menu-paths-debug.json`):
+
+- **`generatedAt`** — ISO timestamp for the generator run (provenance only; not bundled with the app).
 
 - **`guiMenuPathCatalog`** — per-type detail: `permissions`, matched `menuPath` / `menuLeaf` / `menuAuthorize` / `matchScore` / `matchMethod`, optional `overrideMenuPath` / `overrideMatches`, or `unmappedReason`.
 - **`menuRows`** — flattened admin menu plus Directory command-nav rows (`path`, `authorize`). Grows over time; removed rows are retained across runs.

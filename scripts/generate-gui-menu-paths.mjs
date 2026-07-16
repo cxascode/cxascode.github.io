@@ -1779,7 +1779,6 @@ function buildPublicOutput(fullOutput, overrides = null) {
   );
 
   return {
-    generatedAt: fullOutput.generatedAt,
     permissionsSource: fullOutput.permissionsSource,
     permissionsUnion: fullOutput.permissionsUnion ?? null,
     menuCatalog,

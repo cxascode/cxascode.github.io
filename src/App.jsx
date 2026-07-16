@@ -12,6 +12,8 @@ import {
   resolveProviderEnvVars,
   resolveTfExportResourceName,
   RESOURCE_NAME_PLACEHOLDER,
+  TF_EXPORT_MODE_EXPORT,
+  TF_EXPORT_MODE_EXPORT_STATE,
 } from "./tfExportTemplate.js";
 import {
   normalizeGuiMenuPathsDocument,
@@ -921,12 +923,16 @@ export default function App() {
     [activeType, providerEnvVarCatalog]
   );
 
+  const [tfExportMode, setTfExportMode] = useState(TF_EXPORT_MODE_EXPORT);
+
   const tfExportTemplate = useMemo(
     () =>
       activeType
-        ? buildTfExportTemplate(activeType, dependsOn, tfExportResourceName, providerEnvVars)
+        ? buildTfExportTemplate(activeType, dependsOn, tfExportResourceName, providerEnvVars, {
+            mode: tfExportMode,
+          })
         : "",
-    [activeType, dependsOn, tfExportResourceName, providerEnvVars]
+    [activeType, dependsOn, tfExportResourceName, providerEnvVars, tfExportMode]
   );
 
   const terraformRegistryDocsUrl = useMemo(
@@ -1388,7 +1394,6 @@ export default function App() {
   const clearSearch = () => {
     setQuery("");
     setDivisionFilter(DIVISION_FILTER_ALL);
-    setSelectedType("");
     searchRef.current?.focus();
   };
 
@@ -1421,7 +1426,7 @@ export default function App() {
 
   useEffect(() => {
     setCopyState("idle");
-  }, [activeType, tfExportTemplate]);
+  }, [activeType, tfExportTemplate, tfExportMode]);
 
   const copyTfExportTemplate = async () => {
     if (!tfExportTemplate) return;
@@ -1675,11 +1680,7 @@ export default function App() {
                   type="button"
                   className="gcClearButton"
                   onClick={clearSearch}
-                  disabled={
-                    showDependencyLoading ||
-                    !!error ||
-                    (!query && !selectedType && !divisionFilter)
-                  }
+                  disabled={showDependencyLoading || !!error || (!query && !divisionFilter)}
                 >
                   Clear
                 </button>
@@ -1859,7 +1860,7 @@ export default function App() {
                 <div className="gcCard__titleActions">
                   {terraformRegistryDocsUrl ? (
                     <a
-                      className="gcDocsPill"
+                      className="gcHeaderLink"
                       href={terraformRegistryDocsUrl}
                       target="_blank"
                       rel="noreferrer"
@@ -2021,7 +2022,33 @@ export default function App() {
             <div className="gcExportTemplate">
               <div className="gcPanel">
                 <div className="gcPanel__header">
-                  <div className="gcPanel__title">genesyscloud_tf_export template</div>
+                  <div className="gcPanel__headerStart">
+                    <div className="gcPanel__title">genesyscloud_tf_export template</div>
+                    <div
+                      className="gcSegmentedControl gcSegmentedControl--text gcExportTemplate__modeToggle"
+                      role="radiogroup"
+                      aria-label="Export template mode"
+                    >
+                      <button
+                        type="button"
+                        className="gcSegmentedControl__option"
+                        role="radio"
+                        aria-checked={tfExportMode === TF_EXPORT_MODE_EXPORT}
+                        onClick={() => setTfExportMode(TF_EXPORT_MODE_EXPORT)}
+                      >
+                        Export
+                      </button>
+                      <button
+                        type="button"
+                        className="gcSegmentedControl__option"
+                        role="radio"
+                        aria-checked={tfExportMode === TF_EXPORT_MODE_EXPORT_STATE}
+                        onClick={() => setTfExportMode(TF_EXPORT_MODE_EXPORT_STATE)}
+                      >
+                        Export state
+                      </button>
+                    </div>
+                  </div>
                   <button
                     type="button"
                     className="gcCopyButton"
@@ -2037,13 +2064,20 @@ export default function App() {
                 </div>
                 <div className="gcPanel__body">
                   {activeType && tfExportTemplate ? (
-                    <pre className="gcExportTemplate__code gcMono">{tfExportTemplate}</pre>
+                    <>
+                      <p className="gcMuted gcExportTemplate__hint">
+                        {tfExportMode === TF_EXPORT_MODE_EXPORT_STATE
+                          ? "Generate a Terraform state file for existing resources — brownfield adoption and import workflows."
+                          : "Generate HCL configuration for this resource, with dependency types exported as data sources."}
+                      </p>
+                      <pre className="gcExportTemplate__code gcMono">{tfExportTemplate}</pre>
+                    </>
                   ) : (
                     <div className="gcMuted">
                       Select a type to view an export template.
                     </div>
                   )}
-                  {activeType && tfExportNote ? (
+                  {activeType && tfExportNote && tfExportMode === TF_EXPORT_MODE_EXPORT ? (
                     <div className="gcExportTemplate__note">
                       <DependencyNote content={tfExportNote} />
                     </div>
