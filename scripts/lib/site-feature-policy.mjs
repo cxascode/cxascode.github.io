@@ -137,6 +137,14 @@ export const SITE_FEATURES = [
       dataOnlyPaths: [/^public\/provider-env-vars\.json$/, /^scripts\/verify-tf-export-env-vars\.mjs$/],
     },
   },
+  {
+    id: "bundler",
+    visibility: "semi-public",
+    siteUpdates: {
+      commitKeywords: ["bundler", "/bundler", "cx as code bundler"],
+      scrubKeywords: ["bundler", "/bundler", "cx as code bundler"],
+    },
+  },
 ];
 
 /** Generated/provider cache paths — not end-user feature announcements. */
@@ -284,3 +292,9 @@ export const PUBLIC_SITEMAP_DIALOG_PATHS = [
   "/creation-order",
   "/attribute-index",
 ];
+
+/**
+ * External beta tools hosted as separate GitHub Pages project sites.
+ * Not included in write-sitemap.mjs — do not add until promoted from beta.
+ */
+export const EXCLUDED_SITEMAP_EXTERNAL_PATHS = ["/bundler/"];
