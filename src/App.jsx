@@ -2065,21 +2065,23 @@ export default function App() {
                       <DependencyNote content={tfExportNote} />
                     </div>
                   ) : null}
-                  <div className="gcExportTemplate__footer">
-                    <p className="gcMuted gcExportTemplate__hint">
-                      Building an export with multiple resource types?
-                    </p>
-                    <div className="gcExportTemplate__linkRow">
-                      <a
-                        href="https://cxascode.github.io/bundler/"
-                        className="gcHeaderLink gcExportTemplate__link"
-                        rel="nofollow"
-                      >
-                        CX as Code Bundler
-                      </a>
-                      <span className="gcBetaBadge">Beta</span>
+                  {activeType ? (
+                    <div className="gcExportTemplate__footer">
+                      <p className="gcMuted gcExportTemplate__hint">
+                        Building an export with multiple resource types?
+                      </p>
+                      <div className="gcExportTemplate__linkRow">
+                        <a
+                          href="https://cxascode.github.io/bundler/"
+                          className="gcHeaderLink gcExportTemplate__link"
+                          rel="nofollow"
+                        >
+                          CX as Code Bundler
+                        </a>
+                        <span className="gcBetaBadge">Beta</span>
+                      </div>
                     </div>
-                  </div>
+                  ) : null}
                 </div>
               </div>
             </div>
