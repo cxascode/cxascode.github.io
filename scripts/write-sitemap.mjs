@@ -4,7 +4,7 @@ import path from "node:path";
 import { PUBLIC_SITEMAP_DIALOG_PATHS } from "./lib/site-feature-policy.mjs";
 
 const SITE_ORIGIN = "https://cxascode.github.io";
-// External project sites (e.g. /bundler/) are intentionally omitted — see EXCLUDED_SITEMAP_EXTERNAL_PATHS.
+// External project sites (e.g. /exportbuilder/) are intentionally omitted — see EXCLUDED_SITEMAP_EXTERNAL_PATHS.
 const PUBLIC_DIR = path.resolve("public");
 const ROOT_DIR = path.resolve(".");
 const lastmod = new Date().toISOString().slice(0, 10);

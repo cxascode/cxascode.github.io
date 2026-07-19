@@ -2072,11 +2072,11 @@ export default function App() {
                       </p>
                       <div className="gcExportTemplate__linkRow">
                         <a
-                          href="https://cxascode.github.io/bundler/"
+                          href="https://cxascode.github.io/exportbuilder/"
                           className="gcHeaderLink gcExportTemplate__link"
                           rel="nofollow"
                         >
-                          CX as Code Bundler
+                          CX as Code Export Builder
                         </a>
                         <span className="gcBetaBadge">Beta</span>
                       </div>

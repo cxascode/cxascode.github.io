@@ -3,4 +3,4 @@
 
 ### What's new
 
-- Hiding beta behind details
+- Introduced CX as Code Export Builder Beta

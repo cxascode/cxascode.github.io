@@ -138,11 +138,11 @@ export const SITE_FEATURES = [
     },
   },
   {
-    id: "bundler",
+    id: "exportbuilder",
     visibility: "semi-public",
     siteUpdates: {
-      commitKeywords: ["bundler", "/bundler", "cx as code bundler"],
-      scrubKeywords: ["bundler", "/bundler", "cx as code bundler"],
+      commitKeywords: ["hiding beta", "hide beta"],
+      scrubKeywords: ["exportbuilder", "/exportbuilder", "cx as code export builder", "bundler", "/bundler"],
     },
   },
 ];
@@ -297,4 +297,4 @@ export const PUBLIC_SITEMAP_DIALOG_PATHS = [
  * External beta tools hosted as separate GitHub Pages project sites.
  * Not included in write-sitemap.mjs — do not add until promoted from beta.
  */
-export const EXCLUDED_SITEMAP_EXTERNAL_PATHS = ["/bundler/"];
+export const EXCLUDED_SITEMAP_EXTERNAL_PATHS = ["/exportbuilder/"];
