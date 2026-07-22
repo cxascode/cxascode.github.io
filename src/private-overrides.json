@@ -50,7 +50,7 @@
       "flows"
     ],
     "repoAssignments": {
-      "foundation": "genesyscloud_auth_division, genesyscloud_auth_role, genesyscloud_flow_milestone, genesyscloud_flow_outcome, genesyscloud_greeting, genesyscloud_group, genesyscloud_group_greeting, genesyscloud_group_roles, genesyscloud_integration, genesyscloud_integration_action, genesyscloud_location, genesyscloud_organization_presence_definition, genesyscloud_routing_language, genesyscloud_routing_skill, genesyscloud_routing_skill_group, genesyscloud_routing_utilization, genesyscloud_routing_utilization_label, genesyscloud_routing_wrapupcode, genesyscloud_team, genesyscloud_telephony_providers_edges_did_pool, genesyscloud_telephony_providers_edges_extension_pool, genesyscloud_telephony_providers_edges_phonebasesettings, genesyscloud_telephony_providers_edges_site, genesyscloud_telephony_providers_edges_site_outbound_route",
+      "foundation": "genesyscloud_auth_division, genesyscloud_auth_role, genesyscloud_flow_milestone, genesyscloud_flow_outcome, genesyscloud_greeting, genesyscloud_group, genesyscloud_group_greeting, genesyscloud_group_roles, genesyscloud_integration, genesyscloud_integration_action, genesyscloud_location, genesyscloud_oauth_client, genesyscloud_organization_presence_definition, genesyscloud_routing_language, genesyscloud_routing_skill, genesyscloud_routing_skill_group, genesyscloud_routing_utilization, genesyscloud_routing_utilization_label, genesyscloud_routing_wrapupcode, genesyscloud_team, genesyscloud_telephony_providers_edges_did_pool, genesyscloud_telephony_providers_edges_extension_pool, genesyscloud_telephony_providers_edges_phonebasesettings, genesyscloud_telephony_providers_edges_site, genesyscloud_telephony_providers_edges_site_outbound_route",
       "queues": "genesyscloud_architect_emergencygroup, genesyscloud_architect_schedulegroups, genesyscloud_architect_schedules, genesyscloud_routing_queue, genesyscloud_routing_queue_conditional_group_activation, genesyscloud_routing_queue_conditional_group_routing, genesyscloud_routing_queue_outbound_email_address",
       "datatables": "genesyscloud_architect_datatable, genesyscloud_architect_datatable_row, genesyscloud_business_rules_decision_table, genesyscloud_business_rules_schema",
       "prompts": "genesyscloud_architect_user_prompt, genesyscloud_script",
@@ -86,7 +86,6 @@
       "genesyscloud_integration_custom_auth_action",
       "genesyscloud_journey_outcome",
       "genesyscloud_journey_outcome_predictor",
-      "genesyscloud_oauth_client",
       "genesyscloud_orgauthorization_pairing",
       "genesyscloud_organization_authentication_settings",
       "genesyscloud_outbound_contact_list_contact",
