@@ -20,7 +20,9 @@ import {
   GUI_MENU_PATHS_RELATIVE_PATH,
   isDependencyTreeVersionJsonFilename,
   SUPPORTED_RESOURCES_TEMPLATES_DIR,
+  PRIVATE_OVERRIDES_RELATIVE_PATH,
 } from "./lib/public-data-path-constants.mjs";
+import { loadOverridesDocument } from "./lib/load-overrides-document.mjs";
 import {
   applySupportedResourcesLayout,
   applyWorksheetView,
@@ -46,10 +48,12 @@ const UNMAPPED_MENU_PATH = "TBD";
 
 const SUPPORTED_RESOURCES_GLOBAL_INPUT_RELATIVE_PATHS = [
   "public/overrides.json",
+  PRIVATE_OVERRIDES_RELATIVE_PATH,
   GUI_MENU_PATHS_RELATIVE_PATH,
   "scripts/templates/cx-as-code-supported-resources-template.xlsx",
   "scripts/lib/spreadsheet-styles.mjs",
   "scripts/lib/dependency-tree-overrides.mjs",
+  "scripts/lib/load-overrides-document.mjs",
   "scripts/lib/supported-resources-menu-destination.mjs",
   "src/guiMenuPaths.js",
   "scripts/generate-supported-resources-spreadsheet.mjs",
@@ -507,7 +511,7 @@ async function main() {
   const incremental = hasArgFlag("incremental");
   const force = hasArgFlag("force");
 
-  const overrides = (await loadJson(DEFAULT_OVERRIDES_PATH, { optional: true })) || {};
+  const overrides = await loadOverridesDocument(DEFAULT_OVERRIDES_PATH);
   const guiMenuPathsDoc = (await loadJson(GUI_MENU_PATHS_PATH, { optional: true })) || {};
   const generatedGuiMenuPaths = normalizeGuiMenuPathsDocument(guiMenuPathsDoc);
   const menuCatalog = normalizeMenuCatalog(guiMenuPathsDoc.menuCatalog);

@@ -45,6 +45,7 @@ export const SITE_FEATURES = [
       scrubKeywords: ["spreadsheet", "/spreadsheet", "repo recommendations", "practice zip"],
       dataOnlyPaths: [
         /^public\/spreadsheet-templates\//,
+        /^src\/private-overrides\.json$/,
         /^scripts\/generate-spreadsheet-template\.mjs$/,
         /^scripts\/build-spreadsheet-templates\.mjs$/,
         /^scripts\/lib\/spreadsheet-styles\.mjs$/,
@@ -81,6 +82,7 @@ export const SITE_FEATURES = [
       ],
       dataOnlyPaths: [
         /^public\/lab-packages\//,
+        /^src\/private-overrides\.json$/,
         /^scripts\/generate-lab-package\.mjs$/,
         /^scripts\/lib\/lab-export-scope\.mjs$/,
         /^scripts\/lib\/filter-builder-template\.mjs$/,
@@ -107,6 +109,7 @@ export const SITE_FEATURES = [
       ],
       dataOnlyPaths: [
         /^public\/supported-resources-templates\//,
+        /^src\/private-overrides\.json$/,
         /^scripts\/generate-supported-resources-spreadsheet\.mjs$/,
         /^scripts\/lib\/supported-resources-menu-destination\.mjs$/,
         /^scripts\/templates\/cx-as-code-supported-resources-template\.xlsx$/,

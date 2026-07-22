@@ -35,9 +35,11 @@ import {
   isDependencyTreeVersionJsonFilename,
   MIN_SINGLETON_FLAG_VERSION,
   SCHEMA_FORCE_NEW_DIR,
+  PRIVATE_OVERRIDES_RELATIVE_PATH,
   TF_EXPORT_RESOURCE_NAMES_DIR,
   TF_EXPORT_SINGLETONS_DIR,
 } from "./lib/public-data-path-constants.mjs";
+import { loadOverridesDocument } from "./lib/load-overrides-document.mjs";
 import {
   applyDeployEditingColumnFills,
   autoFitWorksheetColumns,
@@ -61,9 +63,11 @@ const STAMP_DIR = path.resolve(REPO_ROOT, ".cache-meta/artifact-stamps/spreadshe
 
 const SPREADSHEET_GLOBAL_INPUT_RELATIVE_PATHS = [
   "public/overrides.json",
+  PRIVATE_OVERRIDES_RELATIVE_PATH,
   "scripts/templates/cx-as-code-spreadsheet-template.xlsx",
   "scripts/lib/spreadsheet-styles.mjs",
   "scripts/lib/dependency-tree-overrides.mjs",
+  "scripts/lib/load-overrides-document.mjs",
   "scripts/lib/priority-group-keywords.mjs",
   "src/effectiveDependencies.js",
   "src/guiMenuPaths.js",
@@ -280,16 +284,7 @@ async function loadOverrides() {
   );
   console.log(`Loading overrides from ${overridesPath}`);
 
-  try {
-    const raw = await fs.readFile(overridesPath, "utf8");
-    return JSON.parse(raw);
-  } catch (err) {
-    if (err && err.code === "ENOENT") {
-      console.log("No overrides file found, continuing without overrides.");
-      return {};
-    }
-    throw err;
-  }
+  return loadOverridesDocument(overridesPath);
 }
 
 async function ensureDir(dir) {

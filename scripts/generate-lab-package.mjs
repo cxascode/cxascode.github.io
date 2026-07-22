@@ -23,7 +23,9 @@ import {
   isDependencyTreeVersionJsonFilename,
   LAB_PACKAGES_DIR,
   resolvePublicDataDir,
+  PRIVATE_OVERRIDES_RELATIVE_PATH,
 } from "./lib/public-data-paths.mjs";
+import { loadOverridesDocument } from "./lib/load-overrides-document.mjs";
 
 const execFileAsync = promisify(execFile);
 
@@ -45,8 +47,10 @@ const STAMP_DIR = path.resolve(REPO_ROOT, ".cache-meta/artifact-stamps/lab");
 
 const LAB_GLOBAL_INPUT_RELATIVE_PATHS = [
   "public/overrides.json",
+  PRIVATE_OVERRIDES_RELATIVE_PATH,
   "scripts/lib/dependency-tree-overrides.mjs",
   "scripts/lib/filter-builder-template.mjs",
+  "scripts/lib/load-overrides-document.mjs",
   "scripts/lib/lab-export-scope.mjs",
   "scripts/lib/lab-package-version.mjs",
   "scripts/lib/public-data-path-constants.mjs",
@@ -99,13 +103,7 @@ async function copyDir(src, dest) {
 }
 
 async function loadOverrides() {
-  try {
-    const raw = await fs.readFile(DEFAULT_OVERRIDES_PATH, "utf8");
-    return JSON.parse(raw);
-  } catch (err) {
-    if (err?.code === "ENOENT") return {};
-    throw err;
-  }
+  return loadOverridesDocument(DEFAULT_OVERRIDES_PATH);
 }
 
 async function validateLabTemplateProviderVersionPins(rootDir, relativeDir = "") {

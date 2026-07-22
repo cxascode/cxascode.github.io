@@ -7,6 +7,7 @@ import {
   GUI_MENU_PATHS_RELATIVE_PATH,
   MIN_RESOURCE_PERMISSIONS_VERSION,
 } from "./lib/public-data-path-constants.mjs";
+import { loadOverridesDocument } from "./lib/load-overrides-document.mjs";
 
 const PUBLIC_DIR = path.resolve("public");
 const REPO_ROOT = path.resolve(import.meta.dirname, "..");
@@ -1717,17 +1718,9 @@ function unionPermissionsMinVersion() {
   return getArgValue("union-permissions") || MIN_RESOURCE_PERMISSIONS_VERSION;
 }
 
-async function loadOverridesDocument() {
+async function loadOverridesDocumentForGenerator() {
   const overridesPath = path.resolve(getArgValue("overrides") || DEFAULT_OVERRIDES_PATH);
-
-  try {
-    return await readJson(overridesPath);
-  } catch (err) {
-    if (err?.code === "ENOENT") {
-      return {};
-    }
-    throw err;
-  }
+  return loadOverridesDocument(overridesPath);
 }
 
 async function loadGuiMenuPathOverrides() {
@@ -1852,7 +1845,7 @@ async function main() {
       loadPermissionOverrides(),
       loadGuiMenuPathOverrides(),
       loadPreviousOutput(),
-      loadOverridesDocument(),
+      loadOverridesDocumentForGenerator(),
     ]);
 
   const directoryNav = await loadDirectoryNav(menuSource);

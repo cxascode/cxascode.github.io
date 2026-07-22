@@ -10,7 +10,7 @@ export function getHiddenResourceTypes(overrides) {
   );
 }
 
-/** Default link substrings that exclude admin routes from supported-resources (override in overrides.json). */
+/** Default link substrings that exclude admin routes from supported-resources (override in src/private-overrides.json). */
 export const DEFAULT_SUPPORTED_RESOURCES_ADMIN_EXCLUSION_KEYWORDS = [
   "troubleshooting",
   "platformusage",
@@ -48,8 +48,13 @@ function normalizeAdminExclusionKeywordList(keywords) {
 /**
  * Admin link substrings excluded from supported-resources after the admin/non-admin split.
  */
+function getSupportedResourcesTemplates(overrides) {
+  return overrides?.supportedResourcesTemplates;
+}
+
 export function getSupportedResourcesAdminExclusionKeywords(overrides) {
   const custom =
+    getSupportedResourcesTemplates(overrides)?.adminExclusionKeywords ||
     overrides?.supportedResourcesAdminExclusionKeywords ||
     overrides?.supportedResourcesDestinationKeywords;
 
@@ -80,7 +85,9 @@ function normalizeKeywordList(keywords) {
  * Unmapped toggle-gated paths whose toggle contains any keyword are included on the sheet.
  */
 export function getSupportedResourcesFeatureToggleKeywords(overrides) {
-  const custom = overrides?.supportedResourcesFeatureToggleKeywords;
+  const custom =
+    getSupportedResourcesTemplates(overrides)?.featureToggleKeywords ||
+    overrides?.supportedResourcesFeatureToggleKeywords;
   return normalizeKeywordList(custom) || [];
 }
 

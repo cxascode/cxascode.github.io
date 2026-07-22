@@ -62,7 +62,7 @@ Reference for `package.json` scripts. CI behavior is described in [Deploy workfl
 
 ### Generators
 
-All generators read `public/overrides.json` unless `--overrides=` is passed (spreadsheet only). Spreadsheet, supported-resources spreadsheet, and lab scripts support **`--incremental`** (skip unchanged versions) and **`--force`** (rebuild all). CI passes `--incremental`; add `--force` locally to match `force_deploy`.
+All generators read `public/overrides.json` unless `--overrides=` is passed (spreadsheet only). Spreadsheet, supported-resources spreadsheet, lab, and gui-menu-paths generators also read `src/private-overrides.json` (merged at load time). Spreadsheet, supported-resources spreadsheet, and lab scripts support **`--incremental`** (skip unchanged versions) and **`--force`** (rebuild all). CI passes `--incremental`; add `--force` locally to match `force_deploy`.
 
 | Script | Output | Common flags |
 |--------|--------|--------------|
@@ -131,9 +131,6 @@ npm run download-provider-versions
 - `dependencyNotes` — per resource type, Markdown note (GFM) shown at the bottom of Resource Type Details when that type is selected. Use `\n` in JSON for line breaks (not `\\n`).
 - `guiMenuPaths` — optional per-type override for Genesys Cloud admin menu paths shown in Resource Type Details and the GUI list view; wins over `src/gui-menu-paths.json`
 - `hiddenResourceTypes` — resource types omitted from the left-hand list (still appear in Depends on / Dependency for when referenced)
-- `supportedResourcesAdminExclusionKeywords` — link substrings that exclude admin routes from the supported-resources spreadsheet; see `public/overrides.json`
-- `supportedResourcesFeatureToggleKeywords` — feature-toggle name substrings on the public allowlist (unmapped toggle-gated paths are included on the sheet); see `public/overrides.json`
-- `spreadsheetTemplates` — spreadsheet program layer: `out` (out-of-scope types; column 5 label `"out"`, cols 7–8 blank), `repoAssignments` (repo → comma-separated resource types for column 8), `repoDeployOrder` (ordered repo names → Priority column 1-based deploy wave). Unassigned in-scope types show `TBD` in column 8. Rows sort by priority, then alpha; `TBD` before out-of-scope. Also the source of truth for `exclude_filter_resources` in the lab `exportpipeline/main.tf` (minus any types listed in that file's `replace_with_datasource` block, and minus `nonExportableResourceTypes`).
 - **Division aware** — badge when **Depends on** includes `genesyscloud_auth_division`; list filter **Division Aware** → *Yes* / *No* (blank = all types; same heuristic)
 - `deprecatedResourceTypes` — **Deprecated** badge in resource details; **Notes** column in spreadsheet templates (`Deprecated`)
 - `nonExportableResourceTypes` — **Cannot be exported** badge in resource details; **Notes** column in spreadsheet templates (`Cannot be exported`); omitted from lab `exclude_filter_resources` (cannot be exported, so exclusion is unnecessary)
@@ -284,7 +281,7 @@ The full mapping catalog (~200 KB) is written to **`.cache-meta/gui-menu-paths-d
 
 **Bundled file fields (`src/gui-menu-paths.json`):** `menuCatalog`, `permissionsSource`, `permissionsUnion`.
 
-- **`menuCatalog`** — Directory command-nav destinations in nav order. Each entry has `includeInSupportedResources` and, when excluded, `skipReason` explaining which funnel rule applied (see [supported-resources-templates](#supported-resources-templates)). Rules are configured in `overrides.json` → `supportedResourcesAdminExclusionKeywords` and baked at `generate-gui-menu-paths` time.
+- **`menuCatalog`** — Directory command-nav destinations in nav order. Each entry has `includeInSupportedResources` and, when excluded, `skipReason` explaining which funnel rule applied (see [supported-resources-templates](#supported-resources-templates)). Rules are configured in `src/private-overrides.json` → `supportedResourcesTemplates.adminExclusionKeywords` and baked at `generate-gui-menu-paths` time.
 
 - **`--union-permissions`** — merge all cached `public/resource-permissions-json/*.json` from `1.76.0` through `--latest` (newer file wins per resource type). Omit for a single `--permissions=` file or add `--no-union-permissions` with `--latest` for latest-only mapping.
 - **`guiMenuPaths`** — lookup map (`resource_type` → menu path). Same shape as `overrides.json` → `guiMenuPaths`. Types removed from **latest** permissions but mapped via the union are kept; debug catalog entries for those show `retired: true`.
@@ -357,7 +354,7 @@ Versioned `.tf` files live under `resource-permissions-tf/` on disk (what the pe
 
 ## lab-packages/
 
-`public/lab-packages/` is **generated** from `scripts/templates/cx-as-code-lab/`, **one zip per provider version** (same version list as `dependency-tree-json/`). Each zip pins `version = "~> X.Y.Z"` in every lab `.tf` file that declares a provider constraint, refreshes `filter-builder-template.xlsx` with that version's resource types (column **B** dropdown via Excel data validation on the hidden **validation** sheet), and writes `exportpipeline/main.tf` `exclude_filter_resources` from `spreadsheetTemplates.out` in `public/overrides.json` (skipping types in that file's `replace_with_datasource` block and `nonExportableResourceTypes`). Resource types honor `replaceDependencies`, `addDependencies`, and `hiddenResourceTypes` the same way as the explorer and spreadsheet generator.
+`public/lab-packages/` is **generated** from `scripts/templates/cx-as-code-lab/`, **one zip per provider version** (same version list as `dependency-tree-json/`). Each zip pins `version = "~> X.Y.Z"` in every lab `.tf` file that declares a provider constraint, refreshes `filter-builder-template.xlsx` with that version's resource types (column **B** dropdown via Excel data validation on the hidden **validation** sheet), and writes `exportpipeline/main.tf` `exclude_filter_resources` from `spreadsheetTemplates.out` in `src/private-overrides.json` (skipping types in that file's `replace_with_datasource` block and `nonExportableResourceTypes`). Resource types honor `replaceDependencies`, `addDependencies`, and `hiddenResourceTypes` the same way as the explorer and spreadsheet generator.
 
 The static lab source lives under `scripts/templates/cx-as-code-lab/CX_as_Code-Lab/`. Update that tree when lab exercises change; re-run the generator to rebuild versioned zips.
 
@@ -370,6 +367,14 @@ Hidden permalink download (same pattern as `/spreadsheet` and `/roles/...`):
 - `/labfiles/latest`
 - `/labfiles/v1.82.0`
 
+## private-overrides.json
+
+`src/private-overrides.json` is **bundled with the app** (not served as a static URL). Generators read it from disk alongside `public/overrides.json`. It holds build-time spreadsheet and supported-resources funnel configuration that does not need to ship in the public `overrides.json` payload.
+
+- `supportedResourcesTemplates.adminExclusionKeywords` — link substrings that exclude admin routes from the supported-resources spreadsheet
+- `supportedResourcesTemplates.featureToggleKeywords` — feature-toggle name substrings on the public allowlist (unmapped toggle-gated paths are included on the sheet)
+- `spreadsheetTemplates` — deploy spreadsheet program layer: `out` (out-of-scope types; column 5 label `"out"`, cols 7–8 blank), `repoAssignments` (repo → comma-separated resource types for column 8), `repoDeployOrder` (ordered repo names → Priority column 1-based deploy wave). Unassigned in-scope types show `TBD` in column 8. Rows sort by priority, then alpha; `TBD` before out-of-scope. Also the source of truth for `exclude_filter_resources` in the lab `exportpipeline/main.tf` (minus any types listed in that file's `replace_with_datasource` block, and minus `nonExportableResourceTypes`).
+
 ## supported-resources-templates/
 
 `public/supported-resources-templates/` is **generated** from `src/gui-menu-paths.json` `menuCatalog` and each cached `dependency-tree-json/{version}.json`. It lists Directory config destinations (menu path, supported yes/no, mapped resource types) for configuration coverage review — separate from the deploy `/spreadsheet` template.
@@ -377,9 +382,9 @@ Hidden permalink download (same pattern as `/spreadsheet` and `/roles/...`):
 **Supported-resources funnel** (applied at `generate-gui-menu-paths`; excluded rows record the matching rule in `menuCatalog` → `skipReason`):
 
 1. **Mapped** — known resource-type mappings always win → on sheet
-2. **Preview toggle** — unmapped feature toggles → off sheet, unless the toggle name contains a `supportedResourcesFeatureToggleKeywords` entry → on sheet
+2. **Preview toggle** — unmapped feature toggles → off sheet, unless the toggle name contains a `featureToggleKeywords` entry → on sheet
 3. **Non-admin** — link does not contain `"admin"` → off sheet (`skipReason` mentions non-admin)
-4. **Admin exclusion** — admin link matches `supportedResourcesAdminExclusionKeywords` → off sheet
+4. **Admin exclusion** — admin link matches `adminExclusionKeywords` → off sheet
 5. **Admin config** — remaining admin links → on sheet
 
 Included rows have `includeInSupportedResources: true` and no `skipReason`.

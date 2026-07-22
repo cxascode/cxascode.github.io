@@ -233,19 +233,12 @@ function isRoleDownloadSupported(version) {
  *     "<resource_type>": "Admin > Menu > Path (overrides src/gui-menu-paths.json)"
  *   },
  *   "hiddenResourceTypes": ["genesyscloud_bcp_tf_exporter", ...]
- *   "supportedResourcesAdminExclusionKeywords": ["wfm/schedules", "troubleshooting", ...]
- *   "supportedResourcesFeatureToggleKeywords": ["AI-1365", ...]
  *   "deprecatedResourceTypes": ["genesyscloud_journey_outcome", ...]
  *   "nonExportableResourceTypes": ["genesyscloud_outbound_contact_list_contact", ...]
- *   "spreadsheetTemplates": {
- *     "out": ["genesyscloud_user", ...],
- *     "repoDeployOrder": ["foundation", "routing", ...],
- *     "repoAssignments": {
- *       "foundation": "genesyscloud_auth_division, genesyscloud_auth_role, ...",
- *       "routing": "genesyscloud_architect_emergencygroup, ..."
- *     }
- *   }
  * }
+ *
+ * Supported-resources funnel rules and deploy spreadsheet program layer live in
+ * src/private-overrides.json (build-time only; not fetched at runtime).
  *
  * Behavior:
  * - addDependencies: union the dependencies list (no duplicates).

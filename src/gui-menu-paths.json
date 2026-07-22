@@ -78,7 +78,7 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=billing:subscription:add | policy=billing:subscription:create | policy=billing:subscription:edit | policy=billing:subscription:read | policy=billing:subscription:view",
       "includeInSupportedResources": false,
-      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "skipReason": "Admin link matched adminExclusionKeywords in src/private-overrides.json.",
       "resourceTypes": []
     },
     {
@@ -213,7 +213,7 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=quality:evaluation:add",
       "includeInSupportedResources": false,
-      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "skipReason": "Admin link matched adminExclusionKeywords in src/private-overrides.json.",
       "resourceTypes": []
     },
     {
@@ -223,7 +223,7 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=quality:calibration:view",
       "includeInSupportedResources": false,
-      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "skipReason": "Admin link matched adminExclusionKeywords in src/private-overrides.json.",
       "resourceTypes": []
     },
     {
@@ -255,7 +255,7 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=quality:evaluation:add",
       "includeInSupportedResources": false,
-      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "skipReason": "Admin link matched adminExclusionKeywords in src/private-overrides.json.",
       "resourceTypes": []
     },
     {
@@ -265,7 +265,7 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=conversation:encryptionKey:view | policy=recording:encryptionKey:view",
       "includeInSupportedResources": false,
-      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "skipReason": "Admin link matched adminExclusionKeywords in src/private-overrides.json.",
       "resourceTypes": []
     },
     {
@@ -617,7 +617,7 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=outbound:eventLog:view",
       "includeInSupportedResources": false,
-      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "skipReason": "Admin link matched adminExclusionKeywords in src/private-overrides.json.",
       "resourceTypes": []
     },
     {
@@ -729,7 +729,7 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=telephonyUI:cloudMedia:view",
       "includeInSupportedResources": false,
-      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "skipReason": "Admin link matched adminExclusionKeywords in src/private-overrides.json.",
       "resourceTypes": []
     },
     {
@@ -806,7 +806,7 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=purecloudvoice:number:view | policy=purecloudvoiceinternal:number:view",
       "includeInSupportedResources": false,
-      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "skipReason": "Admin link matched adminExclusionKeywords in src/private-overrides.json.",
       "resourceTypes": []
     },
     {
@@ -854,7 +854,7 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=telephony:plugin:all",
       "includeInSupportedResources": false,
-      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "skipReason": "Admin link matched adminExclusionKeywords in src/private-overrides.json.",
       "resourceTypes": []
     },
     {
@@ -876,7 +876,7 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=telephony:plugin:all",
       "includeInSupportedResources": false,
-      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "skipReason": "Admin link matched adminExclusionKeywords in src/private-overrides.json.",
       "resourceTypes": []
     },
     {
@@ -912,7 +912,7 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=oauth:client:view",
       "includeInSupportedResources": false,
-      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "skipReason": "Admin link matched adminExclusionKeywords in src/private-overrides.json.",
       "resourceTypes": []
     },
     {
@@ -935,7 +935,7 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=audits:audit:view",
       "includeInSupportedResources": false,
-      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "skipReason": "Admin link matched adminExclusionKeywords in src/private-overrides.json.",
       "resourceTypes": []
     },
     {
@@ -1007,7 +1007,7 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=troubleshooting:logCapture:add | policy=troubleshooting:logCapture:delete | policy=troubleshooting:logCapture:edit | policy=troubleshooting:logCapture:view",
       "includeInSupportedResources": false,
-      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "skipReason": "Admin link matched adminExclusionKeywords in src/private-overrides.json.",
       "resourceTypes": []
     },
     {
@@ -1028,7 +1028,7 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=usage:events:view | policy=usage:eventsquery:view",
       "includeInSupportedResources": false,
-      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "skipReason": "Admin link matched adminExclusionKeywords in src/private-overrides.json.",
       "resourceTypes": []
     },
     {
@@ -1387,7 +1387,7 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=analytics:journeyAggregate:view",
       "includeInSupportedResources": false,
-      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "skipReason": "Admin link matched adminExclusionKeywords in src/private-overrides.json.",
       "resourceTypes": []
     },
     {
@@ -1408,7 +1408,7 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=journey:recentsessions:view",
       "includeInSupportedResources": false,
-      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "skipReason": "Admin link matched adminExclusionKeywords in src/private-overrides.json.",
       "resourceTypes": []
     },
     {
@@ -1427,7 +1427,7 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=analytics:journeyAggregate:view",
       "includeInSupportedResources": false,
-      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "skipReason": "Admin link matched adminExclusionKeywords in src/private-overrides.json.",
       "resourceTypes": []
     },
     {
@@ -1680,7 +1680,7 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:historicalAdherence:view",
       "includeInSupportedResources": false,
-      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "skipReason": "Admin link matched adminExclusionKeywords in src/private-overrides.json.",
       "resourceTypes": []
     },
     {
@@ -1690,7 +1690,7 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:shrinkage:view",
       "includeInSupportedResources": false,
-      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "skipReason": "Admin link matched adminExclusionKeywords in src/private-overrides.json.",
       "resourceTypes": []
     },
     {
@@ -1700,7 +1700,7 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:intraday:view",
       "includeInSupportedResources": false,
-      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "skipReason": "Admin link matched adminExclusionKeywords in src/private-overrides.json.",
       "resourceTypes": []
     },
     {
@@ -1710,7 +1710,7 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:realtimeAdherence:view",
       "includeInSupportedResources": false,
-      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "skipReason": "Admin link matched adminExclusionKeywords in src/private-overrides.json.",
       "resourceTypes": []
     },
     {
@@ -1941,7 +1941,7 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:historicalData:upload",
       "includeInSupportedResources": false,
-      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "skipReason": "Admin link matched adminExclusionKeywords in src/private-overrides.json.",
       "resourceTypes": []
     },
     {
@@ -1951,7 +1951,7 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:mainForecast:view",
       "includeInSupportedResources": false,
-      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "skipReason": "Admin link matched adminExclusionKeywords in src/private-overrides.json.",
       "resourceTypes": []
     },
     {
@@ -1979,7 +1979,7 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:publishedSchedule:view | policy=wfm:schedule:administer | policy=wfm:schedule:view",
       "includeInSupportedResources": false,
-      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "skipReason": "Admin link matched adminExclusionKeywords in src/private-overrides.json.",
       "resourceTypes": []
     },
     {
@@ -1989,7 +1989,7 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:shiftTradeRequest:view",
       "includeInSupportedResources": false,
-      "skipReason": "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+      "skipReason": "Admin link matched adminExclusionKeywords in src/private-overrides.json.",
       "resourceTypes": []
     },
     {
