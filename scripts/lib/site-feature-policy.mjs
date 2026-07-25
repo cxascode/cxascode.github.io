@@ -142,10 +142,10 @@ export const SITE_FEATURES = [
   },
   {
     id: "exportbuilder",
-    visibility: "semi-public",
+    visibility: "public",
     siteUpdates: {
-      commitKeywords: ["hiding beta", "hide beta"],
-      scrubKeywords: ["exportbuilder", "/exportbuilder", "cx as code export builder", "bundler", "/bundler"],
+      commitKeywords: ["export builder", "exportbuilder", "/exportbuilder"],
+      dataOnlyPaths: [/^src\/exportBuilder\.js$/],
     },
   },
 ];
@@ -296,8 +296,5 @@ export const PUBLIC_SITEMAP_DIALOG_PATHS = [
   "/attribute-index",
 ];
 
-/**
- * External beta tools hosted as separate GitHub Pages project sites.
- * Not included in write-sitemap.mjs — do not add until promoted from beta.
- */
-export const EXCLUDED_SITEMAP_EXTERNAL_PATHS = ["/exportbuilder/"];
+/** Separate GitHub Pages project sites linked from the Explorer sitemap. */
+export const EXTERNAL_SITEMAP_URLS = ["https://cxascode.github.io/exportbuilder/"];

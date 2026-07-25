@@ -3,6 +3,8 @@ https://cxascode.github.io/release-notes
 https://cxascode.github.io/site-updates
 https://cxascode.github.io/creation-order
 https://cxascode.github.io/attribute-index
+https://cxascode.github.io/site-updates/2026-07-24
+https://cxascode.github.io/site-updates/2026-07-16
 https://cxascode.github.io/site-updates/2026-07-15
 https://cxascode.github.io/site-updates/2026-07-10
 https://cxascode.github.io/site-updates/2026-07-09
@@ -166,3 +168,4 @@ https://cxascode.github.io/genesyscloud_users_rules
 https://cxascode.github.io/genesyscloud_webdeployments_configuration
 https://cxascode.github.io/genesyscloud_webdeployments_deployment
 https://cxascode.github.io/genesyscloud_workforcemanagement_businessunits
+https://cxascode.github.io/exportbuilder/
