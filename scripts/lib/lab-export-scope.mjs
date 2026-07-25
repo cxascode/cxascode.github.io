@@ -1,8 +1,24 @@
 import { getNonExportableResourceTypes } from "./dependency-tree-overrides.mjs";
 import { getSpreadsheetOutResourceTypes } from "./priority-group-keywords.mjs";
 
+function normalizeResourceTypeList(raw) {
+  if (!Array.isArray(raw)) return [];
+
+  return [
+    ...new Set(
+      raw
+        .filter((entry) => typeof entry === "string" && entry.trim())
+        .map((entry) => entry.trim())
+    ),
+  ].sort((a, b) => a.localeCompare(b));
+}
+
 export function getOutOfScopeResourceTypes(overrides) {
-  return getSpreadsheetOutResourceTypes(overrides).sort((a, b) => a.localeCompare(b));
+  return normalizeResourceTypeList(getSpreadsheetOutResourceTypes(overrides));
+}
+
+export function getLabfilesAllOutResourceTypes(overrides) {
+  return normalizeResourceTypeList(overrides?.labfiles?.allout);
 }
 
 function stripHclLineComments(terraformContent) {
@@ -64,9 +80,24 @@ export function patchExcludeFilterResources(terraformContent, resourceTypes) {
   return terraformContent.replace(pattern, replacement);
 }
 
-export function resolveExcludeFilterResources(terraformContent, overrides) {
-  const outOfScopeTypes = getOutOfScopeResourceTypes(overrides);
+function resolveExcludeFilterResourcesFromOutTypes(outOfScopeTypes, terraformContent, overrides) {
   const replaceTypes = parseReplaceWithDatasourceTypes(terraformContent);
   const nonExportableTypes = getNonExportableResourceTypes(overrides);
   return buildExcludeFilterResources(outOfScopeTypes, replaceTypes, nonExportableTypes);
+}
+
+export function resolveExcludeFilterResources(terraformContent, overrides) {
+  return resolveExcludeFilterResourcesFromOutTypes(
+    getOutOfScopeResourceTypes(overrides),
+    terraformContent,
+    overrides
+  );
+}
+
+export function resolveExportAllExcludeFilterResources(terraformContent, overrides) {
+  return resolveExcludeFilterResourcesFromOutTypes(
+    getLabfilesAllOutResourceTypes(overrides),
+    terraformContent,
+    overrides
+  );
 }

@@ -102,5 +102,11 @@
       "genesyscloud_user_roles",
       "genesyscloud_workforcemanagement_businessunits"
     ]
+  },
+  "labfiles": {
+    "allout": [
+      "genesyscloud_journey_outcome",
+      "genesyscloud_journey_outcome_predictor"
+    ]
   }
 }
