@@ -62,7 +62,7 @@ export default function ResourceReleaseChanges({
           {resourceType && onViewAttributeHistory ? (
             <button
               type="button"
-              className="gcCopyButton"
+              className="gcHeaderLink"
               onClick={() => onViewAttributeHistory(resourceType)}
               title={`View all changes for ${resourceType}`}
             >
