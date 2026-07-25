@@ -1,10 +1,17 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { loadDirectoryCommandNav } from "./lib/directory-command-nav.mjs";
-import { MIN_RESOURCE_PERMISSIONS_VERSION } from "./lib/public-data-path-constants.mjs";
+import { buildMenuCatalog, finalizeMenuCatalog } from "./lib/supported-resources-menu-destination.mjs";
+import { attachResourceTypesToMenuCatalog } from "../src/guiMenuPaths.js";
+import {
+  GUI_MENU_PATHS_RELATIVE_PATH,
+  MIN_RESOURCE_PERMISSIONS_VERSION,
+} from "./lib/public-data-path-constants.mjs";
+import { loadOverridesDocument } from "./lib/load-overrides-document.mjs";
 
 const PUBLIC_DIR = path.resolve("public");
-const OUTPUT_PATH = path.join(PUBLIC_DIR, "gui-menu-paths.json");
+const REPO_ROOT = path.resolve(import.meta.dirname, "..");
+const OUTPUT_PATH = path.join(REPO_ROOT, GUI_MENU_PATHS_RELATIVE_PATH);
 const DEBUG_OUTPUT_PATH = path.resolve(".cache-meta/gui-menu-paths-debug.json");
 const PERMISSIONS_DIR = path.join(PUBLIC_DIR, "resource-permissions-json");
 const DEFAULT_OVERRIDES_PATH = path.join(PUBLIC_DIR, "overrides.json");
@@ -206,12 +213,6 @@ const DIRECTORY_TITLE_KEY_HINTS = {
   ],
   trunks: ["telephony_providers_edges_trunk", "telephony_providers_edges_trunkbasesettings"],
   externalMetricDefinitions: ["employeeperformance_externalmetrics_definitions"],
-};
-
-// Architect app pages not present in directory command-nav; extend parent link breadcrumb.
-const RESOURCE_MENU_PATH_EXTENSIONS = {
-  genesyscloud_architect_grammar: " > Grammars",
-  genesyscloud_architect_grammar_language: " > Grammars",
 };
 
 const DIRECTORY_TITLE_KEY_MATCH_BONUS = 250_000;
@@ -612,24 +613,6 @@ function preferDirectoryEquivalentPath(path, menuRows) {
     return leafNorm === sourceLeafNorm;
   });
   return directoryRow?.path || normalizedPath;
-}
-
-function extendMenuPath(resourceType, menuPath) {
-  const extension = RESOURCE_MENU_PATH_EXTENSIONS[resourceType];
-  if (!extension || !menuPath) return menuPath;
-  const suffix = extension.replace(/^\s*>\s*/, "");
-  if (menuPath.endsWith(suffix)) return menuPath;
-  return `${menuPath}${extension}`;
-}
-
-function finalizeMenuMatch(resourceType, match) {
-  if (!match) return match;
-  const menuPath = extendMenuPath(resourceType, match.menuPath);
-  if (menuPath === match.menuPath) return match;
-  return {
-    ...match,
-    menuPath,
-  };
 }
 
 function translationKeysFromResourceType(resourceType) {
@@ -1508,15 +1491,9 @@ function buildMapping(
       continue;
     }
 
-    let match = finalizeMenuMatch(
-      resourceType,
-      bestMenuMatch(resourceType, uniquePermissions, menuRows, translationIndex)
-    );
+    let match = bestMenuMatch(resourceType, uniquePermissions, menuRows, translationIndex);
     if (!match && !permissionOnly) {
-      match = finalizeMenuMatch(
-        resourceType,
-        bestTranslationFallbackMatch(resource, uniquePermissions, menuRows, translationIndex)
-      );
+      match = bestTranslationFallbackMatch(resource, uniquePermissions, menuRows, translationIndex);
     }
 
     if (match) {
@@ -1561,7 +1538,19 @@ function mergeMenuRows(previousRows, generatedRows) {
     const key = `${row.path}\0${authorize}`;
     if (seen.has(key)) continue;
     seen.add(key);
-    merged.push({ path: row.path, authorize });
+
+    const mergedRow = { path: row.path, authorize };
+    if (typeof row.link === "string" && row.link.trim()) mergedRow.link = row.link.trim();
+    if (typeof row.titleKey === "string" && row.titleKey.trim()) {
+      mergedRow.titleKey = row.titleKey.trim();
+    }
+    if (typeof row.menuSource === "string" && row.menuSource.trim()) {
+      mergedRow.menuSource = row.menuSource.trim();
+    }
+    if (Array.isArray(row.featureToggles) && row.featureToggles.length > 0) {
+      mergedRow.featureToggles = [...row.featureToggles];
+    }
+    merged.push(mergedRow);
   }
 
   return merged;
@@ -1729,6 +1718,11 @@ function unionPermissionsMinVersion() {
   return getArgValue("union-permissions") || MIN_RESOURCE_PERMISSIONS_VERSION;
 }
 
+async function loadOverridesDocumentForGenerator() {
+  const overridesPath = path.resolve(getArgValue("overrides") || DEFAULT_OVERRIDES_PATH);
+  return loadOverridesDocument(overridesPath);
+}
+
 async function loadGuiMenuPathOverrides() {
   const overridesPath = path.resolve(getArgValue("overrides") || DEFAULT_OVERRIDES_PATH);
 
@@ -1771,12 +1765,16 @@ async function loadPermissionOverrides() {
   }
 }
 
-function buildPublicOutput(fullOutput) {
+function buildPublicOutput(fullOutput, overrides = null) {
+  const menuCatalog = finalizeMenuCatalog(
+    attachResourceTypesToMenuCatalog(fullOutput.menuCatalog, fullOutput.guiMenuPaths),
+    overrides
+  );
+
   return {
-    generatedAt: fullOutput.generatedAt,
     permissionsSource: fullOutput.permissionsSource,
     permissionsUnion: fullOutput.permissionsUnion ?? null,
-    guiMenuPaths: fullOutput.guiMenuPaths,
+    menuCatalog,
   };
 }
 
@@ -1793,10 +1791,10 @@ async function loadPreviousOutput() {
   return null;
 }
 
-async function writeGuiMenuPathOutputs(fullOutput) {
-  const publicOutput = buildPublicOutput(fullOutput);
+async function writeGuiMenuPathOutputs(fullOutput, overrides = null) {
+  const publicOutput = buildPublicOutput(fullOutput, overrides);
 
-  await fs.mkdir(PUBLIC_DIR, { recursive: true });
+  await fs.mkdir(path.dirname(OUTPUT_PATH), { recursive: true });
   await fs.mkdir(path.dirname(DEBUG_OUTPUT_PATH), { recursive: true });
 
   await Promise.all([
@@ -1841,12 +1839,13 @@ async function loadDirectoryNav(menuSource) {
 }
 
 async function main() {
-  const [{ json: menuJson, source: menuSource }, permissionOverrides, guiMenuPathOverrides, previous] =
+  const [{ json: menuJson, source: menuSource }, permissionOverrides, guiMenuPathOverrides, previous, overridesDoc] =
     await Promise.all([
       loadMenuJson(),
       loadPermissionOverrides(),
       loadGuiMenuPathOverrides(),
       loadPreviousOutput(),
+      loadOverridesDocumentForGenerator(),
     ]);
 
   const directoryNav = await loadDirectoryNav(menuSource);
@@ -1895,6 +1894,7 @@ async function main() {
     permissionResourceTypes
   );
   const menuRows = mergeMenuRows(previous?.menuRows, generated.menuRows);
+  const menuCatalog = buildMenuCatalog(directoryNav.menuRows, overridesDoc);
 
   const unionResourceTypes = new Set(
     (permissionsJson.resources || []).map((resource) => getResourceType(resource)).filter(Boolean)
@@ -1912,11 +1912,13 @@ async function main() {
     menuSource,
     directoryNavSource: directoryNav.sources,
     directoryCommandNavEntries: directoryNav.commandNavEntryCount,
+    directoryMenuRows: directoryNav.menuRows,
     permissionsSource: path.relative(process.cwd(), latestPermissionsPath),
     permissionsUnion,
     generatedAt: new Date().toISOString(),
     guiMenuPaths,
     guiMenuPathCatalog,
+    menuCatalog,
     menuRows,
     guiMenuPathsIgnore,
   };
@@ -1926,10 +1928,10 @@ async function main() {
     return;
   }
 
-  await writeGuiMenuPathOutputs(output);
+  await writeGuiMenuPathOutputs(output, overridesDoc);
 
   console.log(
-    `Wrote ${path.relative(process.cwd(), OUTPUT_PATH)} (public, ${Object.keys(guiMenuPaths).length} guiMenuPaths) and ${path.relative(process.cwd(), DEBUG_OUTPUT_PATH)} (debug catalog, ${menuRows.length} menuRows, ${directoryNav.menuRows.length} directory command-nav rows, ${mappedCount}/${totalResources} mapped this run, ${permissionResourceTypes.size} in latest permissions, ${unmappedCount} unmapped)`
+    `Wrote ${path.relative(process.cwd(), OUTPUT_PATH)} (app bundle, ${menuCatalog.length} menuCatalog entries, ${Object.keys(guiMenuPaths).length} mapped resource types) and ${path.relative(process.cwd(), DEBUG_OUTPUT_PATH)} (debug catalog, ${menuRows.length} menuRows, ${directoryNav.menuRows.length} directory command-nav rows, ${mappedCount}/${totalResources} mapped this run, ${permissionResourceTypes.size} in latest permissions, ${unmappedCount} unmapped)`
   );
   console.log(
     `Match methods: permission=${generated.matchMethodCounts.permission}, path-affinity=${generated.matchMethodCounts["path-affinity"]}, translation=${translationMapped} (resource-type=${generated.matchMethodCounts["translation-resource-type"]}, entity=${generated.matchMethodCounts["translation-entity"]}, scope=${generated.matchMethodCounts["translation-scope"]}, resource=${generated.matchMethodCounts["translation-resource"]})`

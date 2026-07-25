@@ -4,25 +4,46 @@
     "resource": "genesyscloud_tf_export",
     "changes": [
         {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "replace_with_datasource",
+            "change": "updated",
+            "summary": "Description updated to clarify that a resource type alone (equivalent to type::) is a valid match pattern, in addition to resource_type::regular expression."
+        },
+        {
             "kind": "resource_behavior",
             "resource": "genesyscloud_tf_export",
             "attribute": "exclude_attributes",
             "change": "updated",
-            "summary": "Invalid entries are skipped with a warning instead of failing the export; exclusions are applied in a final pass so they work for resource types discovered during dependency resolution."
+            "summary": "Invalid entries (for example, a value with no attribute path after the resource type) are skipped with a warning instead of failing the export."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "exclude_attributes",
+            "change": "updated",
+            "summary": "Exclusions are applied in a final pass before output, so entries still apply to resource types discovered during dependency resolution (enable_dependency_resolution = true)."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "exclude_attributes",
+            "change": "updated",
+            "summary": "Nested attribute paths (for example, resource_type.nested.attribute) are removed from exported configuration maps."
         },
         {
             "kind": "resource_behavior",
             "resource": "genesyscloud_tf_export",
             "attribute": "replace_with_datasource",
             "change": "updated",
-            "summary": "Accepts a resource type without a label suffix (equivalent to type::) to replace all exported instances of that type with data sources."
+            "summary": "A list entry that is only a resource type name (without :: and label) now matches all exported instances of that type."
         },
         {
             "kind": "export_behavior",
             "resource": "genesyscloud_tf_export",
             "attribute": null,
             "change": "updated",
-            "summary": "Per-resource JSON files are named data_<resource_type>.json instead of <resource_type>.json."
+            "summary": "Per-resource JSON export files are written as data_<resource_type>.json instead of <resource_type>.json."
         }
     ],
     "related_export_changes": []

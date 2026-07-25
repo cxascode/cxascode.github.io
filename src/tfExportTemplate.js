@@ -4,6 +4,9 @@ export { effectiveDependencies };
 
 export const RESOURCE_NAME_PLACEHOLDER = "<name>";
 
+export const TF_EXPORT_MODE_EXPORT = "export";
+export const TF_EXPORT_MODE_EXPORT_STATE = "exportstate";
+
 /**
  * Resolve the managed-resource block label placeholder for include_filter_resources.
  * Data-source export paths (ExportAsDataFunc) are not modeled here.
@@ -78,15 +81,30 @@ function tfExportAttrLine(name, value) {
   return `  ${name.padEnd(TF_EXPORT_ATTR_WIDTH)} = ${value}`;
 }
 
+function normalizeTfExportMode(mode) {
+  return mode === TF_EXPORT_MODE_EXPORT_STATE
+    ? TF_EXPORT_MODE_EXPORT_STATE
+    : TF_EXPORT_MODE_EXPORT;
+}
+
 /**
  * Build a genesyscloud_tf_export resource block for a resource type.
  *
  * - include_filter_resources: single filter for the selected type and resource name
- * - replace_with_datasource: depends-on types as datasource patterns, excluding self-deps
+ * - replace_with_datasource (export mode): depends-on types as datasource patterns, excluding self-deps
+ * - exportstate mode: include_state_file true, no dependency resolution, empty replace_with_datasource
  */
-export function buildTfExportAttributes(resourceType, dependencies, resourceName) {
+export function buildTfExportAttributes(
+  resourceType,
+  dependencies,
+  resourceName,
+  { mode = TF_EXPORT_MODE_EXPORT } = {}
+) {
   const type = (resourceType || "").trim();
   if (!type) return "";
+
+  const exportMode = normalizeTfExportMode(mode);
+  const isExportState = exportMode === TF_EXPORT_MODE_EXPORT_STATE;
 
   const name =
     typeof resourceName === "string" && resourceName.trim()
@@ -98,19 +116,24 @@ export function buildTfExportAttributes(resourceType, dependencies, resourceName
   );
 
   const includeFilter = `["${type}::^${name}$"]`;
-  const replaceWith = `[${replaceEntries.map((e) => JSON.stringify(e)).join(", ")}]`;
+  const replaceWith = isExportState
+    ? "[]"
+    : `[${replaceEntries.map((e) => JSON.stringify(e)).join(", ")}]`;
 
   const body = [
     tfExportAttrLine("directory", '"./genesyscloud"'),
-    tfExportAttrLine("enable_dependency_resolution", "true"),
+    tfExportAttrLine("enable_dependency_resolution", isExportState ? "false" : "true"),
     tfExportAttrLine("export_format", '"hcl"'),
     tfExportAttrLine("exclude_attributes", "[]"),
-    tfExportAttrLine("include_state_file", "false"),
+    tfExportAttrLine("include_state_file", isExportState ? "true" : "false"),
     tfExportAttrLine("include_filter_resources", includeFilter),
     tfExportAttrLine("log_permission_errors", "true"),
     tfExportAttrLine("replace_with_datasource", replaceWith),
     tfExportAttrLine("split_files_by_resource", "false"),
-    tfExportAttrLine("use_legacy_architect_flow_exporter", "false"),
+    tfExportAttrLine(
+      "use_legacy_architect_flow_exporter",
+      isExportState ? "true" : "false"
+    ),
   ].join("\n");
 
   return `resource "genesyscloud_tf_export" "tf_export" {\n${body}\n}`;
@@ -119,8 +142,14 @@ export function buildTfExportAttributes(resourceType, dependencies, resourceName
 /**
  * Build the full copyable export template: env var shell comments, then the HCL block.
  */
-export function buildTfExportTemplate(resourceType, dependencies, resourceName, envVars) {
-  const block = buildTfExportAttributes(resourceType, dependencies, resourceName);
+export function buildTfExportTemplate(
+  resourceType,
+  dependencies,
+  resourceName,
+  envVars,
+  { mode = TF_EXPORT_MODE_EXPORT } = {}
+) {
+  const block = buildTfExportAttributes(resourceType, dependencies, resourceName, { mode });
   if (!block) return "";
 
   const preamble = (envVars || []).map(formatEnvVarComment);

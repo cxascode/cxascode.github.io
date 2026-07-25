@@ -1,12 +1,22 @@
 export const PUBLIC_DIR_NAME = "public";
 
+/** Generated menu catalog + path index; bundled with the app (not served as a static URL). */
+export const GUI_MENU_PATHS_JSON = "gui-menu-paths.json";
+export const GUI_MENU_PATHS_RELATIVE_PATH = `src/${GUI_MENU_PATHS_JSON}`;
+
+/** Build-time overrides not served publicly (merged with public/overrides.json in generators). */
+export const PRIVATE_OVERRIDES_JSON = "private-overrides.json";
+export const PRIVATE_OVERRIDES_RELATIVE_PATH = `src/${PRIVATE_OVERRIDES_JSON}`;
+
 export const DEPENDENCY_TREE_DIR = "dependency-tree-json";
 export const DEPENDENCY_TREE_MERGED_DIR = "dependency-tree-merged-json";
 export const RESOURCE_PERMISSIONS_JSON_DIR = "resource-permissions-json";
 export const RESOURCE_PERMISSIONS_TF_DIR = "resource-permissions-tf";
 export const SPREADSHEET_TEMPLATES_DIR = "spreadsheet-templates";
+export const SUPPORTED_RESOURCES_TEMPLATES_DIR = "supported-resources-templates";
 export const TF_EXPORT_RESOURCE_NAMES_DIR = "tf-export-resource-names";
 export const TF_EXPORT_SINGLETONS_DIR = "tf-export-singletons";
+export const SCHEMA_FORCE_NEW_DIR = "schema-force-new";
 export const LAB_PACKAGES_DIR = "lab-packages";
 
 /** Oldest provider release with dependency_tree.json on GitHub releases. */
@@ -65,7 +75,9 @@ export const GENERATED_PUBLIC_DATA_DIRS = [
   RESOURCE_PERMISSIONS_JSON_DIR,
   RESOURCE_PERMISSIONS_TF_DIR,
   SPREADSHEET_TEMPLATES_DIR,
+  SUPPORTED_RESOURCES_TEMPLATES_DIR,
   TF_EXPORT_RESOURCE_NAMES_DIR,
   TF_EXPORT_SINGLETONS_DIR,
+  SCHEMA_FORCE_NEW_DIR,
   LAB_PACKAGES_DIR,
 ];

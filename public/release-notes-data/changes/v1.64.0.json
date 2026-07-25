@@ -172,10 +172,17 @@
         },
         {
             "kind": "resource_attribute",
-            "resource": "genesyscloud_scripts",
+            "resource": "genesyscloud_script",
             "attribute": "division_id",
             "change": "added",
             "summary": "Optional computed division for the script."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_task_management_worktype_status_transition",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Destroy preserves destination statuses not managed in Terraform state and adjusts default_destination_status_id handling."
         },
         {
             "kind": "resource_behavior",
@@ -190,27 +197,6 @@
             "attribute": "addresses.phone_numbers.extension_pool_id",
             "change": "added",
             "summary": "Optional extension pool ID for phone extensions; populated on read when resolvable."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": null,
-            "attribute": null,
-            "change": "updated",
-            "summary": "Bulk export depends_on references to data sources now use the data. prefix."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_user",
-            "attribute": "addresses.phone_numbers.extension_pool_id",
-            "change": "updated",
-            "summary": "Bulk export resolves extension_pool_id to genesyscloud_telephony_providers_edges_extension_pool references."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_routing_sms_address",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Bulk export may use postal_code as the block label when name is absent."
         }
     ]
 }

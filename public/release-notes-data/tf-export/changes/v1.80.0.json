@@ -2,6 +2,14 @@
     "version": "v1.80.0",
     "previous": "v1.79.2",
     "resource": "genesyscloud_tf_export",
-    "changes": [],
+    "changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exported terraform.tfstate entries now include schema_version: 0 in each resource's meta block when the exported block has a type prefix (for example, resource or data)."
+        }
+    ],
     "related_export_changes": []
 }

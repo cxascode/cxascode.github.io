@@ -56,23 +56,38 @@ Reference for `package.json` scripts. CI behavior is described in [Deploy workfl
 | Script | What it does |
 |--------|----------------|
 | `npm run bootstrap-local-dev` | **Lightweight local setup.** Downloads the **latest** `dependency_tree-*.json` and `resource_permissions-*.json` from `MyPureCloud/terraform-provider-genesyscloud` (when present), refreshes `public/dependency-tree-json/index.json` and `latest.json`, then runs all generators below. Optional `--latest=X.Y.Z` to pin the version. Use `GH_TOKEN` or `GITHUB_TOKEN` to avoid API rate limits. |
-| `npm run download-provider-versions` | **Full version history**, like CI bootstrap. Downloads every cached provider version ≥ min versions into `public/dependency-tree-json/` and `public/resource-permissions-json/`. Skips files that already exist and validate. Environment variables: `DOWNLOAD_PERMISSIONS=false` (dependency trees only), `RUN_GENERATORS=false` (download only), `MIN_DEP_VERSION`, `MIN_PERM_VERSION`, `GH_TOKEN`. When `RUN_GENERATORS=true` (default), runs permissions TF, tf-export, verify, spreadsheet, and lab generators for the latest version. |
+| `npm run download-provider-versions` | **Full version history**, like CI bootstrap. Downloads every cached provider version ≥ min versions into `public/dependency-tree-json/` and `public/resource-permissions-json/`. Skips files that already exist and validate. Environment variables: `DOWNLOAD_PERMISSIONS=false` (dependency trees only), `RUN_GENERATORS=false` (download only), `MIN_DEP_VERSION`, `MIN_PERM_VERSION`, `GH_TOKEN`. When `RUN_GENERATORS=true` (default), runs permissions TF, tf-export, verify, spreadsheet, supported-resources spreadsheet, and lab generators for the latest version. |
 
 **When to use which:** `bootstrap-local-dev` is enough for day-to-day app work. Use `download-provider-versions` when you need the full multi-version cache locally (spreadsheet/lab artifacts for older provider versions, or debugging version-specific output).
 
 ### Generators
 
-All generators read `public/overrides.json` unless `--overrides=` is passed (spreadsheet only). Spreadsheet and lab scripts support **`--incremental`** (skip unchanged versions) and **`--force`** (rebuild all). CI passes `--incremental`; add `--force` locally to match `force_deploy`.
+All generators read `public/overrides.json` unless `--overrides=` is passed (spreadsheet only). Spreadsheet, supported-resources spreadsheet, lab, and gui-menu-paths generators also read `src/private-overrides.json` (merged at load time). Spreadsheet, supported-resources spreadsheet, and lab scripts support **`--incremental`** (skip unchanged versions) and **`--force`** (rebuild all). CI passes `--incremental`; add `--force` locally to match `force_deploy`.
 
 | Script | Output | Common flags |
 |--------|--------|--------------|
 | `npm run generate-spreadsheet-template` | `public/spreadsheet-templates/{version}-cx-as-code-template.xlsx`, `latest-cx-as-code-template.xlsx` | `--latest=X.Y.Z`, `--incremental`, `--force`, `--overrides=path` |
+| `npm run generate-supported-resources-spreadsheet` | `public/supported-resources-templates/{version}-supported-resources.xlsx`, `latest-supported-resources.xlsx` | `--latest=X.Y.Z`, `--incremental`, `--force` |
 | `npm run generate-lab-package` | `public/lab-packages/{version}-cx-as-code-lab.zip`, `latest-cx-as-code-lab.zip` | `--latest=X.Y.Z`, `--incremental`, `--force` |
 | `npm run generate-tf-export-resource-names` | `public/tf-export-resource-names/{version}.json` | No args: all cached versions. `--version=X.Y.Z`, `--latest=X.Y.Z`, `--provider=path`, `--verify`, `--stdout` |
 | `npm run generate-tf-export-singletons` | `public/tf-export-singletons/{version}.json` | Same pattern as tf-export resource names |
-| `npm run generate-gui-menu-paths` | `public/gui-menu-paths.json` (slim), `.cache-meta/gui-menu-paths-debug.json` (full catalog) | Genesys Cloud `admin/menu.json` plus Directory command-nav. `--latest=X.Y.Z`, `--union-permissions` (default in CI), `--no-union-permissions`, `--menu=`, `--permissions=`, `--directory-base=`, `--directory-bundle=`, `--directory-translations=`, `--no-directory-nav`, `--stdout` (full JSON). |
+| `npm run generate-schema-force-new` | `public/schema-force-new/{version}.json` | Same pattern as tf-export resource names |
+| `npm run generate-gui-menu-paths` | `src/gui-menu-paths.json` (app bundle), `.cache-meta/gui-menu-paths-debug.json` (full catalog) | Genesys Cloud `admin/menu.json` plus Directory command-nav. `--latest=X.Y.Z`, `--union-permissions` (default in CI), `--no-union-permissions`, `--menu=`, `--permissions=`, `--directory-base=`, `--directory-bundle=`, `--directory-translations=`, `--no-directory-nav`, `--stdout` (full JSON). |
 | `npm run verify-tf-export-env-vars` | Updates `public/provider-env-vars.json` | `--version=X.Y.Z`, `--latest=X.Y.Z`. Auto-appends new provider env vars; **exits non-zero** until each is triaged (`export-template` or `providerEnvVarsIgnore`). Runs in CI after upstream refresh. |
-| `npm run generate-site-updates` | `public/site-updates-data/` | `--base`, `--head`, `--date=YYYY-MM-DD`, `--dry-run`, `--force`. Normally CI-only on push to `main`; use locally to preview changelog entries from a commit range. |
+| `npm run generate-site-updates` | `public/site-updates-data/` | `--base`, `--head`, `--date=YYYY-MM-DD`, `--dry-run`, `--force`, `--scrub`. Normally CI-only on push to `main`; use locally to preview changelog entries from a commit range. `--scrub` re-filters auto-generated entries using `scripts/lib/site-feature-policy.mjs`. |
+
+### Site feature policy (hidden vs public)
+
+**Single registry:** `scripts/lib/site-feature-policy.mjs`
+
+When you add a download permalink or other feature that should **not** appear in Site updates, add one entry to `SITE_FEATURES` with:
+
+- `visibility`: `hidden` (private permalink like `/spreadsheet`, `/labfiles`, `/supported-resources`), `shareable` (link-only like `/roles/...`), `semi-public`, or `public`
+- `siteUpdates.commitKeywords` — git commit subjects to ignore
+- `siteUpdates.scrubKeywords` — text to strip from auto-generated site-update markdown
+- `siteUpdates.dataOnlyPaths` — paths that never trigger “user-visible change” on their own
+
+Site updates, sitemap dialog paths, and scrub logic derive from this file. Add new build consumers here instead of one-off regexes elsewhere.
 
 ### Related scripts (no npm alias)
 
@@ -114,13 +129,13 @@ npm run download-provider-versions
 - `tfExportResourceNames` — optional per-type override for **genesyscloud_tf_export template** filter placeholders; wins over the generated map in `tf-export-resource-names.json`
 - `tfExportNote` — default Markdown note (GFM) shown in the **genesyscloud_tf_export template** panel when a resource type is selected. Use `\n` in JSON for line breaks (not `\\n`).
 - `dependencyNotes` — per resource type, Markdown note (GFM) shown at the bottom of Resource Type Details when that type is selected. Use `\n` in JSON for line breaks (not `\\n`).
-- `guiMenuPaths` — optional per-type override for Genesys Cloud admin menu paths shown in Resource Type Details and the GUI list view; wins over `public/gui-menu-paths.json`
+- `guiMenuPaths` — optional per-type override for Genesys Cloud admin menu paths shown in Resource Type Details and the GUI list view; wins over `src/gui-menu-paths.json`
 - `hiddenResourceTypes` — resource types omitted from the left-hand list (still appear in Depends on / Dependency for when referenced)
-- `spreadsheetTemplates` — spreadsheet program layer: `out` (out-of-scope types; column 5 label `"out"`, cols 7–8 blank), `repoAssignments` (repo → comma-separated resource types for column 8), `repoDeployOrder` (ordered repo names → Priority column 1-based deploy wave). Unassigned in-scope types show `TBD` in column 8. Rows sort by priority, then alpha; `TBD` before out-of-scope. Also the source of truth for `exclude_filter_resources` in the lab `exportpipeline/main.tf` (minus any types listed in that file's `replace_with_datasource` block, and minus `nonExportableResourceTypes`).
 - **Division aware** — badge when **Depends on** includes `genesyscloud_auth_division`; list filter **Division Aware** → *Yes* / *No* (blank = all types; same heuristic)
 - `deprecatedResourceTypes` — **Deprecated** badge in resource details; **Notes** column in spreadsheet templates (`Deprecated`)
-- `nonExportableResourceTypes` — **Non-exportable** badge in resource details; **Notes** column in spreadsheet templates (`Non-exportable`); omitted from lab `exclude_filter_resources` (cannot be exported, so exclusion is unnecessary)
-- **Singleton** — badge in resource details; **Notes** column in spreadsheet templates (`Org-wide singleton`)
+- `nonExportableResourceTypes` — **Cannot be exported** badge in resource details; **Notes** column in spreadsheet templates (`Cannot be exported`); omitted from lab `exclude_filter_resources` (cannot be exported, so exclusion is unnecessary)
+- **Singleton** — badge in resource details; **Notes** column in spreadsheet templates (`Only one per org`)
+- **Changing these attributes recreates the resource** — detail row in resource details; **Recreate attributes** column in spreadsheet templates (`group_ids, user_ids`)
 
 Examples:
 
@@ -193,7 +208,7 @@ Every run compares the latest `MyPureCloud/terraform-provider-genesyscloud` rele
 | Site updates auto-commit | Yes (push only) | Yes | Yes if push | Yes if push |
 | Spreadsheet templates | Skip unchanged versions | Regenerate all | Regenerate new version only | Regenerate all |
 | Lab packages | Skip unchanged versions | Regenerate all | Regenerate new version only | Regenerate all |
-| Permissions TF / tf-export / **gui-menu-paths** | All cached versions / union permissions + live nav | Same | Same | Same |
+| Permissions TF / tf-export / **schema-force-new** / **gui-menu-paths** | All cached versions / union permissions + live nav | Same | Same | Same |
 
 Spreadsheet templates and lab packages use **`--incremental`** in CI. Each provider version gets a fingerprint in `.cache-meta/artifact-stamps/`. A version is skipped when its output file exists and inputs are unchanged. A version is rebuilt when output is missing, its inputs changed, or CI passed **`--force`** (via **`force_deploy`** / **`force_refresh_upstream`**).
 
@@ -203,7 +218,7 @@ Spreadsheet templates and lab packages use **`--incremental`** in CI. Each provi
 | **New cx-as-code release** (incremental deploy) | Regenerate **only the new version** (and any version whose dependency tree, tf-export catalog, overrides, or menu paths changed) |
 | **Push to `main`** with no input changes | Skip unchanged versions |
 
-Permissions TF and tf-export generators do not use incremental skip yet — they still run for every cached version on each deploy.
+Permissions TF and tf-export generators do not use incremental skip yet — they still run for every cached version on each deploy. `schema-force-new` follows the same pattern as tf-export singletons.
 
 ### Manual workflow options
 
@@ -246,20 +261,34 @@ node scripts/generate-tf-export-resource-names.mjs --version=1.82.0 --provider=/
 
 `tfExportNote` in `overrides.json` is still the hand-edited Markdown note shown below the export template block.
 
+## schema-force-new/
+
+`public/schema-force-new/` is **generated** from provider schema `ForceNew: true` attributes in `*_schema.go` (and inline resource schema), **one JSON file per provider version** (same version list as `dependency-tree-json/`). Harvest logic lives in `scripts/lib/provider-schema-scan.mjs` (shared schema parser; `schema-force-new-scan.mjs` re-exports the ForceNew selector). The version picker loads the matching file for the **Changing these attributes recreates the resource** detail row in resource details.
+
+**Local:** `npm run generate-schema-force-new`
+
+```bash
+node scripts/generate-schema-force-new.mjs --provider=/path/to/genesyscloud --stdout
+```
+
 ## gui-menu-paths.json
 
-`public/gui-menu-paths.json` is the **slim generated** GUI menu path map shipped to the site (~15 KB). The app and spreadsheet generator load `guiMenuPaths` from this file and apply `overrides.json` → `guiMenuPaths` on top (same pattern as `tfExportResourceNames`).
+`src/gui-menu-paths.json` is the **slim generated** menu catalog and path index, **bundled with the app** (not served as a static URL under `/gui-menu-paths.json`). The explorer imports it at build time; generators read it from disk. Apply `overrides.json` → `guiMenuPaths` on top for per-type path overrides (same pattern as `tfExportResourceNames`).
 
 The full mapping catalog (~200 KB) is written to **`.cache-meta/gui-menu-paths-debug.json`** (Actions cache only, not deployed). Use `--stdout` for the full JSON locally.
 
 **Generate:** `npm run generate-gui-menu-paths -- --latest=X.Y.Z --union-permissions` (CI, bootstrap, and `download-provider-versions.sh` pass `--union-permissions` so paths cover every resource type that ever appeared in cached `resource_permissions-*.json` since **1.76.0**, while still fetching live Genesys nav each run).
 
-**Public file fields:** `guiMenuPaths`, `generatedAt`, `permissionsSource`, `permissionsUnion`.
+**Bundled file fields (`src/gui-menu-paths.json`):** `menuCatalog`, `permissionsSource`, `permissionsUnion`.
+
+- **`menuCatalog`** — Directory command-nav destinations in nav order. Each entry has `includeInSupportedResources` and, when excluded, `skipReason` explaining which funnel rule applied (see [supported-resources-templates](#supported-resources-templates)). Rules are configured in `src/private-overrides.json` → `supportedResourcesTemplates.adminExclusionKeywords` and baked at `generate-gui-menu-paths` time.
 
 - **`--union-permissions`** — merge all cached `public/resource-permissions-json/*.json` from `1.76.0` through `--latest` (newer file wins per resource type). Omit for a single `--permissions=` file or add `--no-union-permissions` with `--latest` for latest-only mapping.
 - **`guiMenuPaths`** — lookup map (`resource_type` → menu path). Same shape as `overrides.json` → `guiMenuPaths`. Types removed from **latest** permissions but mapped via the union are kept; debug catalog entries for those show `retired: true`.
 
 **Debug file only** (`.cache-meta/gui-menu-paths-debug.json`):
+
+- **`generatedAt`** — ISO timestamp for the generator run (provenance only; not bundled with the app).
 
 - **`guiMenuPathCatalog`** — per-type detail: `permissions`, matched `menuPath` / `menuLeaf` / `menuAuthorize` / `matchScore` / `matchMethod`, optional `overrideMenuPath` / `overrideMatches`, or `unmappedReason`.
 - **`menuRows`** — flattened admin menu plus Directory command-nav rows (`path`, `authorize`). Grows over time; removed rows are retained across runs.
@@ -325,7 +354,7 @@ Versioned `.tf` files live under `resource-permissions-tf/` on disk (what the pe
 
 ## lab-packages/
 
-`public/lab-packages/` is **generated** from `scripts/templates/cx-as-code-lab/`, **one zip per provider version** (same version list as `dependency-tree-json/`). Each zip pins `version = "~> X.Y.Z"` in every lab `.tf` file that declares a provider constraint, refreshes `filter-builder-template.xlsx` with that version's resource types (column **B** dropdown via Excel data validation on the hidden **validation** sheet), and writes `exportpipeline/main.tf` `exclude_filter_resources` from `spreadsheetTemplates.out` in `public/overrides.json` (skipping types in that file's `replace_with_datasource` block and `nonExportableResourceTypes`). Resource types honor `replaceDependencies`, `addDependencies`, and `hiddenResourceTypes` the same way as the explorer and spreadsheet generator.
+`public/lab-packages/` is **generated** from `scripts/templates/cx-as-code-lab/`, **one zip per provider version** (same version list as `dependency-tree-json/`). Each zip pins `version = "~> X.Y.Z"` in every lab `.tf` file that declares a provider constraint, refreshes `filter-builder-template.xlsx` with that version's resource types (column **B** dropdown via Excel data validation on the hidden **validation** sheet), and writes `exportpipeline/main.tf` `exclude_filter_resources` from `spreadsheetTemplates.out` in `src/private-overrides.json` (skipping types in that file's `replace_with_datasource` block and `nonExportableResourceTypes`). Resource types honor `replaceDependencies`, `addDependencies`, and `hiddenResourceTypes` the same way as the explorer and spreadsheet generator.
 
 The static lab source lives under `scripts/templates/cx-as-code-lab/CX_as_Code-Lab/`. Update that tree when lab exercises change; re-run the generator to rebuild versioned zips.
 
@@ -337,3 +366,32 @@ Hidden permalink download (same pattern as `/spreadsheet` and `/roles/...`):
 
 - `/labfiles/latest`
 - `/labfiles/v1.82.0`
+
+## private-overrides.json
+
+`src/private-overrides.json` is **bundled with the app** (not served as a static URL). Generators read it from disk alongside `public/overrides.json`. It holds build-time spreadsheet and supported-resources funnel configuration that does not need to ship in the public `overrides.json` payload.
+
+- `supportedResourcesTemplates.adminExclusionKeywords` — link substrings that exclude admin routes from the supported-resources spreadsheet
+- `supportedResourcesTemplates.featureToggleKeywords` — feature-toggle name substrings on the public allowlist (unmapped toggle-gated paths are included on the sheet)
+- `spreadsheetTemplates` — deploy spreadsheet program layer: `out` (out-of-scope types; column 5 label `"out"`, cols 7–8 blank), `repoAssignments` (repo → comma-separated resource types for column 8), `repoDeployOrder` (ordered repo names → Priority column 1-based deploy wave). Unassigned in-scope types show `TBD` in column 8. Rows sort by priority, then alpha; `TBD` before out-of-scope. Also the source of truth for `exclude_filter_resources` in the lab `exportpipeline/main.tf` (minus any types listed in that file's `replace_with_datasource` block, and minus `nonExportableResourceTypes`).
+
+## supported-resources-templates/
+
+`public/supported-resources-templates/` is **generated** from `src/gui-menu-paths.json` `menuCatalog` and each cached `dependency-tree-json/{version}.json`. It lists Directory config destinations (menu path, supported yes/no, mapped resource types) for configuration coverage review — separate from the deploy `/spreadsheet` template.
+
+**Supported-resources funnel** (applied at `generate-gui-menu-paths`; excluded rows record the matching rule in `menuCatalog` → `skipReason`):
+
+1. **Mapped** — known resource-type mappings always win → on sheet
+2. **Preview toggle** — unmapped feature toggles → off sheet, unless the toggle name contains a `featureToggleKeywords` entry → on sheet
+3. **Non-admin** — link does not contain `"admin"` → off sheet (`skipReason` mentions non-admin)
+4. **Admin exclusion** — admin link matches `adminExclusionKeywords` → off sheet
+5. **Admin config** — remaining admin links → on sheet
+
+Included rows have `includeInSupportedResources: true` and no `skipReason`.
+
+**Local:** `npm run generate-supported-resources-spreadsheet` (optionally `-- --incremental` or `-- --force`; see [npm scripts](#npm-scripts)). Also runs from `bootstrap-local-dev` and CI.
+
+Hidden permalink download (same pattern as `/spreadsheet` and `/labfiles`):
+
+- `/supported-resources/latest`
+- `/supported-resources/v1.84.2`

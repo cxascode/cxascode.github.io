@@ -7,14 +7,14 @@
             "resource": "genesyscloud_flow",
             "attribute": null,
             "change": "updated",
-            "summary": "Dependency pagination metadata is handled safely; export no longer fails when the consumed-resources API response omits PageCount."
+            "summary": "Dependency resolution during export no longer requires page count metadata from the API; when page count is omitted, paging continues with the default count instead of failing."
         },
         {
             "kind": "export_behavior",
             "resource": "genesyscloud_flow",
             "attribute": null,
             "change": "updated",
-            "summary": "Consumed resource dependencies missing a name are skipped during export dependency resolution."
+            "summary": "Dependent consumer entries missing a name are skipped during dependency discovery, in addition to entries missing an ID or type."
         }
     ]
 }

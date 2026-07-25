@@ -11,6 +11,7 @@ export const DIALOG_ENV_VARS = "env-vars";
 export const SITE_UPDATES_ENTRY_QUERY_KEY = "entry";
 
 export const SPREADSHEET_PATH_SEGMENT = "spreadsheet";
+export const SUPPORTED_RESOURCES_PATH_SEGMENT = "supported-resources";
 export const LAB_FILES_PATH_SEGMENT = "labfiles";
 export const ROLES_PATH_SEGMENT = "roles";
 export const ROLE_READ_WRITE_SEGMENT = "read-write";
@@ -39,6 +40,7 @@ export const VALID_DIALOGS = new Set(Object.keys(DIALOG_PATH_SEGMENT));
 const RESERVED_PATH_SEGMENTS = new Set([
   ...Object.values(DIALOG_PATH_SEGMENT),
   SPREADSHEET_PATH_SEGMENT,
+  SUPPORTED_RESOURCES_PATH_SEGMENT,
   LAB_FILES_PATH_SEGMENT,
   ROLES_PATH_SEGMENT,
   ROLE_READ_WRITE_SEGMENT,
@@ -220,6 +222,28 @@ export function spreadsheetPathname(version = "latest") {
   const root = BASE.endsWith("/") ? BASE : `${BASE}/`;
   const base = normalizePathname(
     new URL(SPREADSHEET_PATH_SEGMENT, new URL(root, "http://local")).pathname
+  );
+  return appendVersionSegment(base, version);
+}
+
+export function readSupportedResourcesDownloadFromLocation() {
+  try {
+    const segments = pathSegments(window.location.pathname);
+    if (segments[0] !== SUPPORTED_RESOURCES_PATH_SEGMENT) return null;
+    if (segments.length === 1) return "latest";
+    if (segments.length === 2 && isVersionPathSegment(segments[1])) {
+      return fromVersionPathSegment(segments[1]);
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+export function supportedResourcesPathname(version = "latest") {
+  const root = BASE.endsWith("/") ? BASE : `${BASE}/`;
+  const base = normalizePathname(
+    new URL(SUPPORTED_RESOURCES_PATH_SEGMENT, new URL(root, "http://local")).pathname
   );
   return appendVersionSegment(base, version);
 }

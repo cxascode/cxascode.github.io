@@ -2,6 +2,29 @@
     "version": "v1.64.0",
     "previous": "v1.63.0",
     "resource": "genesyscloud_tf_export",
-    "changes": [],
-    "related_export_changes": []
+    "changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When tf-export resolves depends_on references, dependencies on data sources now include the required data. prefix (for example, data.genesyscloud_<type>.<label> instead of genesyscloud_<type>.<label>)."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When exporting more than one output format in a single run (for example, HCL and JSON together), diagnostics from each export step are now collected and returned together instead of only the last step's result being reported."
+        }
+    ],
+    "related_export_changes": [
+        {
+            "kind": "export_behavior",
+            "resource": null,
+            "attribute": "depends_on",
+            "change": "updated",
+            "summary": "Exported depends_on values that reference data sources may differ from v1.63.0 output because the data. prefix is now included where it was previously omitted."
+        }
+    ]
 }

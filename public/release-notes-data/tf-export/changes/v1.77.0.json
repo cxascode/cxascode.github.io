@@ -2,6 +2,29 @@
     "version": "v1.77.0",
     "previous": "v1.76.2",
     "resource": "genesyscloud_tf_export",
-    "changes": [],
-    "related_export_changes": []
+    "changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "During dependency resolution, flows exported as data sources (data.genesyscloud_flow) are skipped for dependent resource discovery because they are referenced only and not managed as resources."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "During configuration sanitization, reference attributes backed by custom resolvers that can infer a target type from the exported configuration are now converted to Terraform resource or data source references when that type can be determined."
+        }
+    ],
+    "related_export_changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_flow",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exports that include data source flow blocks may produce fewer related resources and different depends_on entries, because dependency fetching is no longer run for those flows."
+        }
+    ]
 }

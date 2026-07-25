@@ -60,6 +60,13 @@
         },
         {
             "kind": "export_behavior",
+            "resource": "genesyscloud_knowledge_document",
+            "attribute": "labels",
+            "change": "updated",
+            "summary": "Label references in exported configuration now match on the original label name, fixing resolution for labels whose names contain spaces."
+        },
+        {
+            "kind": "export_behavior",
             "resource": "genesyscloud_flow",
             "attribute": null,
             "change": "updated",

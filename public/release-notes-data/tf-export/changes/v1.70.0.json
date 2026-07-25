@@ -8,8 +8,16 @@
             "resource": "genesyscloud_tf_export",
             "attribute": null,
             "change": "updated",
-            "summary": "When not using the legacy architect flow exporter, exported flow configurations may be more complete because sanitized flow data is preserved during export."
+            "summary": "When use_legacy_architect_flow_exporter is false, the export pipeline now switches to the newer architect flow exporter after the initial flow export step and carries forward sanitized flow data from that step. Exported architect flow configurations may be more complete than in v1.69.3, where that sanitized data was not preserved when the exporter was replaced during per-resource processing."
         }
     ],
-    "related_export_changes": []
+    "related_export_changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_architect_flow",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exported genesyscloud_architect_flow blocks may include additional or more complete configuration when not using the legacy architect flow exporter, because sanitized flow data is retained across the exporter handoff."
+        }
+    ]
 }

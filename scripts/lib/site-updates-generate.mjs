@@ -1,32 +1,20 @@
 import { execSync } from "node:child_process";
 import fs from "node:fs/promises";
 import path from "node:path";
+import {
+  getHiddenFeatureCommitSubjectPattern,
+  getSiteUpdateDataOnlyPathPatterns,
+  isSiteUpdateSuppressedSubject,
+  mentionsHiddenSiteFeature,
+  mentionsInternalSiteUpdate,
+} from "./site-feature-policy.mjs";
 
 const ROOT = path.resolve(".");
 const SITE_UPDATES_DIR = path.join(ROOT, "public", "site-updates-data");
 const VERSIONS_DIR = path.join(SITE_UPDATES_DIR, "versions");
 const AUTO_MARKER = "<!-- site-updates:auto -->";
 
-const DATA_ONLY_PATHS = [
-  /^public\/release-notes-data\//,
-  /^public\/dependency-tree-json\//,
-  /^public\/dependency-tree-merged-json\//,
-  /^public\/resource-permissions-json\//,
-  /^public\/resource-permissions-tf\//,
-  /^public\/tf-export-resource-names\//,
-  /^public\/tf-export-singletons\//,
-  /^public\/spreadsheet-templates\//,
-  /^public\/lab-packages\//,
-  /^public\/overrides\.json$/,
-  /^public\/provider-env-vars\.json$/,
-  /^public\/sitemap\.(xml|txt)$/,
-  /^public\/seo\//,
-  /^\.github\//,
-  /^\.automation\//,
-  /^\.cache/,
-  /^package-lock\.json$/,
-  /^dist\//,
-];
+const DATA_ONLY_PATHS = getSiteUpdateDataOnlyPathPatterns();
 
 const USER_VISIBLE_PATHS = [
   /^src\//,
@@ -41,23 +29,12 @@ const SITE_UPDATES_INFRA_PATHS = [
   /^src\/siteUpdates\.js$/,
   /^scripts\/generate-site-updates\.mjs$/,
   /^scripts\/lib\/site-updates-generate\.mjs$/,
+  /^scripts\/lib\/site-feature-policy\.mjs$/,
 ];
 
-/** Commit subjects that describe hidden or permalink-only features. */
-const HIDDEN_FEATURE_SUBJECT_RE =
-  /\b(lab files?|lab package|cx as code lab|spreadsheet|practice zip|\/labfiles|\/spreadsheet|\/roles|role template|site updates?|site notes?|env vars?|environment variables?)\b/i;
+export { mentionsHiddenSiteFeature, mentionsInternalSiteUpdate } from "./site-feature-policy.mjs";
 
-/** Repo, lab-package, or build-pipeline changes — not explorer UI for end users. */
-const INTERNAL_SITE_UPDATE_SUBJECT_RE =
-  /\b(readme versioning|terraform\.tfvars|tfvars|latest-merged|json generation|lab readme|bootstrap-local|write-merged|merged-dependency|resource-type-changes|generate-resource|deploy-pages|github actions|provider-source)\b/i;
-
-export function mentionsHiddenSiteFeature(text) {
-  return HIDDEN_FEATURE_SUBJECT_RE.test(String(text || ""));
-}
-
-export function mentionsInternalSiteUpdate(text) {
-  return INTERNAL_SITE_UPDATE_SUBJECT_RE.test(String(text || ""));
-}
+const HIDDEN_FEATURE_SUBJECT_RE = getHiddenFeatureCommitSubjectPattern();
 
 const SKIP_SUBJECT_RE =
   /^(chore\(release-notes\)|chore\(site-updates\)|chore: monthly keep-alive|merge (branch|pull request)|update (app\.jsx|overrides\.json|package-lock\.json|deploy-pages\.yml|provider-source\.mjs)|bump |dependabot|fix(ed)? ci|github actions|deploy-pages|build script|sitemap|seo\b)/i;
@@ -69,12 +46,14 @@ export function parseArgs(argv = process.argv.slice(2)) {
     date: "",
     dryRun: false,
     force: false,
+    scrubOnly: false,
   };
 
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     if (arg === "--dry-run") options.dryRun = true;
     else if (arg === "--force") options.force = true;
+    else if (arg === "--scrub") options.scrubOnly = true;
     else if (arg === "--base") options.base = argv[++i] || "";
     else if (arg === "--head") options.head = argv[++i] || "HEAD";
     else if (arg === "--date") options.date = argv[++i] || "";
@@ -344,43 +323,181 @@ export function expandSubject(subject) {
     };
   }
 
+  if (isSiteUpdateSuppressedSubject(cleaned)) {
+    return { summary: "", sections: [] };
+  }
+
+  if (/\bexport resource name\b/.test(lower)) {
+    return {
+      summary: "",
+      sections: [
+        {
+          title: "What's new",
+          bullets: [
+            "Export resource name changes now appear as their own type in attribute history.",
+          ],
+        },
+      ],
+    };
+  }
+
+  if (/\bforcenew\b|\bforce recreate\b|\bforce[- ]new\b/.test(lower)) {
+    return {
+      summary: "Attributes that force resource recreate are shown in Explorer.",
+      sections: [
+        {
+          title: "Attributes that force recreate",
+          bullets: [
+            "Resource detail panels list attributes that trigger a full resource recreate when changed.",
+          ],
+        },
+      ],
+    };
+  }
+
   return {
     summary: "",
     sections: [{ title: "What's new", bullets: [capitalizeSentence(cleaned)] }],
   };
 }
 
-function renderSubjectBlocks(subjects) {
+function normalizeDedupeKey(text) {
+  return String(text || "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+export function dedupeBullets(bullets) {
+  const seen = new Set();
+  const result = [];
+
+  for (const bullet of bullets) {
+    const key = normalizeDedupeKey(bullet);
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    result.push(bullet);
+  }
+
+  return result;
+}
+
+function dedupeSummaries(summaries) {
+  return dedupeBullets(summaries);
+}
+
+function filterVisibleBullets(bullets) {
+  return bullets.filter(
+    (bullet) =>
+      bullet && !mentionsHiddenSiteFeature(bullet) && !mentionsInternalSiteUpdate(bullet)
+  );
+}
+
+/** Parse an auto-generated site-update entry into header, summary, and sections. */
+export function parseAutoMarkdown(content) {
+  const lines = String(content || "").split("\n");
+  const summaries = [];
+  const sections = new Map();
+  let headerLine = "";
+  let currentSection = null;
+  let afterHeader = false;
+  let seenFirstSection = false;
+
+  for (const line of lines) {
+    if (line.includes(AUTO_MARKER)) continue;
+
+    if (line.startsWith("## ")) {
+      headerLine = line;
+      afterHeader = true;
+      continue;
+    }
+
+    if (line.startsWith("### ")) {
+      seenFirstSection = true;
+      currentSection = line.slice(4).trim();
+      if (!sections.has(currentSection)) {
+        sections.set(currentSection, []);
+      }
+      continue;
+    }
+
+    if (line.startsWith("- ")) {
+      if (currentSection) {
+        sections.get(currentSection).push(line.slice(2).trim());
+      }
+      continue;
+    }
+
+    if (afterHeader && !seenFirstSection && line.trim()) {
+      summaries.push(line.trim());
+    }
+  }
+
+  for (const [title, bullets] of sections) {
+    sections.set(title, dedupeBullets(bullets));
+  }
+
+  return { headerLine, summaries: dedupeSummaries(summaries), sections };
+}
+
+function isEmptyAutoGeneratedEntry(content) {
+  if (!isAutoGeneratedEntry(content)) return false;
+
+  const parsed = parseAutoMarkdown(content);
+  if (parsed.summaries.length) return false;
+
+  for (const bullets of parsed.sections.values()) {
+    if (bullets.length) return false;
+  }
+
+  return true;
+}
+
+function collectSubjectBlocks(subjects) {
   const expansions = subjects.map(expandSubject);
-  const summaries = expansions
-    .map((expansion) => expansion.summary)
-    .filter(
-      (summary) =>
-        summary && !mentionsHiddenSiteFeature(summary) && !mentionsInternalSiteUpdate(summary)
-    );
-  const lines = [];
-  const mergedSections = new Map();
+  const summaries = dedupeSummaries(
+    expansions
+      .map((expansion) => expansion.summary)
+      .filter(
+        (summary) =>
+          summary && !mentionsHiddenSiteFeature(summary) && !mentionsInternalSiteUpdate(summary)
+      )
+  );
+  const sections = new Map();
+
+  for (const expansion of expansions) {
+    for (const section of expansion.sections) {
+      const bullets = filterVisibleBullets(section.bullets);
+      if (!bullets.length) continue;
+
+      const existing = sections.get(section.title) || [];
+      sections.set(section.title, dedupeBullets([...existing, ...bullets]));
+    }
+  }
+
+  return { summaries, sections };
+}
+
+function mergeSectionMaps(baseSections, incomingSections) {
+  const merged = new Map(baseSections);
+
+  for (const [title, bullets] of incomingSections) {
+    const existing = merged.get(title) || [];
+    merged.set(title, dedupeBullets([...existing, ...bullets]));
+  }
+
+  return merged;
+}
+
+function renderMarkdownBlocks({ headerLine, summaries, sections }) {
+  const lines = [AUTO_MARKER, headerLine, ""];
 
   if (summaries.length) {
     lines.push(summaries.join(" "), "");
   }
 
-  for (const expansion of expansions) {
-    for (const section of expansion.sections) {
-      const bullets = section.bullets.filter(
-        (bullet) =>
-          bullet &&
-          !mentionsHiddenSiteFeature(bullet) &&
-          !mentionsInternalSiteUpdate(bullet)
-      );
-      if (!bullets.length) continue;
-
-      const existing = mergedSections.get(section.title) || [];
-      mergedSections.set(section.title, [...existing, ...bullets]);
-    }
-  }
-
-  for (const [title, bullets] of mergedSections) {
+  for (const [title, bullets] of sections) {
+    if (!bullets.length) continue;
     lines.push(`### ${title}`, "");
     for (const bullet of bullets) {
       lines.push(`- ${bullet}`);
@@ -392,19 +509,148 @@ function renderSubjectBlocks(subjects) {
 }
 
 export function buildMarkdown({ date, subjects }) {
-  const title = formatTitleFromDate(date);
-  const lines = [AUTO_MARKER, `## Site updates — ${title}`, ""];
-
-  if (subjects.length) {
-    lines.push(...renderSubjectBlocks(subjects));
-  }
-
-  return `${lines.join("\n").trim()}\n`;
+  const headerLine = `## Site updates — ${formatTitleFromDate(date)}`;
+  const { summaries, sections } = collectSubjectBlocks(subjects);
+  return `${renderMarkdownBlocks({ headerLine, summaries, sections }).join("\n").trim()}\n`;
 }
 
-export function appendMarkdown(existing, { subjects }) {
-  if (!subjects.length) return `${existing.trim()}\n`;
-  return `${existing.trim()}\n\n${renderSubjectBlocks(subjects).join("\n").trim()}\n`;
+/** Remove hidden-permalink bullets/summaries from an auto-generated site-update entry. */
+export function scrubSiteUpdateMarkdown(content) {
+  if (!isAutoGeneratedEntry(content)) return content;
+
+  const parsed = parseAutoMarkdown(content);
+  const summaries = parsed.summaries.filter(
+    (summary) => summary && !mentionsHiddenSiteFeature(summary) && !mentionsInternalSiteUpdate(summary)
+  );
+  const sections = new Map();
+
+  for (const [title, bullets] of parsed.sections) {
+    const visibleBullets = filterVisibleBullets(bullets);
+    if (visibleBullets.length) {
+      sections.set(title, visibleBullets);
+    }
+  }
+
+  return `${renderMarkdownBlocks({
+    headerLine: parsed.headerLine,
+    summaries,
+    sections,
+  })
+    .join("\n")
+    .trim()}\n`;
+}
+
+async function syncLatestSiteUpdateFiles(index) {
+  const latest = index[0];
+  if (!latest?.version) return;
+
+  const latestMarkdown = await fs.readFile(
+    path.join(VERSIONS_DIR, `${latest.version}.md`),
+    "utf8"
+  );
+  await fs.writeFile(path.join(SITE_UPDATES_DIR, "latest.md"), latestMarkdown, "utf8");
+  await fs.writeFile(
+    path.join(SITE_UPDATES_DIR, "latest.json"),
+    `${JSON.stringify(
+      {
+        version: latest.version,
+        title: latest.title,
+        path: latest.path,
+      },
+      null,
+      2
+    )}\n`,
+    "utf8"
+  );
+}
+
+export async function scrubAllSiteUpdateEntries({ dryRun = false } = {}) {
+  const names = await fs.readdir(VERSIONS_DIR);
+  let changedCount = 0;
+  const removedVersions = [];
+
+  for (const name of names) {
+    if (!name.endsWith(".md")) continue;
+
+    const filePath = path.join(VERSIONS_DIR, name);
+    const content = await fs.readFile(filePath, "utf8");
+    if (!isAutoGeneratedEntry(content)) continue;
+
+    const scrubbed = scrubSiteUpdateMarkdown(content);
+    const version = name.slice(0, -".md".length);
+
+    if (isEmptyAutoGeneratedEntry(scrubbed)) {
+      removedVersions.push(version);
+      if (!dryRun) {
+        await fs.unlink(filePath);
+      }
+      continue;
+    }
+
+    if (scrubbed === content) continue;
+
+    changedCount += 1;
+    if (!dryRun) {
+      await fs.writeFile(filePath, scrubbed, "utf8");
+    }
+  }
+
+  if ((changedCount || removedVersions.length) && !dryRun) {
+    let index = [];
+    try {
+      index = JSON.parse(await fs.readFile(path.join(SITE_UPDATES_DIR, "index.json"), "utf8"));
+    } catch {
+      index = [];
+    }
+
+    if (removedVersions.length) {
+      index = removeIndexEntries(index, removedVersions);
+      await fs.writeFile(
+        path.join(SITE_UPDATES_DIR, "index.json"),
+        `${JSON.stringify(index, null, 2)}\n`,
+        "utf8"
+      );
+    }
+
+    if (index.length) {
+      await syncLatestSiteUpdateFiles(index);
+    }
+  }
+
+  const parts = [];
+  if (changedCount) {
+    parts.push(
+      `scrubbed ${changedCount} auto-generated entr${changedCount === 1 ? "y" : "ies"}`
+    );
+  }
+  if (removedVersions.length) {
+    parts.push(
+      `removed ${removedVersions.length} empty entr${removedVersions.length === 1 ? "y" : "ies"}`
+    );
+  }
+
+  console.log(
+    parts.length
+      ? `Site updates: ${parts.join("; ")}${dryRun ? " (dry run)" : ""}.`
+      : `Site updates: no scrub changes${dryRun ? " (dry run)" : ""}.`
+  );
+
+  return { changedCount, removedVersions, dryRun };
+}
+
+export function appendMarkdown(existing, { subjects, date = "" }) {
+  if (!subjects.length) return scrubSiteUpdateMarkdown(existing);
+
+  const parsed = parseAutoMarkdown(existing);
+  const incoming = collectSubjectBlocks(subjects);
+  const headerLine =
+    parsed.headerLine || `## Site updates — ${formatTitleFromDate(date)}`;
+  const summaries = dedupeSummaries([...parsed.summaries, ...incoming.summaries]);
+  const sections = mergeSectionMaps(parsed.sections, incoming.sections);
+
+  return scrubSiteUpdateMarkdown(
+    `${renderMarkdownBlocks({ headerLine, summaries, sections }).join("\n").trim()}\n`
+  );
 }
 
 export function updateIndexEntries(index, version, title) {
@@ -424,7 +670,24 @@ export function updateIndexEntries(index, version, title) {
   return next;
 }
 
+function removeIndexEntries(index, versions) {
+  const removeSet = new Set(versions);
+  const next = index.filter((entry) => !removeSet.has(entry?.version));
+
+  for (let i = 0; i < next.length; i += 1) {
+    next[i].previous = next[i + 1]?.version || "";
+  }
+
+  return next;
+}
+
 export async function generateSiteUpdates(options = parseArgs()) {
+  if (options.scrubOnly) {
+    return scrubAllSiteUpdateEntries({ dryRun: options.dryRun });
+  }
+
+  await scrubAllSiteUpdateEntries({ dryRun: options.dryRun });
+
   const range = resolveRange(options);
   if (!range) {
     console.log("Site updates: no merge range detected; skipping.");
@@ -435,7 +698,6 @@ export async function generateSiteUpdates(options = parseArgs()) {
   const files = changedFiles(base, head);
   const visibleFiles = files.filter(isUserVisiblePath);
   const subjects = commitSubjects(base, head);
-  const hints = featureHints(visibleFiles);
 
   if (!options.force && visibleFiles.length === 0) {
     console.log(
@@ -444,7 +706,7 @@ export async function generateSiteUpdates(options = parseArgs()) {
     return { wrote: false, reason: "no-user-visible", base, head, files };
   }
 
-  if (!options.force && subjects.length === 0 && hints.length === 0) {
+  if (!options.force && subjects.length === 0) {
     console.log("Site updates: only data or chore changes detected; skipping.");
     return { wrote: false, reason: "no-notable-changes", base, head, files };
   }
@@ -453,13 +715,13 @@ export async function generateSiteUpdates(options = parseArgs()) {
   const title = formatTitleFromDate(date);
   const versionPath = path.join(VERSIONS_DIR, `${date}.md`);
 
-  let markdown = buildMarkdown({ date, subjects });
+  let markdown = scrubSiteUpdateMarkdown(buildMarkdown({ date, subjects }));
   let mode = "create";
 
   try {
     const existing = await fs.readFile(versionPath, "utf8");
     if (isAutoGeneratedEntry(existing)) {
-      markdown = appendMarkdown(existing, { subjects });
+      markdown = appendMarkdown(existing, { subjects, date });
       mode = "append";
     } else {
       console.log(

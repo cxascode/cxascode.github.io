@@ -5,49 +5,42 @@
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_routing_queue",
-            "attribute": "message_media_settings.sub_type_settings",
+            "attribute": "media_settings_message.enable_inactivity_timeout",
             "change": "added",
-            "summary": "Per-subtype auto-answer settings for digital message channels."
+            "summary": "Enable inactivity timeout for message interactions; defaults to false."
         },
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_routing_queue",
-            "attribute": "message_media_settings.enable_inactivity_timeout",
-            "change": "added",
-            "summary": "Enable inactivity timeout for message interactions."
-        },
-        {
-            "kind": "resource_attribute",
-            "resource": "genesyscloud_routing_queue",
-            "attribute": "message_media_settings.inactivity_timeout_settings",
+            "attribute": "media_settings_message.inactivity_timeout_settings",
             "change": "added",
             "summary": "Inactivity timeout configuration block for messages."
         },
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_routing_queue",
-            "attribute": "message_media_settings.inactivity_timeout_settings.timeout_seconds",
+            "attribute": "media_settings_message.inactivity_timeout_settings.timeout_seconds",
             "change": "added",
             "summary": "Timeout in seconds before the inactivity action runs."
         },
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_routing_queue",
-            "attribute": "message_media_settings.inactivity_timeout_settings.action_type",
+            "attribute": "media_settings_message.inactivity_timeout_settings.action_type",
             "change": "added",
             "summary": "Action on timeout; valid values are DISCONNECT or SEND_TO_ARCHITECT_FLOW."
         },
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_routing_queue",
-            "attribute": "message_media_settings.inactivity_timeout_settings.flow_id",
+            "attribute": "media_settings_message.inactivity_timeout_settings.flow_id",
             "change": "added",
             "summary": "Architect flow ID when action_type is SEND_TO_ARCHITECT_FLOW."
         },
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_routing_queue",
-            "attribute": "message_media_settings",
+            "attribute": "media_settings_message",
             "change": "updated",
             "summary": "Uses a message-specific block schema; alerting_timeout_sec must be at least 7, service_level_percentage must be between 0 and 1, and service_level_duration_ms must be at least 1000."
         },
@@ -63,10 +56,10 @@
             "resource": "genesyscloud_task_management_worktype_status",
             "attribute": "auto_terminate_workitem",
             "change": "added",
-            "summary": "When true, workitems are automatically terminated when they enter this status."
+            "summary": "When true, workitems are automatically terminated when they enter this status (typically used for Closed category statuses)."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "state_behavior",
             "resource": "genesyscloud_team",
             "attribute": "member_ids",
             "change": "updated",

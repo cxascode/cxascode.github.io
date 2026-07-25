@@ -7,14 +7,7 @@
             "resource": "genesyscloud_flow",
             "attribute": null,
             "change": "updated",
-            "summary": "Dependent consumer resolution for published flows now requires the flow to have a type; flows without a type are skipped when building export dependency lists."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_flow",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Consumed resource dependencies missing an ID or type are skipped instead of being included in export dependency resolution."
+            "summary": "Dependency resolution during export now requires a published version with a defined flow type before dependent resources are discovered; dependent consumer entries missing an ID or type are skipped."
         }
     ]
 }

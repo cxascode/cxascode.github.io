@@ -21,21 +21,21 @@
             "resource": "genesyscloud_routing_queue",
             "attribute": "auto_end_delay_seconds",
             "change": "removed",
-            "summary": "Removed from shared media settings blocks such as media_settings_chat, media_settings_message, and media_settings_email."
+            "summary": "Removed from non-callback media settings blocks such as media_settings_chat, media_settings_message, and media_settings_email."
         },
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_routing_queue",
             "attribute": "auto_dial_delay_seconds",
             "change": "removed",
-            "summary": "Removed from shared media settings blocks such as media_settings_chat, media_settings_message, and media_settings_email."
+            "summary": "Removed from non-callback media settings blocks such as media_settings_chat, media_settings_message, and media_settings_email."
         },
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_routing_queue",
             "attribute": "enable_auto_dial_and_end",
             "change": "removed",
-            "summary": "Removed from shared media settings blocks such as media_settings_chat, media_settings_message, and media_settings_email."
+            "summary": "Removed from non-callback media settings blocks such as media_settings_chat, media_settings_message, and media_settings_email."
         },
         {
             "kind": "resource_behavior",
@@ -84,7 +84,7 @@
             "resource": "genesyscloud_telephony_providers_edges_site_outbound_route",
             "attribute": null,
             "change": "updated",
-            "summary": "Resource operations no longer require the ENABLE_STANDALONE_OUTBOUND_ROUTES environment variable."
+            "summary": "Resource operations no longer require the ENABLE_STANDALONE_OUTBOUND_ROUTES environment variable for create, read, update, delete, export, or data source lookup."
         },
         {
             "kind": "data_source_attribute",
@@ -98,7 +98,7 @@
             "resource": "genesyscloud_flow",
             "attribute": null,
             "change": "updated",
-            "summary": "When multiple flows share the same name, lookup uses type to select the matching flow."
+            "summary": "When multiple flows share the same name, lookup uses type to select the matching flow; if multiple matches exist and none match the requested type, lookup fails with an error."
         },
         {
             "kind": "export_behavior",
@@ -113,13 +113,6 @@
             "attribute": null,
             "change": "updated",
             "summary": "Bulk export skips users that lack an ID or email address."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": null,
-            "attribute": null,
-            "change": "updated",
-            "summary": "Export no longer substitutes unresolvable attributes on data source blocks with ${var...} placeholders."
         }
     ]
 }

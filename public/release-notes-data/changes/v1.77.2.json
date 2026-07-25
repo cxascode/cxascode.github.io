@@ -7,56 +7,35 @@
             "resource": "genesyscloud_outbound_contact_list",
             "attribute": "whats_app_columns",
             "change": "added",
-            "summary": "Optional set block (forces replacement when changed) to designate which contact-list columns hold WhatsApp contacts; at least one of phone_columns, email_columns, or whats_app_columns must be configured."
-        },
-        {
-            "kind": "resource_attribute",
-            "resource": "genesyscloud_outbound_contact_list",
-            "attribute": "whats_app_columns.column_name",
-            "change": "added",
-            "summary": "Required column name for a WhatsApp contact field within the whats_app_columns block."
-        },
-        {
-            "kind": "resource_attribute",
-            "resource": "genesyscloud_outbound_contact_list",
-            "attribute": "whats_app_columns.type",
-            "change": "added",
-            "summary": "Required WhatsApp column type (for example, work or personal) within the whats_app_columns block."
+            "summary": "Optional block set for WhatsApp contact columns (column_name, type). Changing this attribute forces replacement. At least one of phone_columns, email_columns, or whats_app_columns must be configured."
         },
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_outbound_contact_list",
             "attribute": "phone_columns",
             "change": "updated",
-            "summary": "Description updated; this block is required when both email_columns and whats_app_columns are empty."
+            "summary": "Now documented as required when both email_columns and whats_app_columns are empty."
         },
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_outbound_contact_list",
             "attribute": "email_columns",
             "change": "updated",
-            "summary": "Description updated; this block is required when both phone_columns and whats_app_columns are empty."
+            "summary": "Now documented as required when both phone_columns and whats_app_columns are empty."
         },
         {
             "kind": "export_behavior",
-            "resource": "genesyscloud_outbound_contact_list",
-            "attribute": "whats_app_columns",
-            "change": "updated",
-            "summary": "Exported configurations include whats_app_columns blocks when WhatsApp columns exist on the contact list."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_architect_flow",
+            "resource": "genesyscloud_flow",
             "attribute": null,
             "change": "updated",
-            "summary": "Flow YAML downloads now request the flow's published version when one is available, which can improve export success for published flows."
+            "summary": "Flow export jobs now include the published flow version when available, targeting the correct published revision."
         },
         {
             "kind": "export_behavior",
-            "resource": "genesyscloud_architect_flow",
+            "resource": "genesyscloud_flow",
             "attribute": null,
             "change": "updated",
-            "summary": "Export retries rate-limited API responses (HTTP 429) when listing flows and creating export jobs, and retries transient export-job failures that can occur under heavy API load."
+            "summary": "Flow listing and export operations retry more reliably when the API rate-limits requests or returns transient export job failures."
         }
     ]
 }

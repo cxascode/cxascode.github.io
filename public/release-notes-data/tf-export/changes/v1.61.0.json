@@ -8,14 +8,42 @@
             "resource": "genesyscloud_tf_export",
             "attribute": "use_legacy_architect_flow_exporter",
             "change": "added",
-            "summary": "Optional boolean (defaults to true). When false, architect flow YAML files are downloaded as part of the export process."
+            "summary": "Optional boolean (defaults to true, ForceNew). When set to false, architect flow configuration files are downloaded as part of the flow export process."
         },
         {
             "kind": "resource_behavior",
             "resource": "genesyscloud_tf_export",
             "attribute": null,
             "change": "updated",
-            "summary": "Export can complete with warnings for non-fatal issues instead of treating all diagnostics as hard failures."
+            "summary": "A successful export can now return warning diagnostics to Terraform instead of discarding them; only errors still stop the export."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Post-export Terraform state verification results are now returned to the user instead of being ignored."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Failures from per-resource custom file writers now surface as Terraform warning diagnostics instead of being logged only."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "use_legacy_architect_flow_exporter",
+            "change": "updated",
+            "summary": "When use_legacy_architect_flow_exporter is false, architect flows are processed with the new flow exporter, which downloads flow configuration files during export."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exported data source blocks no longer rewrite unresolvable attributes as ${var.*} placeholder references."
         }
     ],
     "related_export_changes": [
@@ -24,7 +52,7 @@
             "resource": "genesyscloud_architect_flow",
             "attribute": null,
             "change": "updated",
-            "summary": "When use_legacy_architect_flow_exporter is false on genesyscloud_tf_export, flow YAML files are downloaded into an architect_flows subdirectory with filenames based on flow name, type, and ID."
+            "summary": "When use_legacy_architect_flow_exporter is false on genesyscloud_tf_export, exported architect flows include downloaded flow configuration files."
         }
     ]
 }

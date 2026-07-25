@@ -88,11 +88,13 @@ jobs:
             public/resource-permissions-json
             public/resource-permissions-tf
             public/spreadsheet-templates
+            public/supported-resources-templates
             public/lab-packages
             public/tf-export-resource-names
             public/tf-export-singletons
+            public/schema-force-new
             public/tf-export-block-label-history.json
-            public/gui-menu-paths.json
+            src/gui-menu-paths.json
             .cache-meta
             .cache/provider-source
           key: versions-${{ runner.os }}-${{ github.ref_name }}-${{ github.run_id }}
@@ -114,6 +116,8 @@ jobs:
           ls -la public/resource-permissions-tf | head -n 20 || true
           echo "--- public/spreadsheet-templates (first 20) ---"
           ls -la public/spreadsheet-templates | head -n 20 || true
+          echo "--- public/supported-resources-templates (first 20) ---"
+          ls -la public/supported-resources-templates | head -n 20 || true
           echo "--- latest.txt ---"
           cat .cache-meta/latest.txt || true
           echo "--- bootstrapped.txt ---"
@@ -130,7 +134,7 @@ jobs:
           FORCE_REFRESH: ${{ github.event_name == 'workflow_dispatch' && inputs.force_refresh_upstream && 'true' || 'false' }}
         run: |
           set -euo pipefail
-          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf public/tf-export-resource-names public/tf-export-singletons .cache-meta
+          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf public/tf-export-resource-names public/tf-export-singletons public/schema-force-new .cache-meta
 
           api_base="https://api.github.com/repos/${OWNER}/${REPO}"
 
@@ -222,7 +226,7 @@ jobs:
           FORCE_REFRESH: ${{ steps.check.outputs.force_refresh }}
         run: |
           set -euo pipefail
-          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf public/spreadsheet-templates public/tf-export-resource-names public/tf-export-singletons .cache-meta
+          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf public/spreadsheet-templates public/supported-resources-templates public/tf-export-resource-names public/tf-export-singletons public/schema-force-new .cache-meta
           rm -f \
             public/dependency-tree-json/index.json \
             public/dependency-tree-json/latest.json \
@@ -230,6 +234,7 @@ jobs:
             public/resource-permissions-tf/latest-read-write-role.tf \
             public/resource-permissions-tf/latest-read-only-role.tf \
             public/spreadsheet-templates/latest-cx-as-code-template.xlsx \
+            public/supported-resources-templates/latest-supported-resources.xlsx \
             public/dependency_tree.json \
             public/read-write-role.tf \
             public/read-only-role.tf
@@ -308,6 +313,7 @@ jobs:
           node scripts/generate-gui-menu-paths.mjs --latest="${latest}" --union-permissions
           node scripts/generate-tf-export-resource-names.mjs
           node scripts/generate-tf-export-singletons.mjs
+          node scripts/generate-schema-force-new.mjs
           node scripts/verify-tf-export-env-vars.mjs
 
           echo "${latest}" > .cache-meta/latest.txt
@@ -321,7 +327,7 @@ jobs:
           REPO: terraform-provider-genesyscloud
         run: |
           set -euo pipefail
-          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf public/spreadsheet-templates public/tf-export-resource-names public/tf-export-singletons .cache-meta
+          mkdir -p public/dependency-tree-json public/resource-permissions-json public/resource-permissions-tf public/spreadsheet-templates public/supported-resources-templates public/tf-export-resource-names public/tf-export-singletons public/schema-force-new .cache-meta
           rm -f \
             public/dependency-tree-json/index.json \
             public/dependency-tree-json/latest.json \
@@ -329,6 +335,7 @@ jobs:
             public/resource-permissions-tf/latest-read-write-role.tf \
             public/resource-permissions-tf/latest-read-only-role.tf \
             public/spreadsheet-templates/latest-cx-as-code-template.xlsx \
+            public/supported-resources-templates/latest-supported-resources.xlsx \
             public/dependency_tree.json \
             public/read-write-role.tf \
             public/read-only-role.tf
@@ -388,6 +395,7 @@ jobs:
           node scripts/generate-gui-menu-paths.mjs --latest="${latest}" --union-permissions
           node scripts/generate-tf-export-resource-names.mjs
           node scripts/generate-tf-export-singletons.mjs
+          node scripts/generate-schema-force-new.mjs
           node scripts/verify-tf-export-env-vars.mjs
 
           echo "${latest}" > .cache-meta/latest.txt
@@ -450,6 +458,7 @@ jobs:
             artifact_flags="--incremental --force"
           fi
           node scripts/generate-spreadsheet-template.mjs --latest="${latest}" ${artifact_flags}
+          node scripts/generate-supported-resources-spreadsheet.mjs --latest="${latest}" ${artifact_flags}
           node scripts/generate-lab-package.mjs --latest="${latest}" ${artifact_flags}
 
       - run: npm run build

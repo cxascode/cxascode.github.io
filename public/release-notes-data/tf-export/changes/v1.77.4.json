@@ -2,6 +2,29 @@
     "version": "v1.77.4",
     "previous": "v1.77.3",
     "resource": "genesyscloud_tf_export",
-    "changes": [],
-    "related_export_changes": []
+    "changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Permission errors logged while listing resources during export are now recorded more reliably when multiple resource types are processed concurrently, improving consistency of the end-of-run error summary."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Export sanitization now invokes custom attribute resolvers that require provider client configuration, which may update exported attribute values where those resolvers are defined."
+        }
+    ],
+    "related_export_changes": [
+        {
+            "kind": "export_behavior",
+            "resource": null,
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exported string attributes that reference other resources and use ID transformation during resolution may now have the entire attribute value resolved as a Terraform reference, rather than preserving surrounding text while substituting only the embedded identifier portion."
+        }
+    ]
 }

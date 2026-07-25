@@ -8,14 +8,21 @@
             "resource": "genesyscloud_tf_export",
             "attribute": "include_filter_resources_by_id",
             "change": "added",
-            "summary": "Optional list of {resourceType}::{resourceId} values to export only specific resources by ID."
+            "summary": "Optional list of {resourceType}::{resourceId} values to export only specific resources by ID. See the export guide for supported resource types and format details. Changing this attribute forces a new export run."
         },
         {
             "kind": "resource_behavior",
             "resource": "genesyscloud_tf_export",
             "attribute": null,
             "change": "updated",
-            "summary": "Filter attributes resource_types, include_filter_resources, exclude_filter_resources, and include_filter_resources_by_id are mutually exclusive."
+            "summary": "Filter selection attributes resource_types, include_filter_resources, exclude_filter_resources, and include_filter_resources_by_id are mutually exclusive."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "include_filter_resources_by_id",
+            "change": "added",
+            "summary": "When include_filter_resources_by_id is set, the export includes only resources whose type and ID match one of the listed {resourceType}::{resourceId} values."
         }
     ],
     "related_export_changes": []

@@ -7,35 +7,35 @@
             "resource": "genesyscloud_case_management_caseplan",
             "attribute": null,
             "change": "added",
-            "summary": "New Terraform resource for managing case management case plans."
+            "summary": "Newly registered resource for managing case management caseplans."
         },
         {
             "kind": "resource",
             "resource": "genesyscloud_case_management_stageplan",
             "attribute": null,
             "change": "added",
-            "summary": "New Terraform resource for managing case management stage plans."
+            "summary": "Newly registered resource for managing case management stageplans."
         },
         {
             "kind": "resource",
             "resource": "genesyscloud_case_management_stepplan",
             "attribute": null,
             "change": "added",
-            "summary": "New Terraform resource for managing case management step plans."
+            "summary": "Newly registered resource for managing case management stepplans."
         },
         {
             "kind": "resource",
             "resource": "genesyscloud_group_greeting",
             "attribute": null,
             "change": "added",
-            "summary": "New Terraform resource for managing group greetings."
+            "summary": "Newly registered resource for managing group greetings."
         },
         {
             "kind": "resource",
             "resource": "genesyscloud_greeting_user",
             "attribute": null,
             "change": "added",
-            "summary": "New Terraform resource for managing user greetings."
+            "summary": "Newly registered resource for managing user greetings."
         },
         {
             "kind": "resource_behavior",
@@ -49,189 +49,161 @@
             "resource": "genesyscloud_greeting",
             "attribute": "audio_filename",
             "change": "added",
-            "summary": "Path to the greeting audio file used during export and import."
+            "summary": "Optional computed path to the greeting audio file used during export and import."
         },
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_greeting",
             "attribute": "audio_file_content_hash",
             "change": "added",
-            "summary": "Hash of the greeting audio file content, used to detect file changes."
+            "summary": "Optional computed hash of greeting audio file content used to detect changes."
         },
         {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_greeting",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Greeting audio files are now written alongside exported configuration and resolved on import using audio_filename and audio_file_content_hash."
-        },
-        {
-            "kind": "export_behavior",
+            "kind": "resource_behavior",
             "resource": "genesyscloud_integration_action",
             "attribute": null,
             "change": "updated",
-            "summary": "Built-in static data actions are exported as genesyscloud_integration_action data source blocks instead of managed resources."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_integration_action",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Static data action block labels now include the parent integration name as a prefix so duplicate action names across integration instances export with distinct labels."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_integration_credential",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Integration credentials are no longer skipped when the credential name does not match the Integration-* pattern; export resolves the parent integration by credential ID."
-        },
-        {
-            "kind": "resource_attribute",
-            "resource": "genesyscloud_outbound_campaign",
-            "attribute": "agent_owned_column",
-            "change": "added",
-            "summary": "Contact list column containing the agent ID that owns the record; applicable to preview campaigns."
+            "summary": "Publishing an integration action draft now sends the correct version number to the API."
         },
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_outbound_campaign",
             "attribute": "max_calls_per_agent_decimal",
             "change": "added",
-            "summary": "Computed decimal value returned by the API; use max_calls_per_agent to configure this setting."
+            "summary": "Computed decimal max calls per agent value returned by the API; configure using max_calls_per_agent."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaign",
+            "attribute": "agent_owned_column",
+            "change": "added",
+            "summary": "Optional contact list column containing the agent ID that owns the record for preview campaigns."
         },
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_outbound_campaignrule",
             "attribute": "campaign_rule_processing",
             "change": "added",
-            "summary": "Set to v2 to use condition groups instead of flat campaign_rule_conditions."
+            "summary": "Optional processing algorithm selector; set to v2 to enable condition groups."
         },
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_outbound_campaignrule",
             "attribute": "condition_groups",
             "change": "added",
-            "summary": "Nested condition groups with match_any_conditions and conditions; required when campaign_rule_processing is v2."
+            "summary": "Optional list of condition groups used when campaign_rule_processing is v2."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "condition_groups.match_any_conditions",
+            "change": "added",
+            "summary": "Whether any condition in the group must match for the group to evaluate as true."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "condition_groups.conditions",
+            "change": "added",
+            "summary": "Conditions evaluated within a condition group."
         },
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_outbound_campaignrule",
             "attribute": "execution_settings",
             "change": "added",
-            "summary": "Execution control with frequency onEachTrigger or oncePerDay and optional time_zone_id for daily runs."
+            "summary": "Optional execution control settings for the campaign rule."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "execution_settings.frequency",
+            "change": "added",
+            "summary": "Execution frequency; valid values are onEachTrigger and oncePerDay."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "execution_settings.time_zone_id",
+            "change": "added",
+            "summary": "Time zone used when frequency is oncePerDay."
         },
         {
             "kind": "resource_behavior",
             "resource": "genesyscloud_outbound_campaignrule",
             "attribute": "campaign_rule_conditions",
             "change": "updated",
-            "summary": "No longer unconditionally required; use with legacy rules or use condition_groups when campaign_rule_processing is v2. The two blocks cannot be set together."
+            "summary": "No longer unconditionally required; use either campaign_rule_conditions or condition_groups with campaign_rule_processing v2, enforced by plan validation."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "resource_attribute",
             "resource": "genesyscloud_outbound_campaignrule",
-            "attribute": "campaign_rule_conditions.condition",
+            "attribute": "campaign_rule_conditions.condition_type",
             "change": "updated",
-            "summary": "Additional condition types are supported: timeOfDay, dayOfWeek, dayOfMonth, weekDayOfMonth, specificDate, campaignRunTime, and campaignWaitTime."
-        },
-        {
-            "kind": "resource_behavior",
-            "resource": "genesyscloud_outbound_campaignrule",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Terraform validates that condition_groups is present when using v2 processing and that campaign_rule_conditions is present otherwise."
+            "summary": "Accepts additional values: timeOfDay, dayOfWeek, dayOfMonth, weekDayOfMonth, specificDate, campaignRunTime, and campaignWaitTime."
         },
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_routing_queue",
-            "attribute": "media_settings_call.auto_answer_alert_tone_seconds",
+            "attribute": "call_media_settings.auto_answer_alert_tone_seconds",
             "change": "added",
-            "summary": "Duration to play the alerting tone for auto-answer call interactions."
+            "summary": "Optional duration in seconds to play the alerting tone for auto-answer call interactions."
         },
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_routing_queue",
-            "attribute": "media_settings_call.manual_answer_alert_tone_seconds",
+            "attribute": "call_media_settings.manual_answer_alert_tone_seconds",
             "change": "added",
-            "summary": "Duration to play the alerting tone for manual-answer call interactions."
+            "summary": "Optional duration in seconds to play the alerting tone for manual-answer call interactions."
         },
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_routing_queue",
-            "attribute": "media_settings_chat.auto_answer_alert_tone_seconds",
+            "attribute": "email_media_settings.auto_answer_alert_tone_seconds",
             "change": "added",
-            "summary": "Duration to play the alerting tone for auto-answer chat interactions."
+            "summary": "Optional duration in seconds to play the alerting tone for auto-answer email interactions."
         },
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_routing_queue",
-            "attribute": "media_settings_chat.manual_answer_alert_tone_seconds",
+            "attribute": "email_media_settings.manual_answer_alert_tone_seconds",
             "change": "added",
-            "summary": "Duration to play the alerting tone for manual-answer chat interactions."
+            "summary": "Optional duration in seconds to play the alerting tone for manual-answer email interactions."
         },
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_routing_queue",
-            "attribute": "media_settings_email.auto_answer_alert_tone_seconds",
+            "attribute": "message_media_settings.sub_type_settings.enable_inactivity_timeout",
             "change": "added",
-            "summary": "Duration to play the alerting tone for auto-answer email interactions."
+            "summary": "Optional flag to enable inactivity timeout for an individual message media subtype."
         },
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_routing_queue",
-            "attribute": "media_settings_email.manual_answer_alert_tone_seconds",
-            "change": "added",
-            "summary": "Duration to play the alerting tone for manual-answer email interactions."
-        },
-        {
-            "kind": "resource_attribute",
-            "resource": "genesyscloud_routing_queue",
-            "attribute": "media_settings_message.sub_type_settings.enable_inactivity_timeout",
-            "change": "added",
-            "summary": "Per-subtype inactivity timeout flag for digital message channels."
-        },
-        {
-            "kind": "resource_attribute",
-            "resource": "genesyscloud_routing_queue",
-            "attribute": "media_settings_call.sub_type_settings",
+            "attribute": "call_media_settings.sub_type_settings",
             "change": "removed",
-            "summary": "Removed from call media settings; subtype configuration is not supported on this block."
+            "summary": "Subtype-specific settings are not supported on call media settings."
         },
         {
             "kind": "resource_attribute",
             "resource": "genesyscloud_routing_queue",
-            "attribute": "media_settings_chat.sub_type_settings",
+            "attribute": "callback_media_settings.sub_type_settings",
             "change": "removed",
-            "summary": "Removed from chat media settings."
-        },
-        {
-            "kind": "resource_attribute",
-            "resource": "genesyscloud_routing_queue",
-            "attribute": "media_settings_email.sub_type_settings",
-            "change": "removed",
-            "summary": "Removed from email media settings."
-        },
-        {
-            "kind": "resource_attribute",
-            "resource": "genesyscloud_routing_queue",
-            "attribute": "media_settings_callback.sub_type_settings",
-            "change": "removed",
-            "summary": "Removed from callback media settings."
+            "summary": "Subtype-specific settings are not supported on callback media settings."
         },
         {
             "kind": "data_source_attribute",
             "resource": "genesyscloud_integration_action",
             "attribute": "integration_id",
             "change": "added",
-            "summary": "Optional argument to disambiguate lookups when multiple built-in data actions share the same name across integration instances."
+            "summary": "Optional integration ID to disambiguate static data action lookups when names collide across integration instances."
         },
         {
             "kind": "data_source_behavior",
-            "resource": "genesyscloud_processautomation_trigger",
+            "resource": "genesyscloud_integration_action",
             "attribute": null,
             "change": "updated",
-            "summary": "Name lookup now follows API pagination links correctly, so triggers beyond the first page can be found."
+            "summary": "Lookups filter by integration_id when provided; ambiguous name errors suggest setting integration_id."
         }
     ]
 }

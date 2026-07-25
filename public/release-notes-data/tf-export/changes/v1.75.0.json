@@ -2,14 +2,6 @@
     "version": "v1.75.0",
     "previous": "v1.74.0",
     "resource": "genesyscloud_tf_export",
-    "changes": [
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_tf_export",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Routing queue exports resolve conditional_group_activation.rules.groups.member_group_id references."
-        }
-    ],
+    "changes": [],
     "related_export_changes": []
 }

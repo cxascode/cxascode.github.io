@@ -126,7 +126,7 @@
             "resource": null,
             "attribute": null,
             "change": "updated",
-            "summary": "Phone number validation requires a leading + and accepts any viable E.164 number instead of requiring an exact canonical format match; validation is skipped when BCP mode is enabled."
+            "summary": "Phone number validation requires a leading + and accepts any viable E.164 number instead of requiring an exact canonical format match."
         }
     ]
 }

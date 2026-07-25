@@ -1,8 +1,8 @@
 {
-  "version": "v1.84.1",
-  "previous": "v1.84.0",
-  "path": "/release-notes-data/versions/v1.84.1.md",
-  "changes_path": "/release-notes-data/changes/v1.84.1.json",
-  "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.84.1",
-  "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.84.1/docs"
+  "version": "v1.84.2",
+  "previous": "v1.84.1",
+  "path": "/release-notes-data/versions/v1.84.2.md",
+  "changes_path": "/release-notes-data/changes/v1.84.2.json",
+  "release_url": "https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.84.2",
+  "provider_docs_url": "https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.84.2/docs"
 }

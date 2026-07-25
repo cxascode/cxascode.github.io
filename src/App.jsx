@@ -7,20 +7,29 @@ import AttributeIndexDialog from "./AttributeIndexDialog.jsx";
 import ReleaseNotesDialog from "./ReleaseNotesDialog.jsx";
 import SiteUpdatesDialog from "./SiteUpdatesDialog.jsx";
 import ResourceReleaseChanges from "./ResourceReleaseChanges.jsx";
+import DependencyTagList from "./DependencyTagList.jsx";
 import {
   buildTfExportTemplate,
   resolveProviderEnvVars,
   resolveTfExportResourceName,
   RESOURCE_NAME_PLACEHOLDER,
+  TF_EXPORT_MODE_EXPORT,
+  TF_EXPORT_MODE_EXPORT_STATE,
 } from "./tfExportTemplate.js";
 import {
-  normalizeGeneratedGuiMenuPaths,
+  normalizeGuiMenuPathsDocument,
   resolveGuiMenuPath,
 } from "./guiMenuPaths.js";
+import generatedGuiMenuPathsDocument from "./gui-menu-paths.json";
 import {
   isSingletonTfExportResource,
   normalizeSingletonResourceTypes,
 } from "./tfExportSingletons.js";
+import {
+  getForceNewAttributes,
+  normalizeForceNewCatalog,
+  RECREATES_ON_CHANGE_LABEL,
+} from "./schemaForceNew.js";
 import {
   buildTerraformRegistryDocsUrl,
   buildTerraformRegistryProviderDocsUrl,
@@ -37,6 +46,7 @@ import {
   ARTIFACT_READ_ONLY_ROLE,
   ARTIFACT_READ_WRITE_ROLE,
   ARTIFACT_SPREADSHEET,
+  ARTIFACT_SUPPORTED_RESOURCES,
   artifactDownloadFilename,
   downloadUrlArtifact,
 } from "./artifactDownloads.js";
@@ -61,6 +71,7 @@ import {
   readLabFilesDownloadFromLocation,
   readRoleDownloadFromLocation,
   readSpreadsheetDownloadFromLocation,
+  readSupportedResourcesDownloadFromLocation,
   roleDownloadPathname,
   ROLE_READ_ONLY_SEGMENT,
   ROLE_READ_WRITE_SEGMENT,
@@ -79,6 +90,7 @@ import {
   MIN_SINGLETON_FLAG_VERSION,
   TF_EXPORT_RESOURCE_NAMES_DIR,
   TF_EXPORT_SINGLETONS_DIR,
+  SCHEMA_FORCE_NEW_DIR,
   indexJsonUrl,
   latestJsonUrl,
   publicDataUrl,
@@ -89,7 +101,6 @@ const INDEX_URL = indexJsonUrl(DEPENDENCY_TREE_DIR);
 const LATEST_URL = latestJsonUrl(DEPENDENCY_TREE_DIR);
 const OVERRIDES_URL = publicDataUrl("", "overrides.json");
 const PROVIDER_ENV_VARS_URL = publicDataUrl("", "provider-env-vars.json");
-const GUI_MENU_PATHS_URL = publicDataUrl("", "gui-menu-paths.json");
 const VERSION_URL = (v) => versionedJsonUrl(DEPENDENCY_TREE_DIR, v);
 
 function attributeIndexVersionFromUrl(versionFromUrl) {
@@ -119,6 +130,8 @@ const TF_EXPORT_NAMES_LATEST_URL = latestJsonUrl(TF_EXPORT_RESOURCE_NAMES_DIR);
 const TF_EXPORT_NAMES_VERSION_URL = (v) => versionedJsonUrl(TF_EXPORT_RESOURCE_NAMES_DIR, v);
 const TF_EXPORT_SINGLETONS_LATEST_URL = latestJsonUrl(TF_EXPORT_SINGLETONS_DIR);
 const TF_EXPORT_SINGLETONS_VERSION_URL = (v) => versionedJsonUrl(TF_EXPORT_SINGLETONS_DIR, v);
+const SCHEMA_FORCE_NEW_LATEST_URL = latestJsonUrl(SCHEMA_FORCE_NEW_DIR);
+const SCHEMA_FORCE_NEW_VERSION_URL = (v) => versionedJsonUrl(SCHEMA_FORCE_NEW_DIR, v);
 
 const VERSION_PICKER_TOOLTIP = `Dependencies - v${MIN_DEPENDENCY_TREE_VERSION}+, Permissions - v${MIN_RESOURCE_PERMISSIONS_VERSION}+`;
 
@@ -217,20 +230,15 @@ function isRoleDownloadSupported(version) {
  *     "<resource_type>": "Markdown note shown in Resource Type Details"
  *   },
  *   "guiMenuPaths": {
- *     "<resource_type>": "Admin > Menu > Path (overrides public/gui-menu-paths.json)"
+ *     "<resource_type>": "Admin > Menu > Path (overrides src/gui-menu-paths.json)"
  *   },
  *   "hiddenResourceTypes": ["genesyscloud_bcp_tf_exporter", ...]
  *   "deprecatedResourceTypes": ["genesyscloud_journey_outcome", ...]
  *   "nonExportableResourceTypes": ["genesyscloud_outbound_contact_list_contact", ...]
- *   "spreadsheetTemplates": {
- *     "out": ["genesyscloud_user", ...],
- *     "repoDeployOrder": ["foundation", "routing", ...],
- *     "repoAssignments": {
- *       "foundation": "genesyscloud_auth_division, genesyscloud_auth_role, ...",
- *       "routing": "genesyscloud_architect_emergencygroup, ..."
- *     }
- *   }
  * }
+ *
+ * Supported-resources funnel rules and deploy spreadsheet program layer live in
+ * src/private-overrides.json (build-time only; not fetched at runtime).
  *
  * Behavior:
  * - addDependencies: union the dependencies list (no duplicates).
@@ -334,6 +342,21 @@ function MenuPathCrumbs({ path, className = "" }) {
   );
 }
 
+function InlineCrumbs({ items, className = "" }) {
+  if (!Array.isArray(items) || items.length === 0) return null;
+
+  return (
+    <span className={`gcMenuPath__crumbs ${className}`.trim()}>
+      {items.map((item, index) => (
+        <React.Fragment key={item}>
+          {index > 0 ? ", " : null}
+          <span>{item}</span>
+        </React.Fragment>
+      ))}
+    </span>
+  );
+}
+
 function getHiddenResourceTypes(overrides) {
   const hidden = overrides?.hiddenResourceTypes;
   if (!Array.isArray(hidden)) return new Set();
@@ -405,10 +428,14 @@ export default function App() {
 
   const [raw, setRaw] = useState(null);
   const [overrides, setOverrides] = useState(null);
-  const [generatedGuiMenuPaths, setGeneratedGuiMenuPaths] = useState({});
+  const generatedGuiMenuPaths = useMemo(
+    () => normalizeGuiMenuPathsDocument(generatedGuiMenuPathsDocument),
+    []
+  );
   const [providerEnvVarCatalog, setProviderEnvVarCatalog] = useState(null);
   const [tfExportResourceNames, setTfExportResourceNames] = useState({});
   const [tfExportSingletonTypes, setTfExportSingletonTypes] = useState(() => new Set());
+  const [forceNewCatalog, setForceNewCatalog] = useState(() => ({}));
 
   const [query, setQuery] = useState("");
   const [listViewMode, setListViewMode] = useState(LIST_VIEW_TYPE);
@@ -437,10 +464,9 @@ export default function App() {
 
     (async () => {
       try {
-        const [overridesRes, envVarsRes, guiMenuPathsRes] = await Promise.all([
+        const [overridesRes, envVarsRes] = await Promise.all([
           fetch(OVERRIDES_URL, { cache: "no-store" }),
           fetch(PROVIDER_ENV_VARS_URL, { cache: "no-store" }),
-          fetch(GUI_MENU_PATHS_URL, { cache: "no-store" }),
         ]);
 
         if (!overridesRes.ok) {
@@ -455,18 +481,14 @@ export default function App() {
           );
         }
 
-        const [overridesJson, envVarsJson, guiMenuPathsJson] = await Promise.all([
+        const [overridesJson, envVarsJson] = await Promise.all([
           overridesRes.json(),
           envVarsRes.json(),
-          guiMenuPathsRes.ok ? guiMenuPathsRes.json() : Promise.resolve(null),
         ]);
 
         if (!cancelled) {
           setOverrides(overridesJson);
           setProviderEnvVarCatalog(envVarsJson);
-          setGeneratedGuiMenuPaths(
-            normalizeGeneratedGuiMenuPaths(guiMenuPathsJson?.guiMenuPaths)
-          );
         }
       } catch (e) {
         if (!cancelled) setError(String(e));
@@ -661,6 +683,39 @@ export default function App() {
     };
   }, [selectedVersion]);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
+      const url =
+        selectedVersion === "latest"
+          ? SCHEMA_FORCE_NEW_LATEST_URL
+          : SCHEMA_FORCE_NEW_VERSION_URL(selectedVersion);
+
+      try {
+        const res = await fetch(url, { cache: "no-store" });
+        if (!res.ok) {
+          throw new Error(
+            `Failed to fetch schema force-new data: ${res.status} ${res.statusText}`
+          );
+        }
+
+        const json = await res.json();
+        if (!cancelled) {
+          setForceNewCatalog(normalizeForceNewCatalog(json?.forceNewAttributes));
+        }
+      } catch {
+        if (!cancelled) {
+          setForceNewCatalog({});
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedVersion]);
+
   const { depsMap, reverseMap } = useMemo(() => buildDepsMaps(raw), [raw]);
 
   const hiddenTypes = useMemo(
@@ -844,6 +899,11 @@ export default function App() {
     [activeType, tfExportSingletonTypes, tfExportResourceName, useSingletonExporterFlag]
   );
 
+  const forceNewAttributes = useMemo(
+    () => getForceNewAttributes(activeType, forceNewCatalog),
+    [activeType, forceNewCatalog]
+  );
+
   const tfExportNote = useMemo(
     () => (overrides ? resolveTfExportNote(overrides) : ""),
     [overrides]
@@ -857,12 +917,16 @@ export default function App() {
     [activeType, providerEnvVarCatalog]
   );
 
+  const [tfExportMode, setTfExportMode] = useState(TF_EXPORT_MODE_EXPORT);
+
   const tfExportTemplate = useMemo(
     () =>
       activeType
-        ? buildTfExportTemplate(activeType, dependsOn, tfExportResourceName, providerEnvVars)
+        ? buildTfExportTemplate(activeType, dependsOn, tfExportResourceName, providerEnvVars, {
+            mode: tfExportMode,
+          })
         : "",
-    [activeType, dependsOn, tfExportResourceName, providerEnvVars]
+    [activeType, dependsOn, tfExportResourceName, providerEnvVars, tfExportMode]
   );
 
   const terraformRegistryDocsUrl = useMemo(
@@ -880,6 +944,7 @@ export default function App() {
   const [attributeIndexDialogOpen, setAttributeIndexDialogOpen] = useState(false);
   const [envVarsDialogOpen, setEnvVarsDialogOpen] = useState(false);
   const spreadsheetPermalinkRef = useRef("");
+  const supportedResourcesPermalinkRef = useRef("");
   const labFilesPermalinkRef = useRef("");
   const roleDownloadPermalinkRef = useRef("");
   const newestListedReleaseRef = useRef("");
@@ -1080,6 +1145,36 @@ export default function App() {
     return true;
   }, []);
 
+  const handleSupportedResourcesPermalink = useCallback(() => {
+    const version = readSupportedResourcesDownloadFromLocation();
+    if (version === null) {
+      supportedResourcesPermalinkRef.current = "";
+      return false;
+    }
+
+    const permalinkKey = window.location.pathname;
+    if (supportedResourcesPermalinkRef.current === permalinkKey) return true;
+
+    supportedResourcesPermalinkRef.current = permalinkKey;
+
+    void downloadUrlArtifact(
+      ARTIFACT_SUPPORTED_RESOURCES,
+      version,
+      newestListedReleaseRef.current
+    ).finally(() => {
+      if (readSupportedResourcesDownloadFromLocation() === null) {
+        supportedResourcesPermalinkRef.current = "";
+        return;
+      }
+
+      skipNextUrlSyncRef.current = true;
+      replaceDialogInUrl("", readResourceTypeFromLocation(), readVersionFromLocation() || "latest");
+      supportedResourcesPermalinkRef.current = "";
+    });
+
+    return true;
+  }, []);
+
   const handleLabFilesPermalink = useCallback(() => {
     const version = readLabFilesDownloadFromLocation();
     if (version === null) {
@@ -1148,6 +1243,7 @@ export default function App() {
   useEffect(() => {
     const syncFromLocation = () => {
       if (handleSpreadsheetPermalink()) return;
+      if (handleSupportedResourcesPermalink()) return;
       if (handleLabFilesPermalink()) return;
       if (handleRoleDownloadPermalink()) return;
 
@@ -1183,6 +1279,7 @@ export default function App() {
     };
 
     handleSpreadsheetPermalink();
+    handleSupportedResourcesPermalink();
     handleLabFilesPermalink();
     handleRoleDownloadPermalink();
     window.addEventListener("popstate", syncFromLocation);
@@ -1191,6 +1288,7 @@ export default function App() {
     allTypes,
     availableVersions,
     handleSpreadsheetPermalink,
+    handleSupportedResourcesPermalink,
     handleLabFilesPermalink,
     handleRoleDownloadPermalink,
     syncAttributeIndexFromUrl,
@@ -1291,7 +1389,6 @@ export default function App() {
     setQuery("");
     setDivisionFilter(DIVISION_FILTER_ALL);
     setSelectedType("");
-    searchRef.current?.focus();
   };
 
   const handleResourceListKeyDown = useCallback(
@@ -1323,7 +1420,7 @@ export default function App() {
 
   useEffect(() => {
     setCopyState("idle");
-  }, [activeType, tfExportTemplate]);
+  }, [activeType, tfExportTemplate, tfExportMode]);
 
   const copyTfExportTemplate = async () => {
     if (!tfExportTemplate) return;
@@ -1349,7 +1446,7 @@ export default function App() {
       {isSingleton ? (
         <span
           className="gcSingletonBadge"
-          title="Org-wide singleton — only one instance exists per organization."
+          title="Only one per org — a single instance can exist for the organization."
         >
           Singleton
         </span>
@@ -1367,7 +1464,7 @@ export default function App() {
           className="gcNonExportableBadge"
           title="This provider resource type cannot be exported with genesyscloud_tf_export."
         >
-          Non-exportable
+          Cannot be exported
         </span>
       ) : null}
     </>
@@ -1761,7 +1858,7 @@ export default function App() {
                 <div className="gcCard__titleActions">
                   {terraformRegistryDocsUrl ? (
                     <a
-                      className="gcDocsPill"
+                      className="gcHeaderLink"
                       href={terraformRegistryDocsUrl}
                       target="_blank"
                       rel="noreferrer"
@@ -1796,30 +1893,47 @@ export default function App() {
                       )}
                     </div>
                     <div
-                      className="gcMenuPathBlock"
-                      aria-label={
-                        isMenuPathListView
-                          ? "Resource type"
-                          : "Genesys Cloud GUI menu path"
-                      }
+                      className={`gcResourceMetaRow${
+                        activeType && forceNewAttributes.length ? "" : " gcResourceMetaRow--single"
+                      }`}
                     >
-                      <div className="gcMenuPath__label">
-                        {isMenuPathListView ? "Resource type" : "GUI menu path"}
+                      <div
+                        className="gcMenuPathBlock gcResourceMetaRow__col"
+                        aria-label={
+                          isMenuPathListView
+                            ? "Resource type"
+                            : "Genesys Cloud GUI menu path"
+                        }
+                      >
+                        <div className="gcMenuPath__label">
+                          {isMenuPathListView ? "Resource type" : "GUI menu path"}
+                        </div>
+                        <div className="gcMenuPath__value">
+                          {isMenuPathListView ? (
+                            <div className="gcResourceTypeLine">
+                              <code className="gcResourceTypeName">{detailType}</code>
+                              {detailResourceBadges}
+                            </div>
+                          ) : activeType && detailMenuPath ? (
+                            <MenuPathCrumbs path={detailMenuPath} />
+                          ) : (
+                            <span className="gcMenuPath__empty">
+                              {showDependencyLoading ? "Loading…" : "TBD"}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                      <div className="gcMenuPath__value">
-                        {isMenuPathListView ? (
-                          <div className="gcResourceTypeLine">
-                            <code className="gcResourceTypeName">{detailType}</code>
-                            {detailResourceBadges}
+                      {activeType && forceNewAttributes.length ? (
+                        <div
+                          className="gcMenuPathBlock gcResourceMetaRow__col gcResourceMetaRow__col--end"
+                          aria-label={RECREATES_ON_CHANGE_LABEL}
+                        >
+                          <div className="gcMenuPath__label">{RECREATES_ON_CHANGE_LABEL}</div>
+                          <div className="gcMenuPath__value">
+                            <InlineCrumbs items={forceNewAttributes} />
                           </div>
-                        ) : activeType && detailMenuPath ? (
-                          <MenuPathCrumbs path={detailMenuPath} />
-                        ) : (
-                          <span className="gcMenuPath__empty">
-                            {showDependencyLoading ? "Loading…" : "TBD"}
-                          </span>
-                        )}
-                      </div>
+                        </div>
+                      ) : null}
                     </div>
                   </div>
                 ) : isMenuPathListView ? (
@@ -1852,18 +1966,7 @@ export default function App() {
                 <div className="gcPanel__body">
                   {activeType ? (
                     dependsOn.length ? (
-                      dependsOn.map((t) => (
-                        <button
-                          key={t}
-                          className="gcPill"
-                          onClick={() => {
-                            setSelectedType(t);
-                          }}
-                          type="button"
-                        >
-                          {t}
-                        </button>
-                      ))
+                      <DependencyTagList types={dependsOn} onSelectType={setSelectedType} />
                     ) : (
                       <div className="gcMuted">No dependencies found.</div>
                     )
@@ -1881,18 +1984,7 @@ export default function App() {
                 <div className="gcPanel__body">
                   {activeType ? (
                     dependencyFor.length ? (
-                      dependencyFor.map((t) => (
-                        <button
-                          key={t}
-                          className="gcPill"
-                          onClick={() => {
-                            setSelectedType(t);
-                          }}
-                          type="button"
-                        >
-                          {t}
-                        </button>
-                      ))
+                      <DependencyTagList types={dependencyFor} onSelectType={setSelectedType} />
                     ) : (
                       <div className="gcMuted">Nothing depends on this.</div>
                     )
@@ -1906,7 +1998,33 @@ export default function App() {
             <div className="gcExportTemplate">
               <div className="gcPanel">
                 <div className="gcPanel__header">
-                  <div className="gcPanel__title">genesyscloud_tf_export template</div>
+                  <div className="gcPanel__headerStart">
+                    <div className="gcPanel__title">genesyscloud_tf_export template</div>
+                    <div
+                      className="gcSegmentedControl gcSegmentedControl--text gcExportTemplate__modeToggle"
+                      role="radiogroup"
+                      aria-label="Export template mode"
+                    >
+                      <button
+                        type="button"
+                        className="gcSegmentedControl__option"
+                        role="radio"
+                        aria-checked={tfExportMode === TF_EXPORT_MODE_EXPORT}
+                        onClick={() => setTfExportMode(TF_EXPORT_MODE_EXPORT)}
+                      >
+                        Export
+                      </button>
+                      <button
+                        type="button"
+                        className="gcSegmentedControl__option"
+                        role="radio"
+                        aria-checked={tfExportMode === TF_EXPORT_MODE_EXPORT_STATE}
+                        onClick={() => setTfExportMode(TF_EXPORT_MODE_EXPORT_STATE)}
+                      >
+                        Export state
+                      </button>
+                    </div>
+                  </div>
                   <button
                     type="button"
                     className="gcCopyButton"
@@ -1922,15 +2040,39 @@ export default function App() {
                 </div>
                 <div className="gcPanel__body">
                   {activeType && tfExportTemplate ? (
-                    <pre className="gcExportTemplate__code gcMono">{tfExportTemplate}</pre>
+                    <>
+                      <p className="gcMuted gcExportTemplate__hint">
+                        {tfExportMode === TF_EXPORT_MODE_EXPORT_STATE
+                          ? "Generate a Terraform state file for existing resources — brownfield adoption and import workflows."
+                          : "Generate HCL configuration for this resource, with dependency types exported as data sources."}
+                      </p>
+                      <pre className="gcExportTemplate__code gcMono">{tfExportTemplate}</pre>
+                    </>
                   ) : (
                     <div className="gcMuted">
                       Select a type to view an export template.
                     </div>
                   )}
-                  {activeType && tfExportNote ? (
+                  {activeType && tfExportNote && tfExportMode === TF_EXPORT_MODE_EXPORT ? (
                     <div className="gcExportTemplate__note">
                       <DependencyNote content={tfExportNote} />
+                    </div>
+                  ) : null}
+                  {activeType ? (
+                    <div className="gcExportTemplate__footer">
+                      <p className="gcMuted gcExportTemplate__hint">
+                        Building an export with multiple resource types?
+                      </p>
+                      <div className="gcExportTemplate__linkRow">
+                        <a
+                          href="https://cxascode.github.io/exportbuilder/"
+                          className="gcHeaderLink gcExportTemplate__link"
+                          rel="nofollow"
+                        >
+                          CX as Code Export Builder
+                        </a>
+                        <span className="gcBetaBadge">Beta</span>
+                      </div>
                     </div>
                   ) : null}
                 </div>

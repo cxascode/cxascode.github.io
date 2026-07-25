@@ -1,14 +1,18 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import ExcelJS from "exceljs";
 import { effectiveDependencies } from "../src/effectiveDependencies.js";
 import {
   isSingletonTfExportResource,
   normalizeSingletonResourceTypes,
 } from "../src/tfExportSingletons.js";
+import {
+  formatSpreadsheetForceNewAttributeList,
+  getForceNewAttributes,
+  normalizeForceNewCatalog,
+} from "../src/schemaForceNew.js";
 import { resolveTfExportResourceName } from "../src/tfExportTemplate.js";
 import {
-  normalizeGeneratedGuiMenuPaths,
+  normalizeGuiMenuPathsDocument,
   resolveGuiMenuPath,
 } from "../src/guiMenuPaths.js";
 import {
@@ -27,44 +31,52 @@ import {
   resolveSpreadsheetRepoName,
 } from "./lib/priority-group-keywords.mjs";
 import {
+  GUI_MENU_PATHS_RELATIVE_PATH,
   isDependencyTreeVersionJsonFilename,
   MIN_SINGLETON_FLAG_VERSION,
+  SCHEMA_FORCE_NEW_DIR,
+  PRIVATE_OVERRIDES_RELATIVE_PATH,
   TF_EXPORT_RESOURCE_NAMES_DIR,
   TF_EXPORT_SINGLETONS_DIR,
 } from "./lib/public-data-path-constants.mjs";
+import { loadOverridesDocument } from "./lib/load-overrides-document.mjs";
+import {
+  applyDeployEditingColumnFills,
+  autoFitWorksheetColumns,
+  clearDataRows,
+  DEPLOY_SPREADSHEET_DATA_COLUMN_COUNT,
+  DEPLOY_SPREADSHEET_TEMPLATE_PATH,
+  loadWorkbookFromTemplate,
+  SPREADSHEET_DEPRECATED_NOTE,
+  SPREADSHEET_NON_EXPORTABLE_NOTE,
+  SPREADSHEET_SINGLETON_NOTE,
+  styleDataCell,
+} from "./lib/spreadsheet-styles.mjs";
 
 const INPUT_DIR = path.resolve("public/dependency-tree-json");
 const OUTPUT_DIR = path.resolve("public/spreadsheet-templates");
 const PUBLIC_DIR = path.resolve("public");
-const TEMPLATE_PATH = path.resolve(
-  "scripts/templates/cx-as-code-spreadsheet-template.xlsx"
-);
+const TEMPLATE_PATH = DEPLOY_SPREADSHEET_TEMPLATE_PATH;
 const DEFAULT_OVERRIDES_PATH = path.resolve("public/overrides.json");
 const REPO_ROOT = path.resolve(import.meta.dirname, "..");
 const STAMP_DIR = path.resolve(REPO_ROOT, ".cache-meta/artifact-stamps/spreadsheet");
 
 const SPREADSHEET_GLOBAL_INPUT_RELATIVE_PATHS = [
   "public/overrides.json",
+  PRIVATE_OVERRIDES_RELATIVE_PATH,
   "scripts/templates/cx-as-code-spreadsheet-template.xlsx",
+  "scripts/lib/spreadsheet-styles.mjs",
   "scripts/lib/dependency-tree-overrides.mjs",
+  "scripts/lib/load-overrides-document.mjs",
   "scripts/lib/priority-group-keywords.mjs",
   "src/effectiveDependencies.js",
   "src/guiMenuPaths.js",
   "src/tfExportTemplate.js",
   "src/tfExportSingletons.js",
+  "src/schemaForceNew.js",
 ];
 
 const AUTH_DIVISION_RESOURCE_TYPE = "genesyscloud_auth_division";
-const SPREADSHEET_SINGLETON_NOTE = "Org-wide singleton";
-const SPREADSHEET_DEPRECATED_NOTE = "Deprecated";
-const SPREADSHEET_NON_EXPORTABLE_NOTE = "Non-exportable";
-
-const GRAY_FILL = {
-  type: "pattern",
-  pattern: "solid",
-  fgColor: { theme: 2 },
-  bgColor: { indexed: 64 },
-};
 
 import {
   combinedInputsHash,
@@ -125,9 +137,11 @@ function compareVersions(a, b) {
 async function loadTfExportCatalog(version) {
   const singletonPath = path.join(PUBLIC_DIR, TF_EXPORT_SINGLETONS_DIR, `${version}.json`);
   const namesPath = path.join(PUBLIC_DIR, TF_EXPORT_RESOURCE_NAMES_DIR, `${version}.json`);
+  const forceNewPath = path.join(PUBLIC_DIR, SCHEMA_FORCE_NEW_DIR, `${version}.json`);
 
   let singletonTypes = new Set();
   let resourceNames = {};
+  let forceNewCatalog = {};
 
   try {
     const json = JSON.parse(await fs.readFile(singletonPath, "utf8"));
@@ -146,9 +160,17 @@ async function loadTfExportCatalog(version) {
     // tf-export-resource-names may be missing before local bootstrap
   }
 
+  try {
+    const json = JSON.parse(await fs.readFile(forceNewPath, "utf8"));
+    forceNewCatalog = normalizeForceNewCatalog(json?.forceNewAttributes);
+  } catch {
+    // schema-force-new may be missing before local bootstrap
+  }
+
   return {
     singletonTypes,
     resourceNames,
+    forceNewCatalog,
     useSingletonExporterFlag: compareVersions(version, MIN_SINGLETON_FLAG_VERSION) >= 0,
   };
 }
@@ -178,6 +200,12 @@ function resolveSpreadsheetNotes(
   if (nonExportableTypes.has(resourceType)) notes.push(SPREADSHEET_NON_EXPORTABLE_NOTE);
 
   return notes.length > 0 ? notes.join("; ") : "";
+}
+
+function resolveSpreadsheetRecreateAttributes(resourceType, forceNewCatalog) {
+  return formatSpreadsheetForceNewAttributeList(
+    getForceNewAttributes(resourceType, forceNewCatalog)
+  );
 }
 
 function buildResourceRows(raw, overrides, tfExportCatalog, generatedGuiMenuPaths) {
@@ -219,6 +247,10 @@ function buildResourceRows(raw, overrides, tfExportCatalog, generatedGuiMenuPath
       scopePrefix,
       priority: inScope ? resolveRepoPriority(repoName, repoDeployOrderIndex) : null,
       repoName,
+      recreateAttributes: resolveSpreadsheetRecreateAttributes(
+        type,
+        tfExportCatalog.forceNewCatalog
+      ),
       notes: resolveSpreadsheetNotes(
         type,
         overrides,
@@ -233,10 +265,10 @@ function buildResourceRows(raw, overrides, tfExportCatalog, generatedGuiMenuPath
 }
 
 async function loadGeneratedGuiMenuPaths() {
-  const guiMenuPathsPath = path.join(PUBLIC_DIR, "gui-menu-paths.json");
+  const guiMenuPathsPath = path.join(REPO_ROOT, GUI_MENU_PATHS_RELATIVE_PATH);
   try {
     const parsed = JSON.parse(await fs.readFile(guiMenuPathsPath, "utf8"));
-    return normalizeGeneratedGuiMenuPaths(parsed?.guiMenuPaths);
+    return normalizeGuiMenuPathsDocument(parsed);
   } catch (err) {
     if (err && err.code === "ENOENT") {
       console.log("No gui-menu-paths.json found, continuing without generated menu paths.");
@@ -252,16 +284,7 @@ async function loadOverrides() {
   );
   console.log(`Loading overrides from ${overridesPath}`);
 
-  try {
-    const raw = await fs.readFile(overridesPath, "utf8");
-    return JSON.parse(raw);
-  } catch (err) {
-    if (err && err.code === "ENOENT") {
-      console.log("No overrides file found, continuing without overrides.");
-      return {};
-    }
-    throw err;
-  }
+  return loadOverridesDocument(overridesPath);
 }
 
 async function ensureDir(dir) {
@@ -269,18 +292,16 @@ async function ensureDir(dir) {
 }
 
 async function writeWorkbook(rows, outPath) {
-  const workbook = new ExcelJS.Workbook();
-  await workbook.xlsx.readFile(TEMPLATE_PATH);
+  const workbook = await loadWorkbookFromTemplate(TEMPLATE_PATH);
 
   const worksheet = workbook.worksheets[0];
   if (!worksheet) {
     throw new Error("Spreadsheet template is missing a worksheet.");
   }
 
-  const lastRow = worksheet.rowCount;
-  if (lastRow > 1) {
-    worksheet.spliceRows(2, lastRow - 1);
-  }
+  // Header row, layout, and frozen view come from the checked-in template; column widths
+  // are autofit from content except the last column (Recreate attributes).
+  clearDataRows(worksheet, 2);
 
   for (let i = 0; i < rows.length; i += 1) {
     const rowNumber = i + 2;
@@ -297,20 +318,31 @@ async function writeWorkbook(rows, outPath) {
     row.getCell(8).value = entry.repoName;
     row.getCell(9).value = null;
     row.getCell(10).value = entry.notes || null;
+    row.getCell(11).value = entry.recreateAttributes || null;
 
-    for (const col of [5, 6, 7, 8]) {
-      row.getCell(col).fill = GRAY_FILL;
+    for (let column = 1; column <= DEPLOY_SPREADSHEET_DATA_COLUMN_COUNT; column += 1) {
+      styleDataCell(row.getCell(column));
     }
+
+    applyDeployEditingColumnFills(row);
 
     row.commit();
   }
 
   const lastDataRow = rows.length + 1;
-  if (worksheet.rowCount > lastDataRow) {
-    worksheet.spliceRows(lastDataRow + 1, worksheet.rowCount - lastDataRow);
+  for (let rowNumber = worksheet.rowCount; rowNumber > lastDataRow; rowNumber -= 1) {
+    worksheet.spliceRows(rowNumber, 1);
   }
 
-  worksheet.autoFilter = rows.length > 0 ? `A1:J${lastDataRow}` : "A1:J1";
+  worksheet.autoFilter =
+    rows.length > 0
+      ? `A1:K${lastDataRow}`
+      : `A1:K1`;
+
+  autoFitWorksheetColumns(worksheet, {
+    columnCount: DEPLOY_SPREADSHEET_DATA_COLUMN_COUNT,
+    excludeLastColumn: true,
+  });
 
   await workbook.xlsx.writeFile(outPath);
 }
@@ -347,6 +379,9 @@ async function computeSpreadsheetInputsHash(
   const singletonHash = await hashFile(
     path.join(PUBLIC_DIR, TF_EXPORT_SINGLETONS_DIR, `${version}.json`)
   );
+  const forceNewHash = await hashFile(
+    path.join(PUBLIC_DIR, SCHEMA_FORCE_NEW_DIR, `${version}.json`)
+  );
 
   let menuPathsHash = "";
   try {
@@ -364,6 +399,7 @@ async function computeSpreadsheetInputsHash(
     depHash,
     namesHash,
     singletonHash,
+    forceNewHash,
     menuPathsHash,
   ]);
 }

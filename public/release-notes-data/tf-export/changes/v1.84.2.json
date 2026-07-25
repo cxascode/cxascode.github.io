@@ -1,0 +1,15 @@
+{
+    "version": "v1.84.2",
+    "previous": "v1.84.1",
+    "resource": "genesyscloud_tf_export",
+    "changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Custom file writers for exported resources retry transient failures up to three times with exponential backoff before reporting an error."
+        }
+    ],
+    "related_export_changes": []
+}

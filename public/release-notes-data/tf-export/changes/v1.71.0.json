@@ -8,14 +8,21 @@
             "resource": "genesyscloud_tf_export",
             "attribute": "max_concurrent_threads",
             "change": "added",
-            "summary": "Optional maximum number of concurrent export threads (default 10). Changing this value forces replacement of the export resource."
+            "summary": "Optional integer (default 10) that sets the maximum number of concurrent threads used during export. This is separate from the provider token pool size. Changing this value requires replacing the genesyscloud_tf_export resource."
         },
         {
             "kind": "export_behavior",
             "resource": "genesyscloud_tf_export",
             "attribute": null,
             "change": "updated",
-            "summary": "Export work runs concurrently using the configured max_concurrent_threads limit."
+            "summary": "Resource config map building during export now runs concurrently, limited by max_concurrent_threads."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "max_concurrent_threads",
+            "change": "updated",
+            "summary": "If max_concurrent_threads is unset or set to 0, export concurrency defaults to 10 (matching the previous fixed concurrency)."
         }
     ],
     "related_export_changes": []

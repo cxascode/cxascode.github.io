@@ -2,6 +2,50 @@
     "version": "v1.65.0",
     "previous": "v1.64.1",
     "resource": "genesyscloud_tf_export",
-    "changes": [],
-    "related_export_changes": []
+    "changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "JSON multi-file export only writes variables.tf.json when the export defines variables; an empty variables file is no longer created."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "JSON multi-file export skips resource-type and data-source files when a type has no exported instances."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Single-file JSON export omits top-level resource, data, and variable sections when those sections would be empty."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Data source instances are no longer tracked in managed-resource type maps during export assembly, preventing empty managed-resource entries for data-source-only types."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Resource state reads during export are synchronized, which may reduce intermittent failures when exporting large configurations."
+        }
+    ],
+    "related_export_changes": [
+        {
+            "kind": "export_behavior",
+            "resource": null,
+            "attribute": "depends_on",
+            "change": "updated",
+            "summary": "Exported data source blocks no longer include depends_on attributes; dependency references are added only to managed resources."
+        }
+    ]
 }

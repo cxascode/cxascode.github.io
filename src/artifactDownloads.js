@@ -2,6 +2,7 @@ import {
   LAB_PACKAGES_DIR,
   RESOURCE_PERMISSIONS_TF_DIR,
   SPREADSHEET_TEMPLATES_DIR,
+  SUPPORTED_RESOURCES_TEMPLATES_DIR,
 } from "./publicDataPaths.js";
 import {
   artifactDownloadVersionLabel,
@@ -13,6 +14,7 @@ import {
 const BASE = import.meta.env.BASE_URL;
 
 export const ARTIFACT_SPREADSHEET = "spreadsheet";
+export const ARTIFACT_SUPPORTED_RESOURCES = "supported-resources";
 export const ARTIFACT_READ_WRITE_ROLE = "read-write-role";
 export const ARTIFACT_READ_ONLY_ROLE = "read-only-role";
 export const ARTIFACT_LAB = "lab";
@@ -22,6 +24,12 @@ const ARTIFACTS = {
     latestPath: `${SPREADSHEET_TEMPLATES_DIR}/latest-cx-as-code-template.xlsx`,
     versionedPath: (version) => `${SPREADSHEET_TEMPLATES_DIR}/${version}-cx-as-code-template.xlsx`,
     filename: (label) => `cx-as-code-template-${label}.xlsx`,
+  },
+  [ARTIFACT_SUPPORTED_RESOURCES]: {
+    latestPath: `${SUPPORTED_RESOURCES_TEMPLATES_DIR}/latest-supported-resources.xlsx`,
+    versionedPath: (version) =>
+      `${SUPPORTED_RESOURCES_TEMPLATES_DIR}/${version}-supported-resources.xlsx`,
+    filename: (label) => `cx-as-code-supported-resources-${label}.xlsx`,
   },
   [ARTIFACT_READ_WRITE_ROLE]: {
     latestPath: `${RESOURCE_PERMISSIONS_TF_DIR}/latest-read-write-role.tf`,
