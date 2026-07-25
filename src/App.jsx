@@ -34,6 +34,7 @@ import {
   buildTerraformRegistryDocsUrl,
   buildTerraformRegistryProviderDocsUrl,
 } from "./terraformRegistry.js";
+import { buildExportBuilderUrl, EXPORT_BUILDER_BASE_URL } from "./exportBuilder.js";
 import {
   DIVISION_FILTER_ALL,
   DIVISION_FILTER_AWARE,
@@ -937,6 +938,11 @@ export default function App() {
     [detailType, selectedVersion]
   );
 
+  const exportBuilderUrl = useMemo(
+    () => buildExportBuilderUrl(activeType),
+    [activeType]
+  );
+
   const [copyState, setCopyState] = useState("idle");
   const [orderDialogOpen, setOrderDialogOpen] = useState(false);
   const [releaseNotesDialogOpen, setReleaseNotesDialogOpen] = useState(false);
@@ -1554,6 +1560,15 @@ export default function App() {
               Attribute history
             </button>
 
+            <a
+              href={EXPORT_BUILDER_BASE_URL}
+              className="gcHeaderLink"
+              target="_blank"
+              rel="nofollow noopener noreferrer"
+            >
+              Export builder
+            </a>
+
             <button
               type="button"
               className="gcHeaderLink"
@@ -1998,45 +2013,18 @@ export default function App() {
             <div className="gcExportTemplate">
               <div className="gcPanel">
                 <div className="gcPanel__header">
-                  <div className="gcPanel__headerStart">
-                    <div className="gcPanel__title">genesyscloud_tf_export template</div>
-                    <div
-                      className="gcSegmentedControl gcSegmentedControl--text gcExportTemplate__modeToggle"
-                      role="radiogroup"
-                      aria-label="Export template mode"
+                  <div className="gcPanel__title">genesyscloud_tf_export template</div>
+                  {activeType ? (
+                    <a
+                      href={exportBuilderUrl}
+                      className="gcHeaderLink"
+                      target="_blank"
+                      rel="nofollow noopener noreferrer"
+                      title={`Open builder for ${activeType}`}
                     >
-                      <button
-                        type="button"
-                        className="gcSegmentedControl__option"
-                        role="radio"
-                        aria-checked={tfExportMode === TF_EXPORT_MODE_EXPORT}
-                        onClick={() => setTfExportMode(TF_EXPORT_MODE_EXPORT)}
-                      >
-                        Export
-                      </button>
-                      <button
-                        type="button"
-                        className="gcSegmentedControl__option"
-                        role="radio"
-                        aria-checked={tfExportMode === TF_EXPORT_MODE_EXPORT_STATE}
-                        onClick={() => setTfExportMode(TF_EXPORT_MODE_EXPORT_STATE)}
-                      >
-                        Export state
-                      </button>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    className="gcCopyButton"
-                    onClick={copyTfExportTemplate}
-                    disabled={!tfExportTemplate}
-                  >
-                    {copyState === "copied"
-                      ? "Copied"
-                      : copyState === "failed"
-                        ? "Copy failed"
-                        : "Copy"}
-                  </button>
+                      Open builder
+                    </a>
+                  ) : null}
                 </div>
                 <div className="gcPanel__body">
                   {activeType && tfExportTemplate ? (
@@ -2046,6 +2034,44 @@ export default function App() {
                           ? "Generate a Terraform state file for existing resources — brownfield adoption and import workflows."
                           : "Generate HCL configuration for this resource, with dependency types exported as data sources."}
                       </p>
+                      <div className="gcExportTemplate__toolbar">
+                        <div
+                          className="gcSegmentedControl gcSegmentedControl--text gcExportTemplate__modeToggle"
+                          role="radiogroup"
+                          aria-label="Export template mode"
+                        >
+                          <button
+                            type="button"
+                            className="gcSegmentedControl__option"
+                            role="radio"
+                            aria-checked={tfExportMode === TF_EXPORT_MODE_EXPORT}
+                            onClick={() => setTfExportMode(TF_EXPORT_MODE_EXPORT)}
+                          >
+                            Export
+                          </button>
+                          <button
+                            type="button"
+                            className="gcSegmentedControl__option"
+                            role="radio"
+                            aria-checked={tfExportMode === TF_EXPORT_MODE_EXPORT_STATE}
+                            onClick={() => setTfExportMode(TF_EXPORT_MODE_EXPORT_STATE)}
+                          >
+                            Export state
+                          </button>
+                        </div>
+                        <button
+                          type="button"
+                          className="gcCopyButton"
+                          onClick={copyTfExportTemplate}
+                          disabled={!tfExportTemplate}
+                        >
+                          {copyState === "copied"
+                            ? "Copied"
+                            : copyState === "failed"
+                              ? "Copy failed"
+                              : "Copy"}
+                        </button>
+                      </div>
                       <pre className="gcExportTemplate__code gcMono">{tfExportTemplate}</pre>
                     </>
                   ) : (
@@ -2056,23 +2082,6 @@ export default function App() {
                   {activeType && tfExportNote && tfExportMode === TF_EXPORT_MODE_EXPORT ? (
                     <div className="gcExportTemplate__note">
                       <DependencyNote content={tfExportNote} />
-                    </div>
-                  ) : null}
-                  {activeType ? (
-                    <div className="gcExportTemplate__footer">
-                      <p className="gcMuted gcExportTemplate__hint">
-                        Building an export with multiple resource types?
-                      </p>
-                      <div className="gcExportTemplate__linkRow">
-                        <a
-                          href="https://cxascode.github.io/exportbuilder/"
-                          className="gcHeaderLink gcExportTemplate__link"
-                          rel="nofollow"
-                        >
-                          CX as Code Export Builder
-                        </a>
-                        <span className="gcBetaBadge">Beta</span>
-                      </div>
                     </div>
                   ) : null}
                 </div>

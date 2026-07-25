@@ -1060,29 +1060,16 @@ button.gcHeaderLink:disabled {
   line-height: 1.45;
 }
 
+.gcExportTemplate__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
 .gcExportTemplate__note {
   margin-top: 12px;
-}
-
-.gcExportTemplate__footer {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--gc-border2);
-}
-
-.gcExportTemplate__linkRow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-.gcExportTemplate__link {
-  flex-shrink: 0;
 }
 
 .gcExportTemplate__note .gcDependencyNote__markdown {
@@ -1110,18 +1097,19 @@ button.gcHeaderLink:disabled {
   height: var(--gc-action-height);
   padding: 0 var(--gc-action-padding-x);
   border: 1px solid var(--gc-border);
-  border-radius: var(--gc-action-radius-pill);
+  border-radius: var(--gc-action-radius-rect);
   font-size: var(--gc-action-font-size);
   font-weight: var(--gc-action-font-weight);
   background: #fff;
-  color: var(--gc-blue);
+  color: var(--gc-text);
   cursor: pointer;
   white-space: nowrap;
+  text-decoration: none;
 }
 
 .gcCopyButton:hover:not(:disabled),
 .gcCopyButton:focus-visible:not(:disabled) {
-  background: var(--gc-blue-weak);
+  background: rgba(0, 0, 0, 0.03);
   outline: none;
 }
 
