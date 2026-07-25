@@ -7,8 +7,9 @@ const ABOUT_CX_AS_CODE_TEXT = (
     <strong>CX as Code Explorer</strong> maps <code>genesyscloud</code> provider resource types,
     dependencies, division-aware resources, Registry documentation, and{" "}
     <code>genesyscloud_tf_export</code> templates. It also includes provider release notes,
-    attribute change history, and a suggested resource creation order by dependency tier.
-    Site updates track Explorer improvements separately from provider releases.
+    attribute change history, a suggested resource creation order by dependency tier, and the{" "}
+    <strong>Export builder</strong> for multi-type export workflows. Site updates track Explorer
+    improvements separately from provider releases.
   </>
 );
 
