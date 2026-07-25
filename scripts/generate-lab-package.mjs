@@ -9,6 +9,7 @@ import {
 import {
   patchExcludeFilterResources,
   resolveExcludeFilterResources,
+  resolveExportAllExcludeFilterResources,
 } from "./lib/lab-export-scope.mjs";
 import {
   findLabReadmeProviderVersionMismatch,
@@ -41,6 +42,7 @@ const LAB_FOLDER_NAME = "CX_as_Code-Lab";
 const OUTPUT_BASENAME = "cx-as-code-lab";
 const FILTER_BUILDER_FILENAME = "filter-builder-template.xlsx";
 const EXPORT_PIPELINE_MAIN_TF = "exportpipeline/main.tf";
+const EXPORT_ALL_MAIN_TF = "exportall/main.tf";
 const LAB_README_FILENAME = "README.md";
 const DEFAULT_OVERRIDES_PATH = path.resolve(REPO_ROOT, "public/overrides.json");
 const STAMP_DIR = path.resolve(REPO_ROOT, ".cache-meta/artifact-stamps/lab");
@@ -131,6 +133,18 @@ async function validateLabTemplateProviderVersionPins(rootDir, relativeDir = "")
   return mismatches;
 }
 
+async function patchLabExportExcludeFilters(stagingDir, relativeMainTfPath, resolveExcludeTypes) {
+  const mainTfPath = path.join(stagingDir, relativeMainTfPath);
+  if (!(await pathExists(mainTfPath))) return;
+
+  const original = await fs.readFile(mainTfPath, "utf8");
+  const excludeTypes = resolveExcludeTypes(original);
+  const patched = patchExcludeFilterResources(original, excludeTypes);
+  if (patched !== original) {
+    await fs.writeFile(mainTfPath, patched, "utf8");
+  }
+}
+
 async function patchLabReadme(stagingDir, version) {
   const readmePath = path.join(stagingDir, LAB_README_FILENAME);
   if (!(await pathExists(readmePath))) return;
@@ -197,15 +211,12 @@ async function buildLabPackage(version, stagingRoot, { overrides, dependencyTree
     await patchFilterBuilderTemplate(filterBuilderPath, resourceTypes);
   }
 
-  const exportPipelinePath = path.join(stagingDir, EXPORT_PIPELINE_MAIN_TF);
-  if (await pathExists(exportPipelinePath)) {
-    const original = await fs.readFile(exportPipelinePath, "utf8");
-    const excludeTypes = resolveExcludeFilterResources(original, overrides);
-    const patched = patchExcludeFilterResources(original, excludeTypes);
-    if (patched !== original) {
-      await fs.writeFile(exportPipelinePath, patched, "utf8");
-    }
-  }
+  await patchLabExportExcludeFilters(stagingDir, EXPORT_PIPELINE_MAIN_TF, (original) =>
+    resolveExcludeFilterResources(original, overrides)
+  );
+  await patchLabExportExcludeFilters(stagingDir, EXPORT_ALL_MAIN_TF, (original) =>
+    resolveExportAllExcludeFilterResources(original, overrides)
+  );
 
   return stagingDir;
 }

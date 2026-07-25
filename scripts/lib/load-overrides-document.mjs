@@ -48,5 +48,6 @@ export async function loadOverridesDocument(
     ...(privateDoc.spreadsheetTemplates
       ? { spreadsheetTemplates: privateDoc.spreadsheetTemplates }
       : {}),
+    ...(privateDoc.labfiles ? { labfiles: privateDoc.labfiles } : {}),
   };
 }

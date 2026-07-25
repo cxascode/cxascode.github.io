@@ -354,7 +354,7 @@ Versioned `.tf` files live under `resource-permissions-tf/` on disk (what the pe
 
 ## lab-packages/
 
-`public/lab-packages/` is **generated** from `scripts/templates/cx-as-code-lab/`, **one zip per provider version** (same version list as `dependency-tree-json/`). Each zip pins `version = "~> X.Y.Z"` in every lab `.tf` file that declares a provider constraint, refreshes `filter-builder-template.xlsx` with that version's resource types (column **B** dropdown via Excel data validation on the hidden **validation** sheet), and writes `exportpipeline/main.tf` `exclude_filter_resources` from `spreadsheetTemplates.out` in `src/private-overrides.json` (skipping types in that file's `replace_with_datasource` block and `nonExportableResourceTypes`). Resource types honor `replaceDependencies`, `addDependencies`, and `hiddenResourceTypes` the same way as the explorer and spreadsheet generator.
+`public/lab-packages/` is **generated** from `scripts/templates/cx-as-code-lab/`, **one zip per provider version** (same version list as `dependency-tree-json/`). Each zip pins `version = "~> X.Y.Z"` in every lab `.tf` file that declares a provider constraint, refreshes `filter-builder-template.xlsx` with that version's resource types (column **B** dropdown via Excel data validation on the hidden **validation** sheet), writes `exportpipeline/main.tf` `exclude_filter_resources` from `spreadsheetTemplates.out` in `src/private-overrides.json` (skipping types in that file's `replace_with_datasource` block and `nonExportableResourceTypes`), and writes `exportall/main.tf` `exclude_filter_resources` from optional `labfiles.allout` (same skip rules; omit or leave empty for no exclusions). Resource types honor `replaceDependencies`, `addDependencies`, and `hiddenResourceTypes` the same way as the explorer and spreadsheet generator.
 
 The static lab source lives under `scripts/templates/cx-as-code-lab/CX_as_Code-Lab/`. Update that tree when lab exercises change; re-run the generator to rebuild versioned zips.
 
@@ -374,6 +374,7 @@ Hidden permalink download (same pattern as `/spreadsheet` and `/roles/...`):
 - `supportedResourcesTemplates.adminExclusionKeywords` — link substrings that exclude admin routes from the supported-resources spreadsheet
 - `supportedResourcesTemplates.featureToggleKeywords` — feature-toggle name substrings on the public allowlist (unmapped toggle-gated paths are included on the sheet)
 - `spreadsheetTemplates` — deploy spreadsheet program layer: `out` (out-of-scope types; column 5 label `"out"`, cols 7–8 blank), `repoAssignments` (repo → comma-separated resource types for column 8), `repoDeployOrder` (ordered repo names → Priority column 1-based deploy wave). Unassigned in-scope types show `TBD` in column 8. Rows sort by priority, then alpha; `TBD` before out-of-scope. Also the source of truth for `exclude_filter_resources` in the lab `exportpipeline/main.tf` (minus any types listed in that file's `replace_with_datasource` block, and minus `nonExportableResourceTypes`).
+- `labfiles.allout` — optional resource types to exclude in the lab `exportall/main.tf` `exclude_filter_resources` (same skip rules as exportpipeline; omit or `[]` for a full-org export with no exclusions).
 
 ## supported-resources-templates/
 
