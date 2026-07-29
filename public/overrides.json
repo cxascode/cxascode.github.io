@@ -114,6 +114,7 @@
       "languageUnderstanding:nluDomainVersion:view",
       "limits:organization:view",
       "architect:dependencyTracking:view",
+      "assistants:copilot:edit",
       "assistants:copilot:view"
     ],
     "genesyscloud_routing_skill_group": [
