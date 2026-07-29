@@ -113,7 +113,8 @@
       "architect:flow:unlock",
       "languageUnderstanding:nluDomainVersion:view",
       "limits:organization:view",
-      "architect:dependencyTracking:view"
+      "architect:dependencyTracking:view",
+      "assistants:copilot:view"
     ],
     "genesyscloud_routing_skill_group": [
       "routing:skillgroup:add",
@@ -203,7 +204,8 @@
       "architect:flow:view",
       "languageUnderstanding:nluDomainVersion:view",
       "limits:organization:view",
-      "architect:dependencyTracking:view"
+      "architect:dependencyTracking:view",
+      "assistants:copilot:view"
     ],
     "genesyscloud_routing_skill_group": [
       "routing:skillgroup:view"
