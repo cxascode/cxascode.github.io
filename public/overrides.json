@@ -130,7 +130,8 @@
       "telephony:selfStationAssociation:view",
       "telephony:selfStationAssociation:edit",
       "telephony:station:disassociate",
-      "telephony:extension:assign"
+      "telephony:extension:assign",
+      "telephony:extensionPool:search"
     ],
     "genesyscloud_processautomation_trigger": [
       "processautomation:trigger:add",
