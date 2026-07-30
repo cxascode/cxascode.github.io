@@ -1067,7 +1067,8 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=knowledge:knowledgebase:view",
       "featureToggles": [
-        "DX.GKC-5121.CX2DX-migration-force-cx"
+        "DX.GKC-5121.CX2DX-migration-force-cx",
+        "GKC-26947_disable-knowledge-v3-for-EUSC"
       ],
       "includeInSupportedResources": true,
       "resourceTypes": [
@@ -1090,6 +1091,19 @@
         "genesyscloud_knowledge_category",
         "genesyscloud_knowledge_label"
       ]
+    },
+    {
+      "path": "Knowledge > Fabric Content",
+      "link": "#/admin/knowledge/knowledgeConfiguration/content",
+      "titleKey": "navBar.commandView.knowledge.subMenu.fabricContent",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=knowledge:sourceFileList:view",
+      "featureToggles": [
+        "AI-1469_source-file-listing",
+        "DX.GKC-5121.CX2DX-migration-force-cx"
+      ],
+      "includeInSupportedResources": true,
+      "resourceTypes": []
     },
     {
       "path": "Knowledge > Knowledge Activity",
@@ -1173,7 +1187,6 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:agentScheduleBid:submit | policy=wfm:agentWorkPlanBid:submit",
       "featureToggles": [
-        "WEM-1362_ScheduleBids",
         "WEM-1476_Agent-Activity-Migration"
       ],
       "includeInSupportedResources": false,
@@ -1187,20 +1200,6 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=gamification:scorecard:view",
       "featureToggles": [
-        "WEM-1476_Agent-Activity-Migration"
-      ],
-      "includeInSupportedResources": false,
-      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
-      "resourceTypes": []
-    },
-    {
-      "path": "My Activity > Work Plan",
-      "link": "#/activity/workplan",
-      "titleKey": "navBar.commandView.myActivity.subMenu.workPlan",
-      "menuSource": "directory-command-nav",
-      "authorize": "policy=wfm:agentWorkPlanBid:submit",
-      "featureToggles": [
-        "WEM-1362_ScheduleBids",
         "WEM-1476_Agent-Activity-Migration"
       ],
       "includeInSupportedResources": false,
@@ -1258,7 +1257,7 @@
       "link": "#/admin/ai-studio/refine-response",
       "titleKey": "navBar.commandView.orchestration.subMenu.aiStudio.subMenu.refineResponse",
       "menuSource": "directory-command-nav",
-      "authorize": "policy=aiStudio:refinement:view",
+      "authorize": "policy=aiStudio:refinementConfig:view",
       "featureToggles": [
         "AI-1402_email_refinement_with_ai"
       ],
@@ -2029,11 +2028,7 @@
       "titleKey": "navBar.commandView.wfm.subMenu.workPlanConfig.subMenu.scheduleBids",
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:scheduleBid:administer | policy=wfm:scheduleBid:view | policy=wfm:workPlanBid:administer | policy=wfm:workPlanBid:view",
-      "featureToggles": [
-        "WEM-1362_ScheduleBids"
-      ],
-      "includeInSupportedResources": false,
-      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
+      "includeInSupportedResources": true,
       "resourceTypes": []
     },
     {
@@ -2043,19 +2038,6 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=wfm:workPlan:administer | policy=wfm:workPlan:view",
       "includeInSupportedResources": true,
-      "resourceTypes": []
-    },
-    {
-      "path": "Workforce Management > Work Plan Configuration > Work Plan Bids",
-      "link": "#/admin/wfm/workPlanV2/bids",
-      "titleKey": "navBar.commandView.wfm.subMenu.workPlanConfig.subMenu.workPlanBids",
-      "menuSource": "directory-command-nav",
-      "authorize": "policy=wfm:workPlanBid:administer | policy=wfm:workPlanBid:view",
-      "featureToggles": [
-        "WEM-1362_ScheduleBids"
-      ],
-      "includeInSupportedResources": false,
-      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
       "resourceTypes": []
     },
     {
