@@ -148,6 +148,14 @@ export const SITE_FEATURES = [
       dataOnlyPaths: [/^src\/exportBuilder\.js$/],
     },
   },
+  {
+    id: "stagehand",
+    visibility: "public",
+    siteUpdates: {
+      commitKeywords: ["stagehand", "/stagehand"],
+      dataOnlyPaths: [],
+    },
+  },
 ];
 
 /** Generated/provider cache paths — not end-user feature announcements. */
@@ -297,4 +305,7 @@ export const PUBLIC_SITEMAP_DIALOG_PATHS = [
 ];
 
 /** Separate GitHub Pages project sites linked from the Explorer sitemap. */
-export const EXTERNAL_SITEMAP_URLS = ["https://cxascode.github.io/exportbuilder/"];
+export const EXTERNAL_SITEMAP_URLS = [
+  "https://cxascode.github.io/exportbuilder/",
+  "https://cxascode.github.io/stagehand",
+];

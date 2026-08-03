@@ -23,7 +23,7 @@ const PRODUCTION_ORIGIN = "https://cxascode.github.io";
 
 const DEFAULT_TITLE = "CX as Code — Genesys Cloud Terraform Explorer";
 const DEFAULT_DESCRIPTION =
-  "CX as Code reference for Genesys Cloud Terraform. Browse resource types, dependencies, release notes, attribute history, export templates, and the Export builder for multi-type genesyscloud_tf_export workflows.";
+  "CX as Code reference for Genesys Cloud Terraform. Browse resource types, dependencies, release notes, attribute history, export templates, the Export builder for multi-type genesyscloud_tf_export workflows, and Stagehand for Genesys Cloud admin tools.";
 
 const DIALOG_SEO = {
   [DIALOG_RELEASE_NOTES]: {
@@ -77,7 +77,7 @@ function versionLabel(version) {
 function buildResourceDescription(resourceType, version) {
   const label = versionLabel(version);
   const suffix = label ? ` (${label})` : "";
-  return `Dependencies, export templates, attribute history, and Export builder entry for ${resourceType}${suffix} in the Genesys Cloud Terraform provider.`;
+  return `Dependencies, export templates, attribute history, and Export builder entry for ${resourceType}${suffix} in the Genesys Cloud Terraform provider. Also linked: Stagehand admin browser extension.`;
 }
 
 function buildResourceTitle(resourceType, version) {
