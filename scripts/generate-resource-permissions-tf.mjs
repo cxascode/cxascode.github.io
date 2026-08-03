@@ -261,6 +261,22 @@ function buildPolicyMaps(json, overrides) {
   return { rw, ro, skippedDomains, injectedOverrides };
 }
 
+function humanizeApiName(value) {
+  if (!value) return "";
+  return value
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .replace(/[_-]+/g, " ")
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function csvEscape(value) {
+  const text = value == null ? "" : String(value);
+  if (/[",\n\r]/.test(text)) {
+    return `"${text.replace(/"/g, '""')}"`;
+  }
+  return text;
+}
+
 function renderRole(resourceName, roleName, version, policies) {
   const blocks = [...policies.entries()]
     .sort(([a], [b]) => a.localeCompare(b))
@@ -283,6 +299,28 @@ function renderRole(resourceName, roleName, version, policies) {
 ${blocks}
 }
 `;
+}
+
+function renderRoleCsv(policies) {
+  const rows = [];
+
+  for (const [key, actionSet] of [...policies.entries()].sort(([a], [b]) =>
+    a.localeCompare(b)
+  )) {
+    const [domain, entityName] = key.split(":");
+    for (const action of sortActions(actionSet)) {
+      rows.push([
+        "Yes",
+        humanizeApiName(domain),
+        humanizeApiName(entityName),
+        humanizeApiName(action),
+        "",
+      ]);
+    }
+  }
+
+  const header = ["Selected", "Domain", "Entity Name", "Action", "Conditions"];
+  return `${[header, ...rows].map((row) => row.map(csvEscape).join(",")).join("\n")}\n`;
 }
 
 async function ensureDir(dir) {
@@ -339,11 +377,15 @@ async function main() {
 
     const rwOut = path.join(OUTPUT_DIR, `${version}-read-write-role.tf`);
     const roOut = path.join(OUTPUT_DIR, `${version}-read-only-role.tf`);
+    const rwCsvOut = path.join(OUTPUT_DIR, `${version}-read-write-role.csv`);
+    const roCsvOut = path.join(OUTPUT_DIR, `${version}-read-only-role.csv`);
 
     await fs.writeFile(rwOut, rwTf, "utf8");
     await fs.writeFile(roOut, roTf, "utf8");
+    await fs.writeFile(rwCsvOut, renderRoleCsv(rw), "utf8");
+    await fs.writeFile(roCsvOut, renderRoleCsv(ro), "utf8");
 
-    console.log(`Generated Terraform role files for ${version}`);
+    console.log(`Generated Terraform role files and CSV templates for ${version}`);
 
     if (injectedOverrides.length > 0) {
       console.log(`Applied override permissions for ${version}:`);
@@ -375,13 +417,19 @@ async function main() {
   if (latest) {
     const latestRw = path.join(OUTPUT_DIR, `${latest}-read-write-role.tf`);
     const latestRo = path.join(OUTPUT_DIR, `${latest}-read-only-role.tf`);
+    const latestRwCsv = path.join(OUTPUT_DIR, `${latest}-read-write-role.csv`);
+    const latestRoCsv = path.join(OUTPUT_DIR, `${latest}-read-only-role.csv`);
     const aliasRw = path.join(OUTPUT_DIR, "latest-read-write-role.tf");
     const aliasRo = path.join(OUTPUT_DIR, "latest-read-only-role.tf");
+    const aliasRwCsv = path.join(OUTPUT_DIR, "latest-read-write-role.csv");
+    const aliasRoCsv = path.join(OUTPUT_DIR, "latest-read-only-role.csv");
 
     await fs.copyFile(latestRw, aliasRw);
     await fs.copyFile(latestRo, aliasRo);
+    await fs.copyFile(latestRwCsv, aliasRwCsv);
+    await fs.copyFile(latestRoCsv, aliasRoCsv);
 
-    console.log(`Updated latest Terraform aliases for ${latest}`);
+    console.log(`Updated latest Terraform and CSV aliases for ${latest}`);
   }
 }
 
