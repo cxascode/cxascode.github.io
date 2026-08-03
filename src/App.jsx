@@ -1569,6 +1569,15 @@ export default function App() {
               Export builder
             </a>
 
+            <a
+              href="https://cxascode.github.io/stagehand"
+              className="gcHeaderLink"
+              target="_blank"
+              rel="nofollow noopener noreferrer"
+            >
+              Stagehand
+            </a>
+
             <button
               type="button"
               className="gcHeaderLink"
