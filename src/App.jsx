@@ -45,7 +45,9 @@ import {
 import {
   ARTIFACT_LAB,
   ARTIFACT_READ_ONLY_ROLE,
+  ARTIFACT_READ_ONLY_ROLE_CSV,
   ARTIFACT_READ_WRITE_ROLE,
+  ARTIFACT_READ_WRITE_ROLE_CSV,
   ARTIFACT_SPREADSHEET,
   ARTIFACT_SUPPORTED_RESOURCES,
   artifactDownloadFilename,
@@ -74,7 +76,9 @@ import {
   readSpreadsheetDownloadFromLocation,
   readSupportedResourcesDownloadFromLocation,
   roleDownloadPathname,
+  ROLE_READ_ONLY_CSV_SEGMENT,
   ROLE_READ_ONLY_SEGMENT,
+  ROLE_READ_WRITE_CSV_SEGMENT,
   ROLE_READ_WRITE_SEGMENT,
   readVersionFromLocation,
   replaceAttributeIndexInUrl,
@@ -1218,10 +1222,24 @@ export default function App() {
       return false;
     }
 
-    const artifactId =
-      target.role === ROLE_READ_WRITE_SEGMENT
-        ? ARTIFACT_READ_WRITE_ROLE
-        : ARTIFACT_READ_ONLY_ROLE;
+    const artifactId = (() => {
+      switch (target.role) {
+        case ROLE_READ_WRITE_SEGMENT:
+          return ARTIFACT_READ_WRITE_ROLE;
+        case ROLE_READ_ONLY_SEGMENT:
+          return ARTIFACT_READ_ONLY_ROLE;
+        case ROLE_READ_WRITE_CSV_SEGMENT:
+          return ARTIFACT_READ_WRITE_ROLE_CSV;
+        case ROLE_READ_ONLY_CSV_SEGMENT:
+          return ARTIFACT_READ_ONLY_ROLE_CSV;
+        default:
+          return "";
+      }
+    })();
+    if (!artifactId) {
+      roleDownloadPermalinkRef.current = "";
+      return false;
+    }
 
     const permalinkKey = window.location.pathname;
     if (roleDownloadPermalinkRef.current === permalinkKey) return true;

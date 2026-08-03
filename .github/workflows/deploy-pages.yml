@@ -233,6 +233,8 @@ jobs:
             public/dependency-tree-json/latest-merged.json \
             public/resource-permissions-tf/latest-read-write-role.tf \
             public/resource-permissions-tf/latest-read-only-role.tf \
+            public/resource-permissions-tf/latest-read-write-role.csv \
+            public/resource-permissions-tf/latest-read-only-role.csv \
             public/spreadsheet-templates/latest-cx-as-code-template.xlsx \
             public/supported-resources-templates/latest-supported-resources.xlsx \
             public/dependency_tree.json \
@@ -334,6 +336,8 @@ jobs:
             public/dependency-tree-json/latest-merged.json \
             public/resource-permissions-tf/latest-read-write-role.tf \
             public/resource-permissions-tf/latest-read-only-role.tf \
+            public/resource-permissions-tf/latest-read-write-role.csv \
+            public/resource-permissions-tf/latest-read-only-role.csv \
             public/spreadsheet-templates/latest-cx-as-code-template.xlsx \
             public/supported-resources-templates/latest-supported-resources.xlsx \
             public/dependency_tree.json \

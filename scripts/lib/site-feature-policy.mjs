@@ -119,7 +119,7 @@ export const SITE_FEATURES = [
   {
     id: "roles",
     visibility: "shareable",
-    permalink: { segment: "roles", subSegments: ["read-write", "read-only"] },
+    permalink: { segment: "roles", subSegments: ["read-write", "read-only", "read-write-csv", "read-only-csv"] },
     siteUpdates: {
       commitKeywords: ["role template", "/roles"],
       scrubKeywords: [],

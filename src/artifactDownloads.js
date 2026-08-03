@@ -17,6 +17,8 @@ export const ARTIFACT_SPREADSHEET = "spreadsheet";
 export const ARTIFACT_SUPPORTED_RESOURCES = "supported-resources";
 export const ARTIFACT_READ_WRITE_ROLE = "read-write-role";
 export const ARTIFACT_READ_ONLY_ROLE = "read-only-role";
+export const ARTIFACT_READ_WRITE_ROLE_CSV = "read-write-role-csv";
+export const ARTIFACT_READ_ONLY_ROLE_CSV = "read-only-role-csv";
 export const ARTIFACT_LAB = "lab";
 
 const ARTIFACTS = {
@@ -40,6 +42,16 @@ const ARTIFACTS = {
     latestPath: `${RESOURCE_PERMISSIONS_TF_DIR}/latest-read-only-role.tf`,
     versionedPath: (version) => `${RESOURCE_PERMISSIONS_TF_DIR}/${version}-read-only-role.tf`,
     filename: (label) => `cx-as-code-read-only-role-${label}.tf`,
+  },
+  [ARTIFACT_READ_WRITE_ROLE_CSV]: {
+    latestPath: `${RESOURCE_PERMISSIONS_TF_DIR}/latest-read-write-role.csv`,
+    versionedPath: (version) => `${RESOURCE_PERMISSIONS_TF_DIR}/${version}-read-write-role.csv`,
+    filename: (label) => `cx-as-code-read-write-role-${label}.csv`,
+  },
+  [ARTIFACT_READ_ONLY_ROLE_CSV]: {
+    latestPath: `${RESOURCE_PERMISSIONS_TF_DIR}/latest-read-only-role.csv`,
+    versionedPath: (version) => `${RESOURCE_PERMISSIONS_TF_DIR}/${version}-read-only-role.csv`,
+    filename: (label) => `cx-as-code-read-only-role-${label}.csv`,
   },
   [ARTIFACT_LAB]: {
     latestPath: `${LAB_PACKAGES_DIR}/latest-cx-as-code-lab.zip`,
