@@ -1611,8 +1611,6 @@ export default function App() {
             <a
               href={EXPORT_BUILDER_BASE_URL}
               className="gcHeaderLink"
-              target="_blank"
-              rel="nofollow noopener noreferrer"
             >
               Export builder
             </a>
@@ -1620,8 +1618,6 @@ export default function App() {
             <a
               href="https://cxascode.github.io/stagehand"
               className="gcHeaderLink"
-              target="_blank"
-              rel="nofollow noopener noreferrer"
             >
               Stagehand
             </a>
@@ -2075,8 +2071,6 @@ export default function App() {
                     <a
                       href={exportBuilderUrl}
                       className="gcHeaderLink"
-                      target="_blank"
-                      rel="nofollow noopener noreferrer"
                       title={`Open builder for ${activeType}`}
                     >
                       Open builder
