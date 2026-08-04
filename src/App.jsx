@@ -240,6 +240,7 @@ function isRoleDownloadSupported(version) {
  *   "hiddenResourceTypes": ["genesyscloud_bcp_tf_exporter", ...]
  *   "deprecatedResourceTypes": ["genesyscloud_journey_outcome", ...]
  *   "nonExportableResourceTypes": ["genesyscloud_outbound_contact_list_contact", ...]
+ *   "cannotBeDestroyedResourceTypes": ["genesyscloud_flow_outcome", ...]
  * }
  *
  * Supported-resources funnel rules and deploy spreadsheet program layer live in
@@ -392,6 +393,18 @@ function getNonExportableResourceTypes(overrides) {
 
   return new Set(
     nonExportable
+      .filter((t) => typeof t === "string")
+      .map((t) => t.trim())
+      .filter(Boolean)
+  );
+}
+
+function getCannotBeDestroyedResourceTypes(overrides) {
+  const cannotBeDestroyed = overrides?.cannotBeDestroyedResourceTypes;
+  if (!Array.isArray(cannotBeDestroyed)) return new Set();
+
+  return new Set(
+    cannotBeDestroyed
       .filter((t) => typeof t === "string")
       .map((t) => t.trim())
       .filter(Boolean)
@@ -735,6 +748,10 @@ export default function App() {
     () => (overrides ? getNonExportableResourceTypes(overrides) : new Set()),
     [overrides]
   );
+  const cannotBeDestroyedTypes = useMemo(
+    () => (overrides ? getCannotBeDestroyedResourceTypes(overrides) : new Set()),
+    [overrides]
+  );
 
   const allTypes = useMemo(() => {
     const s = new Set([...depsMap.keys(), ...reverseMap.keys()]);
@@ -873,6 +890,11 @@ export default function App() {
   const isNonExportable = useMemo(
     () => (activeType ? nonExportableTypes.has(activeType) : false),
     [activeType, nonExportableTypes]
+  );
+
+  const isCannotBeDestroyed = useMemo(
+    () => (activeType ? cannotBeDestroyedTypes.has(activeType) : false),
+    [activeType, cannotBeDestroyedTypes]
   );
 
   const dependencyNote = useMemo(
@@ -1489,6 +1511,14 @@ export default function App() {
           title="This provider resource type cannot be exported with genesyscloud_tf_export."
         >
           Cannot be exported
+        </span>
+      ) : null}
+      {isCannotBeDestroyed ? (
+        <span
+          className="gcCannotBeDestroyedBadge"
+          title="Terraform destroy does not fully remove this resource from Genesys Cloud — it may persist, deactivate only, or drop from Terraform state."
+        >
+          Cannot be destroyed
         </span>
       ) : null}
     </>

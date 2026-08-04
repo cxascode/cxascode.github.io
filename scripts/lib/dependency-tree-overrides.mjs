@@ -116,6 +116,18 @@ export function getNonExportableResourceTypes(overrides) {
   );
 }
 
+export function getCannotBeDestroyedResourceTypes(overrides) {
+  const cannotBeDestroyed = overrides?.cannotBeDestroyedResourceTypes;
+  if (!Array.isArray(cannotBeDestroyed)) return new Set();
+
+  return new Set(
+    cannotBeDestroyed
+      .filter((entry) => typeof entry === "string")
+      .map((entry) => entry.trim())
+      .filter(Boolean)
+  );
+}
+
 export function applyOverrides(raw, overrides) {
   if (!raw || !Array.isArray(raw.resources)) return raw;
   if (!overrides || typeof overrides !== "object") return raw;

@@ -17,6 +17,7 @@ import {
 } from "../src/guiMenuPaths.js";
 import {
   applyOverrides,
+  getCannotBeDestroyedResourceTypes,
   getDeprecatedResourceTypes,
   getHiddenResourceTypes,
   getNonExportableResourceTypes,
@@ -47,6 +48,7 @@ import {
   DEPLOY_SPREADSHEET_DATA_COLUMN_COUNT,
   DEPLOY_SPREADSHEET_TEMPLATE_PATH,
   loadWorkbookFromTemplate,
+  SPREADSHEET_CANNOT_BE_DESTROYED_NOTE,
   SPREADSHEET_DEPRECATED_NOTE,
   SPREADSHEET_NON_EXPORTABLE_NOTE,
   SPREADSHEET_SINGLETON_NOTE,
@@ -180,7 +182,8 @@ function resolveSpreadsheetNotes(
   overrides,
   tfExportCatalog,
   deprecatedTypes,
-  nonExportableTypes
+  nonExportableTypes,
+  cannotBeDestroyedTypes
 ) {
   const notes = [];
 
@@ -198,6 +201,9 @@ function resolveSpreadsheetNotes(
   if (isSingleton) notes.push(SPREADSHEET_SINGLETON_NOTE);
   if (deprecatedTypes.has(resourceType)) notes.push(SPREADSHEET_DEPRECATED_NOTE);
   if (nonExportableTypes.has(resourceType)) notes.push(SPREADSHEET_NON_EXPORTABLE_NOTE);
+  if (cannotBeDestroyedTypes.has(resourceType)) {
+    notes.push(SPREADSHEET_CANNOT_BE_DESTROYED_NOTE);
+  }
 
   return notes.length > 0 ? notes.join("; ") : "";
 }
@@ -212,6 +218,7 @@ function buildResourceRows(raw, overrides, tfExportCatalog, generatedGuiMenuPath
   const hidden = getHiddenResourceTypes(overrides);
   const deprecatedTypes = getDeprecatedResourceTypes(overrides);
   const nonExportableTypes = getNonExportableResourceTypes(overrides);
+  const cannotBeDestroyedTypes = getCannotBeDestroyedResourceTypes(overrides);
   const patched = applyOverrides(raw, overrides);
   const byType = new Map();
 
@@ -256,7 +263,8 @@ function buildResourceRows(raw, overrides, tfExportCatalog, generatedGuiMenuPath
         overrides,
         tfExportCatalog,
         deprecatedTypes,
-        nonExportableTypes
+        nonExportableTypes,
+        cannotBeDestroyedTypes
       ),
     };
   });

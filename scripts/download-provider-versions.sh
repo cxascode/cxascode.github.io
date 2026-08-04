@@ -146,6 +146,7 @@ if [[ "${RUN_GENERATORS}" == "true" ]]; then
   node scripts/generate-tf-export-singletons.mjs
   node scripts/generate-schema-force-new.mjs
   node scripts/verify-tf-export-env-vars.mjs
+  node scripts/verify-overrides-advisory.mjs --latest="${latest}"
   node scripts/write-merged-dependency-tree.mjs
   node scripts/generate-spreadsheet-template.mjs --latest="${latest}"
   node scripts/generate-supported-resources-spreadsheet.mjs --latest="${latest}"

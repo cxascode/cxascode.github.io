@@ -146,6 +146,7 @@ async function runGenerator(latest) {
   await runScript("scripts/generate-tf-export-singletons.mjs");
   await runScript("scripts/generate-schema-force-new.mjs");
   await runScript("scripts/verify-tf-export-env-vars.mjs");
+  await runScript("scripts/verify-overrides-advisory.mjs", [`--latest=${latest}`]);
   await runScript("scripts/write-merged-dependency-tree.mjs");
   await runScript("scripts/build-spreadsheet-templates.mjs");
   await runScript("scripts/generate-spreadsheet-template.mjs", [
