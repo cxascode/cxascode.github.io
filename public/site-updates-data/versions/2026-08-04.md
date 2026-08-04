@@ -4,3 +4,4 @@
 ### What's new
 
 - Adding breadcrumb
+- Removing about pane
