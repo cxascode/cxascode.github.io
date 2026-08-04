@@ -3,10 +3,6 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
 import {
-  listResourceTypes,
-  patchFilterBuilderTemplate,
-} from "./lib/filter-builder-template.mjs";
-import {
   patchExcludeFilterResources,
   resolveExcludeFilterResources,
   resolveExportAllExcludeFilterResources,
@@ -40,7 +36,6 @@ const OUTPUT_DIR = resolvePublicDataDir(REPO_ROOT, LAB_PACKAGES_DIR);
 
 const LAB_FOLDER_NAME = "CX_as_Code-Lab";
 const OUTPUT_BASENAME = "cx-as-code-lab";
-const FILTER_BUILDER_FILENAME = "filter-builder-template.xlsx";
 const EXPORT_PIPELINE_MAIN_TF = "exportpipeline/main.tf";
 const EXPORT_ALL_MAIN_TF = "exportall/main.tf";
 const LAB_README_FILENAME = "README.md";
@@ -51,7 +46,6 @@ const LAB_GLOBAL_INPUT_RELATIVE_PATHS = [
   "public/overrides.json",
   PRIVATE_OVERRIDES_RELATIVE_PATH,
   "scripts/lib/dependency-tree-overrides.mjs",
-  "scripts/lib/filter-builder-template.mjs",
   "scripts/lib/load-overrides-document.mjs",
   "scripts/lib/lab-export-scope.mjs",
   "scripts/lib/lab-package-version.mjs",
@@ -199,17 +193,11 @@ async function resolveLatestVersion(explicitLatest, jsonFiles) {
   return fromFiles[0] || "";
 }
 
-async function buildLabPackage(version, stagingRoot, { overrides, dependencyTree }) {
+async function buildLabPackage(version, stagingRoot, { overrides }) {
   const stagingDir = path.join(stagingRoot, LAB_FOLDER_NAME);
   await copyDir(TEMPLATE_ROOT, stagingDir);
   await patchTerraformFiles(stagingDir, version);
   await patchLabReadme(stagingDir, version);
-
-  const filterBuilderPath = path.join(stagingDir, FILTER_BUILDER_FILENAME);
-  if (await pathExists(filterBuilderPath)) {
-    const resourceTypes = listResourceTypes(dependencyTree, overrides);
-    await patchFilterBuilderTemplate(filterBuilderPath, resourceTypes);
-  }
 
   await patchLabExportExcludeFilters(stagingDir, EXPORT_PIPELINE_MAIN_TF, (original) =>
     resolveExcludeFilterResources(original, overrides)
@@ -316,14 +304,8 @@ async function main() {
         continue;
       }
 
-      const dependencyTree = JSON.parse(
-        await fs.readFile(path.join(INPUT_DIR, file), "utf8")
-      );
       const versionStagingRoot = path.join(stagingRoot, version);
-      await buildLabPackage(version, versionStagingRoot, {
-        overrides,
-        dependencyTree,
-      });
+      await buildLabPackage(version, versionStagingRoot, { overrides });
 
       await zipDirectory(
         path.join(versionStagingRoot, LAB_FOLDER_NAME),
