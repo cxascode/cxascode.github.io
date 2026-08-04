@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from "react";
-import AboutCxAsCode from "./AboutCxAsCode.jsx";
 
 const EASTER_EGG_QUIPS = [
   "Because depends_on is a lifestyle.",
@@ -75,7 +74,6 @@ export default function PageTitle({ onOpenSiteUpdates }) {
           CX as Code Explorer
         </button>
       </h1>
-      <AboutCxAsCode />
       {quip ? (
         <p className="gcPageTitleEgg__quip" aria-hidden="true">
           {quip}
