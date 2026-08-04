@@ -5,3 +5,4 @@
 
 - Adding breadcrumb
 - Removing about pane
+- Moved buttons around
