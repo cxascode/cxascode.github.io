@@ -71,9 +71,15 @@ All generators read `public/overrides.json` unless `--overrides=` is passed (spr
 | `npm run generate-lab-package` | `public/lab-packages/{version}-cx-as-code-lab.zip`, `latest-cx-as-code-lab.zip` | `--latest=X.Y.Z`, `--incremental`, `--force` |
 | `npm run generate-tf-export-resource-names` | `public/tf-export-resource-names/{version}.json` | No args: all cached versions. `--version=X.Y.Z`, `--latest=X.Y.Z`, `--provider=path`, `--verify`, `--stdout` |
 | `npm run generate-tf-export-singletons` | `public/tf-export-singletons/{version}.json` | Same pattern as tf-export resource names |
+| `npm run scan-non-deletable-resources` | stdout advisory report | `--provider-root=path`, `--overrides=path`. Suggests `cannotBeDestroyedResourceTypes` from provider delete handlers. |
+| `npm run scan-deprecated-resources` | stdout advisory report | `--provider-root=path`, `--overrides=path`. Suggests `deprecatedResourceTypes` from schema `DeprecationMessage`. |
+| `npm run scan-non-exportable-resources` | stdout advisory report | `--provider-root=path`, `--overrides=path`. Suggests `nonExportableResourceTypes` from registration gaps. |
+| `npm run scan-overrides-advisory` | stdout advisory report | Runs all override scans above in one pass (manual; does not fail). |
+| `npm run verify-overrides-advisory` | exit 0/1 | Uses cached provider source for latest dependency-tree version. **Fails** when provider adds new deprecated / non-deletable / deactivates-on-destroy signals missing from `overrides.json`. Runs in `bootstrap-local-dev`, `download-provider-versions`, `npm run build`, and CI. |
 | `npm run generate-schema-force-new` | `public/schema-force-new/{version}.json` | Same pattern as tf-export resource names |
 | `npm run generate-gui-menu-paths` | `src/gui-menu-paths.json` (app bundle), `.cache-meta/gui-menu-paths-debug.json` (full catalog) | Genesys Cloud `admin/menu.json` plus Directory command-nav. `--latest=X.Y.Z`, `--union-permissions` (default in CI), `--no-union-permissions`, `--menu=`, `--permissions=`, `--directory-base=`, `--directory-bundle=`, `--directory-translations=`, `--no-directory-nav`, `--stdout` (full JSON). |
 | `npm run verify-tf-export-env-vars` | Updates `public/provider-env-vars.json` | `--version=X.Y.Z`, `--latest=X.Y.Z`. Auto-appends new provider env vars; **exits non-zero** until each is triaged (`export-template` or `providerEnvVarsIgnore`). Runs in CI after upstream refresh. |
+| `npm run verify-overrides-advisory` | stdout + exit 0/1 | `--provider-root=path`, `--latest=X.Y.Z`, `--overrides=path`. Compares override scans to `public/overrides.json`; fails on blocking drift (see [overrides.json](#overridesjson)). |
 | `npm run generate-site-updates` | `public/site-updates-data/` | `--base`, `--head`, `--date=YYYY-MM-DD`, `--dry-run`, `--force`, `--scrub`. Normally CI-only on push to `main`; use locally to preview changelog entries from a commit range. `--scrub` re-filters auto-generated entries using `scripts/lib/site-feature-policy.mjs`. |
 
 ### Site feature policy (hidden vs public)
@@ -94,6 +100,8 @@ Site updates, sitemap dialog paths, and scrub logic derive from this file. Add n
 `scripts/generate-resource-permissions-tf.mjs` writes `public/resource-permissions-tf/{version}-read-write-role.tf` and `{version}-read-only-role.tf`, plus `latest-*` aliases. Invoked by `bootstrap-local-dev`, `download-provider-versions`, and CI — not exposed as its own npm script. Flags: `--latest=X.Y.Z`.
 
 `scripts/write-merged-dependency-tree.mjs` writes `public/dependency-tree-merged-json/{version}.json`, `index.json`, and `latest.json` by applying `overrides.json` to each cached raw tree in `public/dependency-tree-json/`. Invoked by `bootstrap-local-dev`, `download-provider-versions`, and `npm run build`.
+
+`scripts/verify-overrides-advisory.mjs` scans the latest cached provider source for deprecated, non-exportable, and destroy-behavior signals and compares them to `public/overrides.json`. Invoked by `bootstrap-local-dev`, `download-provider-versions`, `npm run build`, and CI. Exits non-zero when **blocking** keys (`deprecatedResourceTypes`, `cannotBeDestroyedResourceTypes`) have provider signals missing from overrides. `nonExportableResourceTypes` is advisory-only (printed, never fails).
 
 ### Typical local workflows
 
@@ -132,8 +140,9 @@ npm run download-provider-versions
 - `guiMenuPaths` — optional per-type override for Genesys Cloud admin menu paths shown in Resource Type Details and the GUI list view; wins over `src/gui-menu-paths.json`
 - `hiddenResourceTypes` — resource types omitted from the left-hand list (still appear in Depends on / Dependency for when referenced)
 - **Division aware** — badge when **Depends on** includes `genesyscloud_auth_division`; list filter **Division Aware** → *Yes* / *No* (blank = all types; same heuristic)
-- `deprecatedResourceTypes` — **Deprecated** badge in resource details; **Notes** column in spreadsheet templates (`Deprecated`)
-- `nonExportableResourceTypes` — **Cannot be exported** badge in resource details; **Notes** column in spreadsheet templates (`Cannot be exported`); omitted from lab `exclude_filter_resources` (cannot be exported, so exclusion is unnecessary)
+- `deprecatedResourceTypes` — **Deprecated** badge in resource details; **Notes** column in spreadsheet templates (`Deprecated`). Maintainer aid: `npm run scan-deprecated-resources` (harvests `DeprecationMessage` from provider source; advisory only).
+- `nonExportableResourceTypes` — **Cannot be exported** badge in resource details; **Notes** column in spreadsheet templates (`Cannot be exported`); omitted from lab `exclude_filter_resources` (cannot be exported, so exclusion is unnecessary). Maintainer aid: `npm run scan-non-exportable-resources` (resources with `RegisterResource` but no `RegisterExporter`; advisory only).
+- `cannotBeDestroyedResourceTypes` — **Cannot be destroyed** badge in resource details; **Notes** column in spreadsheet templates (`Cannot be destroyed`). Covers resources that persist after destroy, drop from state only, or deactivate rather than fully delete. Maintainer aid: `npm run scan-non-deletable-resources` (advisory only).
 - **Singleton** — badge in resource details; **Notes** column in spreadsheet templates (`Only one per org`)
 - **Changing these attributes recreates the resource** — detail row in resource details; **Recreate attributes** column in spreadsheet templates (`group_ids, user_ids`)
 

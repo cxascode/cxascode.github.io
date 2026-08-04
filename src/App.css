@@ -768,6 +768,7 @@ button.gcHeaderLink:disabled {
 .gcSingletonBadge,
 .gcDeprecatedBadge,
 .gcNonExportableBadge,
+.gcCannotBeDestroyedBadge,
 .gcBetaBadge,
 .gcAttributeHistory__status,
 .gcAttributeIndexLifecycle__status,
@@ -811,6 +812,13 @@ button.gcHeaderLink:disabled {
   border: 1px solid var(--gc-border);
   background: rgba(100, 116, 139, 0.12);
   color: var(--gc-subtle);
+  font-weight: 700;
+}
+
+.gcCannotBeDestroyedBadge {
+  border: 1px solid var(--gc-border);
+  background: rgba(190, 18, 60, 0.1);
+  color: #be123c;
   font-weight: 700;
 }
 
