@@ -4,3 +4,4 @@
 ### What's new
 
 - Adding link to stagehand extension
+- Adding non-destroyable badge
