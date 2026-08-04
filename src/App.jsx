@@ -1608,6 +1608,16 @@ export default function App() {
               Attribute history
             </button>
 
+            <button
+              type="button"
+              className="gcHeaderLink"
+              onClick={() => openDialog(DIALOG_CREATION_ORDER)}
+              disabled={showDependencyLoading || !!error || !raw}
+              title="Suggested creation order of CX as Code resources"
+            >
+              Creation order
+            </button>
+
             <a
               href={EXPORT_BUILDER_BASE_URL}
               className="gcHeaderLink"
@@ -1621,16 +1631,6 @@ export default function App() {
             >
               Stagehand
             </a>
-
-            <button
-              type="button"
-              className="gcHeaderLink"
-              onClick={() => openDialog(DIALOG_CREATION_ORDER)}
-              disabled={showDependencyLoading || !!error || !raw}
-              title="Suggested creation order of CX as Code resources"
-            >
-              Creation order
-            </button>
 
             <div
               className={`gcRoleDownloads ${roleDownloadsSupported ? "isVisible" : "isHidden"}`}
