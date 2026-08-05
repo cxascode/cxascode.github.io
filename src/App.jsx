@@ -11,6 +11,7 @@ import DependencyTagList from "./DependencyTagList.jsx";
 import {
   buildTfExportTemplate,
   resolveProviderEnvVars,
+  resolveTfExportNote,
   resolveTfExportResourceName,
   RESOURCE_NAME_PLACEHOLDER,
   TF_EXPORT_MODE_EXPORT,
@@ -230,7 +231,13 @@ function isRoleDownloadSupported(version) {
  *   "tfExportResourceNames": {
  *     "<resource_type>": "optional override for include_filter_resources placeholder (wins over generated map)"
  *   },
- *   "tfExportNote": "Markdown note shown in the genesyscloud_tf_export template panel when a type is selected",
+ *   "tfExportExcludeAttributes": {
+ *     "<resource_type>": {
+ *       "attributes": ["members"],
+ *       "exclude_attributes": ["genesyscloud_routing_queue.members"],
+ *       "ignore_changes": ["members"]
+ *     }
+ *   },
  *   "dependencyNotes": {
  *     "<resource_type>": "Markdown note shown in Resource Type Details"
  *   },
@@ -297,11 +304,6 @@ function applyOverrides(raw, overrides) {
   }
 
   return patched;
-}
-
-function resolveTfExportNote(overrides) {
-  const note = overrides?.tfExportNote;
-  return typeof note === "string" ? note.trim() : "";
 }
 
 function resolveDependencyNote(resourceType, overrides) {
@@ -932,8 +934,11 @@ export default function App() {
   );
 
   const tfExportNote = useMemo(
-    () => (overrides ? resolveTfExportNote(overrides) : ""),
-    [overrides]
+    () =>
+      overrides && activeType
+        ? resolveTfExportNote(activeType, overrides, tfExportResourceName)
+        : "",
+    [activeType, overrides, tfExportResourceName]
   );
 
   const providerEnvVars = useMemo(

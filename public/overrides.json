@@ -69,7 +69,33 @@
     }
   },
   "tfExportResourceNames": {},
-  "tfExportNote": "**Good To Know:** If using `exclude_attributes`, add a `lifecycle { ignore_changes = [...] }` block to each affected exported resource. Otherwise Terraform may plan to remove those attributes from the org on apply.\n\n_In `genesyscloud_tf_export`:_\n```\nexclude_attributes = [ \"genesyscloud_routing_queue.members\" ]\n```\n_On each exported resource:_\n```\nresource \"genesyscloud_routing_queue\" \"queue_name\"\n  ...\n  lifecycle {\n    ignore_changes = [ members ]\n  }\n  ...\n}\n```",
+  "tfExportExcludeAttributes": {
+    "genesyscloud_telephony_providers_edges_phonebasesettings": {
+      "attributes": ["dnis"],
+      "exclude_attributes": ["genesyscloud_telephony_providers_edges_phonebasesettings.line_base_settings_id"],
+      "ignore_changes": ["line_base_settings_id"]
+    },
+    "genesyscloud_architect_ivr": {
+      "attributes": ["dnis"],
+      "exclude_attributes": ["genesyscloud_architect_ivr.dnis"],
+      "ignore_changes": ["dnis"]
+    },
+    "genesyscloud_integration": {
+      "attributes": ["credentials"],
+      "exclude_attributes": ["genesyscloud_integration.config.credentials"],
+      "ignore_changes": ["config[0].credentials"]
+    },
+    "genesyscloud_group": {
+      "attributes": ["member_ids"],
+      "exclude_attributes": ["genesyscloud_group.member_ids"],
+      "ignore_changes": ["member_ids"]
+    },
+    "genesyscloud_routing_queue": {
+      "attributes": ["members"],
+      "exclude_attributes": ["genesyscloud_routing_queue.members"],
+      "ignore_changes": ["members"]
+    }
+  },
   "dependencyNotes": {
     "genesyscloud_flow": "- Only the latest published flow versions are exportable using CX as Code.\n- Flow version numbers are not maintained in the export/import process.\n  - **Recommendation:** Before publishing, store the exported version number in the description field of the flow so changes can be tracked in source control.\n- These are the flow types used in `.tf` and `.yaml` files.\n\n| gui | cx as code filter type | archy flowType/cx as code type attribute* | .yaml |\n|---|---|---|---|\n| **Initial Flows** |  |  |  |\n| Inbound Call | `INBOUNDCALL` | `inboundcall` | `inboundCall:` |\n| Inbound Message | `INBOUNDSHORTMESSAGE` | `inboundshortmessage` | `inboundShortMessage:` |\n| Inbound Email | `INBOUNDEMAIL` | `inboundemail` | `inboundEmail:` |\n| Inbound Chat | `INBOUNDCHAT` | `inboundchat` | `inboundChat:` |\n| Outbound Call | `OUTBOUNDCALL` | `outboundcall` | `outboundCall:` |\n| **Supporting Flows** |  |  |  |\n| Bot Flow | `BOT` | `bot` | `botFlow:` |\n| Digital Bot Flow | `DIGITALBOT` | `digitalbot` | `digitalBot:` |\n| Common Module | `COMMONMODULE` | `commonmodule` | `commonModule:` |\n| In-Queue Call | `INQUEUECALL` | `inqueuecall` | `inqueueCall:` |\n| In-Queue Email | `INQUEUEEMAIL` | `inqueueemail` | `inqueueEmail:` |\n| In-Queue Message | `INQUEUESHORTMESSAGE` | `inqueueshortmessage` | `inqueueShortMessage:` |\n| Secure Call | `SECURECALL` | `securecall` | `secureCall:` |\n| Voicemail | `VOICEMAIL` | `voicemail` | `voicemail:` |\n| Workflow | `WORKFLOW` | `workflow` | `workflow:` |\n| Workitem Flow | `WORKITEM` | `workitem` | `workitem:` |\n| **Post Interaction** |  |  |  |\n| Voice Survey | `VOICESURVEY` | `voicesurvey` | `voiceSurvey:` |\n| Web Survey Invite | `SURVEYINVITE` | `surveyinvite` | `surveyInvite:` |\n\n\\* cx as code filters and exports data source/resource flow types as _uppercase_, but requires **lowercase** to apply."
   },
