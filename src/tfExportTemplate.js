@@ -75,6 +75,123 @@ function formatEnvVarComment({ name, valueHint, description }) {
 
 export { formatEnvVarComment as formatProviderEnvVarExportComment };
 
+/**
+ * Per-type exclude_attributes / ignore_changes guidance from overrides.json
+ * tfExportExcludeAttributes. Each array holds literal HCL list entries for
+ * exclude_attributes and ignore_changes; attributes holds labels for the note prose.
+ */
+export function resolveTfExportExcludeAttributesEntry(resourceType, overrides) {
+  const type = (resourceType || "").trim();
+  if (!type) return null;
+
+  const map = overrides?.tfExportExcludeAttributes;
+  if (!map || typeof map !== "object") return null;
+
+  const entry = map[type];
+  if (!entry || typeof entry !== "object" || Array.isArray(entry)) return null;
+
+  const excludeAttributes = normalizeTfExportBracketValues(entry.exclude_attributes);
+  const ignoreChanges = normalizeTfExportBracketValues(entry.ignore_changes);
+  const attributes = normalizeTfExportBracketValues(entry.attributes);
+
+  if (excludeAttributes.length === 0 || attributes.length === 0) return null;
+
+  return { attributes, excludeAttributes, ignoreChanges };
+}
+
+function normalizeTfExportBracketValues(value) {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter((item) => typeof item === "string" && item.trim())
+    .map((item) => item.trim());
+}
+
+function formatTfExportExcludeAttributesList(values) {
+  return `[ ${values.map((value) => JSON.stringify(value)).join(", ")} ]`;
+}
+
+function formatTfExportIgnoreChangesList(values) {
+  return `[ ${values.join(", ")} ]`;
+}
+
+function formatAttributeListForProse(attributes) {
+  if (attributes.length === 0) return "";
+  if (attributes.length === 1) return `\`${attributes[0]}\``;
+  if (attributes.length === 2) {
+    return `\`${attributes[0]}\` and \`${attributes[1]}\``;
+  }
+  const last = attributes[attributes.length - 1];
+  const rest = attributes.slice(0, -1).map((attr) => `\`${attr}\``).join(", ");
+  return `${rest}, and \`${last}\``;
+}
+
+/**
+ * Build the Good To Know markdown note for exclude_attributes guidance.
+ */
+export function buildTfExportExcludeAttributesNote(
+  resourceType,
+  { attributes, excludeAttributes, ignoreChanges },
+  resourceName = RESOURCE_NAME_PLACEHOLDER
+) {
+  const type = (resourceType || "").trim();
+  if (
+    !type ||
+    !Array.isArray(attributes) ||
+    attributes.length === 0 ||
+    !Array.isArray(excludeAttributes) ||
+    excludeAttributes.length === 0
+  ) {
+    return "";
+  }
+
+  const label =
+    typeof resourceName === "string" && resourceName.trim()
+      ? resourceName.trim()
+      : RESOURCE_NAME_PLACEHOLDER;
+
+  const excludeLine = `exclude_attributes = ${formatTfExportExcludeAttributesList(excludeAttributes)}`;
+
+  const lines = [
+    `**Good To Know:** For this resource type, consider excluding ${formatAttributeListForProse(attributes)}.`,
+    "",
+    "If you use `exclude_attributes`, add a matching `lifecycle { ignore_changes = [...] }` block on each exported resource. Otherwise Terraform may plan to remove those attributes from the org on apply.",
+    "",
+    "**In `genesyscloud_tf_export`:**",
+    "```",
+    excludeLine,
+    "```",
+  ];
+
+  if (Array.isArray(ignoreChanges) && ignoreChanges.length > 0) {
+    const ignoreLine = `ignore_changes = ${formatTfExportIgnoreChangesList(ignoreChanges)}`;
+    lines.push(
+      "",
+      "**On the exported resource:**",
+      "```",
+      `resource "${type}" "${label}" {`,
+      "  ...",
+      "  lifecycle {",
+      `    ${ignoreLine}`,
+      "  }",
+      "  ...",
+      "}",
+      "```"
+    );
+  }
+
+  return lines.join("\n");
+}
+
+/**
+ * Per-type Good To Know note for the export template panel. Empty when the type
+ * has no tfExportExcludeAttributes entry in overrides.json.
+ */
+export function resolveTfExportNote(resourceType, overrides, resourceName) {
+  const entry = resolveTfExportExcludeAttributesEntry(resourceType, overrides);
+  if (!entry) return "";
+  return buildTfExportExcludeAttributesNote(resourceType, entry, resourceName);
+}
+
 const TF_EXPORT_ATTR_WIDTH = "use_legacy_architect_flow_exporter".length;
 
 function tfExportAttrLine(name, value) {

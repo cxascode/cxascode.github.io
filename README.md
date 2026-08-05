@@ -135,7 +135,7 @@ npm run download-provider-versions
 
 - `addDependencies` / `replaceDependencies` — adjust dependency trees from the provider release JSON. At build time these patches are baked into `public/dependency-tree-merged-json/` (published as `https://cxascode.github.io/dependency-tree-merged-json/{version}.json`, with `latest.json` and `index.json`) for external consumers; the app still merges at runtime from the raw tree + `overrides.json`.
 - `tfExportResourceNames` — optional per-type override for **genesyscloud_tf_export template** filter placeholders; wins over the generated map in `tf-export-resource-names.json`
-- `tfExportNote` — default Markdown note (GFM) shown in the **genesyscloud_tf_export template** panel when a resource type is selected. Use `\n` in JSON for line breaks (not `\\n`).
+- `tfExportExcludeAttributes` — per resource type, `attributes` (labels for the Good To Know prose), plus literal list entries for `exclude_attributes` and `ignore_changes` (what goes inside each `[...]` in HCL). Types not listed show no note.
 - `dependencyNotes` — per resource type, Markdown note (GFM) shown at the bottom of Resource Type Details when that type is selected. Use `\n` in JSON for line breaks (not `\\n`).
 - `guiMenuPaths` — optional per-type override for Genesys Cloud admin menu paths shown in Resource Type Details and the GUI list view; wins over `src/gui-menu-paths.json`
 - `hiddenResourceTypes` — resource types omitted from the left-hand list (still appear in Depends on / Dependency for when referenced)
@@ -155,7 +155,13 @@ Examples:
 "tfExportResourceNames": {
   "genesyscloud_flow": "<type>_<name>"
 },
-"tfExportNote": "**Tip:** replace `<name>` with the Genesys Cloud resource name before export.",
+"tfExportExcludeAttributes": {
+  "genesyscloud_routing_queue": {
+    "attributes": ["members"],
+    "exclude_attributes": ["genesyscloud_routing_queue.members"],
+    "ignore_changes": ["members"]
+  }
+},
 "guiMenuPaths": {
   "genesyscloud_routing_language": "User Management > ACD Skills and Languages > Languages"
 },
@@ -268,7 +274,7 @@ node scripts/generate-tf-export-resource-names.mjs --version=1.82.0 --provider=/
 
 **Local:** `npm run generate-tf-export-singletons`
 
-`tfExportNote` in `overrides.json` is still the hand-edited Markdown note shown below the export template block.
+`tfExportExcludeAttributes` in `overrides.json` drives the per-type **Good To Know** note shown below the export template block.
 
 ## schema-force-new/
 
