@@ -38,9 +38,9 @@
   "spreadsheetTemplates": {
     "repoDeployOrder": [
       "foundation",
-      "queues",
       "datatables",
       "prompts",
+      "queues",
       "reference",
       "channels",
       "quality",
