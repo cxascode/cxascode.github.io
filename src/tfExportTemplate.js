@@ -246,7 +246,7 @@ export function buildTfExportAttributes(
     tfExportAttrLine("include_filter_resources", includeFilter),
     tfExportAttrLine("log_permission_errors", "true"),
     tfExportAttrLine("replace_with_datasource", replaceWith),
-    tfExportAttrLine("split_files_by_resource", "false"),
+    tfExportAttrLine("split_files_by_resource", "true"),
     tfExportAttrLine(
       "use_legacy_architect_flow_exporter",
       isExportState ? "true" : "false"

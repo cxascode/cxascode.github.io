@@ -14,6 +14,6 @@ resource "genesyscloud_tf_export" "export" {
     "genesyscloud_telephony_providers_edges_edge_group::.*",
     "genesyscloud_telephony_providers_edges_trunkbasesettings::.*"
   ]
-  split_files_by_resource      = false
+  split_files_by_resource      = true
   use_legacy_architect_flow_exporter = false
 }

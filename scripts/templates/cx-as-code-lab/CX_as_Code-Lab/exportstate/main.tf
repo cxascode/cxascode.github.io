@@ -12,6 +12,6 @@ resource "genesyscloud_tf_export" "export" {
   log_permission_errors        = true
   #replace_with_datasource      = ["resource_type::Resource name regex"]
   replace_with_datasource      = []
-  split_files_by_resource      = false
+  split_files_by_resource      = true
   use_legacy_architect_flow_exporter = true
 }
