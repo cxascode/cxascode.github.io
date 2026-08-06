@@ -70,11 +70,6 @@
   },
   "tfExportResourceNames": {},
   "tfExportExcludeAttributes": {
-    "genesyscloud_telephony_providers_edges_phonebasesettings": {
-      "attributes": ["dnis"],
-      "exclude_attributes": ["genesyscloud_telephony_providers_edges_phonebasesettings.line_base_settings_id"],
-      "ignore_changes": ["line_base_settings_id"]
-    },
     "genesyscloud_architect_ivr": {
       "attributes": ["dnis"],
       "exclude_attributes": ["genesyscloud_architect_ivr.dnis"],
@@ -94,6 +89,16 @@
       "attributes": ["members"],
       "exclude_attributes": ["genesyscloud_routing_queue.members"],
       "ignore_changes": ["members"]
+    },
+    "genesyscloud_team": {
+      "attributes": ["member_ids"],
+      "exclude_attributes": ["genesyscloud_team.member_ids"],
+      "ignore_changes": ["member_ids"]
+    },
+    "genesyscloud_telephony_providers_edges_phonebasesettings": {
+      "attributes": ["line_base_settings_id"],
+      "exclude_attributes": ["genesyscloud_telephony_providers_edges_phonebasesettings.line_base_settings_id"],
+      "ignore_changes": ["line_base_settings_id"]
     }
   },
   "dependencyNotes": {
