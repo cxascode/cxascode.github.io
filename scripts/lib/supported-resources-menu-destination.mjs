@@ -382,10 +382,17 @@ export function buildMenuCatalog(directoryMenuRows, overrides = null) {
       classifierOptions
     );
 
+    const links = Array.isArray(row.links) && row.links.length > 0
+      ? [...row.links]
+      : row.link
+        ? [row.link]
+        : [];
+
     const entry = applyClassificationToEntry(
       {
         path: menuPath,
-        link: row.link || null,
+        link: links[0] || row.link || null,
+        links,
         titleKey: row.titleKey || null,
         menuSource: row.menuSource || "directory-command-nav",
         authorize: row.authorize || null,
