@@ -32,7 +32,7 @@ const SKIP_REASON = {
   PREVIEW_TOGGLE:
     "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
   ADMIN_EXCLUSION:
-    "Admin link matched supportedResourcesAdminExclusionKeywords in overrides.json.",
+    "Admin link matched adminExclusionKeywords in src/private-overrides.json.",
 };
 
 function entryHasResourceTypeMappings(resourceTypes) {
@@ -46,7 +46,7 @@ function getClassifierOptions(overrides = null) {
   };
 }
 
-/** Unmapped toggle-gated path whose toggle name contains a supportedResourcesFeatureToggleKeywords entry. */
+/** Unmapped toggle-gated path whose toggle name contains a featureToggleKeywords entry. */
 export function featureToggleBypassesPreviewExclusion(featureToggles, featureToggleAllowKeywords) {
   if (!Array.isArray(featureToggles) || featureToggles.length === 0) return false;
 
@@ -139,7 +139,7 @@ export function classifyNonAdminChrome({ link = "", path = "", menuSource = "" }
 }
 
 /**
- * Step 4: exclusions from the admin set (overrides.json link keywords).
+ * Step 4: exclusions from the admin set (private-overrides adminExclusionKeywords).
  * Only reached when the link contains "admin" and passed steps 1–3.
  */
 export function isAdminExclusionLink(link, adminExclusionKeywords) {
@@ -162,9 +162,9 @@ export function isAdminConfigLink(link) {
  *
  * Supported-resources funnel (v2):
  * 1. Known CX as Code mappings always win → include
- * 2. Exclude unmapped feature toggles, except names matching supportedResourcesFeatureToggleKeywords → include
+ * 2. Exclude unmapped feature toggles, except names matching featureToggleKeywords → include
  * 3. Exclude non-admin (link does not contain "admin")
- * 4. Exclude admin links matching supportedResourcesAdminExclusionKeywords
+ * 4. Exclude admin links matching adminExclusionKeywords
  * 5. Remaining admin links → include
  */
 export function resolveMenuCatalogEntry(

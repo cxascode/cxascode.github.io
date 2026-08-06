@@ -32,6 +32,9 @@ export const ATTRIBUTE_INDEX_VIEW_TYPE_LIFECYCLE = "typeLifecycle";
 export const ATTRIBUTE_INDEX_TYPE_LIFECYCLE_ADDED = "added";
 export const ATTRIBUTE_INDEX_TYPE_LIFECYCLE_REMOVED = "removed";
 
+/** Synthetic filter value: resource and data source attribute changes (not whole-type lifecycle). */
+export const ATTRIBUTE_INDEX_TYPE_ATTRIBUTES = "attributes";
+
 export function formatAttributeIndexTypeLifecycleKind(kind) {
   if (kind === "data_source") return "Data source";
   if (kind === "resource") return "Resource";
@@ -369,6 +372,29 @@ function historyRowMatchesVersionFilter(row, versionFilter) {
   return normalizeVersionForCompare(row?.version) === target;
 }
 
+export function isAttributeIndexAttributeRow(row) {
+  const type = (row?.type || "").trim();
+  if (type !== "resource" && type !== "data_source") return false;
+  return (row?.attribute || "").trim() !== ATTRIBUTE_INDEX_RESOURCE_LEVEL_ATTRIBUTE;
+}
+
+export function attributeIndexRowMatchesTypeFilter(row, typeFilter) {
+  if (!typeFilter) return true;
+  if (typeFilter === ATTRIBUTE_INDEX_TYPE_ATTRIBUTES) {
+    return isAttributeIndexAttributeRow(row);
+  }
+  return row?.type === typeFilter;
+}
+
+function attributeIndexEntryMatchesTypeFilter(entry, typeFilter) {
+  if (!typeFilter) return true;
+  if (typeFilter === ATTRIBUTE_INDEX_TYPE_ATTRIBUTES) {
+    const type = (entry?.type || "").trim();
+    return type === "resource" || type === "data_source";
+  }
+  return entry?.type === typeFilter;
+}
+
 export function filterAttributeIndexHistoryRows(
   rows,
   { query = "", typeFilter = "", statusFilter = "", versionFilter = "" } = {}
@@ -378,7 +404,7 @@ export function filterAttributeIndexHistoryRows(
   const normalizedQuery = query.trim().toLowerCase();
 
   const filtered = rows.filter((row) => {
-    if (typeFilter && row?.type !== typeFilter) return false;
+    if (!attributeIndexRowMatchesTypeFilter(row, typeFilter)) return false;
     if (statusFilter && row?.status !== statusFilter) return false;
     if (!historyRowMatchesVersionFilter(row, versionFilter)) return false;
 
@@ -423,7 +449,7 @@ export function filterIndexEntries(
 
     const filtered = index.filter((entry) => {
       if (!isAttributeIndexTypeLifecycleEntry(entry)) return false;
-      if (typeFilter && entry?.type !== typeFilter) return false;
+      if (!attributeIndexEntryMatchesTypeFilter(entry, typeFilter)) return false;
       if (statusFilter && entry?.status !== statusFilter) return false;
       if (!entryMatchesTypeLifecycleVersionFilter(entry, versionFilter)) return false;
 
@@ -471,6 +497,10 @@ export function getIndexFilterOptions(index) {
   }
 
   const types = [...new Set(index.map((entry) => entry?.type).filter(Boolean))].sort();
+  const hasAttributeRows = index.some(isAttributeIndexAttributeRow);
+  if (hasAttributeRows && !types.includes(ATTRIBUTE_INDEX_TYPE_ATTRIBUTES)) {
+    types.unshift(ATTRIBUTE_INDEX_TYPE_ATTRIBUTES);
+  }
   const statuses = [...new Set(index.map((entry) => entry?.status).filter(Boolean))].sort();
 
   return { types, statuses };
@@ -531,6 +561,7 @@ export function formatAttributeIndexHistoryRowVersionLabel(row) {
 }
 
 export function formatAttributeIndexType(type) {
+  if (type === ATTRIBUTE_INDEX_TYPE_ATTRIBUTES) return "Attribute";
   if (type === "data_source") return "Data source";
   if (type === "resource") return "Resource";
   if (type === "export_behavior") return "Export behavior";

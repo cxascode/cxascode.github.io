@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
-import { PUBLIC_SITEMAP_DIALOG_PATHS } from "./lib/site-feature-policy.mjs";
+import { EXTERNAL_SITEMAP_URLS, PUBLIC_SITEMAP_DIALOG_PATHS } from "./lib/site-feature-policy.mjs";
 
 const SITE_ORIGIN = "https://cxascode.github.io";
 const PUBLIC_DIR = path.resolve("public");
@@ -75,6 +75,7 @@ async function write() {
     ...DIALOG_PATHS.map((p) => `${SITE_ORIGIN}${p}`),
     ...siteUpdatesPaths.map((p) => `${SITE_ORIGIN}${p}`),
     ...resourcePaths.map((p) => `${SITE_ORIGIN}${p}`),
+    ...EXTERNAL_SITEMAP_URLS,
   ];
   const { xml, txt } = buildSitemap(urls);
 

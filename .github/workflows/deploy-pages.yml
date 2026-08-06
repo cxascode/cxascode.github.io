@@ -233,6 +233,8 @@ jobs:
             public/dependency-tree-json/latest-merged.json \
             public/resource-permissions-tf/latest-read-write-role.tf \
             public/resource-permissions-tf/latest-read-only-role.tf \
+            public/resource-permissions-tf/latest-read-write-role.csv \
+            public/resource-permissions-tf/latest-read-only-role.csv \
             public/spreadsheet-templates/latest-cx-as-code-template.xlsx \
             public/supported-resources-templates/latest-supported-resources.xlsx \
             public/dependency_tree.json \
@@ -315,6 +317,7 @@ jobs:
           node scripts/generate-tf-export-singletons.mjs
           node scripts/generate-schema-force-new.mjs
           node scripts/verify-tf-export-env-vars.mjs
+          node scripts/verify-overrides-advisory.mjs --latest="${latest}"
 
           echo "${latest}" > .cache-meta/latest.txt
           echo "true" > .cache-meta/bootstrapped.txt
@@ -334,6 +337,8 @@ jobs:
             public/dependency-tree-json/latest-merged.json \
             public/resource-permissions-tf/latest-read-write-role.tf \
             public/resource-permissions-tf/latest-read-only-role.tf \
+            public/resource-permissions-tf/latest-read-write-role.csv \
+            public/resource-permissions-tf/latest-read-only-role.csv \
             public/spreadsheet-templates/latest-cx-as-code-template.xlsx \
             public/supported-resources-templates/latest-supported-resources.xlsx \
             public/dependency_tree.json \
@@ -397,10 +402,11 @@ jobs:
           node scripts/generate-tf-export-singletons.mjs
           node scripts/generate-schema-force-new.mjs
           node scripts/verify-tf-export-env-vars.mjs
+          node scripts/verify-overrides-advisory.mjs --latest="${latest}"
 
           echo "${latest}" > .cache-meta/latest.txt
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         if: steps.check.outputs.needs_deploy == 'true'
         with:
           node-version: 20
@@ -466,7 +472,9 @@ jobs:
 
       - name: Verify provider environment variables
         if: steps.check.outputs.needs_deploy == 'true'
-        run: node scripts/verify-tf-export-env-vars.mjs
+        run: |
+          node scripts/verify-tf-export-env-vars.mjs
+          node scripts/verify-overrides-advisory.mjs
 
       - uses: actions/upload-pages-artifact@v5
         if: steps.check.outputs.needs_deploy == 'true'

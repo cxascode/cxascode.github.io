@@ -14,31 +14,36 @@
     "generate-tf-export-resource-names": "node scripts/generate-tf-export-resource-names.mjs",
     "generate-tf-export-block-label-history": "node scripts/generate-tf-export-block-label-history.mjs",
     "generate-tf-export-singletons": "node scripts/generate-tf-export-singletons.mjs",
+    "scan-non-deletable-resources": "node scripts/scan-non-deletable-resources.mjs",
+    "scan-deprecated-resources": "node scripts/scan-deprecated-resources.mjs",
+    "scan-non-exportable-resources": "node scripts/scan-non-exportable-resources.mjs",
+    "scan-overrides-advisory": "node scripts/scan-overrides-advisory.mjs",
     "generate-schema-force-new": "node scripts/generate-schema-force-new.mjs",
     "generate-gui-menu-paths": "node scripts/generate-gui-menu-paths.mjs",
     "verify-tf-export-env-vars": "node scripts/verify-tf-export-env-vars.mjs",
+    "verify-overrides-advisory": "node scripts/verify-overrides-advisory.mjs",
     "generate-site-updates": "node scripts/generate-site-updates.mjs",
-    "build": "node scripts/write-sitemap.mjs && node scripts/write-merged-dependency-tree.mjs && vite build",
+    "build": "node scripts/write-sitemap.mjs && node scripts/write-merged-dependency-tree.mjs && node scripts/verify-overrides-advisory.mjs && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
-    "genesys-spark": "^4.258.0",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7",
+    "genesys-spark": "^4.262.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.3",
-    "eslint": "^10.6.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^6.0.5",
+    "eslint": "^10.8.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.3",
     "exceljs": "^4.4.0",
-    "globals": "^17.7.0",
-    "vite": "^8.1.1"
+    "globals": "^17.8.0",
+    "vite": "^8.2.0"
   }
 }

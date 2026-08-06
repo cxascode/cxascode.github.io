@@ -17,6 +17,7 @@ import {
 } from "../src/guiMenuPaths.js";
 import {
   applyOverrides,
+  getCannotBeDestroyedResourceTypes,
   getDeprecatedResourceTypes,
   getHiddenResourceTypes,
   getNonExportableResourceTypes,
@@ -35,9 +36,11 @@ import {
   isDependencyTreeVersionJsonFilename,
   MIN_SINGLETON_FLAG_VERSION,
   SCHEMA_FORCE_NEW_DIR,
+  PRIVATE_OVERRIDES_RELATIVE_PATH,
   TF_EXPORT_RESOURCE_NAMES_DIR,
   TF_EXPORT_SINGLETONS_DIR,
 } from "./lib/public-data-path-constants.mjs";
+import { loadOverridesDocument } from "./lib/load-overrides-document.mjs";
 import {
   applyDeployEditingColumnFills,
   autoFitWorksheetColumns,
@@ -45,6 +48,7 @@ import {
   DEPLOY_SPREADSHEET_DATA_COLUMN_COUNT,
   DEPLOY_SPREADSHEET_TEMPLATE_PATH,
   loadWorkbookFromTemplate,
+  SPREADSHEET_CANNOT_BE_DESTROYED_NOTE,
   SPREADSHEET_DEPRECATED_NOTE,
   SPREADSHEET_NON_EXPORTABLE_NOTE,
   SPREADSHEET_SINGLETON_NOTE,
@@ -61,9 +65,11 @@ const STAMP_DIR = path.resolve(REPO_ROOT, ".cache-meta/artifact-stamps/spreadshe
 
 const SPREADSHEET_GLOBAL_INPUT_RELATIVE_PATHS = [
   "public/overrides.json",
+  PRIVATE_OVERRIDES_RELATIVE_PATH,
   "scripts/templates/cx-as-code-spreadsheet-template.xlsx",
   "scripts/lib/spreadsheet-styles.mjs",
   "scripts/lib/dependency-tree-overrides.mjs",
+  "scripts/lib/load-overrides-document.mjs",
   "scripts/lib/priority-group-keywords.mjs",
   "src/effectiveDependencies.js",
   "src/guiMenuPaths.js",
@@ -176,7 +182,8 @@ function resolveSpreadsheetNotes(
   overrides,
   tfExportCatalog,
   deprecatedTypes,
-  nonExportableTypes
+  nonExportableTypes,
+  cannotBeDestroyedTypes
 ) {
   const notes = [];
 
@@ -194,6 +201,9 @@ function resolveSpreadsheetNotes(
   if (isSingleton) notes.push(SPREADSHEET_SINGLETON_NOTE);
   if (deprecatedTypes.has(resourceType)) notes.push(SPREADSHEET_DEPRECATED_NOTE);
   if (nonExportableTypes.has(resourceType)) notes.push(SPREADSHEET_NON_EXPORTABLE_NOTE);
+  if (cannotBeDestroyedTypes.has(resourceType)) {
+    notes.push(SPREADSHEET_CANNOT_BE_DESTROYED_NOTE);
+  }
 
   return notes.length > 0 ? notes.join("; ") : "";
 }
@@ -208,6 +218,7 @@ function buildResourceRows(raw, overrides, tfExportCatalog, generatedGuiMenuPath
   const hidden = getHiddenResourceTypes(overrides);
   const deprecatedTypes = getDeprecatedResourceTypes(overrides);
   const nonExportableTypes = getNonExportableResourceTypes(overrides);
+  const cannotBeDestroyedTypes = getCannotBeDestroyedResourceTypes(overrides);
   const patched = applyOverrides(raw, overrides);
   const byType = new Map();
 
@@ -252,7 +263,8 @@ function buildResourceRows(raw, overrides, tfExportCatalog, generatedGuiMenuPath
         overrides,
         tfExportCatalog,
         deprecatedTypes,
-        nonExportableTypes
+        nonExportableTypes,
+        cannotBeDestroyedTypes
       ),
     };
   });
@@ -280,16 +292,7 @@ async function loadOverrides() {
   );
   console.log(`Loading overrides from ${overridesPath}`);
 
-  try {
-    const raw = await fs.readFile(overridesPath, "utf8");
-    return JSON.parse(raw);
-  } catch (err) {
-    if (err && err.code === "ENOENT") {
-      console.log("No overrides file found, continuing without overrides.");
-      return {};
-    }
-    throw err;
-  }
+  return loadOverridesDocument(overridesPath);
 }
 
 async function ensureDir(dir) {

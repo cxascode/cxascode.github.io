@@ -45,6 +45,7 @@ export const SITE_FEATURES = [
       scrubKeywords: ["spreadsheet", "/spreadsheet", "repo recommendations", "practice zip"],
       dataOnlyPaths: [
         /^public\/spreadsheet-templates\//,
+        /^src\/private-overrides\.json$/,
         /^scripts\/generate-spreadsheet-template\.mjs$/,
         /^scripts\/build-spreadsheet-templates\.mjs$/,
         /^scripts\/lib\/spreadsheet-styles\.mjs$/,
@@ -77,8 +78,10 @@ export const SITE_FEATURES = [
       ],
       dataOnlyPaths: [
         /^public\/lab-packages\//,
+        /^src\/private-overrides\.json$/,
         /^scripts\/generate-lab-package\.mjs$/,
         /^scripts\/lib\/lab-export-scope\.mjs$/,
+        /^scripts\/templates\/cx-as-code-lab\//,
       ],
     },
   },
@@ -101,6 +104,7 @@ export const SITE_FEATURES = [
       ],
       dataOnlyPaths: [
         /^public\/supported-resources-templates\//,
+        /^src\/private-overrides\.json$/,
         /^scripts\/generate-supported-resources-spreadsheet\.mjs$/,
         /^scripts\/lib\/supported-resources-menu-destination\.mjs$/,
         /^scripts\/templates\/cx-as-code-supported-resources-template\.xlsx$/,
@@ -110,7 +114,7 @@ export const SITE_FEATURES = [
   {
     id: "roles",
     visibility: "shareable",
-    permalink: { segment: "roles", subSegments: ["read-write", "read-only"] },
+    permalink: { segment: "roles", subSegments: ["read-write", "read-only", "read-write-csv", "read-only-csv"] },
     siteUpdates: {
       commitKeywords: ["role template", "/roles"],
       scrubKeywords: [],
@@ -129,6 +133,22 @@ export const SITE_FEATURES = [
       commitKeywords: ["env vars", "environment variables", "provider-env-vars"],
       scrubKeywords: ["env vars", "environment variables"],
       dataOnlyPaths: [/^public\/provider-env-vars\.json$/, /^scripts\/verify-tf-export-env-vars\.mjs$/],
+    },
+  },
+  {
+    id: "exportbuilder",
+    visibility: "public",
+    siteUpdates: {
+      commitKeywords: ["export builder", "exportbuilder", "/exportbuilder"],
+      dataOnlyPaths: [/^src\/exportBuilder\.js$/],
+    },
+  },
+  {
+    id: "stagehand",
+    visibility: "public",
+    siteUpdates: {
+      commitKeywords: ["stagehand", "/stagehand"],
+      dataOnlyPaths: [],
     },
   },
 ];
@@ -277,4 +297,10 @@ export const PUBLIC_SITEMAP_DIALOG_PATHS = [
   "/site-updates",
   "/creation-order",
   "/attribute-index",
+];
+
+/** Separate GitHub Pages project sites linked from the Explorer sitemap. */
+export const EXTERNAL_SITEMAP_URLS = [
+  "https://cxascode.github.io/exportbuilder/",
+  "https://cxascode.github.io/stagehand",
 ];

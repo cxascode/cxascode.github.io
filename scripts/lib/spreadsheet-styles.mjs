@@ -122,6 +122,7 @@ export const DEPLOY_SPREADSHEET_EDITING_COLUMNS = [5, 6, 7, 8];
 export const SPREADSHEET_SINGLETON_NOTE = "Only one per org";
 export const SPREADSHEET_DEPRECATED_NOTE = "Deprecated";
 export const SPREADSHEET_NON_EXPORTABLE_NOTE = "Cannot be exported";
+export const SPREADSHEET_CANNOT_BE_DESTROYED_NOTE = "Cannot be destroyed";
 
 /** Deploy spreadsheet column headers (hand-tuned labels; written by build-spreadsheet-templates). */
 export const DEPLOY_SPREADSHEET_HEADERS = [

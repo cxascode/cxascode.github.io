@@ -62,7 +62,7 @@ Reference for `package.json` scripts. CI behavior is described in [Deploy workfl
 
 ### Generators
 
-All generators read `public/overrides.json` unless `--overrides=` is passed (spreadsheet only). Spreadsheet, supported-resources spreadsheet, and lab scripts support **`--incremental`** (skip unchanged versions) and **`--force`** (rebuild all). CI passes `--incremental`; add `--force` locally to match `force_deploy`.
+All generators read `public/overrides.json` unless `--overrides=` is passed (spreadsheet only). Spreadsheet, supported-resources spreadsheet, lab, and gui-menu-paths generators also read `src/private-overrides.json` (merged at load time). Spreadsheet, supported-resources spreadsheet, and lab scripts support **`--incremental`** (skip unchanged versions) and **`--force`** (rebuild all). CI passes `--incremental`; add `--force` locally to match `force_deploy`.
 
 | Script | Output | Common flags |
 |--------|--------|--------------|
@@ -71,9 +71,15 @@ All generators read `public/overrides.json` unless `--overrides=` is passed (spr
 | `npm run generate-lab-package` | `public/lab-packages/{version}-cx-as-code-lab.zip`, `latest-cx-as-code-lab.zip` | `--latest=X.Y.Z`, `--incremental`, `--force` |
 | `npm run generate-tf-export-resource-names` | `public/tf-export-resource-names/{version}.json` | No args: all cached versions. `--version=X.Y.Z`, `--latest=X.Y.Z`, `--provider=path`, `--verify`, `--stdout` |
 | `npm run generate-tf-export-singletons` | `public/tf-export-singletons/{version}.json` | Same pattern as tf-export resource names |
+| `npm run scan-non-deletable-resources` | stdout advisory report | `--provider-root=path`, `--overrides=path`. Suggests `cannotBeDestroyedResourceTypes` from provider delete handlers. |
+| `npm run scan-deprecated-resources` | stdout advisory report | `--provider-root=path`, `--overrides=path`. Suggests `deprecatedResourceTypes` from schema `DeprecationMessage`. |
+| `npm run scan-non-exportable-resources` | stdout advisory report | `--provider-root=path`, `--overrides=path`. Suggests `nonExportableResourceTypes` from registration gaps. |
+| `npm run scan-overrides-advisory` | stdout advisory report | Runs all override scans above in one pass (manual; does not fail). |
+| `npm run verify-overrides-advisory` | exit 0/1 | Uses cached provider source for latest dependency-tree version. **Fails** when provider adds new deprecated / non-deletable / deactivates-on-destroy signals missing from `overrides.json`. Runs in `bootstrap-local-dev`, `download-provider-versions`, `npm run build`, and CI. |
 | `npm run generate-schema-force-new` | `public/schema-force-new/{version}.json` | Same pattern as tf-export resource names |
 | `npm run generate-gui-menu-paths` | `src/gui-menu-paths.json` (app bundle), `.cache-meta/gui-menu-paths-debug.json` (full catalog) | Genesys Cloud `admin/menu.json` plus Directory command-nav. `--latest=X.Y.Z`, `--union-permissions` (default in CI), `--no-union-permissions`, `--menu=`, `--permissions=`, `--directory-base=`, `--directory-bundle=`, `--directory-translations=`, `--no-directory-nav`, `--stdout` (full JSON). |
 | `npm run verify-tf-export-env-vars` | Updates `public/provider-env-vars.json` | `--version=X.Y.Z`, `--latest=X.Y.Z`. Auto-appends new provider env vars; **exits non-zero** until each is triaged (`export-template` or `providerEnvVarsIgnore`). Runs in CI after upstream refresh. |
+| `npm run verify-overrides-advisory` | stdout + exit 0/1 | `--provider-root=path`, `--latest=X.Y.Z`, `--overrides=path`. Compares override scans to `public/overrides.json`; fails on blocking drift (see [overrides.json](#overridesjson)). |
 | `npm run generate-site-updates` | `public/site-updates-data/` | `--base`, `--head`, `--date=YYYY-MM-DD`, `--dry-run`, `--force`, `--scrub`. Normally CI-only on push to `main`; use locally to preview changelog entries from a commit range. `--scrub` re-filters auto-generated entries using `scripts/lib/site-feature-policy.mjs`. |
 
 ### Site feature policy (hidden vs public)
@@ -94,6 +100,8 @@ Site updates, sitemap dialog paths, and scrub logic derive from this file. Add n
 `scripts/generate-resource-permissions-tf.mjs` writes `public/resource-permissions-tf/{version}-read-write-role.tf` and `{version}-read-only-role.tf`, plus `latest-*` aliases. Invoked by `bootstrap-local-dev`, `download-provider-versions`, and CI — not exposed as its own npm script. Flags: `--latest=X.Y.Z`.
 
 `scripts/write-merged-dependency-tree.mjs` writes `public/dependency-tree-merged-json/{version}.json`, `index.json`, and `latest.json` by applying `overrides.json` to each cached raw tree in `public/dependency-tree-json/`. Invoked by `bootstrap-local-dev`, `download-provider-versions`, and `npm run build`.
+
+`scripts/verify-overrides-advisory.mjs` scans the latest cached provider source for deprecated, non-exportable, and destroy-behavior signals and compares them to `public/overrides.json`. Invoked by `bootstrap-local-dev`, `download-provider-versions`, `npm run build`, and CI. Exits non-zero when **blocking** keys (`deprecatedResourceTypes`, `cannotBeDestroyedResourceTypes`) have provider signals missing from overrides. `nonExportableResourceTypes` is advisory-only (printed, never fails).
 
 ### Typical local workflows
 
@@ -127,16 +135,14 @@ npm run download-provider-versions
 
 - `addDependencies` / `replaceDependencies` — adjust dependency trees from the provider release JSON. At build time these patches are baked into `public/dependency-tree-merged-json/` (published as `https://cxascode.github.io/dependency-tree-merged-json/{version}.json`, with `latest.json` and `index.json`) for external consumers; the app still merges at runtime from the raw tree + `overrides.json`.
 - `tfExportResourceNames` — optional per-type override for **genesyscloud_tf_export template** filter placeholders; wins over the generated map in `tf-export-resource-names.json`
-- `tfExportNote` — default Markdown note (GFM) shown in the **genesyscloud_tf_export template** panel when a resource type is selected. Use `\n` in JSON for line breaks (not `\\n`).
+- `tfExportExcludeAttributes` — per resource type, `attributes` (labels for the Good To Know prose), plus literal list entries for `exclude_attributes` and `ignore_changes` (what goes inside each `[...]` in HCL). Types not listed show no note.
 - `dependencyNotes` — per resource type, Markdown note (GFM) shown at the bottom of Resource Type Details when that type is selected. Use `\n` in JSON for line breaks (not `\\n`).
 - `guiMenuPaths` — optional per-type override for Genesys Cloud admin menu paths shown in Resource Type Details and the GUI list view; wins over `src/gui-menu-paths.json`
 - `hiddenResourceTypes` — resource types omitted from the left-hand list (still appear in Depends on / Dependency for when referenced)
-- `supportedResourcesAdminExclusionKeywords` — link substrings that exclude admin routes from the supported-resources spreadsheet; see `public/overrides.json`
-- `supportedResourcesFeatureToggleKeywords` — feature-toggle name substrings on the public allowlist (unmapped toggle-gated paths are included on the sheet); see `public/overrides.json`
-- `spreadsheetTemplates` — spreadsheet program layer: `out` (out-of-scope types; column 5 label `"out"`, cols 7–8 blank), `repoAssignments` (repo → comma-separated resource types for column 8), `repoDeployOrder` (ordered repo names → Priority column 1-based deploy wave). Unassigned in-scope types show `TBD` in column 8. Rows sort by priority, then alpha; `TBD` before out-of-scope. Also the source of truth for `exclude_filter_resources` in the lab `exportpipeline/main.tf` (minus any types listed in that file's `replace_with_datasource` block, and minus `nonExportableResourceTypes`).
 - **Division aware** — badge when **Depends on** includes `genesyscloud_auth_division`; list filter **Division Aware** → *Yes* / *No* (blank = all types; same heuristic)
-- `deprecatedResourceTypes` — **Deprecated** badge in resource details; **Notes** column in spreadsheet templates (`Deprecated`)
-- `nonExportableResourceTypes` — **Cannot be exported** badge in resource details; **Notes** column in spreadsheet templates (`Cannot be exported`); omitted from lab `exclude_filter_resources` (cannot be exported, so exclusion is unnecessary)
+- `deprecatedResourceTypes` — **Deprecated** badge in resource details; **Notes** column in spreadsheet templates (`Deprecated`). Maintainer aid: `npm run scan-deprecated-resources` (harvests `DeprecationMessage` from provider source; advisory only).
+- `nonExportableResourceTypes` — **Cannot be exported** badge in resource details; **Notes** column in spreadsheet templates (`Cannot be exported`); omitted from lab `exclude_filter_resources` (cannot be exported, so exclusion is unnecessary). Maintainer aid: `npm run scan-non-exportable-resources` (resources with `RegisterResource` but no `RegisterExporter`; advisory only).
+- `cannotBeDestroyedResourceTypes` — **Cannot be destroyed** badge in resource details; **Notes** column in spreadsheet templates (`Cannot be destroyed`). Covers resources that persist after destroy, drop from state only, or deactivate rather than fully delete. Maintainer aid: `npm run scan-non-deletable-resources` (advisory only).
 - **Singleton** — badge in resource details; **Notes** column in spreadsheet templates (`Only one per org`)
 - **Changing these attributes recreates the resource** — detail row in resource details; **Recreate attributes** column in spreadsheet templates (`group_ids, user_ids`)
 
@@ -149,7 +155,13 @@ Examples:
 "tfExportResourceNames": {
   "genesyscloud_flow": "<type>_<name>"
 },
-"tfExportNote": "**Tip:** replace `<name>` with the Genesys Cloud resource name before export.",
+"tfExportExcludeAttributes": {
+  "genesyscloud_routing_queue": {
+    "attributes": ["members"],
+    "exclude_attributes": ["genesyscloud_routing_queue.members"],
+    "ignore_changes": ["members"]
+  }
+},
 "guiMenuPaths": {
   "genesyscloud_routing_language": "User Management > ACD Skills and Languages > Languages"
 },
@@ -262,7 +274,7 @@ node scripts/generate-tf-export-resource-names.mjs --version=1.82.0 --provider=/
 
 **Local:** `npm run generate-tf-export-singletons`
 
-`tfExportNote` in `overrides.json` is still the hand-edited Markdown note shown below the export template block.
+`tfExportExcludeAttributes` in `overrides.json` drives the per-type **Good To Know** note shown below the export template block.
 
 ## schema-force-new/
 
@@ -290,6 +302,8 @@ The full mapping catalog (~200 KB) is written to **`.cache-meta/gui-menu-paths-d
 - **`guiMenuPaths`** — lookup map (`resource_type` → menu path). Same shape as `overrides.json` → `guiMenuPaths`. Types removed from **latest** permissions but mapped via the union are kept; debug catalog entries for those show `retired: true`.
 
 **Debug file only** (`.cache-meta/gui-menu-paths-debug.json`):
+
+- **`generatedAt`** — ISO timestamp for the generator run (provenance only; not bundled with the app).
 
 - **`guiMenuPathCatalog`** — per-type detail: `permissions`, matched `menuPath` / `menuLeaf` / `menuAuthorize` / `matchScore` / `matchMethod`, optional `overrideMenuPath` / `overrideMatches`, or `unmappedReason`.
 - **`menuRows`** — flattened admin menu plus Directory command-nav rows (`path`, `authorize`). Grows over time; removed rows are retained across runs.
@@ -355,7 +369,7 @@ Versioned `.tf` files live under `resource-permissions-tf/` on disk (what the pe
 
 ## lab-packages/
 
-`public/lab-packages/` is **generated** from `scripts/templates/cx-as-code-lab/`, **one zip per provider version** (same version list as `dependency-tree-json/`). Each zip pins `version = "~> X.Y.Z"` in every lab `.tf` file that declares a provider constraint, refreshes `filter-builder-template.xlsx` with that version's resource types (column **B** dropdown via Excel data validation on the hidden **validation** sheet), and writes `exportpipeline/main.tf` `exclude_filter_resources` from `spreadsheetTemplates.out` in `public/overrides.json` (skipping types in that file's `replace_with_datasource` block and `nonExportableResourceTypes`). Resource types honor `replaceDependencies`, `addDependencies`, and `hiddenResourceTypes` the same way as the explorer and spreadsheet generator.
+`public/lab-packages/` is **generated** from `scripts/templates/cx-as-code-lab/`, **one zip per provider version** (same version list as `dependency-tree-json/`). Each zip pins `version = "~> X.Y.Z"` in every lab `.tf` file that declares a provider constraint, writes `exportpipeline/main.tf` `exclude_filter_resources` from `spreadsheetTemplates.out` in `src/private-overrides.json` (skipping types in that file's `replace_with_datasource` block and `nonExportableResourceTypes`), and writes `exportall/main.tf` `exclude_filter_resources` from optional `labfiles.allout` (same skip rules; omit or leave empty for no exclusions). Resource types honor `replaceDependencies`, `addDependencies`, and `hiddenResourceTypes` the same way as the explorer and spreadsheet generator. Use the [Export builder](https://cxascode.github.io/exportbuilder/) to build export filters interactively.
 
 The static lab source lives under `scripts/templates/cx-as-code-lab/CX_as_Code-Lab/`. Update that tree when lab exercises change; re-run the generator to rebuild versioned zips.
 
@@ -368,6 +382,15 @@ Hidden permalink download (same pattern as `/spreadsheet` and `/roles/...`):
 - `/labfiles/latest`
 - `/labfiles/v1.82.0`
 
+## private-overrides.json
+
+`src/private-overrides.json` is **bundled with the app** (not served as a static URL). Generators read it from disk alongside `public/overrides.json`. It holds build-time spreadsheet and supported-resources funnel configuration that does not need to ship in the public `overrides.json` payload.
+
+- `supportedResourcesTemplates.adminExclusionKeywords` — link substrings that exclude admin routes from the supported-resources spreadsheet
+- `supportedResourcesTemplates.featureToggleKeywords` — feature-toggle name substrings on the public allowlist (unmapped toggle-gated paths are included on the sheet)
+- `spreadsheetTemplates` — deploy spreadsheet program layer: `out` (out-of-scope types; column 5 label `"out"`, cols 7–8 blank), `repoAssignments` (repo → comma-separated resource types for column 8), `repoDeployOrder` (ordered repo names → Priority column 1-based deploy wave). Unassigned in-scope types show `TBD` in column 8. Rows sort by priority, then alpha; `TBD` before out-of-scope. Also the source of truth for `exclude_filter_resources` in the lab `exportpipeline/main.tf` (minus any types listed in that file's `replace_with_datasource` block, and minus `nonExportableResourceTypes`).
+- `labfiles.allout` — optional resource types to exclude in the lab `exportall/main.tf` `exclude_filter_resources` (same skip rules as exportpipeline; omit or `[]` for a full-org export with no exclusions).
+
 ## supported-resources-templates/
 
 `public/supported-resources-templates/` is **generated** from `src/gui-menu-paths.json` `menuCatalog` and each cached `dependency-tree-json/{version}.json`. It lists Directory config destinations (menu path, supported yes/no, mapped resource types) for configuration coverage review — separate from the deploy `/spreadsheet` template.
@@ -375,9 +398,9 @@ Hidden permalink download (same pattern as `/spreadsheet` and `/roles/...`):
 **Supported-resources funnel** (applied at `generate-gui-menu-paths`; excluded rows record the matching rule in `menuCatalog` → `skipReason`):
 
 1. **Mapped** — known resource-type mappings always win → on sheet
-2. **Preview toggle** — unmapped feature toggles → off sheet, unless the toggle name contains a `supportedResourcesFeatureToggleKeywords` entry → on sheet
+2. **Preview toggle** — unmapped feature toggles → off sheet, unless the toggle name contains a `featureToggleKeywords` entry → on sheet
 3. **Non-admin** — link does not contain `"admin"` → off sheet (`skipReason` mentions non-admin)
-4. **Admin exclusion** — admin link matches `supportedResourcesAdminExclusionKeywords` → off sheet
+4. **Admin exclusion** — admin link matches `adminExclusionKeywords` → off sheet
 5. **Admin config** — remaining admin links → on sheet
 
 Included rows have `includeInSupportedResources: true` and no `skipReason`.

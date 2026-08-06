@@ -7,11 +7,15 @@ import AttributeIndexDialog from "./AttributeIndexDialog.jsx";
 import ReleaseNotesDialog from "./ReleaseNotesDialog.jsx";
 import SiteUpdatesDialog from "./SiteUpdatesDialog.jsx";
 import ResourceReleaseChanges from "./ResourceReleaseChanges.jsx";
+import DependencyTagList from "./DependencyTagList.jsx";
 import {
   buildTfExportTemplate,
   resolveProviderEnvVars,
+  resolveTfExportNote,
   resolveTfExportResourceName,
   RESOURCE_NAME_PLACEHOLDER,
+  TF_EXPORT_MODE_EXPORT,
+  TF_EXPORT_MODE_EXPORT_STATE,
 } from "./tfExportTemplate.js";
 import {
   normalizeGuiMenuPathsDocument,
@@ -31,6 +35,7 @@ import {
   buildTerraformRegistryDocsUrl,
   buildTerraformRegistryProviderDocsUrl,
 } from "./terraformRegistry.js";
+import { buildExportBuilderUrl, EXPORT_BUILDER_BASE_URL } from "./exportBuilder.js";
 import {
   DIVISION_FILTER_ALL,
   DIVISION_FILTER_AWARE,
@@ -41,7 +46,9 @@ import {
 import {
   ARTIFACT_LAB,
   ARTIFACT_READ_ONLY_ROLE,
+  ARTIFACT_READ_ONLY_ROLE_CSV,
   ARTIFACT_READ_WRITE_ROLE,
+  ARTIFACT_READ_WRITE_ROLE_CSV,
   ARTIFACT_SPREADSHEET,
   ARTIFACT_SUPPORTED_RESOURCES,
   artifactDownloadFilename,
@@ -70,7 +77,9 @@ import {
   readSpreadsheetDownloadFromLocation,
   readSupportedResourcesDownloadFromLocation,
   roleDownloadPathname,
+  ROLE_READ_ONLY_CSV_SEGMENT,
   ROLE_READ_ONLY_SEGMENT,
+  ROLE_READ_WRITE_CSV_SEGMENT,
   ROLE_READ_WRITE_SEGMENT,
   readVersionFromLocation,
   replaceAttributeIndexInUrl,
@@ -222,7 +231,13 @@ function isRoleDownloadSupported(version) {
  *   "tfExportResourceNames": {
  *     "<resource_type>": "optional override for include_filter_resources placeholder (wins over generated map)"
  *   },
- *   "tfExportNote": "Markdown note shown in the genesyscloud_tf_export template panel when a type is selected",
+ *   "tfExportExcludeAttributes": {
+ *     "<resource_type>": {
+ *       "attributes": ["members"],
+ *       "exclude_attributes": ["genesyscloud_routing_queue.members"],
+ *       "ignore_changes": ["members"]
+ *     }
+ *   },
  *   "dependencyNotes": {
  *     "<resource_type>": "Markdown note shown in Resource Type Details"
  *   },
@@ -230,19 +245,13 @@ function isRoleDownloadSupported(version) {
  *     "<resource_type>": "Admin > Menu > Path (overrides src/gui-menu-paths.json)"
  *   },
  *   "hiddenResourceTypes": ["genesyscloud_bcp_tf_exporter", ...]
- *   "supportedResourcesAdminExclusionKeywords": ["wfm/schedules", "troubleshooting", ...]
- *   "supportedResourcesFeatureToggleKeywords": ["AI-1365", ...]
  *   "deprecatedResourceTypes": ["genesyscloud_journey_outcome", ...]
  *   "nonExportableResourceTypes": ["genesyscloud_outbound_contact_list_contact", ...]
- *   "spreadsheetTemplates": {
- *     "out": ["genesyscloud_user", ...],
- *     "repoDeployOrder": ["foundation", "routing", ...],
- *     "repoAssignments": {
- *       "foundation": "genesyscloud_auth_division, genesyscloud_auth_role, ...",
- *       "routing": "genesyscloud_architect_emergencygroup, ..."
- *     }
- *   }
+ *   "cannotBeDestroyedResourceTypes": ["genesyscloud_flow_outcome", ...]
  * }
+ *
+ * Supported-resources funnel rules and deploy spreadsheet program layer live in
+ * src/private-overrides.json (build-time only; not fetched at runtime).
  *
  * Behavior:
  * - addDependencies: union the dependencies list (no duplicates).
@@ -295,11 +304,6 @@ function applyOverrides(raw, overrides) {
   }
 
   return patched;
-}
-
-function resolveTfExportNote(overrides) {
-  const note = overrides?.tfExportNote;
-  return typeof note === "string" ? note.trim() : "";
 }
 
 function resolveDependencyNote(resourceType, overrides) {
@@ -391,6 +395,18 @@ function getNonExportableResourceTypes(overrides) {
 
   return new Set(
     nonExportable
+      .filter((t) => typeof t === "string")
+      .map((t) => t.trim())
+      .filter(Boolean)
+  );
+}
+
+function getCannotBeDestroyedResourceTypes(overrides) {
+  const cannotBeDestroyed = overrides?.cannotBeDestroyedResourceTypes;
+  if (!Array.isArray(cannotBeDestroyed)) return new Set();
+
+  return new Set(
+    cannotBeDestroyed
       .filter((t) => typeof t === "string")
       .map((t) => t.trim())
       .filter(Boolean)
@@ -734,6 +750,10 @@ export default function App() {
     () => (overrides ? getNonExportableResourceTypes(overrides) : new Set()),
     [overrides]
   );
+  const cannotBeDestroyedTypes = useMemo(
+    () => (overrides ? getCannotBeDestroyedResourceTypes(overrides) : new Set()),
+    [overrides]
+  );
 
   const allTypes = useMemo(() => {
     const s = new Set([...depsMap.keys(), ...reverseMap.keys()]);
@@ -874,6 +894,11 @@ export default function App() {
     [activeType, nonExportableTypes]
   );
 
+  const isCannotBeDestroyed = useMemo(
+    () => (activeType ? cannotBeDestroyedTypes.has(activeType) : false),
+    [activeType, cannotBeDestroyedTypes]
+  );
+
   const dependencyNote = useMemo(
     () => (overrides ? resolveDependencyNote(activeType, overrides) : ""),
     [activeType, overrides]
@@ -909,8 +934,11 @@ export default function App() {
   );
 
   const tfExportNote = useMemo(
-    () => (overrides ? resolveTfExportNote(overrides) : ""),
-    [overrides]
+    () =>
+      overrides && activeType
+        ? resolveTfExportNote(activeType, overrides, tfExportResourceName)
+        : "",
+    [activeType, overrides, tfExportResourceName]
   );
 
   const providerEnvVars = useMemo(
@@ -921,12 +949,16 @@ export default function App() {
     [activeType, providerEnvVarCatalog]
   );
 
+  const [tfExportMode, setTfExportMode] = useState(TF_EXPORT_MODE_EXPORT);
+
   const tfExportTemplate = useMemo(
     () =>
       activeType
-        ? buildTfExportTemplate(activeType, dependsOn, tfExportResourceName, providerEnvVars)
+        ? buildTfExportTemplate(activeType, dependsOn, tfExportResourceName, providerEnvVars, {
+            mode: tfExportMode,
+          })
         : "",
-    [activeType, dependsOn, tfExportResourceName, providerEnvVars]
+    [activeType, dependsOn, tfExportResourceName, providerEnvVars, tfExportMode]
   );
 
   const terraformRegistryDocsUrl = useMemo(
@@ -935,6 +967,11 @@ export default function App() {
         ? buildTerraformRegistryDocsUrl(detailType, selectedVersion)
         : buildTerraformRegistryProviderDocsUrl(selectedVersion),
     [detailType, selectedVersion]
+  );
+
+  const exportBuilderUrl = useMemo(
+    () => buildExportBuilderUrl(activeType),
+    [activeType]
   );
 
   const [copyState, setCopyState] = useState("idle");
@@ -1212,10 +1249,24 @@ export default function App() {
       return false;
     }
 
-    const artifactId =
-      target.role === ROLE_READ_WRITE_SEGMENT
-        ? ARTIFACT_READ_WRITE_ROLE
-        : ARTIFACT_READ_ONLY_ROLE;
+    const artifactId = (() => {
+      switch (target.role) {
+        case ROLE_READ_WRITE_SEGMENT:
+          return ARTIFACT_READ_WRITE_ROLE;
+        case ROLE_READ_ONLY_SEGMENT:
+          return ARTIFACT_READ_ONLY_ROLE;
+        case ROLE_READ_WRITE_CSV_SEGMENT:
+          return ARTIFACT_READ_WRITE_ROLE_CSV;
+        case ROLE_READ_ONLY_CSV_SEGMENT:
+          return ARTIFACT_READ_ONLY_ROLE_CSV;
+        default:
+          return "";
+      }
+    })();
+    if (!artifactId) {
+      roleDownloadPermalinkRef.current = "";
+      return false;
+    }
 
     const permalinkKey = window.location.pathname;
     if (roleDownloadPermalinkRef.current === permalinkKey) return true;
@@ -1389,7 +1440,6 @@ export default function App() {
     setQuery("");
     setDivisionFilter(DIVISION_FILTER_ALL);
     setSelectedType("");
-    searchRef.current?.focus();
   };
 
   const handleResourceListKeyDown = useCallback(
@@ -1421,7 +1471,7 @@ export default function App() {
 
   useEffect(() => {
     setCopyState("idle");
-  }, [activeType, tfExportTemplate]);
+  }, [activeType, tfExportTemplate, tfExportMode]);
 
   const copyTfExportTemplate = async () => {
     if (!tfExportTemplate) return;
@@ -1466,6 +1516,14 @@ export default function App() {
           title="This provider resource type cannot be exported with genesyscloud_tf_export."
         >
           Cannot be exported
+        </span>
+      ) : null}
+      {isCannotBeDestroyed ? (
+        <span
+          className="gcCannotBeDestroyedBadge"
+          title="Terraform destroy does not fully remove this resource from Genesys Cloud — it may persist, deactivate only, or drop from Terraform state."
+        >
+          Cannot be destroyed
         </span>
       ) : null}
     </>
@@ -1564,6 +1622,20 @@ export default function App() {
             >
               Creation order
             </button>
+
+            <a
+              href={EXPORT_BUILDER_BASE_URL}
+              className="gcHeaderLink"
+            >
+              Export builder
+            </a>
+
+            <a
+              href="https://cxascode.github.io/stagehand"
+              className="gcHeaderLink"
+            >
+              Stagehand
+            </a>
 
             <div
               className={`gcRoleDownloads ${roleDownloadsSupported ? "isVisible" : "isHidden"}`}
@@ -1859,7 +1931,7 @@ export default function App() {
                 <div className="gcCard__titleActions">
                   {terraformRegistryDocsUrl ? (
                     <a
-                      className="gcDocsPill"
+                      className="gcHeaderLink"
                       href={terraformRegistryDocsUrl}
                       target="_blank"
                       rel="noreferrer"
@@ -1967,18 +2039,7 @@ export default function App() {
                 <div className="gcPanel__body">
                   {activeType ? (
                     dependsOn.length ? (
-                      dependsOn.map((t) => (
-                        <button
-                          key={t}
-                          className="gcPill"
-                          onClick={() => {
-                            setSelectedType(t);
-                          }}
-                          type="button"
-                        >
-                          {t}
-                        </button>
-                      ))
+                      <DependencyTagList types={dependsOn} onSelectType={setSelectedType} />
                     ) : (
                       <div className="gcMuted">No dependencies found.</div>
                     )
@@ -1996,18 +2057,7 @@ export default function App() {
                 <div className="gcPanel__body">
                   {activeType ? (
                     dependencyFor.length ? (
-                      dependencyFor.map((t) => (
-                        <button
-                          key={t}
-                          className="gcPill"
-                          onClick={() => {
-                            setSelectedType(t);
-                          }}
-                          type="button"
-                        >
-                          {t}
-                        </button>
-                      ))
+                      <DependencyTagList types={dependencyFor} onSelectType={setSelectedType} />
                     ) : (
                       <div className="gcMuted">Nothing depends on this.</div>
                     )
@@ -2022,28 +2072,70 @@ export default function App() {
               <div className="gcPanel">
                 <div className="gcPanel__header">
                   <div className="gcPanel__title">genesyscloud_tf_export template</div>
-                  <button
-                    type="button"
-                    className="gcCopyButton"
-                    onClick={copyTfExportTemplate}
-                    disabled={!tfExportTemplate}
-                  >
-                    {copyState === "copied"
-                      ? "Copied"
-                      : copyState === "failed"
-                        ? "Copy failed"
-                        : "Copy"}
-                  </button>
+                  {activeType ? (
+                    <a
+                      href={exportBuilderUrl}
+                      className="gcHeaderLink"
+                      title={`Open builder for ${activeType}`}
+                    >
+                      Open builder
+                    </a>
+                  ) : null}
                 </div>
                 <div className="gcPanel__body">
                   {activeType && tfExportTemplate ? (
-                    <pre className="gcExportTemplate__code gcMono">{tfExportTemplate}</pre>
+                    <>
+                      <p className="gcMuted gcExportTemplate__hint">
+                        {tfExportMode === TF_EXPORT_MODE_EXPORT_STATE
+                          ? "Generate a Terraform state file for existing resources — brownfield adoption and import workflows."
+                          : "Generate HCL configuration for this resource, with dependency types exported as data sources."}
+                      </p>
+                      <div className="gcExportTemplate__toolbar">
+                        <div
+                          className="gcSegmentedControl gcSegmentedControl--text gcExportTemplate__modeToggle"
+                          role="radiogroup"
+                          aria-label="Export template mode"
+                        >
+                          <button
+                            type="button"
+                            className="gcSegmentedControl__option"
+                            role="radio"
+                            aria-checked={tfExportMode === TF_EXPORT_MODE_EXPORT}
+                            onClick={() => setTfExportMode(TF_EXPORT_MODE_EXPORT)}
+                          >
+                            Export
+                          </button>
+                          <button
+                            type="button"
+                            className="gcSegmentedControl__option"
+                            role="radio"
+                            aria-checked={tfExportMode === TF_EXPORT_MODE_EXPORT_STATE}
+                            onClick={() => setTfExportMode(TF_EXPORT_MODE_EXPORT_STATE)}
+                          >
+                            Export state
+                          </button>
+                        </div>
+                        <button
+                          type="button"
+                          className="gcCopyButton"
+                          onClick={copyTfExportTemplate}
+                          disabled={!tfExportTemplate}
+                        >
+                          {copyState === "copied"
+                            ? "Copied"
+                            : copyState === "failed"
+                              ? "Copy failed"
+                              : "Copy"}
+                        </button>
+                      </div>
+                      <pre className="gcExportTemplate__code gcMono">{tfExportTemplate}</pre>
+                    </>
                   ) : (
                     <div className="gcMuted">
                       Select a type to view an export template.
                     </div>
                   )}
-                  {activeType && tfExportNote ? (
+                  {activeType && tfExportNote && tfExportMode === TF_EXPORT_MODE_EXPORT ? (
                     <div className="gcExportTemplate__note">
                       <DependencyNote content={tfExportNote} />
                     </div>

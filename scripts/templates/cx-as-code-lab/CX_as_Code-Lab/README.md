@@ -4,7 +4,7 @@
 
 This repository contains examples and lab exercises for working with the Genesys Cloud Terraform Provider and CX as Code workflows.
 
-The examples progress from basic Terraform concepts through exporting, importing, state management, filtering, and pipeline-based automation.
+The examples progress from basic Terraform concepts through exporting, importing, state management, and pipeline-based automation.
 
 ---
 
@@ -22,7 +22,7 @@ The examples progress from basic Terraform concepts through exporting, importing
 4. **exportpipeline**
    - Automate exports using CI/CD pipelines and dependency resolution
 
-5. **filter-builder-template.xlsx**
+5. **[Export builder](https://cxascode.github.io/exportbuilder/)**
    - Build and validate export filters for large environments
 
 6. **export**
@@ -204,12 +204,6 @@ Pipeline-oriented export example.
 - Dependency resolution
 - Data source replacement
 - Repeatable exports
-
----
-
-### filter-builder-template.xlsx
-
-Helps generate export filters without manually building regular expressions. Use this after **exportpipeline** and before targeted **export** exercises when you need to build or refine filter expressions.
 
 ---
 
