@@ -163,8 +163,8 @@ export function buildDirectoryMenuRows(bundleText, directoryTranslations) {
 /**
  * Directory sometimes emits multiple command-nav rows for one menu path during link
  * migrations (different link, overlapping or distinct hide toggles). Collapse to one row
- * per path: union featureToggles; prefer the link from the row with the most toggles,
- * then the later row when counts tie (usually the migration target).
+ * per path: union featureToggles; collect every hash in links[] (bundle order within the
+ * path); set link to links[0] as a representative default, not org-specific.
  */
 export function mergeDirectoryMenuRowsByPath(directoryMenuRows) {
   const order = [];
@@ -174,6 +174,7 @@ export function mergeDirectoryMenuRowsByPath(directoryMenuRows) {
     const menuPath = typeof row?.path === "string" ? row.path.trim() : "";
     if (!menuPath) continue;
 
+    const rowLink = typeof row.link === "string" ? row.link.trim() : "";
     const rowToggles = Array.isArray(row.featureToggles)
       ? row.featureToggles.filter((entry) => typeof entry === "string" && entry.trim())
       : [];
@@ -183,29 +184,32 @@ export function mergeDirectoryMenuRowsByPath(directoryMenuRows) {
       byPath.set(menuPath, {
         ...row,
         path: menuPath,
+        links: rowLink ? [rowLink] : [],
         ...(rowToggles.length ? { featureToggles: [...rowToggles] } : {}),
-        linkToggleCount: rowToggles.length,
       });
       order.push(menuPath);
       continue;
+    }
+
+    if (rowLink && !existing.links.includes(rowLink)) {
+      existing.links.push(rowLink);
     }
 
     const mergedToggles = new Set([...(existing.featureToggles || []), ...rowToggles]);
     if (mergedToggles.size > 0) {
       existing.featureToggles = [...mergedToggles].sort((a, b) => a.localeCompare(b));
     }
-
-    if (rowToggles.length >= existing.linkToggleCount) {
-      existing.link = row.link || existing.link;
-      existing.titleKey = row.titleKey || existing.titleKey;
-      existing.authorize = row.authorize || existing.authorize;
-      existing.linkToggleCount = rowToggles.length;
-    }
   }
 
   return order.map((menuPath) => {
-    const { linkToggleCount, ...row } = byPath.get(menuPath);
-    return row;
+    const row = byPath.get(menuPath);
+    const links = row.links?.length ? [...row.links] : row.link ? [row.link.trim()] : [];
+
+    return {
+      ...row,
+      links,
+      link: links[0] || null,
+    };
   });
 }
 

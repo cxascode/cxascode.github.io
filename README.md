@@ -282,9 +282,9 @@ The full mapping catalog (~200 KB) is written to **`.cache-meta/gui-menu-paths-d
 
 **Generate:** `npm run generate-gui-menu-paths -- --latest=X.Y.Z --union-permissions` (CI, bootstrap, and `download-provider-versions.sh` pass `--union-permissions` so paths cover every resource type that ever appeared in cached `resource_permissions-*.json` since **1.76.0**, while still fetching live Genesys nav each run).
 
-**Public file fields:** `guiMenuPaths`, `menuCatalog`, `generatedAt`, `permissionsSource`, `permissionsUnion`.
+**Bundled file fields (`src/gui-menu-paths.json`):** `menuCatalog`, `permissionsSource`, `permissionsUnion`.
 
-- **`menuCatalog`** — Directory command-nav destinations in nav order. Each entry has `includeInSupportedResources` and, when excluded, `skipReason` explaining which funnel rule applied (see [supported-resources-templates](#supported-resources-templates)). Rules are configured in `overrides.json` → `supportedResourcesAdminExclusionKeywords` and baked at `generate-gui-menu-paths` time.
+- **`menuCatalog`** — Directory command-nav destinations in nav order. Each entry has `path`, `link` (representative hash: first seen in the bundle for that path, not org-specific), `links` (all hash variants for the path), `includeInSupportedResources`, and when excluded, `skipReason` explaining which funnel rule applied (see [supported-resources-templates](#supported-resources-templates)). Rules are configured in `src/private-overrides.json` → `supportedResourcesTemplates.adminExclusionKeywords` and baked at `generate-gui-menu-paths` time.
 
 - **`--union-permissions`** — merge all cached `public/resource-permissions-json/*.json` from `1.76.0` through `--latest` (newer file wins per resource type). Omit for a single `--permissions=` file or add `--no-union-permissions` with `--latest` for latest-only mapping.
 - **`guiMenuPaths`** — lookup map (`resource_type` → menu path). Same shape as `overrides.json` → `guiMenuPaths`. Types removed from **latest** permissions but mapped via the union are kept; debug catalog entries for those show `retired: true`.
