@@ -291,6 +291,20 @@
       "valueHint": "1",
       "description": "Route provider AWS calls through LocalStack when true",
       "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_PAGE_SIZE_",
+      "valueHint": "1",
+      "description": "Provider environment variable (auto-cataloged; update description)",
+      "export-template": []
+    },
+    {
+      "name": "GENESYSCLOUD_SKIP_INACTIVE_USER_EXPORT",
+      "valueHint": "1",
+      "description": "Omits inactive users from export listings",
+      "export-template": [
+        "genesyscloud_user"
+      ]
     }
   ],
   "providerEnvVarsIgnore": [
@@ -333,6 +347,7 @@
     "TF_GC_USER_TESTS_ACTIVE",
     "TF_UNIT",
     "TF_UNIT_ROUTING_QUEUE_TESTS",
-    "USE_LOCAL_STACK"
+    "USE_LOCAL_STACK",
+    "GENESYSCLOUD_PAGE_SIZE_"
   ]
 }

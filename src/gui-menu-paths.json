@@ -1,6 +1,12 @@
 {
-  "permissionsSource": "public/resource-permissions-json/1.84.2.json",
-  "permissionsUnion": null,
+  "permissionsSource": "public/resource-permissions-json/1.85.0.json",
+  "permissionsUnion": {
+    "fromVersion": "1.76.0",
+    "toVersion": "1.85.0",
+    "fileCount": 18,
+    "resourceTypeCount": 144,
+    "minVersion": "1.76.0"
+  },
   "menuCatalog": [
     {
       "path": "Account > Digital Data Filtering Rules",
