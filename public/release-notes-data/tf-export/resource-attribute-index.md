@@ -4,10 +4,10 @@ This index is generated from the release notes available on this site. `Introduc
 
 | Type | Resource / Data Source | Attribute | Introduced | Last Updated | Status | Notes |
 |---|---|---|---:|---:|---|---|
+| `export_behavior` | `genesyscloud_tf_export` | `export_deprecated` | `Unknown` | `v1.85.0` | Active | When export_deprecated is false, entire deprecated resource types are excluded from export runs. Previously, only deprecated attributes within a resource type were omitted while the resource type itself could still be exported. |
 | `export_behavior` | `genesyscloud_tf_export` | `general export behavior` | `Unknown` | `v1.84.2` | Active | Custom file writers for exported resources retry transient failures up to three times with exponential backoff before reporting an error. |
 | `export_behavior` | `genesyscloud_tf_export` | `export_omit_unresolved_refs` | `Unknown` | `v1.84.0` | Active | When export_omit_unresolved_refs is true, optional reference attributes that cannot be resolved to Terraform references are omitted from exported configuration instead of being left as raw GUIDs. The default false preserves prior export output that included unresolved references as GUIDs. |
 | `resource` | `genesyscloud_tf_export` | `export_omit_unresolved_refs` | `v1.84.0` | `v1.84.0` | Active | Changing export_omit_unresolved_refs forces replacement of the genesyscloud_tf_export resource. |
-| `export_behavior` | `genesyscloud_tf_export` | `export_deprecated` | `Unknown` | `v1.82.0` | Active | When export_deprecated is false, deprecated schema attributes are omitted from exported configuration; the default true preserves prior behavior that included deprecated attributes. |
 | `resource` | `genesyscloud_tf_export` | `export_deprecated` | `v1.82.0` | `v1.82.0` | Active | Changing export_deprecated forces replacement of the genesyscloud_tf_export resource. |
 | `resource` | `genesyscloud_tf_export` | `exclude_attributes` | `Unknown` | `v1.79.0` | Active | When a listed resource type is not included in the export and enable_dependency_resolution is false, the export fails with an error instead of continuing. |
 | `resource` | `genesyscloud_tf_export` | `replace_with_datasource` | `Unknown` | `v1.78.0` | Active | A list entry that is only a resource type name (without :: and label) now matches all exported instances of that type. |

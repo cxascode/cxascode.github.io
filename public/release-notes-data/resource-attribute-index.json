@@ -1,5 +1,1304 @@
 [
   {
+    "type": "data_source",
+    "resource": "genesyscloud_integration_action",
+    "attribute": "(resource-level behavior)",
+    "introduced": "Unknown",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Ambiguous lookup errors now suggest using integration_id and/or action_type to disambiguate.",
+    "history": [
+      {
+        "version": "v1.82.0",
+        "change": "updated",
+        "summary": "Lookups filter by integration_id when provided; ambiguous name errors suggest setting integration_id."
+      },
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "Ambiguous lookup errors now suggest using integration_id and/or action_type to disambiguate."
+      }
+    ]
+  },
+  {
+    "type": "data_source",
+    "resource": "genesyscloud_integration_action",
+    "attribute": "action_type",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional static or custom filter to disambiguate lookups when built-in and custom actions share the same name under the same integration.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Optional static or custom filter to disambiguate lookups when built-in and custom actions share the same name under the same integration."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_greeting",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Greeting audio downloads during export now use the WAV media format instead of WAV_8000_16.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "Greeting audio downloads during export now use the WAV media format instead of WAV_8000_16."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_group_greeting",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Greeting audio downloads during export now use the WAV media format instead of WAV_8000_16.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "Greeting audio downloads during export now use the WAV media format instead of WAV_8000_16."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_journey_outcome",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.85.0",
+    "removed": "v1.85.0",
+    "status": "Removed",
+    "latest_summary": "This resource type is no longer exportable because the underlying API endpoints have been removed.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "removed",
+        "summary": "This resource type is no longer exportable because the underlying API endpoints have been removed."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_journey_outcome_predictor",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.85.0",
+    "removed": "v1.85.0",
+    "status": "Removed",
+    "latest_summary": "This resource type is no longer exportable because the underlying API endpoints have been removed.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "removed",
+        "summary": "This resource type is no longer exportable because the underlying API endpoints have been removed."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "evaluation_settings.disputes_assignees.user_id resolves to genesyscloud_user references; ai_scoring and modified_date are excluded from export output.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "evaluation_settings.disputes_assignees.user_id resolves to genesyscloud_user references; ai_scoring and modified_date are excluded from export output."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "media_settings_callback.site_id resolves to genesyscloud_telephony_providers_edges_site references; zero-value conditional_group_activation condition values are retained in export output.",
+    "history": [
+      {
+        "version": "v1.62.0",
+        "change": "updated",
+        "summary": "Bulk export queue listing handles empty API responses without error."
+      },
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "media_settings_callback.site_id resolves to genesyscloud_telephony_providers_edges_site references; zero-value conditional_group_activation condition values are retained in export output."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_user",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Setting the GENESYSCLOUD_SKIP_INACTIVE_USER_EXPORT environment variable omits inactive users from org export listings.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "Bulk export skips users that lack an ID or email address."
+      },
+      {
+        "version": "v1.63.0",
+        "change": "updated",
+        "summary": "Bulk export block labels may include uniqueness hashes when names collide."
+      },
+      {
+        "version": "v1.66.0",
+        "change": "updated",
+        "summary": "Bulk export block labels now use {email}."
+      },
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "Setting the GENESYSCLOUD_SKIP_INACTIVE_USER_EXPORT environment variable omits inactive users from org export listings."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_architect_user_prompt",
+    "attribute": "(resource-level behavior)",
+    "introduced": "Unknown",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Switching a language resource from an uploaded audio file to TTS (empty filename) now deletes and recreates that language resource so previously uploaded audio is removed from Genesys Cloud.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "Switching a language resource from an uploaded audio file to TTS (empty filename) now deletes and recreates that language resource so previously uploaded audio is removed from Genesys Cloud."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_integration_action",
+    "attribute": "(resource-level behavior)",
+    "introduced": "Unknown",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Integrations of type function-data-actions are now treated as function data actions even when the action category text does not contain function data action.",
+    "history": [
+      {
+        "version": "v1.68.2",
+        "change": "updated",
+        "summary": "Function data action categories are created through a draft-and-publish workflow that uploads function_config.file_path, applies function settings, and publishes the draft; file_path is required for these actions."
+      },
+      {
+        "version": "v1.68.2",
+        "change": "updated",
+        "summary": "Function data action categories use the draft workflow on update to upload an updated zip and publish changes."
+      },
+      {
+        "version": "v1.68.2",
+        "change": "updated",
+        "summary": "Read refreshes function_config from the API when the action category is a function data action."
+      },
+      {
+        "version": "v1.68.2",
+        "change": "updated",
+        "summary": "Consistency state validation is no longer performed on refresh, which may surface plan diffs that were previously suppressed."
+      },
+      {
+        "version": "v1.68.3",
+        "change": "updated",
+        "summary": "When updating a function-type integration action, creates or updates the action draft with current integration_id, name, category, secure, contract, and config before uploading the function zip from function_config.file_path."
+      },
+      {
+        "version": "v1.68.3",
+        "change": "updated",
+        "summary": "Retries when the function zip ID is not immediately available after upload, reducing transient apply failures."
+      },
+      {
+        "version": "v1.68.3",
+        "change": "updated",
+        "summary": "Retrieves the latest draft version before publishing, reducing version-mismatch errors during apply."
+      },
+      {
+        "version": "v1.82.0",
+        "change": "updated",
+        "summary": "Publishing an integration action draft now sends the correct version number to the API."
+      },
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "Integrations of type function-data-actions are now treated as function data actions even when the action category text does not contain function data action."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_integration_action",
+    "attribute": "action_type",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Computed value indicating whether the action is static (built-in) or custom (user-created), derived from the action ID prefix.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Computed value indicating whether the action is static (built-in) or custom (user-created), derived from the action ID prefix."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_outbound_campaign",
+    "attribute": "preview_auto_end",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional flag (defaults to false) to automatically end preview and place the call after the preview timeout; applies to preview dialing mode only.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Optional flag (defaults to false) to automatically end preview and place the call after the preview timeout; applies to preview dialing mode only."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_outbound_contact_list_template",
+    "attribute": "column_data_type_specifications.max_length",
+    "introduced": "Unknown",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "No longer required; the attribute is now optional for text columns used in dynamic queueing.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "No longer required; the attribute is now optional for text columns used in dynamic queueing."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_outbound_dnclist",
+    "attribute": "entries",
+    "introduced": "Unknown",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When entries is omitted from configuration, apply no longer deletes and re-uploads all phone numbers on unrelated updates.",
+    "history": [
+      {
+        "version": "v1.76.0",
+        "change": "updated",
+        "summary": "For internal (rds) DNC lists, refresh reads phone entries from the API via export and updates state; when API data matches configured entries (ignoring list order), existing configuration ordering is kept to avoid unnecessary plan changes."
+      },
+      {
+        "version": "v1.77.0",
+        "change": "updated",
+        "summary": "On read, entries are normalized (grouped by expiration date, duplicates merged, phone lists sorted); for non-internal lists, entries are cleared in state because phone entries are only supported on internal (rds) lists."
+      },
+      {
+        "version": "v1.77.0",
+        "change": "updated",
+        "summary": "Entry export retries when the API returns 404 while the export is still being prepared, in addition to existing 400 retries."
+      },
+      {
+        "version": "v1.77.0",
+        "change": "updated",
+        "summary": "Changing entries deletes existing phone entries first; uploads proceed only for internal (rds) lists, with a clear error if entries are changed on other list types."
+      },
+      {
+        "version": "v1.79.0",
+        "change": "updated",
+        "summary": "Updating phone entries is rejected up front unless dnc_source_type is rds (internal DNC list)."
+      },
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "Now computed as well as optional so existing phone numbers can be read into state without being listed in configuration."
+      },
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "When entries is omitted from configuration, apply no longer deletes and re-uploads all phone numbers on unrelated updates."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "ai_scoring",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional block for AI scoring settings on the form.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Optional block for AI scoring settings on the form."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "ai_scoring.id",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Identifier for the AI scoring settings object.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Identifier for the AI scoring settings object."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "ai_scoring.question_group_settings",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Per-question-group AI scoring configuration.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Per-question-group AI scoring configuration."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "ai_scoring.question_group_settings.question_group_context_id",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Context ID of the question group.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Context ID of the question group."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "ai_scoring.question_group_settings.question_settings",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Per-question AI scoring settings within the group.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Per-question AI scoring settings within the group."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "ai_scoring.question_group_settings.question_settings.enabled",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Whether AI scoring is enabled for the question.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Whether AI scoring is enabled for the question."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "ai_scoring.question_group_settings.question_settings.question_context_id",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Context ID of the question.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Context ID of the question."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "dialect",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional language dialect for the evaluation form (for example en-US, fr-CA).",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Optional language dialect for the evaluation form (for example en-US, fr-CA)."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "evaluation_settings",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional block for evaluation revision and dispute settings.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Optional block for evaluation revision and dispute settings."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "evaluation_settings.disputes_allowed_per_evaluation",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Maximum disputes allowed per evaluation.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Maximum disputes allowed per evaluation."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "evaluation_settings.disputes_assignees",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Assignees responsible for handling disputes.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Assignees responsible for handling disputes."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "evaluation_settings.disputes_assignees.type",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Assignee type: Original, Individual, or None.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Assignee type: Original, Individual, or None."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "evaluation_settings.disputes_assignees.user_id",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "User ID when assignee type is Individual.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "User ID when assignee type is Individual."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "evaluation_settings.disputes_enabled",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Whether disputes are allowed for evaluations.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Whether disputes are allowed for evaluations."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "evaluation_settings.revisions_enabled",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Whether rescoring creates a new evaluation version.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Whether rescoring creates a new evaluation version."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "modified_date",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Computed last-modified timestamp from the API.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Computed last-modified timestamp from the API."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "question_groups.context_id",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Computed stable identifier for the question group across form versions.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Computed stable identifier for the question group across form versions."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "question_groups.default_answers_to",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional default scoring settings for questions in the group.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Optional default scoring settings for questions in the group."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "question_groups.default_answers_to.highest_score",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Default to the highest-scoring answer.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Default to the highest-scoring answer."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "question_groups.default_answers_to.lowest_score",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Default to the lowest-scoring answer.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Default to the lowest-scoring answer."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "question_groups.default_answers_to.not_applicable",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Default to N/A.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Default to N/A."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "question_groups.default_answers_to.user_defined",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Default to a user-defined answer.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Default to a user-defined answer."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "question_groups.questions.answer_options.context_id",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Computed stable identifier for the answer option across form versions.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Computed stable identifier for the answer option across form versions."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "question_groups.questions.automated_scoring_focus",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Focus for automated scoring: FullInteraction or EvaluatedAgent.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Focus for automated scoring: FullInteraction or EvaluatedAgent."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "question_groups.questions.context_id",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Computed stable identifier for the question across form versions.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Computed stable identifier for the question across form versions."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "question_groups.questions.default_answer_id",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional default selected answer for the question.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Optional default selected answer for the question."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "question_groups.questions.multiple_select_option_questions.answer_options.context_id",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Computed stable identifier for nested answer options across form versions.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Computed stable identifier for nested answer options across form versions."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "question_groups.questions.multiple_select_option_questions.automated_scoring_focus",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Focus for automated scoring: FullInteraction or EvaluatedAgent.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Focus for automated scoring: FullInteraction or EvaluatedAgent."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "question_groups.questions.multiple_select_option_questions.context_id",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Computed stable identifier for the option question across form versions.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Computed stable identifier for the option question across form versions."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "question_groups.questions.multiple_select_option_questions.default_answer_id",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional default selected answer for the option question.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Optional default selected answer for the option question."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_survey",
+    "attribute": "context_id",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Computed stable identifier for the survey form across versions.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Computed stable identifier for the survey form across versions."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_survey",
+    "attribute": "modified_date",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Computed last-modified timestamp from the API.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Computed last-modified timestamp from the API."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_survey",
+    "attribute": "question_groups.context_id",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Computed stable identifier for the question group across form versions.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Computed stable identifier for the question group across form versions."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_survey",
+    "attribute": "question_groups.questions.answer_options.assistance_conditions",
+    "introduced": "Unknown",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "assistance_conditions values in configuration are now sent to the API on create and update.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "assistance_conditions values in configuration are now sent to the API on create and update."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_survey",
+    "attribute": "question_groups.questions.answer_options.built_in_type",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional built-in answer type for multiple-select options: Selected or Unselected.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Optional built-in answer type for multiple-select options: Selected or Unselected."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_survey",
+    "attribute": "question_groups.questions.answer_options.context_id",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Computed stable identifier for the answer option across form versions.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Computed stable identifier for the answer option across form versions."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_survey",
+    "attribute": "question_groups.questions.context_id",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Computed stable identifier for the question across form versions.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Computed stable identifier for the question across form versions."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_recording_media_retention_policy",
+    "attribute": "(resource-level behavior)",
+    "introduced": "Unknown",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Failed create or update operations now preserve prior Terraform state instead of writing partial configuration values into state.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "Failed create or update operations now preserve prior Terraform state instead of writing partial configuration values into state."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_recording_media_retention_policy",
+    "attribute": "conditions.team_ids",
+    "introduced": "v1.63.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Changed from a set to a list; existing state is migrated automatically on upgrade.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "added",
+        "summary": "Optional set of team IDs to match conversations against."
+      },
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "Changed from a set to a list; existing state is migrated automatically on upgrade."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_recording_media_retention_policy",
+    "attribute": "media_policies.call_policy.conditions.team_ids",
+    "introduced": "v1.63.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Changed from a set to a list.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "added",
+        "summary": "Optional team filter for call media policy conditions."
+      },
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "Changed from a set to a list."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_recording_media_retention_policy",
+    "attribute": "media_policies.chat_policy.conditions.team_ids",
+    "introduced": "v1.63.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Changed from a set to a list.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "added",
+        "summary": "Optional team filter for chat media policy conditions."
+      },
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "Changed from a set to a list."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_recording_media_retention_policy",
+    "attribute": "media_policies.email_policy.conditions.team_ids",
+    "introduced": "v1.63.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Changed from a set to a list.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "added",
+        "summary": "Optional team filter for email media policy conditions."
+      },
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "Changed from a set to a list."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_recording_media_retention_policy",
+    "attribute": "media_policies.message_policy.conditions.team_ids",
+    "introduced": "v1.63.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Changed from a set to a list.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "added",
+        "summary": "Optional team filter for message media policy conditions."
+      },
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "Changed from a set to a list."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_routing_email_route",
+    "attribute": "mailbox_folders",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional list of IMAP mailbox folder names for the route.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Optional list of IMAP mailbox folder names for the route."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "media_settings_callback.site_id",
+    "introduced": "v1.85.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional telephony site ID to use for callback dialing instead of an edge group.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "added",
+        "summary": "Optional telephony site ID to use for callback dialing instead of an edge group."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "media_settings_message.enable_inactivity_timeout",
+    "introduced": "v1.74.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "enable_inactivity_timeout is only sent to the API when set to true, avoiding 400 errors when explicitly set to false.",
+    "history": [
+      {
+        "version": "v1.74.0",
+        "change": "added",
+        "summary": "Enable inactivity timeout for message interactions; defaults to false."
+      },
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Schema default of false removed; when omitted, the value comes from the API on read."
+      },
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "enable_inactivity_timeout is only sent to the API when set to true, avoiding 400 errors when explicitly set to false."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "media_settings_message.sub_type_settings.enable_inactivity_timeout",
+    "introduced": "Unknown",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "sub_type_settings enable_inactivity_timeout is only sent to the API when set to true, avoiding 400 errors when explicitly set to false.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "sub_type_settings enable_inactivity_timeout is only sent to the API when set to true, avoiding 400 errors when explicitly set to false."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "members",
+    "introduced": "Unknown",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When ignore_members is false and the queue has zero user members, members is set to an empty set without calling the members API.",
+    "history": [
+      {
+        "version": "v1.64.0",
+        "change": "updated",
+        "summary": "Must use block syntax; attribute-style assignment is no longer supported. Diffs are suppressed when ignore_members is true."
+      },
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "When ignore_members is false and the queue has zero user members, members is set to an empty set without calling the members API."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_task_management_worktype_status",
+    "attribute": "auto_terminate_workitem",
+    "introduced": "v1.74.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "auto_terminate_workitem is now updated through a dedicated patch so explicit false is sent to the API and disabling the setting takes effect reliably.",
+    "history": [
+      {
+        "version": "v1.74.0",
+        "change": "added",
+        "summary": "When true, workitems are automatically terminated when they enter this status (typically used for Closed category statuses)."
+      },
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "auto_terminate_workitem is now updated through a dedicated patch so explicit false is sent to the API and disabling the setting takes effect reliably."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_task_management_worktype_status_transition",
+    "attribute": "(resource-level behavior)",
+    "introduced": "v1.63.0",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Clearing status_transition_delay_seconds or status_transition_time in configuration now sends null to the API to remove those values from the status.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "added",
+        "summary": "New resource for managing worktype status transition rules."
+      },
+      {
+        "version": "v1.64.0",
+        "change": "updated",
+        "summary": "Destroy preserves destination statuses not managed in Terraform state and adjusts default_destination_status_id handling."
+      },
+      {
+        "version": "v1.67.0",
+        "change": "updated",
+        "summary": "Update retries automatically on HTTP 409 conflict responses."
+      },
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "Clearing status_transition_delay_seconds or status_transition_time in configuration now sends null to the API to remove those values from the status."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_team",
+    "attribute": "member_ids",
+    "introduced": "Unknown",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "member_ids is only loaded from the API when the team has one or more members; teams with no members return an empty set.",
+    "history": [
+      {
+        "version": "v1.75.0",
+        "change": "updated",
+        "summary": "When adding members partially fails, state is synced with successfully added members and apply must be re-run to retry failures."
+      },
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "member_ids is only loaded from the API when the team has one or more members; teams with no members return an empty set."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_telephony_providers_edges_phone",
+    "attribute": "(resource-level behavior)",
+    "introduced": "Unknown",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When web_rtc_user_id is set and the user already has a WebRTC phone, Terraform adopts and updates the existing phone instead of failing with a duplicate-assignment error.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "When web_rtc_user_id is set and the user already has a WebRTC phone, Terraform adopts and updates the existing phone instead of failing with a duplicate-assignment error."
+      }
+    ]
+  },
+  {
     "type": "export_behavior",
     "resource": "genesyscloud_case_management_caseplan",
     "attribute": "customer_intent.id",
@@ -916,28 +2215,6 @@
   },
   {
     "type": "resource",
-    "resource": "genesyscloud_routing_queue",
-    "attribute": "media_settings_message.enable_inactivity_timeout",
-    "introduced": "v1.74.0",
-    "last_updated": "v1.84.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Schema default of false removed; when omitted, the value comes from the API on read.",
-    "history": [
-      {
-        "version": "v1.74.0",
-        "change": "added",
-        "summary": "Enable inactivity timeout for message interactions; defaults to false."
-      },
-      {
-        "version": "v1.84.0",
-        "change": "updated",
-        "summary": "Schema default of false removed; when omitted, the value comes from the API on read."
-      }
-    ]
-  },
-  {
-    "type": "resource",
     "resource": "genesyscloud_webdeployments_configuration",
     "attribute": "custom_i18n_labels.localized_labels.key",
     "introduced": "Unknown",
@@ -1045,23 +2322,6 @@
         "version": "v1.83.0",
         "change": "updated",
         "summary": "Summary settings are now listed and refreshed with correct pagination and name filtering, so plan and apply return the expected resources instead of missing or mismatched results."
-      }
-    ]
-  },
-  {
-    "type": "data_source",
-    "resource": "genesyscloud_integration_action",
-    "attribute": "(resource-level behavior)",
-    "introduced": "Unknown",
-    "last_updated": "v1.82.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Lookups filter by integration_id when provided; ambiguous name errors suggest setting integration_id.",
-    "history": [
-      {
-        "version": "v1.82.0",
-        "change": "updated",
-        "summary": "Lookups filter by integration_id when provided; ambiguous name errors suggest setting integration_id."
       }
     ]
   },
@@ -1215,58 +2475,6 @@
         "version": "v1.82.0",
         "change": "added",
         "summary": "Newly registered resource for managing group greetings."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_integration_action",
-    "attribute": "(resource-level behavior)",
-    "introduced": "Unknown",
-    "last_updated": "v1.82.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Publishing an integration action draft now sends the correct version number to the API.",
-    "history": [
-      {
-        "version": "v1.68.2",
-        "change": "updated",
-        "summary": "Function data action categories are created through a draft-and-publish workflow that uploads function_config.file_path, applies function settings, and publishes the draft; file_path is required for these actions."
-      },
-      {
-        "version": "v1.68.2",
-        "change": "updated",
-        "summary": "Function data action categories use the draft workflow on update to upload an updated zip and publish changes."
-      },
-      {
-        "version": "v1.68.2",
-        "change": "updated",
-        "summary": "Read refreshes function_config from the API when the action category is a function data action."
-      },
-      {
-        "version": "v1.68.2",
-        "change": "updated",
-        "summary": "Consistency state validation is no longer performed on refresh, which may surface plan diffs that were previously suppressed."
-      },
-      {
-        "version": "v1.68.3",
-        "change": "updated",
-        "summary": "When updating a function-type integration action, creates or updates the action draft with current integration_id, name, category, secure, contract, and config before uploading the function zip from function_config.file_path."
-      },
-      {
-        "version": "v1.68.3",
-        "change": "updated",
-        "summary": "Retries when the function zip ID is not immediately available after upload, reducing transient apply failures."
-      },
-      {
-        "version": "v1.68.3",
-        "change": "updated",
-        "summary": "Retrieves the latest draft version before publishing, reducing version-mismatch errors during apply."
-      },
-      {
-        "version": "v1.82.0",
-        "change": "updated",
-        "summary": "Publishing an integration action draft now sends the correct version number to the API."
       }
     ]
   },
@@ -2878,43 +4086,6 @@
         "version": "v1.79.0",
         "change": "updated",
         "summary": "Phone entries are deleted before removing the list only for internal (rds) DNC lists."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_outbound_dnclist",
-    "attribute": "entries",
-    "introduced": "Unknown",
-    "last_updated": "v1.79.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Updating phone entries is rejected up front unless dnc_source_type is rds (internal DNC list).",
-    "history": [
-      {
-        "version": "v1.76.0",
-        "change": "updated",
-        "summary": "For internal (rds) DNC lists, refresh reads phone entries from the API via export and updates state; when API data matches configured entries (ignoring list order), existing configuration ordering is kept to avoid unnecessary plan changes."
-      },
-      {
-        "version": "v1.77.0",
-        "change": "updated",
-        "summary": "On read, entries are normalized (grouped by expiration date, duplicates merged, phone lists sorted); for non-internal lists, entries are cleared in state because phone entries are only supported on internal (rds) lists."
-      },
-      {
-        "version": "v1.77.0",
-        "change": "updated",
-        "summary": "Entry export retries when the API returns 404 while the export is still being prepared, in addition to existing 400 retries."
-      },
-      {
-        "version": "v1.77.0",
-        "change": "updated",
-        "summary": "Changing entries deletes existing phone entries first; uploads proceed only for internal (rds) lists, with a clear error if entries are changed on other list types."
-      },
-      {
-        "version": "v1.79.0",
-        "change": "updated",
-        "summary": "Updating phone entries is rejected up front unless dnc_source_type is rds (internal DNC list)."
       }
     ]
   },
@@ -6283,23 +7454,6 @@
   },
   {
     "type": "resource",
-    "resource": "genesyscloud_team",
-    "attribute": "member_ids",
-    "introduced": "Unknown",
-    "last_updated": "v1.75.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "When adding members partially fails, state is synced with successfully added members and apply must be re-run to retry failures.",
-    "history": [
-      {
-        "version": "v1.75.0",
-        "change": "updated",
-        "summary": "When adding members partially fails, state is synced with successfully added members and apply must be re-run to retry failures."
-      }
-    ]
-  },
-  {
-    "type": "resource",
     "resource": "genesyscloud_telephony_providers_edges_extension_pool",
     "attribute": "division_id",
     "introduced": "v1.75.0",
@@ -6723,23 +7877,6 @@
         "version": "v1.74.0",
         "change": "added",
         "summary": "When true, the worktype's flow rules are processed; defaults to false."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_task_management_worktype_status",
-    "attribute": "auto_terminate_workitem",
-    "introduced": "v1.74.0",
-    "last_updated": "v1.74.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "When true, workitems are automatically terminated when they enter this status (typically used for Closed category statuses).",
-    "history": [
-      {
-        "version": "v1.74.0",
-        "change": "added",
-        "summary": "When true, workitems are automatically terminated when they enter this status (typically used for Closed category statuses)."
       }
     ]
   },
@@ -9725,33 +10862,6 @@
     ]
   },
   {
-    "type": "resource",
-    "resource": "genesyscloud_task_management_worktype_status_transition",
-    "attribute": "(resource-level behavior)",
-    "introduced": "v1.63.0",
-    "last_updated": "v1.67.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Update retries automatically on HTTP 409 conflict responses.",
-    "history": [
-      {
-        "version": "v1.63.0",
-        "change": "added",
-        "summary": "New resource for managing worktype status transition rules."
-      },
-      {
-        "version": "v1.64.0",
-        "change": "updated",
-        "summary": "Destroy preserves destination statuses not managed in Terraform state and adjusts default_destination_status_id handling."
-      },
-      {
-        "version": "v1.67.0",
-        "change": "updated",
-        "summary": "Update retries automatically on HTTP 409 conflict responses."
-      }
-    ]
-  },
-  {
     "type": "data_source",
     "resource": "genesyscloud_telephony_providers_edges_extension_pool",
     "attribute": "(resource-level behavior)",
@@ -9872,33 +10982,6 @@
         "version": "v1.66.0",
         "change": "updated",
         "summary": "Bulk export excludes Genesys Cloud default scripts (Default Outbound Script, Default Inbound Script, Default Callback Script)."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
-    "resource": "genesyscloud_user",
-    "attribute": "general export behavior",
-    "introduced": "Unknown",
-    "last_updated": "v1.66.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Bulk export block labels now use {email}.",
-    "history": [
-      {
-        "version": "v1.61.0",
-        "change": "updated",
-        "summary": "Bulk export skips users that lack an ID or email address."
-      },
-      {
-        "version": "v1.63.0",
-        "change": "updated",
-        "summary": "Bulk export block labels may include uniqueness hashes when names collide."
-      },
-      {
-        "version": "v1.66.0",
-        "change": "updated",
-        "summary": "Bulk export block labels now use {email}."
       }
     ]
   },
@@ -10626,23 +11709,6 @@
   },
   {
     "type": "resource",
-    "resource": "genesyscloud_routing_queue",
-    "attribute": "members",
-    "introduced": "Unknown",
-    "last_updated": "v1.64.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Must use block syntax; attribute-style assignment is no longer supported. Diffs are suppressed when ignore_members is true.",
-    "history": [
-      {
-        "version": "v1.64.0",
-        "change": "updated",
-        "summary": "Must use block syntax; attribute-style assignment is no longer supported. Diffs are suppressed when ignore_members is true."
-      }
-    ]
-  },
-  {
-    "type": "resource",
     "resource": "genesyscloud_routing_sms_address",
     "attribute": "(resource-level behavior)",
     "introduced": "Unknown",
@@ -10915,91 +11981,6 @@
   },
   {
     "type": "resource",
-    "resource": "genesyscloud_recording_media_retention_policy",
-    "attribute": "conditions.team_ids",
-    "introduced": "v1.63.0",
-    "last_updated": "v1.63.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Optional set of team IDs to match conversations against.",
-    "history": [
-      {
-        "version": "v1.63.0",
-        "change": "added",
-        "summary": "Optional set of team IDs to match conversations against."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_recording_media_retention_policy",
-    "attribute": "media_policies.call_policy.conditions.team_ids",
-    "introduced": "v1.63.0",
-    "last_updated": "v1.63.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Optional team filter for call media policy conditions.",
-    "history": [
-      {
-        "version": "v1.63.0",
-        "change": "added",
-        "summary": "Optional team filter for call media policy conditions."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_recording_media_retention_policy",
-    "attribute": "media_policies.chat_policy.conditions.team_ids",
-    "introduced": "v1.63.0",
-    "last_updated": "v1.63.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Optional team filter for chat media policy conditions.",
-    "history": [
-      {
-        "version": "v1.63.0",
-        "change": "added",
-        "summary": "Optional team filter for chat media policy conditions."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_recording_media_retention_policy",
-    "attribute": "media_policies.email_policy.conditions.team_ids",
-    "introduced": "v1.63.0",
-    "last_updated": "v1.63.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Optional team filter for email media policy conditions.",
-    "history": [
-      {
-        "version": "v1.63.0",
-        "change": "added",
-        "summary": "Optional team filter for email media policy conditions."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_recording_media_retention_policy",
-    "attribute": "media_policies.message_policy.conditions.team_ids",
-    "introduced": "v1.63.0",
-    "last_updated": "v1.63.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Optional team filter for message media policy conditions.",
-    "history": [
-      {
-        "version": "v1.63.0",
-        "change": "added",
-        "summary": "Optional team filter for message media policy conditions."
-      }
-    ]
-  },
-  {
-    "type": "resource",
     "resource": "genesyscloud_routing_queue",
     "attribute": "users",
     "introduced": "Unknown",
@@ -11097,23 +12078,6 @@
         "version": "v1.63.0",
         "change": "updated",
         "summary": "Deprecated and computed; use genesyscloud_task_management_worktype_status_transition instead."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
-    "resource": "genesyscloud_routing_queue",
-    "attribute": "general export behavior",
-    "introduced": "Unknown",
-    "last_updated": "v1.62.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Bulk export queue listing handles empty API responses without error.",
-    "history": [
-      {
-        "version": "v1.62.0",
-        "change": "updated",
-        "summary": "Bulk export queue listing handles empty API responses without error."
       }
     ]
   },

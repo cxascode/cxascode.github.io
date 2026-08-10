@@ -1,0 +1,23 @@
+{
+    "version": "v1.85.0",
+    "previous": "v1.84.2",
+    "resource": "genesyscloud_tf_export",
+    "changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "export_deprecated",
+            "change": "updated",
+            "summary": "When export_deprecated is false, entire deprecated resource types are excluded from export runs. Previously, only deprecated attributes within a resource type were omitted while the resource type itself could still be exported."
+        }
+    ],
+    "related_export_changes": [
+        {
+            "kind": "export_behavior",
+            "resource": null,
+            "attribute": null,
+            "change": "updated",
+            "summary": "Deprecated provider resource types no longer appear in generated Terraform configuration when export_deprecated is false."
+        }
+    ]
+}

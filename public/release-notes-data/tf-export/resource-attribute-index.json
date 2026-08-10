@@ -2,6 +2,28 @@
   {
     "type": "export_behavior",
     "resource": "genesyscloud_tf_export",
+    "attribute": "export_deprecated",
+    "introduced": "Unknown",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When export_deprecated is false, entire deprecated resource types are excluded from export runs. Previously, only deprecated attributes within a resource type were omitted while the resource type itself could still be exported.",
+    "history": [
+      {
+        "version": "v1.82.0",
+        "change": "updated",
+        "summary": "When export_deprecated is false, deprecated schema attributes are omitted from exported configuration; the default true preserves prior behavior that included deprecated attributes."
+      },
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "When export_deprecated is false, entire deprecated resource types are excluded from export runs. Previously, only deprecated attributes within a resource type were omitted while the resource type itself could still be exported."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_tf_export",
     "attribute": "general export behavior",
     "introduced": "Unknown",
     "last_updated": "v1.84.2",
@@ -247,23 +269,6 @@
         "version": "v1.84.0",
         "change": "updated",
         "summary": "Changing export_omit_unresolved_refs forces replacement of the genesyscloud_tf_export resource."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
-    "resource": "genesyscloud_tf_export",
-    "attribute": "export_deprecated",
-    "introduced": "Unknown",
-    "last_updated": "v1.82.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "When export_deprecated is false, deprecated schema attributes are omitted from exported configuration; the default true preserves prior behavior that included deprecated attributes.",
-    "history": [
-      {
-        "version": "v1.82.0",
-        "change": "updated",
-        "summary": "When export_deprecated is false, deprecated schema attributes are omitted from exported configuration; the default true preserves prior behavior that included deprecated attributes."
       }
     ]
   },

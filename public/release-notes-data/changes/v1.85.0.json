@@ -1,0 +1,482 @@
+{
+    "version": "v1.85.0",
+    "previous": "v1.84.2",
+    "changes": [
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_architect_user_prompt",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Switching a language resource from an uploaded audio file to TTS (empty filename) now deletes and recreates that language resource so previously uploaded audio is removed from Genesys Cloud."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_greeting",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Greeting audio downloads during export now use the WAV media format instead of WAV_8000_16."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_group_greeting",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Greeting audio downloads during export now use the WAV media format instead of WAV_8000_16."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_integration_action",
+            "attribute": "action_type",
+            "change": "added",
+            "summary": "Computed value indicating whether the action is static (built-in) or custom (user-created), derived from the action ID prefix."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_integration_action",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Integrations of type function-data-actions are now treated as function data actions even when the action category text does not contain function data action."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_journey_outcome",
+            "attribute": null,
+            "change": "removed",
+            "summary": "This resource type is no longer exportable because the underlying API endpoints have been removed."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_journey_outcome_predictor",
+            "attribute": null,
+            "change": "removed",
+            "summary": "This resource type is no longer exportable because the underlying API endpoints have been removed."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaign",
+            "attribute": "preview_auto_end",
+            "change": "added",
+            "summary": "Optional flag (defaults to false) to automatically end preview and place the call after the preview timeout; applies to preview dialing mode only."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_contact_list_template",
+            "attribute": "column_data_type_specifications.max_length",
+            "change": "updated",
+            "summary": "No longer required; the attribute is now optional for text columns used in dynamic queueing."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_dnclist",
+            "attribute": "entries",
+            "change": "updated",
+            "summary": "Now computed as well as optional so existing phone numbers can be read into state without being listed in configuration."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_outbound_dnclist",
+            "attribute": "entries",
+            "change": "updated",
+            "summary": "When entries is omitted from configuration, apply no longer deletes and re-uploads all phone numbers on unrelated updates."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "evaluation_settings",
+            "change": "added",
+            "summary": "Optional block for evaluation revision and dispute settings."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "evaluation_settings.revisions_enabled",
+            "change": "added",
+            "summary": "Whether rescoring creates a new evaluation version."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "evaluation_settings.disputes_enabled",
+            "change": "added",
+            "summary": "Whether disputes are allowed for evaluations."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "evaluation_settings.disputes_allowed_per_evaluation",
+            "change": "added",
+            "summary": "Maximum disputes allowed per evaluation."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "evaluation_settings.disputes_assignees",
+            "change": "added",
+            "summary": "Assignees responsible for handling disputes."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "evaluation_settings.disputes_assignees.type",
+            "change": "added",
+            "summary": "Assignee type: Original, Individual, or None."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "evaluation_settings.disputes_assignees.user_id",
+            "change": "added",
+            "summary": "User ID when assignee type is Individual."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "ai_scoring",
+            "change": "added",
+            "summary": "Optional block for AI scoring settings on the form."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "ai_scoring.id",
+            "change": "added",
+            "summary": "Identifier for the AI scoring settings object."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "ai_scoring.question_group_settings",
+            "change": "added",
+            "summary": "Per-question-group AI scoring configuration."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "ai_scoring.question_group_settings.question_group_context_id",
+            "change": "added",
+            "summary": "Context ID of the question group."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "ai_scoring.question_group_settings.question_settings",
+            "change": "added",
+            "summary": "Per-question AI scoring settings within the group."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "ai_scoring.question_group_settings.question_settings.question_context_id",
+            "change": "added",
+            "summary": "Context ID of the question."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "ai_scoring.question_group_settings.question_settings.enabled",
+            "change": "added",
+            "summary": "Whether AI scoring is enabled for the question."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "dialect",
+            "change": "added",
+            "summary": "Optional language dialect for the evaluation form (for example en-US, fr-CA)."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "modified_date",
+            "change": "added",
+            "summary": "Computed last-modified timestamp from the API."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "question_groups.context_id",
+            "change": "added",
+            "summary": "Computed stable identifier for the question group across form versions."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "question_groups.default_answers_to",
+            "change": "added",
+            "summary": "Optional default scoring settings for questions in the group."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "question_groups.default_answers_to.highest_score",
+            "change": "added",
+            "summary": "Default to the highest-scoring answer."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "question_groups.default_answers_to.not_applicable",
+            "change": "added",
+            "summary": "Default to N/A."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "question_groups.default_answers_to.lowest_score",
+            "change": "added",
+            "summary": "Default to the lowest-scoring answer."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "question_groups.default_answers_to.user_defined",
+            "change": "added",
+            "summary": "Default to a user-defined answer."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "question_groups.questions.context_id",
+            "change": "added",
+            "summary": "Computed stable identifier for the question across form versions."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "question_groups.questions.default_answer_id",
+            "change": "added",
+            "summary": "Optional default selected answer for the question."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "question_groups.questions.automated_scoring_focus",
+            "change": "added",
+            "summary": "Focus for automated scoring: FullInteraction or EvaluatedAgent."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "question_groups.questions.multiple_select_option_questions.context_id",
+            "change": "added",
+            "summary": "Computed stable identifier for the option question across form versions."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "question_groups.questions.multiple_select_option_questions.default_answer_id",
+            "change": "added",
+            "summary": "Optional default selected answer for the option question."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "question_groups.questions.multiple_select_option_questions.automated_scoring_focus",
+            "change": "added",
+            "summary": "Focus for automated scoring: FullInteraction or EvaluatedAgent."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "question_groups.questions.answer_options.context_id",
+            "change": "added",
+            "summary": "Computed stable identifier for the answer option across form versions."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "question_groups.questions.multiple_select_option_questions.answer_options.context_id",
+            "change": "added",
+            "summary": "Computed stable identifier for nested answer options across form versions."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": null,
+            "change": "updated",
+            "summary": "evaluation_settings.disputes_assignees.user_id resolves to genesyscloud_user references; ai_scoring and modified_date are excluded from export output."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_survey",
+            "attribute": "context_id",
+            "change": "added",
+            "summary": "Computed stable identifier for the survey form across versions."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_survey",
+            "attribute": "modified_date",
+            "change": "added",
+            "summary": "Computed last-modified timestamp from the API."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_survey",
+            "attribute": "question_groups.context_id",
+            "change": "added",
+            "summary": "Computed stable identifier for the question group across form versions."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_survey",
+            "attribute": "question_groups.questions.context_id",
+            "change": "added",
+            "summary": "Computed stable identifier for the question across form versions."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_survey",
+            "attribute": "question_groups.questions.answer_options.context_id",
+            "change": "added",
+            "summary": "Computed stable identifier for the answer option across form versions."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_survey",
+            "attribute": "question_groups.questions.answer_options.built_in_type",
+            "change": "added",
+            "summary": "Optional built-in answer type for multiple-select options: Selected or Unselected."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_quality_forms_survey",
+            "attribute": "question_groups.questions.answer_options.assistance_conditions",
+            "change": "updated",
+            "summary": "assistance_conditions values in configuration are now sent to the API on create and update."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_recording_media_retention_policy",
+            "attribute": "conditions.team_ids",
+            "change": "updated",
+            "summary": "Changed from a set to a list; existing state is migrated automatically on upgrade."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_recording_media_retention_policy",
+            "attribute": "media_policies.call_policy.conditions.team_ids",
+            "change": "updated",
+            "summary": "Changed from a set to a list."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_recording_media_retention_policy",
+            "attribute": "media_policies.chat_policy.conditions.team_ids",
+            "change": "updated",
+            "summary": "Changed from a set to a list."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_recording_media_retention_policy",
+            "attribute": "media_policies.email_policy.conditions.team_ids",
+            "change": "updated",
+            "summary": "Changed from a set to a list."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_recording_media_retention_policy",
+            "attribute": "media_policies.message_policy.conditions.team_ids",
+            "change": "updated",
+            "summary": "Changed from a set to a list."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_recording_media_retention_policy",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Failed create or update operations now preserve prior Terraform state instead of writing partial configuration values into state."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_email_route",
+            "attribute": "mailbox_folders",
+            "change": "added",
+            "summary": "Optional list of IMAP mailbox folder names for the route."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "media_settings_callback.site_id",
+            "change": "added",
+            "summary": "Optional telephony site ID to use for callback dialing instead of an edge group."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "members",
+            "change": "updated",
+            "summary": "When ignore_members is false and the queue has zero user members, members is set to an empty set without calling the members API."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "media_settings_message.enable_inactivity_timeout",
+            "change": "updated",
+            "summary": "enable_inactivity_timeout is only sent to the API when set to true, avoiding 400 errors when explicitly set to false."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "media_settings_message.sub_type_settings.enable_inactivity_timeout",
+            "change": "updated",
+            "summary": "sub_type_settings enable_inactivity_timeout is only sent to the API when set to true, avoiding 400 errors when explicitly set to false."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": null,
+            "change": "updated",
+            "summary": "media_settings_callback.site_id resolves to genesyscloud_telephony_providers_edges_site references; zero-value conditional_group_activation condition values are retained in export output."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_task_management_worktype_status",
+            "attribute": "auto_terminate_workitem",
+            "change": "updated",
+            "summary": "auto_terminate_workitem is now updated through a dedicated patch so explicit false is sent to the API and disabling the setting takes effect reliably."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_task_management_worktype_status_transition",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Clearing status_transition_delay_seconds or status_transition_time in configuration now sends null to the API to remove those values from the status."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_team",
+            "attribute": "member_ids",
+            "change": "updated",
+            "summary": "member_ids is only loaded from the API when the team has one or more members; teams with no members return an empty set."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_telephony_providers_edges_phone",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When web_rtc_user_id is set and the user already has a WebRTC phone, Terraform adopts and updates the existing phone instead of failing with a duplicate-assignment error."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_user",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Setting the GENESYSCLOUD_SKIP_INACTIVE_USER_EXPORT environment variable omits inactive users from org export listings."
+        },
+        {
+            "kind": "data_source_attribute",
+            "resource": "genesyscloud_integration_action",
+            "attribute": "action_type",
+            "change": "added",
+            "summary": "Optional static or custom filter to disambiguate lookups when built-in and custom actions share the same name under the same integration."
+        },
+        {
+            "kind": "data_source_behavior",
+            "resource": "genesyscloud_integration_action",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Ambiguous lookup errors now suggest using integration_id and/or action_type to disambiguate."
+        }
+    ]
+}
