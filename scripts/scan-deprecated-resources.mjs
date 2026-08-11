@@ -3,30 +3,39 @@ import { scanProviderDeprecatedResources } from "./lib/deprecated-scan.mjs";
 import {
   compareOverrideList,
   getArgValue,
-  loadOverridesJson,
   printAdvisorySection,
   resolveProviderRoot,
 } from "./lib/advisory-overrides-report.mjs";
+import {
+  loadClassificationJson,
+  resolveClassificationPath,
+} from "./lib/run-classification-advisory.mjs";
+import { resolveLatestProviderVersion } from "./lib/verify-resource-classification.mjs";
 
 const REPO_ROOT = path.resolve(import.meta.dirname, "..");
-const DEFAULT_OVERRIDES_PATH = path.resolve(REPO_ROOT, "public/overrides.json");
+const versionArg = (getArgValue("version") || getArgValue("latest") || "").trim();
+const version = versionArg
+  ? versionArg.replace(/^v/i, "")
+  : await resolveLatestProviderVersion(REPO_ROOT);
+const classificationPath = path.resolve(
+  getArgValue("classification") || resolveClassificationPath(REPO_ROOT, version)
+);
 
 const providerRoot = resolveProviderRoot(REPO_ROOT);
-const overridesPath = path.resolve(getArgValue("overrides") || DEFAULT_OVERRIDES_PATH);
-const overrides = await loadOverridesJson(overridesPath);
+const classification = await loadClassificationJson(classificationPath);
 const scanned = scanProviderDeprecatedResources(providerRoot);
 
 const report = compareOverrideList(
   "deprecatedResourceTypes",
   scanned.deprecatedResourceTypes,
-  overrides
+  classification
 );
 
 console.log(`Scanned ${providerRoot}`);
-console.log(`Compared against ${overridesPath}`);
+console.log(`Compared against ${classificationPath}`);
 printAdvisorySection("Deprecated resources (advisory)", report, {
   details: scanned.details,
 });
 console.log(
-  "\nAdvisory only — merge missing types into public/overrides.json after review."
+  "\nAdvisory only — regenerate public/resource-classification/*.json after review."
 );

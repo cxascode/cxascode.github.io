@@ -1,0 +1,23 @@
+{
+  "version": "1.62.0",
+  "deprecatedResourceTypes": [
+    "genesyscloud_outbound_contact_list_contact"
+  ],
+  "nonExportableResourceTypes": [
+    "genesyscloud_conversations_messaging_settings_default",
+    "genesyscloud_flow_loglevel",
+    "genesyscloud_orgauthorization_pairing",
+    "genesyscloud_outbound_contact_list_contact"
+  ],
+  "cannotBeDestroyedResourceTypes": [
+    "genesyscloud_conversations_messaging_supportedcontent_default",
+    "genesyscloud_flow_outcome",
+    "genesyscloud_group_roles",
+    "genesyscloud_organization_authentication_settings",
+    "genesyscloud_orgauthorization_pairing",
+    "genesyscloud_outbound_settings",
+    "genesyscloud_outbound_wrapupcodemappings",
+    "genesyscloud_telephony_providers_edges_trunk",
+    "genesyscloud_user_roles"
+  ]
+}

@@ -3,27 +3,36 @@ import { scanProviderNonExportableResources } from "./lib/non-exportable-scan.mj
 import {
   compareOverrideList,
   getArgValue,
-  loadOverridesJson,
   printAdvisorySection,
   resolveProviderRoot,
 } from "./lib/advisory-overrides-report.mjs";
+import {
+  loadClassificationJson,
+  resolveClassificationPath,
+} from "./lib/run-classification-advisory.mjs";
+import { resolveLatestProviderVersion } from "./lib/verify-resource-classification.mjs";
 
 const REPO_ROOT = path.resolve(import.meta.dirname, "..");
-const DEFAULT_OVERRIDES_PATH = path.resolve(REPO_ROOT, "public/overrides.json");
+const versionArg = (getArgValue("version") || getArgValue("latest") || "").trim();
+const version = versionArg
+  ? versionArg.replace(/^v/i, "")
+  : await resolveLatestProviderVersion(REPO_ROOT);
+const classificationPath = path.resolve(
+  getArgValue("classification") || resolveClassificationPath(REPO_ROOT, version)
+);
 
 const providerRoot = resolveProviderRoot(REPO_ROOT);
-const overridesPath = path.resolve(getArgValue("overrides") || DEFAULT_OVERRIDES_PATH);
-const overrides = await loadOverridesJson(overridesPath);
+const classification = await loadClassificationJson(classificationPath);
 const scanned = scanProviderNonExportableResources(providerRoot);
 
 const report = compareOverrideList(
   "nonExportableResourceTypes",
   scanned.nonExportableResourceTypes,
-  overrides
+  classification
 );
 
 console.log(`Scanned ${providerRoot}`);
-console.log(`Compared against ${overridesPath}`);
+console.log(`Compared against ${classificationPath}`);
 printAdvisorySection("Non-exportable resources (advisory)", report, {
   details: scanned.details,
 });
@@ -34,6 +43,5 @@ if (scanned.exportersWithoutGetResources.length) {
 }
 
 console.log(
-  "\nAdvisory only — not every type without an exporter needs the badge (e.g. action resources)."
+  "\nAdvisory only — regenerate public/resource-classification/*.json after review."
 );
-console.log("Merge intentional types into public/overrides.json after review.");

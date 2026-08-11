@@ -13,6 +13,7 @@ export {
   TF_EXPORT_RESOURCE_NAMES_DIR,
   TF_EXPORT_SINGLETONS_DIR,
   SCHEMA_FORCE_NEW_DIR,
+  RESOURCE_CLASSIFICATION_DIR,
   LAB_PACKAGES_DIR,
 } from "../scripts/lib/public-data-path-constants.mjs";
 

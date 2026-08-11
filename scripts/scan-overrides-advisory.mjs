@@ -1,22 +1,31 @@
 import path from "node:path";
 import {
   getArgValue,
-  loadOverridesJson,
   printAdvisorySection,
   resolveProviderRoot,
 } from "./lib/advisory-overrides-report.mjs";
-import { runOverridesAdvisory } from "./lib/run-overrides-advisory.mjs";
+import {
+  loadClassificationJson,
+  resolveClassificationPath,
+  runClassificationAdvisory,
+} from "./lib/run-classification-advisory.mjs";
+import { resolveLatestProviderVersion } from "./lib/verify-resource-classification.mjs";
 
 const REPO_ROOT = path.resolve(import.meta.dirname, "..");
-const DEFAULT_OVERRIDES_PATH = path.resolve(REPO_ROOT, "public/overrides.json");
+const versionArg = (getArgValue("version") || getArgValue("latest") || "").trim();
+const version = versionArg
+  ? versionArg.replace(/^v/i, "")
+  : await resolveLatestProviderVersion(REPO_ROOT);
+const classificationPath = path.resolve(
+  getArgValue("classification") || resolveClassificationPath(REPO_ROOT, version)
+);
 
 const providerRoot = resolveProviderRoot(REPO_ROOT);
-const overridesPath = path.resolve(getArgValue("overrides") || DEFAULT_OVERRIDES_PATH);
-const overrides = await loadOverridesJson(overridesPath);
-const { reports, details } = runOverridesAdvisory(providerRoot, overrides);
+const classification = await loadClassificationJson(classificationPath);
+const { reports, details } = runClassificationAdvisory(providerRoot, classification);
 
 console.log(`Scanned ${providerRoot}`);
-console.log(`Compared against ${overridesPath}`);
+console.log(`Compared against ${classificationPath}`);
 
 printAdvisorySection("Deprecated resources (advisory)", reports.deprecatedResourceTypes, {
   details: details.deprecated,
@@ -38,6 +47,6 @@ printAdvisorySection("Cannot be destroyed resources (advisory)", reports.cannotB
 });
 
 console.log(
-  "\nAdvisory only — provider scans suggest candidates; curate public/overrides.json manually."
+  "\nAdvisory only — provider scans suggest candidates; regenerate public/resource-classification/*.json after review."
 );
-console.log("CI/build use verify-overrides-advisory.mjs to fail on blocking drift.");
+console.log("CI/build use verify-overrides-advisory.mjs to fail on classification drift.");

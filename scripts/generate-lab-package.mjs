@@ -19,6 +19,7 @@ import {
   DEPENDENCY_TREE_DIR,
   isDependencyTreeVersionJsonFilename,
   LAB_PACKAGES_DIR,
+  RESOURCE_CLASSIFICATION_DIR,
   resolvePublicDataDir,
   PRIVATE_OVERRIDES_RELATIVE_PATH,
 } from "./lib/public-data-paths.mjs";
@@ -50,6 +51,7 @@ const LAB_GLOBAL_INPUT_RELATIVE_PATHS = [
   "scripts/lib/lab-export-scope.mjs",
   "scripts/lib/lab-package-version.mjs",
   "scripts/lib/public-data-path-constants.mjs",
+  "src/resourceClassification.js",
 ];
 const SKIP_TEMPLATE_ENTRIES = new Set([".vscode", ".DS_Store", "__MACOSX"]);
 
@@ -193,17 +195,30 @@ async function resolveLatestVersion(explicitLatest, jsonFiles) {
   return fromFiles[0] || "";
 }
 
-async function buildLabPackage(version, stagingRoot, { overrides }) {
+async function loadResourceClassification(version) {
+  const classificationPath = path.join(
+    resolvePublicDataDir(REPO_ROOT, RESOURCE_CLASSIFICATION_DIR),
+    `${version}.json`
+  );
+
+  try {
+    return JSON.parse(await fs.readFile(classificationPath, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+async function buildLabPackage(version, stagingRoot, { overrides, classification }) {
   const stagingDir = path.join(stagingRoot, LAB_FOLDER_NAME);
   await copyDir(TEMPLATE_ROOT, stagingDir);
   await patchTerraformFiles(stagingDir, version);
   await patchLabReadme(stagingDir, version);
 
   await patchLabExportExcludeFilters(stagingDir, EXPORT_PIPELINE_MAIN_TF, (original) =>
-    resolveExcludeFilterResources(original, overrides)
+    resolveExcludeFilterResources(original, overrides, classification)
   );
   await patchLabExportExcludeFilters(stagingDir, EXPORT_ALL_MAIN_TF, (original) =>
-    resolveExportAllExcludeFilterResources(original, overrides)
+    resolveExportAllExcludeFilterResources(original, overrides, classification)
   );
 
   return stagingDir;
@@ -304,8 +319,9 @@ async function main() {
         continue;
       }
 
+      const classification = await loadResourceClassification(version);
       const versionStagingRoot = path.join(stagingRoot, version);
-      await buildLabPackage(version, versionStagingRoot, { overrides });
+      await buildLabPackage(version, versionStagingRoot, { overrides, classification });
 
       await zipDirectory(
         path.join(versionStagingRoot, LAB_FOLDER_NAME),
