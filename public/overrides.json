@@ -85,6 +85,11 @@
       "exclude_attributes": ["genesyscloud_group.member_ids"],
       "ignore_changes": ["member_ids"]
     },
+    "genesyscloud_location": {
+      "attributes": ["emergency_number"],
+      "exclude_attributes": ["genesyscloud_location.emergency_number"],
+      "ignore_changes": ["emergency_number"]
+    },
     "genesyscloud_routing_queue": {
       "attributes": ["members"],
       "exclude_attributes": ["genesyscloud_routing_queue.members"],
