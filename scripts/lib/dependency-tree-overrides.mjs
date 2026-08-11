@@ -92,40 +92,26 @@ export function getSupportedResourcesFeatureToggleKeywords(overrides) {
 }
 
 
-export function getDeprecatedResourceTypes(overrides) {
-  const deprecated = overrides?.deprecatedResourceTypes;
-  if (!Array.isArray(deprecated)) return new Set();
+import { classificationTypeSet, resolveClassificationTypeSets } from "../../src/resourceClassification.js";
 
-  return new Set(
-    deprecated
-      .filter((entry) => typeof entry === "string")
-      .map((entry) => entry.trim())
-      .filter(Boolean)
-  );
+export function getDeprecatedResourceTypes(classification, overrides = null) {
+  return resolveClassificationTypeSets(classification, overrides).deprecatedTypes;
 }
 
-export function getNonExportableResourceTypes(overrides) {
-  const nonExportable = overrides?.nonExportableResourceTypes;
-  if (!Array.isArray(nonExportable)) return new Set();
-
-  return new Set(
-    nonExportable
-      .filter((entry) => typeof entry === "string")
-      .map((entry) => entry.trim())
-      .filter(Boolean)
-  );
+export function getNonExportableResourceTypes(classification, overrides = null) {
+  return resolveClassificationTypeSets(classification, overrides).nonExportableTypes;
 }
 
-export function getCannotBeDestroyedResourceTypes(overrides) {
-  const cannotBeDestroyed = overrides?.cannotBeDestroyedResourceTypes;
-  if (!Array.isArray(cannotBeDestroyed)) return new Set();
+export function getCannotBeDestroyedResourceTypes(classification, overrides = null) {
+  return resolveClassificationTypeSets(classification, overrides).cannotBeDestroyedTypes;
+}
 
-  return new Set(
-    cannotBeDestroyed
-      .filter((entry) => typeof entry === "string")
-      .map((entry) => entry.trim())
-      .filter(Boolean)
-  );
+export function getClassificationTypeSet(classification, key, overrides = null) {
+  const sets = resolveClassificationTypeSets(classification, overrides);
+  if (key === "deprecatedResourceTypes") return sets.deprecatedTypes;
+  if (key === "nonExportableResourceTypes") return sets.nonExportableTypes;
+  if (key === "cannotBeDestroyedResourceTypes") return sets.cannotBeDestroyedTypes;
+  return classificationTypeSet(classification, key);
 }
 
 export function applyOverrides(raw, overrides) {

@@ -80,24 +80,31 @@ export function patchExcludeFilterResources(terraformContent, resourceTypes) {
   return terraformContent.replace(pattern, replacement);
 }
 
-function resolveExcludeFilterResourcesFromOutTypes(outOfScopeTypes, terraformContent, overrides) {
+function resolveExcludeFilterResourcesFromOutTypes(
+  outOfScopeTypes,
+  terraformContent,
+  overrides,
+  classification
+) {
   const replaceTypes = parseReplaceWithDatasourceTypes(terraformContent);
-  const nonExportableTypes = getNonExportableResourceTypes(overrides);
+  const nonExportableTypes = getNonExportableResourceTypes(classification, overrides);
   return buildExcludeFilterResources(outOfScopeTypes, replaceTypes, nonExportableTypes);
 }
 
-export function resolveExcludeFilterResources(terraformContent, overrides) {
+export function resolveExcludeFilterResources(terraformContent, overrides, classification) {
   return resolveExcludeFilterResourcesFromOutTypes(
     getOutOfScopeResourceTypes(overrides),
     terraformContent,
-    overrides
+    overrides,
+    classification
   );
 }
 
-export function resolveExportAllExcludeFilterResources(terraformContent, overrides) {
+export function resolveExportAllExcludeFilterResources(terraformContent, overrides, classification) {
   return resolveExcludeFilterResourcesFromOutTypes(
     getLabfilesAllOutResourceTypes(overrides),
     terraformContent,
-    overrides
+    overrides,
+    classification
   );
 }

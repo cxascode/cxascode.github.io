@@ -35,6 +35,7 @@ import {
   GUI_MENU_PATHS_RELATIVE_PATH,
   isDependencyTreeVersionJsonFilename,
   MIN_SINGLETON_FLAG_VERSION,
+  RESOURCE_CLASSIFICATION_DIR,
   SCHEMA_FORCE_NEW_DIR,
   PRIVATE_OVERRIDES_RELATIVE_PATH,
   TF_EXPORT_RESOURCE_NAMES_DIR,
@@ -73,6 +74,7 @@ const SPREADSHEET_GLOBAL_INPUT_RELATIVE_PATHS = [
   "scripts/lib/priority-group-keywords.mjs",
   "src/effectiveDependencies.js",
   "src/guiMenuPaths.js",
+  "src/resourceClassification.js",
   "src/tfExportTemplate.js",
   "src/tfExportSingletons.js",
   "src/schemaForceNew.js",
@@ -134,6 +136,16 @@ function compareVersions(a, b) {
   }
 
   return 0;
+}
+
+async function loadResourceClassification(version) {
+  const classificationPath = path.join(PUBLIC_DIR, RESOURCE_CLASSIFICATION_DIR, `${version}.json`);
+
+  try {
+    return JSON.parse(await fs.readFile(classificationPath, "utf8"));
+  } catch {
+    return null;
+  }
 }
 
 async function loadTfExportCatalog(version) {
@@ -214,11 +226,11 @@ function resolveSpreadsheetRecreateAttributes(resourceType, forceNewCatalog) {
   );
 }
 
-function buildResourceRows(raw, overrides, tfExportCatalog, generatedGuiMenuPaths) {
+function buildResourceRows(raw, overrides, tfExportCatalog, generatedGuiMenuPaths, classification) {
   const hidden = getHiddenResourceTypes(overrides);
-  const deprecatedTypes = getDeprecatedResourceTypes(overrides);
-  const nonExportableTypes = getNonExportableResourceTypes(overrides);
-  const cannotBeDestroyedTypes = getCannotBeDestroyedResourceTypes(overrides);
+  const deprecatedTypes = getDeprecatedResourceTypes(classification, overrides);
+  const nonExportableTypes = getNonExportableResourceTypes(classification, overrides);
+  const cannotBeDestroyedTypes = getCannotBeDestroyedResourceTypes(classification, overrides);
   const patched = applyOverrides(raw, overrides);
   const byType = new Map();
 
@@ -497,7 +509,14 @@ async function main() {
     const inputPath = path.join(INPUT_DIR, file);
     const raw = JSON.parse(await fs.readFile(inputPath, "utf8"));
     const tfExportCatalog = await loadTfExportCatalog(version);
-    const rows = buildResourceRows(raw, overrides, tfExportCatalog, generatedGuiMenuPaths);
+    const classification = await loadResourceClassification(version);
+    const rows = buildResourceRows(
+      raw,
+      overrides,
+      tfExportCatalog,
+      generatedGuiMenuPaths,
+      classification
+    );
 
     await writeWorkbook(rows, outPath);
     if (incremental) {

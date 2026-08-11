@@ -89,11 +89,13 @@ import {
   replaceResourceInUrl,
 } from "./appPermalinks.js";
 import { applyPageSeo, resolvePageSeo } from "./pageSeo.js";
+import { resolveClassificationTypeSets } from "./resourceClassification.js";
 import {
   DEPENDENCY_TREE_DIR,
   MIN_DEPENDENCY_TREE_VERSION,
   MIN_RESOURCE_PERMISSIONS_VERSION,
   MIN_SINGLETON_FLAG_VERSION,
+  RESOURCE_CLASSIFICATION_DIR,
   TF_EXPORT_RESOURCE_NAMES_DIR,
   TF_EXPORT_SINGLETONS_DIR,
   SCHEMA_FORCE_NEW_DIR,
@@ -138,6 +140,9 @@ const TF_EXPORT_SINGLETONS_LATEST_URL = latestJsonUrl(TF_EXPORT_SINGLETONS_DIR);
 const TF_EXPORT_SINGLETONS_VERSION_URL = (v) => versionedJsonUrl(TF_EXPORT_SINGLETONS_DIR, v);
 const SCHEMA_FORCE_NEW_LATEST_URL = latestJsonUrl(SCHEMA_FORCE_NEW_DIR);
 const SCHEMA_FORCE_NEW_VERSION_URL = (v) => versionedJsonUrl(SCHEMA_FORCE_NEW_DIR, v);
+const RESOURCE_CLASSIFICATION_LATEST_URL = latestJsonUrl(RESOURCE_CLASSIFICATION_DIR);
+const RESOURCE_CLASSIFICATION_VERSION_URL = (v) =>
+  versionedJsonUrl(RESOURCE_CLASSIFICATION_DIR, v);
 
 const VERSION_PICKER_TOOLTIP = `Dependencies - v${MIN_DEPENDENCY_TREE_VERSION}+, Permissions - v${MIN_RESOURCE_PERMISSIONS_VERSION}+`;
 
@@ -245,10 +250,11 @@ function isRoleDownloadSupported(version) {
  *     "<resource_type>": "Admin > Menu > Path (overrides src/gui-menu-paths.json)"
  *   },
  *   "hiddenResourceTypes": ["genesyscloud_bcp_tf_exporter", ...]
- *   "deprecatedResourceTypes": ["genesyscloud_journey_outcome", ...]
- *   "nonExportableResourceTypes": ["genesyscloud_outbound_contact_list_contact", ...]
- *   "cannotBeDestroyedResourceTypes": ["genesyscloud_flow_outcome", ...]
+ *   "classificationExtras": { "nonExportableResourceTypes": [...] } // optional manual additions
  * }
+ *
+ * Deprecated / non-exportable / cannot-be-destroyed badges come from
+ * public/resource-classification/{version}.json (provider scans), not overrides.
  *
  * Supported-resources funnel rules and deploy spreadsheet program layer live in
  * src/private-overrides.json (build-time only; not fetched at runtime).
@@ -377,42 +383,6 @@ function getHiddenResourceTypes(overrides) {
   );
 }
 
-function getDeprecatedResourceTypes(overrides) {
-  const deprecated = overrides?.deprecatedResourceTypes;
-  if (!Array.isArray(deprecated)) return new Set();
-
-  return new Set(
-    deprecated
-      .filter((t) => typeof t === "string")
-      .map((t) => t.trim())
-      .filter(Boolean)
-  );
-}
-
-function getNonExportableResourceTypes(overrides) {
-  const nonExportable = overrides?.nonExportableResourceTypes;
-  if (!Array.isArray(nonExportable)) return new Set();
-
-  return new Set(
-    nonExportable
-      .filter((t) => typeof t === "string")
-      .map((t) => t.trim())
-      .filter(Boolean)
-  );
-}
-
-function getCannotBeDestroyedResourceTypes(overrides) {
-  const cannotBeDestroyed = overrides?.cannotBeDestroyedResourceTypes;
-  if (!Array.isArray(cannotBeDestroyed)) return new Set();
-
-  return new Set(
-    cannotBeDestroyed
-      .filter((t) => typeof t === "string")
-      .map((t) => t.trim())
-      .filter(Boolean)
-  );
-}
-
 function buildDepsMaps(raw) {
   const depsMap = new Map();
   const reverseMap = new Map();
@@ -456,6 +426,7 @@ export default function App() {
   const [tfExportResourceNames, setTfExportResourceNames] = useState({});
   const [tfExportSingletonTypes, setTfExportSingletonTypes] = useState(() => new Set());
   const [forceNewCatalog, setForceNewCatalog] = useState(() => ({}));
+  const [resourceClassification, setResourceClassification] = useState(null);
 
   const [query, setQuery] = useState("");
   const [listViewMode, setListViewMode] = useState(LIST_VIEW_TYPE);
@@ -736,24 +707,52 @@ export default function App() {
     };
   }, [selectedVersion]);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
+      const url =
+        selectedVersion === "latest"
+          ? RESOURCE_CLASSIFICATION_LATEST_URL
+          : RESOURCE_CLASSIFICATION_VERSION_URL(selectedVersion);
+
+      try {
+        const res = await fetch(url, { cache: "no-store" });
+        if (!res.ok) {
+          throw new Error(
+            `Failed to fetch resource classification: ${res.status} ${res.statusText}`
+          );
+        }
+
+        const json = await res.json();
+        if (!cancelled) {
+          setResourceClassification(json);
+        }
+      } catch {
+        if (!cancelled) {
+          setResourceClassification(null);
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedVersion]);
+
   const { depsMap, reverseMap } = useMemo(() => buildDepsMaps(raw), [raw]);
 
   const hiddenTypes = useMemo(
     () => (overrides ? getHiddenResourceTypes(overrides) : new Set()),
     [overrides]
   );
-  const deprecatedTypes = useMemo(
-    () => (overrides ? getDeprecatedResourceTypes(overrides) : new Set()),
-    [overrides]
+  const classificationSets = useMemo(
+    () => resolveClassificationTypeSets(resourceClassification, overrides),
+    [resourceClassification, overrides]
   );
-  const nonExportableTypes = useMemo(
-    () => (overrides ? getNonExportableResourceTypes(overrides) : new Set()),
-    [overrides]
-  );
-  const cannotBeDestroyedTypes = useMemo(
-    () => (overrides ? getCannotBeDestroyedResourceTypes(overrides) : new Set()),
-    [overrides]
-  );
+  const deprecatedTypes = classificationSets.deprecatedTypes;
+  const nonExportableTypes = classificationSets.nonExportableTypes;
+  const cannotBeDestroyedTypes = classificationSets.cannotBeDestroyedTypes;
 
   const allTypes = useMemo(() => {
     const s = new Set([...depsMap.keys(), ...reverseMap.keys()]);

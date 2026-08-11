@@ -1,0 +1,33 @@
+{
+  "version": "1.83.0",
+  "deprecatedResourceTypes": [
+    "genesyscloud_journey_outcome",
+    "genesyscloud_journey_outcome_predictor",
+    "genesyscloud_outbound_contact_list_contact"
+  ],
+  "nonExportableResourceTypes": [
+    "genesyscloud_case_management_caseplan_create_version",
+    "genesyscloud_case_management_caseplan_publish",
+    "genesyscloud_conversations_messaging_settings_default",
+    "genesyscloud_orgauthorization_pairing",
+    "genesyscloud_outbound_contact_list_contact"
+  ],
+  "cannotBeDestroyedResourceTypes": [
+    "genesyscloud_case_management_caseplan_create_version",
+    "genesyscloud_case_management_caseplan_publish",
+    "genesyscloud_case_management_stageplan",
+    "genesyscloud_case_management_stepplan",
+    "genesyscloud_conversations_messaging_supportedcontent_default",
+    "genesyscloud_conversations_settings",
+    "genesyscloud_flow_outcome",
+    "genesyscloud_group_roles",
+    "genesyscloud_guide_version",
+    "genesyscloud_organization_authentication_settings",
+    "genesyscloud_organization_presence_definition",
+    "genesyscloud_orgauthorization_pairing",
+    "genesyscloud_outbound_settings",
+    "genesyscloud_outbound_wrapupcodemappings",
+    "genesyscloud_telephony_providers_edges_trunk",
+    "genesyscloud_user_roles"
+  ]
+}

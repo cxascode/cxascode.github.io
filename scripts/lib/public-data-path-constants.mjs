@@ -17,6 +17,7 @@ export const SUPPORTED_RESOURCES_TEMPLATES_DIR = "supported-resources-templates"
 export const TF_EXPORT_RESOURCE_NAMES_DIR = "tf-export-resource-names";
 export const TF_EXPORT_SINGLETONS_DIR = "tf-export-singletons";
 export const SCHEMA_FORCE_NEW_DIR = "schema-force-new";
+export const RESOURCE_CLASSIFICATION_DIR = "resource-classification";
 export const LAB_PACKAGES_DIR = "lab-packages";
 
 /** Oldest provider release with dependency_tree.json on GitHub releases. */
@@ -79,5 +80,6 @@ export const GENERATED_PUBLIC_DATA_DIRS = [
   TF_EXPORT_RESOURCE_NAMES_DIR,
   TF_EXPORT_SINGLETONS_DIR,
   SCHEMA_FORCE_NEW_DIR,
+  RESOURCE_CLASSIFICATION_DIR,
   LAB_PACKAGES_DIR,
 ];
