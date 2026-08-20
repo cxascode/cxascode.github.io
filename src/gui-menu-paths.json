@@ -1661,22 +1661,52 @@
       ]
     },
     {
-      "path": "Orchestration > Enrichments > Outcomes",
-      "link": "#/admin/journey/outcome",
+      "path": "Orchestration > Enrichments > Outcomes & Milestones",
+      "link": "#/admin/outcomes-milestones",
       "links": [
-        "#/admin/journey/outcome"
+        "#/admin/outcomes-milestones"
       ],
-      "titleKey": "navBar.commandView.orchestration.subMenu.enrichments.subMenu.outcomes",
+      "titleKey": "navBar.commandView.orchestration.subMenu.enrichments.subMenu.outcomesMilestones",
       "menuSource": "directory-command-nav",
-      "authorize": "policy=journey:outcome:edit",
+      "authorize": "policy=externalContacts:outcomesMilestones:view",
       "featureToggles": [
-        "AI-1331_journey-outcomes-deprecation"
+        "PURE-6813_OutcomesMilestones"
       ],
-      "includeInSupportedResources": true,
-      "resourceTypes": [
-        "genesyscloud_journey_outcome",
-        "genesyscloud_journey_outcome_predictor"
-      ]
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
+      "resourceTypes": []
+    },
+    {
+      "path": "Orchestration > External Event Ingestion > Configurations",
+      "link": "#/admin/external-events/configurations",
+      "links": [
+        "#/admin/external-events/configurations"
+      ],
+      "titleKey": "navBar.commandView.orchestration.subMenu.externalEventIngestion.subMenu.configurations",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=journey:externalEventsConfiguration:view",
+      "featureToggles": [
+        "PURE-7071_external-events-ui"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
+      "resourceTypes": []
+    },
+    {
+      "path": "Orchestration > External Event Ingestion > Schemas",
+      "link": "#/admin/external-events/schemas",
+      "links": [
+        "#/admin/external-events/schemas"
+      ],
+      "titleKey": "navBar.commandView.orchestration.subMenu.externalEventIngestion.subMenu.schemas",
+      "menuSource": "directory-command-nav",
+      "authorize": "policy=journey:externalEventsSchema:view",
+      "featureToggles": [
+        "PURE-7071_external-events-ui"
+      ],
+      "includeInSupportedResources": false,
+      "skipReason": "Unmapped feature toggle; excluded until a resource-type mapping exists or the toggle drops from the nav bundle.",
+      "resourceTypes": []
     },
     {
       "path": "Orchestration > Orchestration Assets > Data Tables",
