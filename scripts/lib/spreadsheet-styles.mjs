@@ -1,3 +1,5 @@
+import crypto from "node:crypto";
+import fs from "node:fs/promises";
 import path from "node:path";
 import ExcelJS from "exceljs";
 
@@ -299,6 +301,37 @@ export function clearDataRows(worksheet, firstDataRow = 2) {
   }
 }
 
+function hashBuffer(buffer) {
+  return crypto.createHash("sha256").update(buffer).digest("hex");
+}
+
+async function hashFileContents(filePath) {
+  try {
+    const buffer = await fs.readFile(filePath);
+    return hashBuffer(buffer);
+  } catch (err) {
+    if (err?.code === "ENOENT") return "";
+    throw err;
+  }
+}
+
+/**
+ * Writes an ExcelJS workbook only when bytes differ from the file on disk.
+ * Avoids touching checked-in templates when bootstrap rebuilds unchanged layout.
+ */
+export async function writeWorkbookIfChanged(templatePath, workbook) {
+  const nextBuffer = Buffer.from(await workbook.xlsx.writeBuffer());
+  const nextHash = hashBuffer(nextBuffer);
+  const existingHash = await hashFileContents(templatePath);
+
+  if (existingHash && existingHash === nextHash) {
+    return { path: templatePath, written: false };
+  }
+
+  await fs.writeFile(templatePath, nextBuffer);
+  return { path: templatePath, written: true };
+}
+
 export async function writeDeploySpreadsheetTemplate(
   templatePath = DEPLOY_SPREADSHEET_TEMPLATE_PATH
 ) {
@@ -322,8 +355,7 @@ export async function writeDeploySpreadsheetTemplate(
 
   applyWorksheetView(worksheet, { activeCell: "J2" });
 
-  await workbook.xlsx.writeFile(templatePath);
-  return templatePath;
+  return writeWorkbookIfChanged(templatePath, workbook);
 }
 
 export async function writeSupportedResourcesTemplate(templatePath = SUPPORTED_RESOURCES_TEMPLATE_PATH) {
@@ -340,6 +372,5 @@ export async function writeSupportedResourcesTemplate(templatePath = SUPPORTED_R
 
   applyWorksheetView(worksheet, { showOutlineSymbols: true, activeCell: "C2" });
 
-  await workbook.xlsx.writeFile(templatePath);
-  return templatePath;
+  return writeWorkbookIfChanged(templatePath, workbook);
 }
