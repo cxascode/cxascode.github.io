@@ -68,7 +68,9 @@
       "responsemanagement_responseasset": "genesyscloud_responsemanagement_responseasset"
     }
   },
-  "tfExportResourceNames": {},
+  "tfExportResourceNames": {
+    "genesyscloud_location": "<name>"
+  },
   "tfExportExcludeAttributes": {
     "genesyscloud_architect_ivr": {
       "attributes": ["dnis"],
