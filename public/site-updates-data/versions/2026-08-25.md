@@ -4,3 +4,4 @@
 ### What's new
 
 - Fixing ui display bug
+- Updating helper code to support new flow dependencies automation
