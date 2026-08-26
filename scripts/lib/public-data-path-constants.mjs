@@ -9,6 +9,8 @@ export const PRIVATE_OVERRIDES_JSON = "private-overrides.json";
 export const PRIVATE_OVERRIDES_RELATIVE_PATH = `src/${PRIVATE_OVERRIDES_JSON}`;
 
 export const DEPENDENCY_TREE_DIR = "dependency-tree-json";
+export const ARCHITECT_FLOW_DEPENDENCY_TYPE_MAPPING_DIR =
+  "architect_flow_dependency_type_mapping-json";
 export const DEPENDENCY_TREE_MERGED_DIR = "dependency-tree-merged-json";
 export const RESOURCE_PERMISSIONS_JSON_DIR = "resource-permissions-json";
 export const RESOURCE_PERMISSIONS_TF_DIR = "resource-permissions-tf";
@@ -72,6 +74,7 @@ export const MIN_SINGLETON_FLAG_VERSION = "1.78.0";
 /** Versioned generated artifacts under public/ (reserved from resource permalinks). */
 export const GENERATED_PUBLIC_DATA_DIRS = [
   DEPENDENCY_TREE_DIR,
+  ARCHITECT_FLOW_DEPENDENCY_TYPE_MAPPING_DIR,
   DEPENDENCY_TREE_MERGED_DIR,
   RESOURCE_PERMISSIONS_JSON_DIR,
   RESOURCE_PERMISSIONS_TF_DIR,

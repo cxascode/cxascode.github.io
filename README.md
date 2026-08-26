@@ -47,7 +47,7 @@ Reference for `package.json` scripts. CI behavior is described in [Deploy workfl
 | Script | What it does |
 |--------|----------------|
 | `npm run dev` | Start the Vite dev server (hot reload). |
-| `npm run build` | Run `scripts/write-sitemap.mjs` (writes `public/sitemap.xml`, `public/seo/sitemap.xml`, `public/sitemap.txt`, `public/.nojekyll` from latest dependency tree + site updates), `scripts/write-merged-dependency-tree.mjs` (writes `public/dependency-tree-merged-json/`), then Vite production build to `dist/`. |
+| `npm run build` | Run `scripts/write-sitemap.mjs` (writes `public/sitemap.xml`, `public/seo/sitemap.xml`, `public/sitemap.txt`, `public/.nojekyll` from latest dependency tree + site updates), `scripts/build-dependency-trees.mjs` (writes `public/architect_flow_dependency_type_mapping-json/` and `public/dependency-tree-merged-json/` from provider `dependent_consumers.go` + `overrides.json`), then Vite production build to `dist/`. |
 | `npm run preview` | Serve the production build locally after `npm run build`. |
 | `npm run lint` | Run ESLint on the repo. |
 
@@ -99,7 +99,7 @@ Site updates, sitemap dialog paths, and scrub logic derive from this file. Add n
 
 `scripts/generate-resource-permissions-tf.mjs` writes `public/resource-permissions-tf/{version}-read-write-role.tf` and `{version}-read-only-role.tf`, plus `latest-*` aliases. Invoked by `bootstrap-local-dev`, `download-provider-versions`, and CI — not exposed as its own npm script. Flags: `--latest=X.Y.Z`.
 
-`scripts/write-merged-dependency-tree.mjs` writes `public/dependency-tree-merged-json/{version}.json`, `index.json`, and `latest.json` by applying `overrides.json` to each cached raw tree in `public/dependency-tree-json/`. Invoked by `bootstrap-local-dev`, `download-provider-versions`, and `npm run build`.
+`scripts/build-dependency-trees.mjs` writes `public/architect_flow_dependency_type_mapping-json/{version}.json` (flow deps from provider `dependent_consumers.go`) and `public/dependency-tree-merged-json/{version}.json` (raw tree + flow deps + `overrides.json`), plus `index.json` and `latest.json` in each directory. Invoked by `bootstrap-local-dev`, `download-provider-versions`, and `npm run build`. Pass `--latest=X.Y.Z` to build a single version.
 
 `scripts/verify-overrides-advisory.mjs` scans the latest cached provider source for deprecated, non-exportable, and destroy-behavior signals and compares them to `public/overrides.json`. Invoked by `bootstrap-local-dev`, `download-provider-versions`, `npm run build`, and CI. Exits non-zero when **blocking** keys (`deprecatedResourceTypes`, `cannotBeDestroyedResourceTypes`) have provider signals missing from overrides. `nonExportableResourceTypes` is advisory-only (printed, never fails).
 

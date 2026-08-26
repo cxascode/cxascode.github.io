@@ -9,7 +9,10 @@ export const PROVIDER_OWNER = "MyPureCloud";
 export const PROVIDER_REPO = "terraform-provider-genesyscloud";
 
 const REPO_ROOT = path.resolve(import.meta.dirname, "../..");
-const DEFAULT_CACHE_ROOT = path.resolve(REPO_ROOT, ".cache/provider-source");
+export const PROVIDER_SOURCE_CACHE_ROOT = path.resolve(
+  REPO_ROOT,
+  ".cache/provider-source"
+);
 
 // Display version (vX.Y.Z) -> actual upstream GitHub release tag.
 // Keep in sync with RELEASE_TAG_OVERRIDES in cxascode/releasenotes.
@@ -55,7 +58,7 @@ export async function pathExists(filePath) {
 export async function ensureProviderSource(
   version,
   cacheRoot = process.env.TF_EXPORT_PROVIDER_CACHE ||
-    DEFAULT_CACHE_ROOT
+    PROVIDER_SOURCE_CACHE_ROOT
 ) {
   const normalizedVersion = normalizeVersion(version);
   if (!normalizedVersion) {

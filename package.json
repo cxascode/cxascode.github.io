@@ -25,7 +25,7 @@
     "verify-overrides-advisory": "node scripts/verify-overrides-advisory.mjs",
     "verify-resource-classification": "node scripts/verify-resource-classification.mjs",
     "generate-site-updates": "node scripts/generate-site-updates.mjs",
-    "build": "node scripts/write-sitemap.mjs && node scripts/write-merged-dependency-tree.mjs && node scripts/verify-overrides-advisory.mjs && vite build",
+    "build": "node scripts/write-sitemap.mjs && node scripts/build-dependency-trees.mjs && node scripts/verify-overrides-advisory.mjs && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
