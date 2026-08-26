@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
+import { DEPENDENCY_TREE_MERGED_DIR } from "./lib/public-data-path-constants.mjs";
 import { EXTERNAL_SITEMAP_URLS, PUBLIC_SITEMAP_DIALOG_PATHS } from "./lib/site-feature-policy.mjs";
 
 const SITE_ORIGIN = "https://cxascode.github.io";
@@ -12,7 +13,7 @@ const DIALOG_PATHS = PUBLIC_SITEMAP_DIALOG_PATHS;
 
 async function loadResourcePaths() {
   const [latestRaw, overridesRaw] = await Promise.all([
-    fs.readFile(path.join(PUBLIC_DIR, "dependency-tree-json/latest.json"), "utf8"),
+    fs.readFile(path.join(PUBLIC_DIR, DEPENDENCY_TREE_MERGED_DIR, "latest.json"), "utf8"),
     fs.readFile(path.join(PUBLIC_DIR, "overrides.json"), "utf8"),
   ]);
 

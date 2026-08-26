@@ -47,7 +47,7 @@ Reference for `package.json` scripts. CI behavior is described in [Deploy workfl
 | Script | What it does |
 |--------|----------------|
 | `npm run dev` | Start the Vite dev server (hot reload). |
-| `npm run build` | Run `scripts/write-sitemap.mjs` (writes `public/sitemap.xml`, `public/seo/sitemap.xml`, `public/sitemap.txt`, `public/.nojekyll` from latest dependency tree + site updates), `scripts/build-dependency-trees.mjs` (writes `public/architect_flow_dependency_type_mapping-json/` and `public/dependency-tree-merged-json/` from provider `dependent_consumers.go` + `overrides.json`), then Vite production build to `dist/`. |
+| `npm run build` | Run `scripts/build-dependency-trees.mjs` (writes `public/architect_flow_dependency_type_mapping-json/` and `public/dependency-tree-merged-json/` from provider `dependent_consumers.go` + `overrides.json`), `scripts/write-sitemap.mjs` (writes `public/sitemap.xml`, `public/seo/sitemap.xml`, `public/sitemap.txt`, `public/.nojekyll` from latest merged dependency tree + site updates), then Vite production build to `dist/`. |
 | `npm run preview` | Serve the production build locally after `npm run build`. |
 | `npm run lint` | Run ESLint on the repo. |
 
@@ -62,7 +62,7 @@ Reference for `package.json` scripts. CI behavior is described in [Deploy workfl
 
 ### Generators
 
-All generators read `public/overrides.json` unless `--overrides=` is passed (spreadsheet only). Spreadsheet, supported-resources spreadsheet, lab, and gui-menu-paths generators also read `src/private-overrides.json` (merged at load time). Spreadsheet, supported-resources spreadsheet, and lab scripts support **`--incremental`** (skip unchanged versions) and **`--force`** (rebuild all). CI passes `--incremental`; add `--force` locally to match `force_deploy`.
+All generators read `public/overrides.json` unless `--overrides=` is passed (spreadsheet only). Spreadsheet, supported-resources spreadsheet, lab, and gui-menu-paths generators also read `src/private-overrides.json` (merged at load time). Spreadsheet, supported-resources spreadsheet, and lab scripts load **`public/dependency-tree-merged-json/`** (run `scripts/build-dependency-trees.mjs` first if that directory is empty). Spreadsheet, supported-resources spreadsheet, and lab scripts support **`--incremental`** (skip unchanged versions) and **`--force`** (rebuild all). CI passes `--incremental`; add `--force` locally to match `force_deploy`.
 
 | Script | Output | Common flags |
 |--------|--------|--------------|
@@ -369,7 +369,7 @@ Versioned `.tf` files live under `resource-permissions-tf/` on disk (what the pe
 
 ## lab-packages/
 
-`public/lab-packages/` is **generated** from `scripts/templates/cx-as-code-lab/`, **one zip per provider version** (same version list as `dependency-tree-json/`). Each zip pins `version = "~> X.Y.Z"` in every lab `.tf` file that declares a provider constraint, writes `exportpipeline/main.tf` `exclude_filter_resources` from `spreadsheetTemplates.out` in `src/private-overrides.json` (skipping types in that file's `replace_with_datasource` block and `nonExportableResourceTypes`), and writes `exportall/main.tf` `exclude_filter_resources` from optional `labfiles.allout` (same skip rules; omit or leave empty for no exclusions). Resource types honor `replaceDependencies`, `addDependencies`, and `hiddenResourceTypes` the same way as the explorer and spreadsheet generator. Use the [Export builder](https://cxascode.github.io/exportbuilder/) to build export filters interactively.
+`public/lab-packages/` is **generated** from `scripts/templates/cx-as-code-lab/`, **one zip per provider version** (same version list as `dependency-tree-merged-json/`). Each zip pins `version = "~> X.Y.Z"` in every lab `.tf` file that declares a provider constraint, writes `exportpipeline/main.tf` `exclude_filter_resources` from `spreadsheetTemplates.out` in `src/private-overrides.json` (skipping types in that file's `replace_with_datasource` block and `nonExportableResourceTypes`), and writes `exportall/main.tf` `exclude_filter_resources` from optional `labfiles.allout` (same skip rules; omit or leave empty for no exclusions). Lab package rebuilds track merged dependency trees (flow deps + overrides). Use the [Export builder](https://cxascode.github.io/exportbuilder/) to build export filters interactively.
 
 The static lab source lives under `scripts/templates/cx-as-code-lab/CX_as_Code-Lab/`. Update that tree when lab exercises change; re-run the generator to rebuild versioned zips.
 
@@ -393,7 +393,7 @@ Hidden permalink download (same pattern as `/spreadsheet` and `/roles/...`):
 
 ## supported-resources-templates/
 
-`public/supported-resources-templates/` is **generated** from `src/gui-menu-paths.json` `menuCatalog` and each cached `dependency-tree-json/{version}.json`. It lists Directory config destinations (menu path, supported yes/no, mapped resource types) for configuration coverage review — separate from the deploy `/spreadsheet` template.
+`public/supported-resources-templates/` is **generated** from `src/gui-menu-paths.json` `menuCatalog` and each cached `dependency-tree-merged-json/{version}.json`. It lists Directory config destinations (menu path, supported yes/no, mapped resource types) for configuration coverage review — separate from the deploy `/spreadsheet` template.
 
 **Supported-resources funnel** (applied at `generate-gui-menu-paths`; excluded rows record the matching rule in `menuCatalog` → `skipReason`):
 

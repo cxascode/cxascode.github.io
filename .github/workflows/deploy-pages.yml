@@ -320,6 +320,7 @@ jobs:
           node scripts/generate-resource-classification.mjs
           node scripts/verify-tf-export-env-vars.mjs
           node scripts/verify-overrides-advisory.mjs --latest="${latest}"
+          node scripts/build-dependency-trees.mjs
 
           echo "${latest}" > .cache-meta/latest.txt
           echo "true" > .cache-meta/bootstrapped.txt
@@ -406,6 +407,7 @@ jobs:
           node scripts/generate-resource-classification.mjs
           node scripts/verify-tf-export-env-vars.mjs
           node scripts/verify-overrides-advisory.mjs --latest="${latest}"
+          node scripts/build-dependency-trees.mjs
 
           echo "${latest}" > .cache-meta/latest.txt
 

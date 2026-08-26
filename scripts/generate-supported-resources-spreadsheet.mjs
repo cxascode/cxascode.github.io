@@ -17,6 +17,7 @@ import {
   writeStamp,
 } from "./lib/generated-artifact-incremental.mjs";
 import {
+  DEPENDENCY_TREE_MERGED_DIR,
   GUI_MENU_PATHS_RELATIVE_PATH,
   isDependencyTreeVersionJsonFilename,
   SUPPORTED_RESOURCES_TEMPLATES_DIR,
@@ -38,7 +39,7 @@ import {
 } from "./lib/spreadsheet-styles.mjs";
 
 const PUBLIC_DIR = path.resolve("public");
-const INPUT_DIR = path.join(PUBLIC_DIR, "dependency-tree-json");
+const INPUT_DIR = path.join(PUBLIC_DIR, DEPENDENCY_TREE_MERGED_DIR);
 const OUTPUT_DIR = path.join(PUBLIC_DIR, SUPPORTED_RESOURCES_TEMPLATES_DIR);
 const DEFAULT_OVERRIDES_PATH = path.join(PUBLIC_DIR, "overrides.json");
 const REPO_ROOT = path.resolve(import.meta.dirname, "..");
@@ -52,7 +53,9 @@ const SUPPORTED_RESOURCES_GLOBAL_INPUT_RELATIVE_PATHS = [
   GUI_MENU_PATHS_RELATIVE_PATH,
   "scripts/templates/cx-as-code-supported-resources-template.xlsx",
   "scripts/lib/spreadsheet-styles.mjs",
+  "scripts/build-dependency-trees.mjs",
   "scripts/lib/dependency-tree-overrides.mjs",
+  "scripts/lib/flow-dependency-merge.mjs",
   "scripts/lib/load-overrides-document.mjs",
   "scripts/lib/supported-resources-menu-destination.mjs",
   "src/guiMenuPaths.js",
@@ -524,7 +527,7 @@ async function main() {
 
   if (jsonFiles.length === 0) {
     throw new Error(
-      `No dependency tree JSON files found in ${INPUT_DIR}. Run "npm run bootstrap-local-dev" first.`
+      `No dependency tree JSON files found in ${INPUT_DIR}. Run "node scripts/build-dependency-trees.mjs" first.`
     );
   }
 
@@ -608,7 +611,7 @@ async function main() {
     await fs.access(latestSrc);
   } catch {
     throw new Error(
-      `Expected ${latestSrc} was not generated. Check that public/dependency-tree-json/${latest}.json exists.`
+      `Expected ${latestSrc} was not generated. Check that public/${DEPENDENCY_TREE_MERGED_DIR}/${latest}.json exists (run scripts/build-dependency-trees.mjs first).`
     );
   }
 
