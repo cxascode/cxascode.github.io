@@ -16,7 +16,6 @@ import {
   resolveGuiMenuPath,
 } from "../src/guiMenuPaths.js";
 import {
-  applyOverrides,
   getCannotBeDestroyedResourceTypes,
   getDeprecatedResourceTypes,
   getHiddenResourceTypes,
@@ -32,6 +31,7 @@ import {
   resolveSpreadsheetRepoName,
 } from "./lib/priority-group-keywords.mjs";
 import {
+  DEPENDENCY_TREE_MERGED_DIR,
   GUI_MENU_PATHS_RELATIVE_PATH,
   isDependencyTreeVersionJsonFilename,
   MIN_SINGLETON_FLAG_VERSION,
@@ -56,7 +56,7 @@ import {
   styleDataCell,
 } from "./lib/spreadsheet-styles.mjs";
 
-const INPUT_DIR = path.resolve("public/dependency-tree-json");
+const INPUT_DIR = path.resolve("public", DEPENDENCY_TREE_MERGED_DIR);
 const OUTPUT_DIR = path.resolve("public/spreadsheet-templates");
 const PUBLIC_DIR = path.resolve("public");
 const TEMPLATE_PATH = DEPLOY_SPREADSHEET_TEMPLATE_PATH;
@@ -69,7 +69,9 @@ const SPREADSHEET_GLOBAL_INPUT_RELATIVE_PATHS = [
   PRIVATE_OVERRIDES_RELATIVE_PATH,
   "scripts/templates/cx-as-code-spreadsheet-template.xlsx",
   "scripts/lib/spreadsheet-styles.mjs",
+  "scripts/build-dependency-trees.mjs",
   "scripts/lib/dependency-tree-overrides.mjs",
+  "scripts/lib/flow-dependency-merge.mjs",
   "scripts/lib/load-overrides-document.mjs",
   "scripts/lib/priority-group-keywords.mjs",
   "src/effectiveDependencies.js",
@@ -226,15 +228,20 @@ function resolveSpreadsheetRecreateAttributes(resourceType, forceNewCatalog) {
   );
 }
 
-function buildResourceRows(raw, overrides, tfExportCatalog, generatedGuiMenuPaths, classification) {
+function buildResourceRows(
+  dependencyTree,
+  overrides,
+  tfExportCatalog,
+  generatedGuiMenuPaths,
+  classification
+) {
   const hidden = getHiddenResourceTypes(overrides);
   const deprecatedTypes = getDeprecatedResourceTypes(classification, overrides);
   const nonExportableTypes = getNonExportableResourceTypes(classification, overrides);
   const cannotBeDestroyedTypes = getCannotBeDestroyedResourceTypes(classification, overrides);
-  const patched = applyOverrides(raw, overrides);
   const byType = new Map();
 
-  for (const resource of patched.resources || []) {
+  for (const resource of dependencyTree.resources || []) {
     if (!resource || typeof resource.type !== "string") continue;
     if (hidden.has(resource.type)) continue;
     byType.set(resource.type, resource);
@@ -459,7 +466,7 @@ async function main() {
 
   if (jsonFiles.length === 0) {
     throw new Error(
-      `No dependency tree JSON files found in ${INPUT_DIR}. Run "npm run bootstrap-local-dev" first.`
+      `No dependency tree JSON files found in ${INPUT_DIR}. Run "node scripts/build-dependency-trees.mjs" first.`
     );
   }
 
@@ -541,7 +548,7 @@ async function main() {
     await fs.access(latestSrc);
   } catch {
     throw new Error(
-      `Expected ${latestSrc} was not generated. Check that public/dependency-tree-json/${latest}.json exists.`
+      `Expected ${latestSrc} was not generated. Check that public/${DEPENDENCY_TREE_MERGED_DIR}/${latest}.json exists (run scripts/build-dependency-trees.mjs first).`
     );
   }
 

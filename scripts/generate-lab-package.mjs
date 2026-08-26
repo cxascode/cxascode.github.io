@@ -16,7 +16,7 @@ import {
   patchProviderVersionPins,
 } from "./lib/lab-package-version.mjs";
 import {
-  DEPENDENCY_TREE_DIR,
+  DEPENDENCY_TREE_MERGED_DIR,
   isDependencyTreeVersionJsonFilename,
   LAB_PACKAGES_DIR,
   RESOURCE_CLASSIFICATION_DIR,
@@ -32,7 +32,7 @@ const TEMPLATE_ROOT = path.resolve(
   REPO_ROOT,
   "scripts/templates/cx-as-code-lab/CX_as_Code-Lab"
 );
-const INPUT_DIR = resolvePublicDataDir(REPO_ROOT, DEPENDENCY_TREE_DIR);
+const INPUT_DIR = resolvePublicDataDir(REPO_ROOT, DEPENDENCY_TREE_MERGED_DIR);
 const OUTPUT_DIR = resolvePublicDataDir(REPO_ROOT, LAB_PACKAGES_DIR);
 
 const LAB_FOLDER_NAME = "CX_as_Code-Lab";
@@ -46,7 +46,9 @@ const STAMP_DIR = path.resolve(REPO_ROOT, ".cache-meta/artifact-stamps/lab");
 const LAB_GLOBAL_INPUT_RELATIVE_PATHS = [
   "public/overrides.json",
   PRIVATE_OVERRIDES_RELATIVE_PATH,
+  "scripts/build-dependency-trees.mjs",
   "scripts/lib/dependency-tree-overrides.mjs",
+  "scripts/lib/flow-dependency-merge.mjs",
   "scripts/lib/load-overrides-document.mjs",
   "scripts/lib/lab-export-scope.mjs",
   "scripts/lib/lab-package-version.mjs",
@@ -269,7 +271,7 @@ async function main() {
 
   if (jsonFiles.length === 0) {
     throw new Error(
-      `No dependency tree JSON files found in ${INPUT_DIR}. Run "npm run bootstrap-local-dev" first.`
+      `No dependency tree JSON files found in ${INPUT_DIR}. Run "node scripts/build-dependency-trees.mjs" first.`
     );
   }
 
