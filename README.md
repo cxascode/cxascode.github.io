@@ -133,7 +133,7 @@ npm run download-provider-versions
 
 `public/overrides.json` patches release data served by the site:
 
-- `addDependencies` / `replaceDependencies` — adjust dependency trees from the provider release JSON. At build time these patches are baked into `public/dependency-tree-merged-json/` (published as `https://cxascode.github.io/dependency-tree-merged-json/{version}.json`, with `latest.json` and `index.json`) for external consumers; the app still merges at runtime from the raw tree + `overrides.json`.
+- `addDependencies` / `replaceDependencies` — adjust dependency trees from the provider release JSON. At build time these patches are baked into `public/dependency-tree-merged-json/` (published as `https://cxascode.github.io/dependency-tree-merged-json/{version}.json`, with `latest.json` and `index.json`). The app loads that merged tree at runtime (includes `genesyscloud_flow` deps from `dependent_consumers.go`).
 - `tfExportResourceNames` — optional per-type override for **genesyscloud_tf_export template** filter placeholders; wins over the generated map in `tf-export-resource-names.json`
 - `tfExportExcludeAttributes` — per resource type, `attributes` (labels for the Good To Know prose), plus literal list entries for `exclude_attributes` and `ignore_changes` (what goes inside each `[...]` in HCL). Types not listed show no note.
 - `dependencyNotes` — per resource type, Markdown note (GFM) shown at the bottom of Resource Type Details when that type is selected. Use `\n` in JSON for line breaks (not `\\n`).

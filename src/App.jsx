@@ -91,7 +91,7 @@ import {
 import { applyPageSeo, resolvePageSeo } from "./pageSeo.js";
 import { resolveClassificationTypeSets } from "./resourceClassification.js";
 import {
-  DEPENDENCY_TREE_DIR,
+  DEPENDENCY_TREE_MERGED_DIR,
   MIN_DEPENDENCY_TREE_VERSION,
   MIN_RESOURCE_PERMISSIONS_VERSION,
   MIN_SINGLETON_FLAG_VERSION,
@@ -105,11 +105,11 @@ import {
   versionedJsonUrl,
 } from "./publicDataPaths.js";
 
-const INDEX_URL = indexJsonUrl(DEPENDENCY_TREE_DIR);
-const LATEST_URL = latestJsonUrl(DEPENDENCY_TREE_DIR);
+const INDEX_URL = indexJsonUrl(DEPENDENCY_TREE_MERGED_DIR);
+const LATEST_URL = latestJsonUrl(DEPENDENCY_TREE_MERGED_DIR);
 const OVERRIDES_URL = publicDataUrl("", "overrides.json");
 const PROVIDER_ENV_VARS_URL = publicDataUrl("", "provider-env-vars.json");
-const VERSION_URL = (v) => versionedJsonUrl(DEPENDENCY_TREE_DIR, v);
+const VERSION_URL = (v) => versionedJsonUrl(DEPENDENCY_TREE_MERGED_DIR, v);
 
 function attributeIndexVersionFromUrl(versionFromUrl) {
   const trimmed = (versionFromUrl || "").trim().replace(/^v/i, "");
@@ -585,10 +585,9 @@ export default function App() {
         }
 
         const json = await depsRes.json();
-        const patched = applyOverrides(json, overrides);
 
         if (!cancelled) {
-          setRaw(patched);
+          setRaw(json);
         }
       } catch (e) {
         if (!cancelled) {
