@@ -59,6 +59,11 @@
       "exclude_attributes": ["genesyscloud_location.emergency_number"],
       "ignore_changes": ["emergency_number"]
     },
+    "genesyscloud_responsemanagement_responseasset": {
+      "attributes": ["content_location"],
+      "exclude_attributes": ["genesyscloud_responsemanagement_responseasset.content_location"],
+      "ignore_changes": []
+    },
     "genesyscloud_routing_queue": {
       "attributes": ["members"],
       "exclude_attributes": ["genesyscloud_routing_queue.members"],
@@ -72,10 +77,11 @@
     "genesyscloud_telephony_providers_edges_phonebasesettings": {
       "attributes": ["line_base_settings_id"],
       "exclude_attributes": ["genesyscloud_telephony_providers_edges_phonebasesettings.line_base_settings_id"],
-      "ignore_changes": ["line_base_settings_id"]
+      "ignore_changes": []
     }
   },
   "dependencyNotes": {
+    "genesyscloud_auth_role": "-If you see an error after applying a role, try to apply the role again. The resulting plan will tell you which permissions in your role are not available in the org you are applying the role to.",
     "genesyscloud_flow": "- Only the latest published flow versions are exportable using CX as Code.\n- Flow version numbers are not maintained in the export/import process.\n  - **Recommendation:** Before publishing, store the exported version number in the description field of the flow so changes can be tracked in source control.\n- These are the flow types used in `.tf` and `.yaml` files.\n\n| gui | cx as code filter type | archy flowType/cx as code type attribute* | .yaml |\n|---|---|---|---|\n| **Initial Flows** |  |  |  |\n| Inbound Call | `INBOUNDCALL` | `inboundcall` | `inboundCall:` |\n| Inbound Message | `INBOUNDSHORTMESSAGE` | `inboundshortmessage` | `inboundShortMessage:` |\n| Inbound Email | `INBOUNDEMAIL` | `inboundemail` | `inboundEmail:` |\n| Inbound Chat | `INBOUNDCHAT` | `inboundchat` | `inboundChat:` |\n| Outbound Call | `OUTBOUNDCALL` | `outboundcall` | `outboundCall:` |\n| **Supporting Flows** |  |  |  |\n| Bot Flow | `BOT` | `bot` | `botFlow:` |\n| Digital Bot Flow | `DIGITALBOT` | `digitalbot` | `digitalBot:` |\n| Common Module | `COMMONMODULE` | `commonmodule` | `commonModule:` |\n| In-Queue Call | `INQUEUECALL` | `inqueuecall` | `inqueueCall:` |\n| In-Queue Email | `INQUEUEEMAIL` | `inqueueemail` | `inqueueEmail:` |\n| In-Queue Message | `INQUEUESHORTMESSAGE` | `inqueueshortmessage` | `inqueueShortMessage:` |\n| Secure Call | `SECURECALL` | `securecall` | `secureCall:` |\n| Voicemail | `VOICEMAIL` | `voicemail` | `voicemail:` |\n| Workflow | `WORKFLOW` | `workflow` | `workflow:` |\n| Workitem Flow | `WORKITEM` | `workitem` | `workitem:` |\n| **Post Interaction** |  |  |  |\n| Voice Survey | `VOICESURVEY` | `voicesurvey` | `voiceSurvey:` |\n| Web Survey Invite | `SURVEYINVITE` | `surveyinvite` | `surveyInvite:` |\n\n\\* cx as code filters and exports data source/resource flow types as _uppercase_, but requires **lowercase** to apply.",
     "genesyscloud_architect_datatable_row": "- To select all rows in a datatable, use this filter syntax: **`\"genesyscloud_architect_datatable_row::^<datatable name>_.*$\"`**",
     "genesyscloud_externalcontacts_contact": "- To select all contacts in an organization, use this filter syntax: **`\"genesyscloud_externalcontacts_contact::^<external org name>_.*$\"`**",
