@@ -21,6 +21,17 @@ export function getLabfilesAllOutResourceTypes(overrides) {
   return normalizeResourceTypeList(overrides?.labfiles?.allout);
 }
 
+/** Resource types registered for a provider version (from dependency-tree-merged-json). */
+export function getKnownResourceTypes(dependencyTree) {
+  if (!dependencyTree || !Array.isArray(dependencyTree.resources)) return null;
+
+  return new Set(
+    dependencyTree.resources
+      .map((resource) => (typeof resource?.type === "string" ? resource.type.trim() : ""))
+      .filter(Boolean)
+  );
+}
+
 function stripHclLineComments(terraformContent) {
   return terraformContent
     .split("\n")
@@ -48,7 +59,8 @@ export function parseReplaceWithDatasourceTypes(terraformContent) {
 export function buildExcludeFilterResources(
   outOfScopeTypes,
   replaceWithDatasourceTypes,
-  nonExportableTypes = []
+  nonExportableTypes = [],
+  knownResourceTypes = null
 ) {
   const replaceTypes =
     replaceWithDatasourceTypes instanceof Set
@@ -56,8 +68,14 @@ export function buildExcludeFilterResources(
       : new Set(replaceWithDatasourceTypes);
   const nonExportable =
     nonExportableTypes instanceof Set ? nonExportableTypes : new Set(nonExportableTypes);
+  const knownTypes =
+    knownResourceTypes instanceof Set ? knownResourceTypes : null;
 
-  return outOfScopeTypes.filter((type) => !replaceTypes.has(type) && !nonExportable.has(type));
+  return outOfScopeTypes.filter((type) => {
+    if (replaceTypes.has(type) || nonExportable.has(type)) return false;
+    if (knownTypes) return knownTypes.has(type);
+    return true;
+  });
 }
 
 export function renderExcludeFilterResourcesAttribute(resourceTypes, indent = "  ") {
@@ -84,27 +102,46 @@ function resolveExcludeFilterResourcesFromOutTypes(
   outOfScopeTypes,
   terraformContent,
   overrides,
-  classification
+  classification,
+  dependencyTree = null
 ) {
   const replaceTypes = parseReplaceWithDatasourceTypes(terraformContent);
   const nonExportableTypes = getNonExportableResourceTypes(classification, overrides);
-  return buildExcludeFilterResources(outOfScopeTypes, replaceTypes, nonExportableTypes);
+  const knownResourceTypes = getKnownResourceTypes(dependencyTree);
+  return buildExcludeFilterResources(
+    outOfScopeTypes,
+    replaceTypes,
+    nonExportableTypes,
+    knownResourceTypes
+  );
 }
 
-export function resolveExcludeFilterResources(terraformContent, overrides, classification) {
+export function resolveExcludeFilterResources(
+  terraformContent,
+  overrides,
+  classification,
+  dependencyTree = null
+) {
   return resolveExcludeFilterResourcesFromOutTypes(
     getOutOfScopeResourceTypes(overrides),
     terraformContent,
     overrides,
-    classification
+    classification,
+    dependencyTree
   );
 }
 
-export function resolveExportAllExcludeFilterResources(terraformContent, overrides, classification) {
+export function resolveExportAllExcludeFilterResources(
+  terraformContent,
+  overrides,
+  classification,
+  dependencyTree = null
+) {
   return resolveExcludeFilterResourcesFromOutTypes(
     getLabfilesAllOutResourceTypes(overrides),
     terraformContent,
     overrides,
-    classification
+    classification,
+    dependencyTree
   );
 }

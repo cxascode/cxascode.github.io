@@ -210,17 +210,27 @@ async function loadResourceClassification(version) {
   }
 }
 
-async function buildLabPackage(version, stagingRoot, { overrides, classification }) {
+async function loadDependencyTree(version) {
+  const dependencyTreePath = path.join(INPUT_DIR, `${version}.json`);
+
+  try {
+    return JSON.parse(await fs.readFile(dependencyTreePath, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+async function buildLabPackage(version, stagingRoot, { overrides, classification, dependencyTree }) {
   const stagingDir = path.join(stagingRoot, LAB_FOLDER_NAME);
   await copyDir(TEMPLATE_ROOT, stagingDir);
   await patchTerraformFiles(stagingDir, version);
   await patchLabReadme(stagingDir, version);
 
   await patchLabExportExcludeFilters(stagingDir, EXPORT_PIPELINE_MAIN_TF, (original) =>
-    resolveExcludeFilterResources(original, overrides, classification)
+    resolveExcludeFilterResources(original, overrides, classification, dependencyTree)
   );
   await patchLabExportExcludeFilters(stagingDir, EXPORT_ALL_MAIN_TF, (original) =>
-    resolveExportAllExcludeFilterResources(original, overrides, classification)
+    resolveExportAllExcludeFilterResources(original, overrides, classification, dependencyTree)
   );
 
   return stagingDir;
@@ -322,8 +332,13 @@ async function main() {
       }
 
       const classification = await loadResourceClassification(version);
+      const dependencyTree = await loadDependencyTree(version);
       const versionStagingRoot = path.join(stagingRoot, version);
-      await buildLabPackage(version, versionStagingRoot, { overrides, classification });
+      await buildLabPackage(version, versionStagingRoot, {
+        overrides,
+        classification,
+        dependencyTree,
+      });
 
       await zipDirectory(
         path.join(versionStagingRoot, LAB_FOLDER_NAME),
