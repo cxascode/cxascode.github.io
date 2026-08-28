@@ -141,6 +141,8 @@ These **read** cxascode output at runtime (or sync a fallback at build). They do
 
 ### Stagehand (`cxascode/stagehand`)
 
+**Cadence:** only when you ship Stagehand features or bugfixes — sync then so it picks up the latest cxascode `gui-menu-paths` at release time (no daily/scheduled sync).
+
 | If this failed… | Do this |
 |-----------------|---------|
 | Export registry out of date after menu changes | After cxascode **`generate-gui-menu-paths`** deploys: `python3 scripts/sync-gui-menu-paths.py` then regenerate export registry / cut extension release (see stagehand README). |
