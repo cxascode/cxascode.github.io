@@ -114,9 +114,9 @@ export function buildFlowDependencyArtifact(consumerMap, overridesByType, provid
   return {
     terraform_resource: FLOW_TF_RESOURCE,
     description:
-      "Terraform resource types Architect flows may consume at export time. " +
-      "Automated base from provider dependent_consumers.go; optional add/remove " +
-      `from overrides.json by_type.${FLOW_TF_RESOURCE}.`,
+      "Terraform resource types the provider maps when resolving Architect flow " +
+      "dependencies at export time. Automated from provider dependent_consumers.go; " +
+      `optional add/remove from overrides.json by_type.${FLOW_TF_RESOURCE}.`,
     provider_version: normalizeVersion(providerVersion),
     automated_source: AUTOMATED_SOURCE,
     dependent_consumer_map: consumerMap,
@@ -179,4 +179,14 @@ export async function buildMergedDependencyTree({
     }
   );
   return applyOverrides(withFlow, overrides);
+}
+
+export function formatArchitectDependencyArtifactLog(resourceType, artifact) {
+  return (
+    `[info] ${artifact.provider_version}: ${resourceType} ` +
+    `${artifact.automated_dependencies.length} automated, ` +
+    `+${artifact.dependencies_add.length} override add, ` +
+    `-${artifact.dependencies_remove.length} override remove, ` +
+    `${artifact.possible_dependencies.length} final`
+  );
 }

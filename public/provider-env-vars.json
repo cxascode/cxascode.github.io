@@ -305,6 +305,14 @@
       "export-template": [
         "genesyscloud_user"
       ]
+    },
+    {
+      "name": "ENABLE_STANDALONE_INTEGRATION_CONFIG",
+      "valueHint": "1",
+      "description": "Required for export and apply when using genesyscloud_integration_config resource",
+      "export-template": [
+        "genesyscloud_integration_config"
+      ]
     }
   ],
   "providerEnvVarsIgnore": [

@@ -1,10 +1,10 @@
 {
-  "permissionsSource": "public/resource-permissions-json/1.85.0.json",
+  "permissionsSource": "public/resource-permissions-json/1.86.0.json",
   "permissionsUnion": {
     "fromVersion": "1.76.0",
-    "toVersion": "1.85.0",
-    "fileCount": 18,
-    "resourceTypeCount": 144,
+    "toVersion": "1.86.0",
+    "fileCount": 19,
+    "resourceTypeCount": 150,
     "minVersion": "1.76.0"
   },
   "menuCatalog": [
@@ -1266,6 +1266,7 @@
       "includeInSupportedResources": true,
       "resourceTypes": [
         "genesyscloud_integration",
+        "genesyscloud_integration_config",
         "genesyscloud_integration_credential"
       ]
     },
@@ -1548,7 +1549,11 @@
         "AI-1365_agentic_virtual_agents"
       ],
       "includeInSupportedResources": true,
-      "resourceTypes": []
+      "resourceTypes": [
+        "genesyscloud_agentic_virtual_agent",
+        "genesyscloud_agentic_virtual_agent_version",
+        "genesyscloud_agentic_virtual_agent_version_publish"
+      ]
     },
     {
       "path": "Orchestration > AI Studio > Genesys Cloud Copilot Configuration",
@@ -2233,7 +2238,9 @@
       "menuSource": "directory-command-nav",
       "authorize": "policy=authorization:policy:view",
       "includeInSupportedResources": true,
-      "resourceTypes": []
+      "resourceTypes": [
+        "genesyscloud_access_policy"
+      ]
     },
     {
       "path": "User Management > ACD Skills and Languages",

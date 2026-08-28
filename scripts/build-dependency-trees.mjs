@@ -3,6 +3,7 @@ import path from "node:path";
 import {
   buildFlowDependencyArtifact,
   buildMergedDependencyTree,
+  formatArchitectDependencyArtifactLog,
   loadDependentConsumerMap,
   loadOverridesByType,
 } from "./lib/flow-dependency-merge.mjs";
@@ -94,13 +95,7 @@ async function buildProviderVersion(version, overrides) {
   await writeJson(path.join(MERGED_DIR, `${version}.json`), merged);
 
   console.log(`[info] ${version}: wrote flow mapping + merged dependency tree`);
-  console.log(
-    `[info] ${version}: genesyscloud_flow ` +
-      `${flowArtifact.automated_dependencies.length} automated, ` +
-      `+${flowArtifact.dependencies_add.length} override add, ` +
-      `-${flowArtifact.dependencies_remove.length} override remove, ` +
-      `${flowArtifact.possible_dependencies.length} final`
-  );
+  console.log(formatArchitectDependencyArtifactLog("genesyscloud_flow", flowArtifact));
 }
 
 async function main() {
