@@ -2,6 +2,72 @@
   {
     "type": "export_behavior",
     "resource": "genesyscloud_tf_export",
+    "attribute": "enable_dependency_resolution",
+    "introduced": "Unknown",
+    "last_updated": "v1.86.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Dependency resolution processes resources in a stable order sorted by resource ID, so depends_on attribute ordering is consistent across repeated export runs.",
+    "history": [
+      {
+        "version": "v1.77.3",
+        "change": "updated",
+        "summary": "When using include_filter_resources or include_filter_resources_by_id, setting enable_dependency_resolution to true now generates depends_on blocks without requiring a non-empty resource-type filter list."
+      },
+      {
+        "version": "v1.77.3",
+        "change": "updated",
+        "summary": "When using exclude_filter_resources or the default export mode (no include/exclude filter), enable_dependency_resolution no longer adds depends_on blocks, even when set to true."
+      },
+      {
+        "version": "v1.86.0",
+        "change": "updated",
+        "summary": "When enable_dependency_resolution is enabled, the exporter checks that the Architect dependency tracking index is operational before resolving flow dependencies. If the index is not ready, it triggers a rebuild and waits (up to approximately five minutes) before continuing."
+      },
+      {
+        "version": "v1.86.0",
+        "change": "updated",
+        "summary": "Dependency resolution processes resources in a stable order sorted by resource ID, so depends_on attribute ordering is consistent across repeated export runs."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_tf_export",
+    "attribute": "ignore_cyclic_deps",
+    "introduced": "Unknown",
+    "last_updated": "v1.86.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When ignore_cyclic_deps is enabled, bidirectional cyclic dependencies are automatically removed from generated depends_on attributes to reduce Terraform cycle errors during apply.",
+    "history": [
+      {
+        "version": "v1.86.0",
+        "change": "updated",
+        "summary": "When ignore_cyclic_deps is enabled, bidirectional cyclic dependencies are automatically removed from generated depends_on attributes to reduce Terraform cycle errors during apply."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_tf_export",
+    "attribute": "enable_dependency_resolution",
+    "introduced": "Unknown",
+    "last_updated": "v1.86.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Description updated to document that dependency resolution adds a depends_on attribute to both genesyscloud_flow and genesyscloud_script resources, and that referenced dependencies inside flow or script configuration are resolved and exported.",
+    "history": [
+      {
+        "version": "v1.86.0",
+        "change": "updated",
+        "summary": "Description updated to document that dependency resolution adds a depends_on attribute to both genesyscloud_flow and genesyscloud_script resources, and that referenced dependencies inside flow or script configuration are resolved and exported."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_tf_export",
     "attribute": "export_deprecated",
     "introduced": "Unknown",
     "last_updated": "v1.85.0",
@@ -355,28 +421,6 @@
         "version": "v1.78.0",
         "change": "updated",
         "summary": "A list entry that is only a resource type name (without :: and label) now matches all exported instances of that type."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
-    "resource": "genesyscloud_tf_export",
-    "attribute": "enable_dependency_resolution",
-    "introduced": "Unknown",
-    "last_updated": "v1.77.3",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "When using exclude_filter_resources or the default export mode (no include/exclude filter), enable_dependency_resolution no longer adds depends_on blocks, even when set to true.",
-    "history": [
-      {
-        "version": "v1.77.3",
-        "change": "updated",
-        "summary": "When using include_filter_resources or include_filter_resources_by_id, setting enable_dependency_resolution to true now generates depends_on blocks without requiring a non-empty resource-type filter list."
-      },
-      {
-        "version": "v1.77.3",
-        "change": "updated",
-        "summary": "When using exclude_filter_resources or the default export mode (no include/exclude filter), enable_dependency_resolution no longer adds depends_on blocks, even when set to true."
       }
     ]
   },

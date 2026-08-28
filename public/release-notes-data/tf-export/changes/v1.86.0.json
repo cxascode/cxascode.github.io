@@ -1,0 +1,44 @@
+{
+    "version": "v1.86.0",
+    "previous": "v1.85.0",
+    "resource": "genesyscloud_tf_export",
+    "changes": [
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "enable_dependency_resolution",
+            "change": "updated",
+            "summary": "Description updated to document that dependency resolution adds a depends_on attribute to both genesyscloud_flow and genesyscloud_script resources, and that referenced dependencies inside flow or script configuration are resolved and exported."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "enable_dependency_resolution",
+            "change": "updated",
+            "summary": "When enable_dependency_resolution is enabled, the exporter checks that the Architect dependency tracking index is operational before resolving flow dependencies. If the index is not ready, it triggers a rebuild and waits (up to approximately five minutes) before continuing."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "enable_dependency_resolution",
+            "change": "updated",
+            "summary": "Dependency resolution processes resources in a stable order sorted by resource ID, so depends_on attribute ordering is consistent across repeated export runs."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "ignore_cyclic_deps",
+            "change": "updated",
+            "summary": "When ignore_cyclic_deps is enabled, bidirectional cyclic dependencies are automatically removed from generated depends_on attributes to reduce Terraform cycle errors during apply."
+        }
+    ],
+    "related_export_changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_script",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Data source genesyscloud_script resources (referenced but not managed) are skipped during dependency resolution, matching existing behavior for data source flows."
+        }
+    ]
+}

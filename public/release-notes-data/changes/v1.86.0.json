@@ -1,0 +1,489 @@
+{
+    "version": "v1.86.0",
+    "previous": "v1.85.0",
+    "changes": [
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_access_policy",
+            "attribute": null,
+            "change": "added",
+            "summary": "New Terraform resource registered in v1.86.0."
+        },
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_agentic_virtual_agent",
+            "attribute": null,
+            "change": "added",
+            "summary": "New Terraform resource registered in v1.86.0."
+        },
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_agentic_virtual_agent_version",
+            "attribute": null,
+            "change": "added",
+            "summary": "New Terraform resource registered in v1.86.0."
+        },
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_agentic_virtual_agent_version_publish",
+            "attribute": null,
+            "change": "added",
+            "summary": "New Terraform resource registered in v1.86.0."
+        },
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_integration_config",
+            "attribute": null,
+            "change": "added",
+            "summary": "New Terraform resource registered in v1.86.0."
+        },
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_routing_queue_identity_resolution",
+            "attribute": null,
+            "change": "added",
+            "summary": "New Terraform resource registered in v1.86.0."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_business_rules_decision_table",
+            "attribute": "rows_csv_filepath",
+            "change": "added",
+            "summary": "Path to a CSV file of decision table rows; mutually exclusive with nested rows. Create and later CSV edits run a Replace import job and publish the draft version."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_business_rules_decision_table",
+            "attribute": "rows_csv_content_hash",
+            "change": "added",
+            "summary": "Computed hash of the CSV file content used to detect file changes."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_business_rules_decision_table",
+            "attribute": "rows_record_count",
+            "change": "added",
+            "summary": "Computed count of data rows imported from the CSV at last successful import."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_business_rules_decision_table",
+            "attribute": "rows",
+            "change": "updated",
+            "summary": "No longer required; now optional and deprecated in favor of rows_csv_filepath. Use exactly one of rows or rows_csv_filepath."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_business_rules_decision_table",
+            "attribute": null,
+            "change": "updated",
+            "summary": "CSV-backed row management runs import jobs in Replace mode when the file path or content hash changes."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_business_rules_decision_table",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Row data can be exported to a CSV file under a rows subdirectory; nested rows blocks are not emitted for CSV-backed exports."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_idp_adfs",
+            "attribute": "force_authn",
+            "change": "added",
+            "summary": "Optional flag (defaults to true) to redirect to the identity provider with ForceAuthn after inactivity timeout."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_idp_generic",
+            "attribute": "force_authn",
+            "change": "added",
+            "summary": "Optional flag (defaults to true) to redirect to the identity provider with ForceAuthn after inactivity timeout."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_idp_gsuite",
+            "attribute": "force_authn",
+            "change": "added",
+            "summary": "Optional flag (defaults to true) to redirect to the identity provider with ForceAuthn after inactivity timeout."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_idp_okta",
+            "attribute": "force_authn",
+            "change": "added",
+            "summary": "Optional flag (defaults to true) to redirect to the identity provider with ForceAuthn after inactivity timeout."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_idp_onelogin",
+            "attribute": "force_authn",
+            "change": "added",
+            "summary": "Optional flag (defaults to true) to redirect to the identity provider with ForceAuthn after inactivity timeout."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_idp_ping",
+            "attribute": "force_authn",
+            "change": "added",
+            "summary": "Optional flag (defaults to true) to redirect to the identity provider with ForceAuthn after inactivity timeout."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_idp_salesforce",
+            "attribute": "force_authn",
+            "change": "added",
+            "summary": "Optional flag (defaults to true) to redirect to the identity provider with ForceAuthn after inactivity timeout."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_integration_action",
+            "attribute": "function_config.file_content_hash",
+            "change": "added",
+            "summary": "Optional and computed hash of the function zip file; detects content changes when file_path is updated."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_integration_action",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Read preserves configured function_config.file_path and function_config.file_content_hash because Genesys Cloud does not return the original zip binary."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_integration_action",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exports placeholder paths for function zip files under a function_zips subdirectory; supply the zip at the exported path before apply."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_journey_action_map",
+            "attribute": "trigger_with_outcome_probability_conditions",
+            "change": "removed",
+            "summary": "Journey outcome trigger conditions are no longer supported."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_journey_action_map",
+            "attribute": "trigger_with_outcome_quantile_conditions",
+            "change": "removed",
+            "summary": "Journey outcome trigger conditions are no longer supported."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_journey_action_map",
+            "attribute": "action.is_pacing_enabled",
+            "change": "removed",
+            "summary": "Web Chat pacing setting removed with Web Chat deprecation."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_journey_action_map",
+            "attribute": "action.media_type",
+            "change": "updated",
+            "summary": "webchat is no longer a valid value; allowed values are webMessagingOffer, contentOffer, architectFlow, and openAction."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_journey_action_template",
+            "attribute": "media_type",
+            "change": "updated",
+            "summary": "webchat is no longer a valid value; allowed values are webMessagingOffer, contentOffer, architectFlow, and openAction."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_journey_outcome_predictor",
+            "attribute": null,
+            "change": "updated",
+            "summary": "outcome_id is no longer resolved to genesyscloud_journey_outcome references during export."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_knowledge_document",
+            "attribute": "label_ids",
+            "change": "added",
+            "summary": "Optional and computed composite label IDs used for export dependency resolution; do not set manually."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_knowledge_document",
+            "attribute": "category_id",
+            "change": "added",
+            "summary": "Optional and computed composite category ID used for export dependency resolution; do not set manually."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_knowledge_document",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Documents with no labels now set knowledge_document.label_names to an empty list instead of omitting the attribute."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_knowledge_document",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Label and category references resolve through genesyscloud_knowledge_label and genesyscloud_knowledge_category; export output strips helper label_ids and category_id values."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaign",
+            "attribute": "precise_dialing_enabled",
+            "change": "added",
+            "summary": "Optional flag to enable precise dialing on the campaign."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "time_zone_id",
+            "change": "added",
+            "summary": "Optional IANA time zone for date/time conditions; computed from the API when unset."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "condition_groups.conditions.date_time_parameters",
+            "change": "added",
+            "summary": "Optional block for v2 date/time condition types with nested time, day, date, and weekday-of-month settings."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "condition_groups.conditions.campaign_run_time_settings",
+            "change": "added",
+            "summary": "Optional block for campaignRunTime conditions, including include_waiting_time."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "condition_groups.conditions.campaign_wait_time_settings",
+            "change": "added",
+            "summary": "Optional block for campaignWaitTime conditions, including required wait_type (Agents, Contacts, or Lines)."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_conditions.date_time_parameters",
+            "change": "added",
+            "summary": "Date/time parameter block available only when campaign_rule_processing is v2 with condition_groups."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_conditions.campaign_run_time_settings",
+            "change": "added",
+            "summary": "Runtime settings block available only when campaign_rule_processing is v2 with condition_groups."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_conditions.campaign_wait_time_settings",
+            "change": "added",
+            "summary": "Wait-time settings block available only when campaign_rule_processing is v2 with condition_groups."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "parameters.operator",
+            "change": "updated",
+            "summary": "Condition parameters now accept date/time operators before, after, between, and in when used with v2 date/time condition types."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "execution_settings.time_zone_id",
+            "change": "updated",
+            "summary": "Plan-time validation now checks IANA time zone format."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Plan-time and apply-time validation reject v2-only condition types and nested date/time blocks in legacy campaign_rule_conditions."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "action.parameters",
+            "change": "updated",
+            "summary": "Action parameter blocks no longer accept date/time comparison operators."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "media_settings_callback.edge_group_id",
+            "change": "added",
+            "summary": "Optional edge group ID for callback dialing instead of the default edge group."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "members",
+            "change": "updated",
+            "summary": "Changed from a set to a list; existing state migrates automatically on upgrade."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "wrapup_codes",
+            "change": "updated",
+            "summary": "Changed from a set to a list."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "media_settings_callback.site_id",
+            "change": "updated",
+            "summary": "Description updated to clarify that omitting the attribute uses the organization's default telephony site."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": null,
+            "change": "updated",
+            "summary": "media_settings_message.sub_type_settings order now follows configuration order to reduce plan drift."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Failed updates preserve prior state instead of writing partial values; bullseye ring changes apply even when other bullseye settings are unchanged."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": null,
+            "change": "updated",
+            "summary": "media_settings_callback.edge_group_id resolves to genesyscloud_telephony_providers_edges_edge_group references."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_skill",
+            "attribute": "division_id",
+            "change": "added",
+            "summary": "Optional and computed division assignment for the skill."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_routing_skill",
+            "attribute": null,
+            "change": "updated",
+            "summary": "The resource now supports in-place updates including division_id instead of being create-and-delete only for name changes."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_speechandtextanalytics_dictionaryfeedback",
+            "attribute": "transcription_engine",
+            "change": "added",
+            "summary": "Optional engine selection Genesys (default) or GenesysExtended; changing this value forces resource replacement."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_speechandtextanalytics_dictionaryfeedback",
+            "attribute": "display_as",
+            "change": "added",
+            "summary": "Optional transcript display text when transcription_engine is GenesysExtended."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_speechandtextanalytics_dictionaryfeedback",
+            "attribute": "example_phrases",
+            "change": "updated",
+            "summary": "No longer unconditionally required; optional with plan-time validation requiring at least three phrases for Genesys and disallowing the block for GenesysExtended."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_speechandtextanalytics_dictionaryfeedback",
+            "attribute": "boost_value",
+            "change": "updated",
+            "summary": "Applies only when transcription_engine is Genesys."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_speechandtextanalytics_dictionaryfeedback",
+            "attribute": "source",
+            "change": "updated",
+            "summary": "Applies only when transcription_engine is Genesys."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_speechandtextanalytics_dictionaryfeedback",
+            "attribute": "sounds_like",
+            "change": "updated",
+            "summary": "Applies only when transcription_engine is Genesys."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_task_management_worktype_status",
+            "attribute": null,
+            "change": "updated",
+            "summary": "destination_status_ids, default_destination_status_id, status_transition_delay_seconds, and status_transition_time are excluded from export output."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_task_management_worktype_status_transition",
+            "attribute": null,
+            "change": "updated",
+            "summary": "status_id, destination_status_ids, and default_destination_status_id now resolve to genesyscloud_task_management_worktype_status references."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_team",
+            "attribute": "member_ids",
+            "change": "updated",
+            "summary": "Changed from a set to a list; existing state migrates automatically on upgrade."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_team",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Failed member updates preserve prior state instead of leaving partial member assignments in Terraform state."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_team",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When configuration and API return the same member IDs, list order follows configuration order."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_webdeployments_configuration",
+            "attribute": "settings.video.channels",
+            "change": "added",
+            "summary": "Optional list of channels (Webmessaging or Voice) through which video chat is available."
+        },
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_journey_outcome",
+            "attribute": null,
+            "change": "removed",
+            "summary": "Resource type removed from the provider."
+        },
+        {
+            "kind": "data_source",
+            "resource": "genesyscloud_journey_outcome",
+            "attribute": null,
+            "change": "removed",
+            "summary": "Data source removed from the provider."
+        },
+        {
+            "kind": "data_source_attribute",
+            "resource": "genesyscloud_speechandtextanalytics_dictionaryfeedback",
+            "attribute": "dialect",
+            "change": "added",
+            "summary": "Optional dialect argument to disambiguate lookups when the same term exists for multiple dialects."
+        },
+        {
+            "kind": "data_source_attribute",
+            "resource": "genesyscloud_speechandtextanalytics_dictionaryfeedback",
+            "attribute": "transcription_engine",
+            "change": "added",
+            "summary": "Optional transcription engine argument (Genesys or GenesysExtended) to disambiguate lookups."
+        }
+    ]
+}
