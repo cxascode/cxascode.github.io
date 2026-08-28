@@ -183,6 +183,10 @@ Directory names and **oldest supported provider versions** live in `scripts/lib/
 
 CI (`deploy-pages.yml`, `download-provider-versions.sh`) uses `MIN_DEP_VERSION` / `MIN_PERM_VERSION` env vars to gate **downloading** `dependency_tree` and `resource_permissions` release assets — keep those in sync with `MIN_DEPENDENCY_TREE_VERSION` and `MIN_RESOURCE_PERMISSIONS_VERSION`. `MIN_SINGLETON_FLAG_VERSION` is app-only (badge logic); singleton JSON is generated from provider source for every cached dependency-tree version, not downloaded from releases.
 
+## Build chain & rerun guide
+
+End-to-end pipeline (release notes → site generators → Export Builder / Splitter / Stagehand) and **what to rerun when a step fails**: [`docs/build-chain.md`](docs/build-chain.md).
+
 ## Deploy workflow (GitHub Actions)
 
 The [`deploy-pages.yml`](.github/workflows/deploy-pages.yml) workflow builds the site and publishes to GitHub Pages. It restores a cache of upstream JSON and generated artifacts (dependency trees, permissions TF, spreadsheets, lab zips, tf-export catalogs, and input fingerprints in `.cache-meta/`).
