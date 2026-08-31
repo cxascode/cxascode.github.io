@@ -6,6 +6,8 @@ import ProviderEnvVarsDialog from "./ProviderEnvVarsDialog.jsx";
 import AttributeIndexDialog from "./AttributeIndexDialog.jsx";
 import ReleaseNotesDialog from "./ReleaseNotesDialog.jsx";
 import SiteUpdatesDialog from "./SiteUpdatesDialog.jsx";
+import DebuggingDialog from "./DebuggingDialog.jsx";
+import HeaderNavMenu from "./HeaderNavMenu.jsx";
 import ResourceReleaseChanges from "./ResourceReleaseChanges.jsx";
 import DependencyTagList from "./DependencyTagList.jsx";
 import {
@@ -62,6 +64,7 @@ import {
 import {
   DIALOG_ATTRIBUTE_INDEX,
   DIALOG_CREATION_ORDER,
+  DIALOG_DEBUGGING,
   DIALOG_ENV_VARS,
   DIALOG_RELEASE_NOTES,
   DIALOG_SITE_UPDATES,
@@ -978,6 +981,7 @@ export default function App() {
   const [siteUpdatesDialogOpen, setSiteUpdatesDialogOpen] = useState(false);
   const [attributeIndexDialogOpen, setAttributeIndexDialogOpen] = useState(false);
   const [envVarsDialogOpen, setEnvVarsDialogOpen] = useState(false);
+  const [debuggingDialogOpen, setDebuggingDialogOpen] = useState(false);
   const spreadsheetPermalinkRef = useRef("");
   const supportedResourcesPermalinkRef = useRef("");
   const labFilesPermalinkRef = useRef("");
@@ -1027,6 +1031,7 @@ export default function App() {
     setSiteUpdatesDialogOpen(dialogId === DIALOG_SITE_UPDATES);
     setAttributeIndexDialogOpen(dialogId === DIALOG_ATTRIBUTE_INDEX);
     setEnvVarsDialogOpen(dialogId === DIALOG_ENV_VARS);
+    setDebuggingDialogOpen(dialogId === DIALOG_DEBUGGING);
     if (dialogId === DIALOG_ATTRIBUTE_INDEX) {
       setAttributeIndexQuery("");
     }
@@ -1088,6 +1093,7 @@ export default function App() {
       setSiteUpdatesDialogOpen(false);
       setAttributeIndexDialogOpen(false);
       setEnvVarsDialogOpen(false);
+      setDebuggingDialogOpen(false);
       setAttributeIndexQuery("");
       setCreationOrderQuery("");
       setSiteUpdatesEntry("latest");
@@ -1125,6 +1131,7 @@ export default function App() {
     setSiteUpdatesDialogOpen(dialog === DIALOG_SITE_UPDATES);
     setAttributeIndexDialogOpen(dialog === DIALOG_ATTRIBUTE_INDEX);
     setEnvVarsDialogOpen(dialog === DIALOG_ENV_VARS);
+    setDebuggingDialogOpen(dialog === DIALOG_DEBUGGING);
     if (dialog === DIALOG_ATTRIBUTE_INDEX) {
       syncAttributeIndexFromUrl();
     }
@@ -1302,6 +1309,7 @@ export default function App() {
       setSiteUpdatesDialogOpen(dialog === DIALOG_SITE_UPDATES);
       setAttributeIndexDialogOpen(dialog === DIALOG_ATTRIBUTE_INDEX);
       setEnvVarsDialogOpen(dialog === DIALOG_ENV_VARS);
+    setDebuggingDialogOpen(dialog === DIALOG_DEBUGGING);
       syncAttributeIndexFromUrl();
       syncCreationOrderFromUrl();
       syncSiteUpdatesFromUrl();
@@ -1355,6 +1363,7 @@ export default function App() {
         creationOrderOpen: orderDialogOpen,
         attributeIndexOpen: attributeIndexDialogOpen,
         envVarsOpen: envVarsDialogOpen,
+        debuggingOpen: debuggingDialogOpen,
         attributeIndexFilter: attributeIndexQuery,
         creationOrderFilter: creationOrderQuery,
         siteUpdatesEntry,
@@ -1368,6 +1377,7 @@ export default function App() {
     orderDialogOpen,
     attributeIndexDialogOpen,
     envVarsDialogOpen,
+    debuggingDialogOpen,
     attributeIndexQuery,
     creationOrderQuery,
     siteUpdatesEntry,
@@ -1588,6 +1598,8 @@ export default function App() {
     isMenuPathListView,
   ]);
 
+  const referenceNavDisabled = showDependencyLoading || !!error || !raw;
+
   return (
     <div className="gcShell">
       <div className="gcPageHeader">
@@ -1611,29 +1623,40 @@ export default function App() {
               Attribute history
             </button>
 
-            <button
-              type="button"
-              className="gcHeaderLink"
-              onClick={() => openDialog(DIALOG_CREATION_ORDER)}
-              disabled={showDependencyLoading || !!error || !raw}
-              title="Suggested creation order of CX as Code resources"
-            >
-              Creation order
-            </button>
+            <HeaderNavMenu
+              label="Reference"
+              items={[
+                {
+                  id: DIALOG_CREATION_ORDER,
+                  label: "Creation order",
+                  title: "Suggested creation order of CX as Code resources",
+                  disabled: referenceNavDisabled,
+                  onClick: () => openDialog(DIALOG_CREATION_ORDER),
+                },
+                {
+                  id: DIALOG_DEBUGGING,
+                  label: "Debugging",
+                  title: "Terraform and Genesys Cloud SDK debugging instructions",
+                  onClick: () => openDialog(DIALOG_DEBUGGING),
+                },
+              ]}
+            />
 
-            <a
-              href={EXPORT_BUILDER_BASE_URL}
-              className="gcHeaderLink"
-            >
-              Export builder
-            </a>
-
-            <a
-              href="https://cxascode.github.io/stagehand"
-              className="gcHeaderLink"
-            >
-              Stagehand
-            </a>
+            <HeaderNavMenu
+              label="Tools"
+              items={[
+                {
+                  id: "export-builder",
+                  label: "Export builder",
+                  href: EXPORT_BUILDER_BASE_URL,
+                },
+                {
+                  id: "stagehand",
+                  label: "Stagehand",
+                  href: "https://cxascode.github.io/stagehand",
+                },
+              ]}
+            />
 
             <div
               className={`gcRoleDownloads ${roleDownloadsSupported ? "isVisible" : "isHidden"}`}
@@ -2268,6 +2291,8 @@ export default function App() {
         catalog={providerEnvVarCatalog}
         loadingCatalog={!providerEnvVarCatalog}
       />
+
+      <DebuggingDialog open={debuggingDialogOpen} onClose={closeDialogs} />
 
     </div>
   );

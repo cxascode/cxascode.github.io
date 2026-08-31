@@ -136,6 +136,20 @@ export const SITE_FEATURES = [
     },
   },
   {
+    id: "debugging",
+    visibility: "public",
+    permalink: { segment: "debugging" },
+    siteUpdates: {
+      commitKeywords: ["debugging", "debug instructions", "/debugging"],
+      scrubKeywords: [],
+      dataOnlyPaths: [
+        /^public\/debugging\.md$/,
+        /^src\/debugInstructions\.js$/,
+        /^src\/DebuggingDialog\.jsx$/,
+      ],
+    },
+  },
+  {
     id: "exportbuilder",
     visibility: "public",
     siteUpdates: {
@@ -297,6 +311,7 @@ export const PUBLIC_SITEMAP_DIALOG_PATHS = [
   "/site-updates",
   "/creation-order",
   "/attribute-index",
+  "/debugging",
 ];
 
 /** Separate GitHub Pages project sites linked from the Explorer sitemap. */

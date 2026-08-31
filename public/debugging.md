@@ -38,45 +38,37 @@ Remove-Item Env:TF_LOG
 Remove-Item Env:TF_LOG_PATH
 ```
 
+---
+
 ### 2. Genesys Cloud SDK/API Logging (`sdk_debug`)
 
 Captures API requests and responses made by the Genesys Cloud SDK.
 
 #### Enable Logging
 
-In the providers.tf file:
-
-Change:
+In your `genesyscloud` provider block, add or update the `sdk_debug` and `sdk_debug_format` attributes:
 
 ```hcl
-sdk_debug = false
-```
-
-to:
-
-```hcl
-sdk_debug = true
-```
-
-and uncomment:
-
-```hcl
-sdk_debug_format = "Json"
+provider "genesyscloud" {
+  ...
+  sdk_debug        = true
+  sdk_debug_format = "Json"
+}
 ```
 
 #### Disable Logging
 
-Revert the providers.tf file:
+Revert the provider block by disabling or removing `sdk_debug` and `sdk_debug_format` attributes:
 
 ```hcl
-sdk_debug = false
+provider "genesyscloud" {
+  ...
+  #sdk_debug         = true
+  #sdk_debug_format = "Json"
+}
 ```
 
-and comment out:
-
-```hcl
-sdk_debug_format = "Json"
-```
+---
 
 ### Choosing the Right Debug Level
 

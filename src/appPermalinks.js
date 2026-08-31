@@ -7,6 +7,7 @@ export const DIALOG_SITE_UPDATES = "site-updates";
 export const DIALOG_CREATION_ORDER = "creation-order";
 export const DIALOG_ATTRIBUTE_INDEX = "attribute-index";
 export const DIALOG_ENV_VARS = "env-vars";
+export const DIALOG_DEBUGGING = "debugging";
 
 export const SITE_UPDATES_ENTRY_QUERY_KEY = "entry";
 
@@ -38,9 +39,10 @@ const DIALOG_PATH_SEGMENT = {
   [DIALOG_CREATION_ORDER]: "creation-order",
   [DIALOG_ATTRIBUTE_INDEX]: "attribute-index",
   [DIALOG_ENV_VARS]: "env-vars",
+  [DIALOG_DEBUGGING]: "debugging",
 };
 
-const DIALOGS_WITHOUT_PROVIDER_VERSION = new Set([DIALOG_SITE_UPDATES]);
+const DIALOGS_WITHOUT_PROVIDER_VERSION = new Set([DIALOG_SITE_UPDATES, DIALOG_DEBUGGING]);
 
 export const VALID_DIALOGS = new Set(Object.keys(DIALOG_PATH_SEGMENT));
 

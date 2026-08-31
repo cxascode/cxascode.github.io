@@ -4,6 +4,7 @@ import {
   creationOrderLocation,
   DIALOG_ATTRIBUTE_INDEX,
   DIALOG_CREATION_ORDER,
+  DIALOG_DEBUGGING,
   DIALOG_ENV_VARS,
   DIALOG_RELEASE_NOTES,
   DIALOG_SITE_UPDATES,
@@ -50,6 +51,11 @@ const DIALOG_SEO = {
     title: "Provider environment variables — CX as Code Explorer",
     description:
       "Catalog of Genesys Cloud Terraform provider environment variables used by genesyscloud_tf_export, including export-template mappings.",
+  },
+  [DIALOG_DEBUGGING]: {
+    title: "Debugging — CX as Code Explorer",
+    description:
+      "Enable Terraform provider logging (TF_LOG) or Genesys Cloud SDK debug output (sdk_debug) when troubleshooting CX as Code deployments.",
   },
 };
 
@@ -101,6 +107,7 @@ export function resolvePageSeo({
   creationOrderOpen,
   attributeIndexOpen,
   envVarsOpen,
+  debuggingOpen,
   attributeIndexFilter = "",
   creationOrderFilter = "",
   siteUpdatesEntry = "",
@@ -137,6 +144,9 @@ export function resolvePageSeo({
   }
   if (envVarsOpen) {
     return { dialogId: DIALOG_ENV_VARS, resourceType: "", version };
+  }
+  if (debuggingOpen) {
+    return { dialogId: DIALOG_DEBUGGING, resourceType: "", version: "" };
   }
 
   const dialogFromUrl = readDialogFromLocation();
