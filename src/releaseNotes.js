@@ -171,7 +171,11 @@ export function formatReleaseChangeLabel(change) {
 
 export function formatReleaseChangeKind(kind) {
   if (kind === "resource_behavior") return "Resource behavior";
-  if (kind === "state_behavior") return "State behavior";
+  if (kind === "plan_behavior" || kind === "state_behavior" || kind === "import_behavior") {
+    return "Plan behavior";
+  }
+  if (kind === "apply_behavior") return "Apply behavior";
+  if (kind === "export_behavior") return "Export behavior";
   if (kind === "attribute") return "Attribute";
   return kind || "";
 }

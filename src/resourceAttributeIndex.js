@@ -378,12 +378,19 @@ export function isAttributeIndexAttributeRow(row) {
   return (row?.attribute || "").trim() !== ATTRIBUTE_INDEX_RESOURCE_LEVEL_ATTRIBUTE;
 }
 
+export function normalizeAttributeIndexType(type) {
+  if (type === "state_behavior" || type === "import_behavior") {
+    return "plan_behavior";
+  }
+  return type;
+}
+
 export function attributeIndexRowMatchesTypeFilter(row, typeFilter) {
   if (!typeFilter) return true;
   if (typeFilter === ATTRIBUTE_INDEX_TYPE_ATTRIBUTES) {
     return isAttributeIndexAttributeRow(row);
   }
-  return row?.type === typeFilter;
+  return normalizeAttributeIndexType(row?.type) === normalizeAttributeIndexType(typeFilter);
 }
 
 function attributeIndexEntryMatchesTypeFilter(entry, typeFilter) {
@@ -392,7 +399,7 @@ function attributeIndexEntryMatchesTypeFilter(entry, typeFilter) {
     const type = (entry?.type || "").trim();
     return type === "resource" || type === "data_source";
   }
-  return entry?.type === typeFilter;
+  return normalizeAttributeIndexType(entry?.type) === normalizeAttributeIndexType(typeFilter);
 }
 
 export function filterAttributeIndexHistoryRows(
@@ -496,7 +503,9 @@ export function getIndexFilterOptions(index) {
     return { types: [], statuses: [] };
   }
 
-  const types = [...new Set(index.map((entry) => entry?.type).filter(Boolean))].sort();
+  const types = [
+    ...new Set(index.map((entry) => normalizeAttributeIndexType(entry?.type)).filter(Boolean)),
+  ].sort();
   const hasAttributeRows = index.some(isAttributeIndexAttributeRow);
   if (hasAttributeRows && !types.includes(ATTRIBUTE_INDEX_TYPE_ATTRIBUTES)) {
     types.unshift(ATTRIBUTE_INDEX_TYPE_ATTRIBUTES);
@@ -564,9 +573,11 @@ export function formatAttributeIndexType(type) {
   if (type === ATTRIBUTE_INDEX_TYPE_ATTRIBUTES) return "Attribute";
   if (type === "data_source") return "Data source";
   if (type === "resource") return "Resource";
+  if (type === "plan_behavior" || type === "state_behavior" || type === "import_behavior") {
+    return "Plan behavior";
+  }
+  if (type === "apply_behavior") return "Apply behavior";
   if (type === "export_behavior") return "Export behavior";
-  if (type === "import_behavior") return "Import behavior";
-  if (type === "state_behavior") return "State behavior";
   if (type === ATTRIBUTE_INDEX_TYPE_EXPORT_BLOCK_LABEL) return "Export resource name";
   if (type === "provider_configuration") return "Provider configuration";
   return type || "Unknown";
