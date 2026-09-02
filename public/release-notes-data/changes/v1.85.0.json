@@ -3,7 +3,7 @@
     "previous": "v1.84.2",
     "changes": [
         {
-            "kind": "resource_behavior",
+            "kind": "apply_behavior",
             "resource": "genesyscloud_architect_user_prompt",
             "attribute": null,
             "change": "updated",
@@ -31,7 +31,14 @@
             "summary": "Computed value indicating whether the action is static (built-in) or custom (user-created), derived from the action ID prefix."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_integration_action",
+            "attribute": "action_type",
+            "change": "added",
+            "summary": "Computed action_type is set on refresh from the action ID prefix (static or custom)."
+        },
+        {
+            "kind": "apply_behavior",
             "resource": "genesyscloud_integration_action",
             "attribute": null,
             "change": "updated",
@@ -73,7 +80,14 @@
             "summary": "Now computed as well as optional so existing phone numbers can be read into state without being listed in configuration."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_outbound_dnclist",
+            "attribute": "entries",
+            "change": "updated",
+            "summary": "entries is populated from the API on read when omitted from configuration."
+        },
+        {
+            "kind": "apply_behavior",
             "resource": "genesyscloud_outbound_dnclist",
             "attribute": "entries",
             "change": "updated",
@@ -339,7 +353,7 @@
             "summary": "Optional built-in answer type for multiple-select options: Selected or Unselected."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "apply_behavior",
             "resource": "genesyscloud_quality_forms_survey",
             "attribute": "question_groups.questions.answer_options.assistance_conditions",
             "change": "updated",
@@ -381,7 +395,14 @@
             "summary": "Changed from a set to a list."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_recording_media_retention_policy",
+            "attribute": "conditions.team_ids",
+            "change": "updated",
+            "summary": "team_ids attributes migrate from set to list in state automatically on upgrade (schema version 2)."
+        },
+        {
+            "kind": "apply_behavior",
             "resource": "genesyscloud_recording_media_retention_policy",
             "attribute": null,
             "change": "updated",
@@ -402,21 +423,21 @@
             "summary": "Optional telephony site ID to use for callback dialing instead of an edge group."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
             "resource": "genesyscloud_routing_queue",
             "attribute": "members",
             "change": "updated",
             "summary": "When ignore_members is false and the queue has zero user members, members is set to an empty set without calling the members API."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "apply_behavior",
             "resource": "genesyscloud_routing_queue",
             "attribute": "media_settings_message.enable_inactivity_timeout",
             "change": "updated",
             "summary": "enable_inactivity_timeout is only sent to the API when set to true, avoiding 400 errors when explicitly set to false."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "apply_behavior",
             "resource": "genesyscloud_routing_queue",
             "attribute": "media_settings_message.sub_type_settings.enable_inactivity_timeout",
             "change": "updated",
@@ -430,28 +451,35 @@
             "summary": "media_settings_callback.site_id resolves to genesyscloud_telephony_providers_edges_site references; zero-value conditional_group_activation condition values are retained in export output."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "export_behavior",
+            "resource": "genesyscloud_routing_wrapupcode",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Wrap-up code listing during export uses a page size of 500 instead of 100, improving completeness for large orgs."
+        },
+        {
+            "kind": "apply_behavior",
             "resource": "genesyscloud_task_management_worktype_status",
             "attribute": "auto_terminate_workitem",
             "change": "updated",
             "summary": "auto_terminate_workitem is now updated through a dedicated patch so explicit false is sent to the API and disabling the setting takes effect reliably."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "apply_behavior",
             "resource": "genesyscloud_task_management_worktype_status_transition",
             "attribute": null,
             "change": "updated",
             "summary": "Clearing status_transition_delay_seconds or status_transition_time in configuration now sends null to the API to remove those values from the status."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
             "resource": "genesyscloud_team",
             "attribute": "member_ids",
             "change": "updated",
             "summary": "member_ids is only loaded from the API when the team has one or more members; teams with no members return an empty set."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "apply_behavior",
             "resource": "genesyscloud_telephony_providers_edges_phone",
             "attribute": null,
             "change": "updated",

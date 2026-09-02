@@ -73,18 +73,25 @@
             "summary": "No longer required; now optional and deprecated in favor of rows_csv_filepath. Use exactly one of rows or rows_csv_filepath."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_business_rules_decision_table",
+            "attribute": "rows",
+            "change": "updated",
+            "summary": "Plan requires exactly one of rows or rows_csv_filepath; nested rows is deprecated."
+        },
+        {
+            "kind": "apply_behavior",
             "resource": "genesyscloud_business_rules_decision_table",
             "attribute": null,
             "change": "updated",
-            "summary": "CSV-backed row management runs import jobs in Replace mode when the file path or content hash changes."
+            "summary": "CSV-backed creates and updates run Replace import jobs when the file path or content hash changes; failed imports roll back partially created tables."
         },
         {
             "kind": "export_behavior",
             "resource": "genesyscloud_business_rules_decision_table",
             "attribute": null,
             "change": "updated",
-            "summary": "Row data can be exported to a CSV file under a rows subdirectory; nested rows blocks are not emitted for CSV-backed exports."
+            "summary": "Row data exports to a CSV file under a rows subdirectory instead of nested rows blocks."
         },
         {
             "kind": "resource_attribute",
@@ -143,18 +150,25 @@
             "summary": "Optional and computed hash of the function zip file; detects content changes when file_path is updated."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
             "resource": "genesyscloud_integration_action",
-            "attribute": null,
+            "attribute": "function_config.file_content_hash",
+            "change": "added",
+            "summary": "Computed function_config.file_content_hash is set during plan when the zip file changes; hash comparison uses prior state to avoid false-positive diffs on computed attributes."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_integration_action",
+            "attribute": "function_config.file_path",
             "change": "updated",
-            "summary": "Read preserves configured function_config.file_path and function_config.file_content_hash because Genesys Cloud does not return the original zip binary."
+            "summary": "Read preserves configured function_config.file_path and function_config.file_content_hash because the API does not return zip binaries."
         },
         {
             "kind": "export_behavior",
             "resource": "genesyscloud_integration_action",
             "attribute": null,
             "change": "updated",
-            "summary": "Exports placeholder paths for function zip files under a function_zips subdirectory; supply the zip at the exported path before apply."
+            "summary": "Function zip files export as placeholder paths under a function_zips subdirectory."
         },
         {
             "kind": "resource_attribute",
@@ -213,18 +227,18 @@
             "summary": "Optional and computed composite category ID used for export dependency resolution; do not set manually."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
             "resource": "genesyscloud_knowledge_document",
-            "attribute": null,
+            "attribute": "knowledge_document.label_names",
             "change": "updated",
-            "summary": "Documents with no labels now set knowledge_document.label_names to an empty list instead of omitting the attribute."
+            "summary": "Refresh sets knowledge_document.label_names to an empty list when a document has no labels."
         },
         {
             "kind": "export_behavior",
             "resource": "genesyscloud_knowledge_document",
             "attribute": null,
             "change": "updated",
-            "summary": "Label and category references resolve through genesyscloud_knowledge_label and genesyscloud_knowledge_category; export output strips helper label_ids and category_id values."
+            "summary": "Label and category references resolve through genesyscloud_knowledge_label and genesyscloud_knowledge_category; helper label_ids and category_id values are stripped from generated configuration."
         },
         {
             "kind": "resource_attribute",
@@ -297,11 +311,18 @@
             "summary": "Plan-time validation now checks IANA time zone format."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
             "resource": "genesyscloud_outbound_campaignrule",
             "attribute": null,
             "change": "updated",
-            "summary": "Plan-time and apply-time validation reject v2-only condition types and nested date/time blocks in legacy campaign_rule_conditions."
+            "summary": "Plan-time validation checks IANA format for time_zone_id and execution_settings.time_zone_id; v2-only condition types and nested date/time blocks are rejected in legacy campaign_rule_conditions."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Apply-time validation rejects v2-only condition types and nested date/time blocks in legacy campaign_rule_conditions."
         },
         {
             "kind": "resource_attribute",
@@ -339,18 +360,25 @@
             "summary": "Description updated to clarify that omitting the attribute uses the organization's default telephony site."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
             "resource": "genesyscloud_routing_queue",
-            "attribute": null,
+            "attribute": "members",
             "change": "updated",
-            "summary": "media_settings_message.sub_type_settings order now follows configuration order to reduce plan drift."
+            "summary": "members and wrapup_codes migrate from set to list in state automatically on upgrade (schema version 3)."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "media_settings_message.sub_type_settings",
+            "change": "updated",
+            "summary": "Refresh preserves configuration order for media_settings_message.sub_type_settings to reduce plan drift."
+        },
+        {
+            "kind": "apply_behavior",
             "resource": "genesyscloud_routing_queue",
             "attribute": null,
             "change": "updated",
-            "summary": "Failed updates preserve prior state instead of writing partial values; bullseye ring changes apply even when other bullseye settings are unchanged."
+            "summary": "Failed queue, member, and wrapup-code updates preserve prior Terraform state; bullseye ring member-group clearing runs whenever bullseye_rings changes."
         },
         {
             "kind": "export_behavior",
@@ -367,11 +395,18 @@
             "summary": "Optional and computed division assignment for the skill."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "apply_behavior",
             "resource": "genesyscloud_routing_skill",
-            "attribute": null,
+            "attribute": "division_id",
             "change": "updated",
-            "summary": "The resource now supports in-place updates including division_id instead of being create-and-delete only for name changes."
+            "summary": "Create can assign division_id after creation; update supports in-place division_id changes."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_routing_skill",
+            "attribute": "division_id",
+            "change": "updated",
+            "summary": "division_id resolves to genesyscloud_auth_division references."
         },
         {
             "kind": "resource_attribute",
@@ -416,6 +451,13 @@
             "summary": "Applies only when transcription_engine is Genesys."
         },
         {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_speechandtextanalytics_dictionaryfeedback",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Plan-time validation requires at least three example_phrases for Genesys and disallows example_phrases and sounds_like for GenesysExtended."
+        },
+        {
             "kind": "export_behavior",
             "resource": "genesyscloud_task_management_worktype_status",
             "attribute": null,
@@ -427,7 +469,7 @@
             "resource": "genesyscloud_task_management_worktype_status_transition",
             "attribute": null,
             "change": "updated",
-            "summary": "status_id, destination_status_ids, and default_destination_status_id now resolve to genesyscloud_task_management_worktype_status references."
+            "summary": "status_id, destination_status_ids, and default_destination_status_id resolve to genesyscloud_task_management_worktype_status references."
         },
         {
             "kind": "resource_attribute",
@@ -437,18 +479,18 @@
             "summary": "Changed from a set to a list; existing state migrates automatically on upgrade."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
             "resource": "genesyscloud_team",
-            "attribute": null,
+            "attribute": "member_ids",
             "change": "updated",
-            "summary": "Failed member updates preserve prior state instead of leaving partial member assignments in Terraform state."
+            "summary": "member_ids migrates from set to list in state automatically on upgrade (schema version 2); refresh preserves configuration order when membership matches the API."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "apply_behavior",
             "resource": "genesyscloud_team",
-            "attribute": null,
+            "attribute": "member_ids",
             "change": "updated",
-            "summary": "When configuration and API return the same member IDs, list order follows configuration order."
+            "summary": "Failed member add operations no longer write partially applied member IDs into state."
         },
         {
             "kind": "resource_attribute",
@@ -456,6 +498,20 @@
             "attribute": "settings.video.channels",
             "change": "added",
             "summary": "Optional list of channels (Webmessaging or Voice) through which video chat is available."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_architect_datatable_row",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Export listing respects resource filter patterns and skips datatables that do not match the filter."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_externalcontacts_contact",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Contact listing during export uses the division-views scan API, which may return a different contact set than the prior scan endpoint."
         },
         {
             "kind": "resource",

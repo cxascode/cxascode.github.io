@@ -1,0 +1,69 @@
+{
+    "version": "v1.86.1",
+    "previous": "v1.86.0",
+    "changes": [
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_business_rules_decision_table",
+            "attribute": "timeouts.read",
+            "change": "updated",
+            "summary": "Default read timeout increased from 8 minutes to 60 minutes."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_business_rules_decision_table",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Row adds, updates, and deletes during create and update use bulk API requests in chunks instead of one request per row; interdependent row updates are grouped into sequential waves so input-value uniqueness constraints are satisfied before the next wave runs."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_utilization",
+            "attribute": "max_inbound_calls",
+            "change": "added",
+            "summary": "Optional and computed integer that limits the total inbound voice calls (ACD and non-ACD) an agent can receive."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_architect_user_prompt",
+            "attribute": "resources.filename",
+            "change": "updated",
+            "summary": "On refresh, resources[].filename is set only when the API returns a non-empty filename tag; missing or empty filename tags are no longer written into state."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_business_rules_decision_table",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Refresh of tables with many rows fetches additional row pages concurrently after the first page."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_routing_utilization",
+            "attribute": "max_inbound_calls",
+            "change": "updated",
+            "summary": "Refresh now reads and sets max_inbound_calls from the API."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": null,
+            "attribute": null,
+            "change": "updated",
+            "summary": "Read operations that hit timeouts now retry at most once (two attempts total) instead of looping indefinitely; retries use the parent Terraform operation context so cancellation and deadlines still apply."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_routing_utilization",
+            "attribute": "max_inbound_calls",
+            "change": "updated",
+            "summary": "Updates now send max_inbound_calls when it is set in configuration."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_routing_utilization",
+            "attribute": "max_inbound_calls",
+            "change": "updated",
+            "summary": "max_inbound_calls is included in export output and is retained when the value is 0."
+        }
+    ]
+}

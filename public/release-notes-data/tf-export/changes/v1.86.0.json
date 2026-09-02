@@ -39,6 +39,13 @@
             "attribute": null,
             "change": "updated",
             "summary": "Data source genesyscloud_script resources (referenced but not managed) are skipped during dependency resolution, matching existing behavior for data source flows."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_knowledge_document",
+            "attribute": "label_names",
+            "change": "updated",
+            "summary": "Exported genesyscloud_knowledge_document resources are more likely to resolve label_names to genesyscloud_knowledge_label Terraform references when the label exporter was not already loaded during the export run."
         }
     ]
 }
