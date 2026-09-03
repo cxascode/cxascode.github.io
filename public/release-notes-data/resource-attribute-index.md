@@ -370,7 +370,7 @@ This index is generated from the release notes available on this site. `Introduc
 | `data_source` | `genesyscloud_knowledge_document` | `category_name` | `v1.77.4` | `v1.77.4` | Active | Optional category name to disambiguate documents that share the same title. |
 | `data_source` | `genesyscloud_knowledge_document` | `knowledge_base_name` | `v1.77.4` | `v1.77.4` | Active | Required knowledge base name used to scope the document lookup. |
 | `data_source` | `genesyscloud_knowledge_document` | `title` | `v1.77.4` | `v1.77.4` | Active | Required knowledge document title used to select the document. |
-| `export_behavior` | `genesyscloud_integration_credential` | `name` | `Unknown` | `v1.77.4` | Active | No longer resolved to a genesyscloud_integration reference; exported values retain the raw Integration-prefixed name. |
+| `export_behavior` | `genesyscloud_integration_credential` | `name` | `Unknown` | `v1.77.4` | Active | No longer exported as a reference to genesyscloud_integration; exported values retain the raw Integration-prefixed name. |
 | `export_behavior` | `genesyscloud_knowledge_category` | `knowledge_base_name` | `Unknown` | `v1.77.4` | Active | Maps to a data source lookup attribute when exporting as data sources. |
 | `export_behavior` | `genesyscloud_knowledge_category` | `name` | `Unknown` | `v1.77.4` | Active | Maps to a data source lookup attribute when exporting as data sources. |
 | `export_behavior` | `genesyscloud_knowledge_document` | `category_name` | `Unknown` | `v1.77.4` | Active | Maps to a data source lookup attribute when exporting as data sources. |
@@ -382,10 +382,12 @@ This index is generated from the release notes available on this site. `Introduc
 | `export_behavior` | `genesyscloud_knowledge_label` | `name` | `Unknown` | `v1.77.4` | Active | Maps to a data source lookup attribute when exporting as data sources. |
 | `export_behavior` | `genesyscloud_outbound_messagingcampaign` | `whats_app_config.content_template_id` | `Unknown` | `v1.77.4` | Active | Resolved as a Terraform reference during export. |
 | `export_behavior` | `genesyscloud_outbound_messagingcampaign` | `whats_app_config.whats_app_integration_id` | `Unknown` | `v1.77.4` | Active | Resolved as a Terraform reference during export. |
-| `export_behavior` | `genesyscloud_responsemanagement_response` | `library_id` | `Unknown` | `v1.77.4` | Active | Maps to library_ids data source lookup attributes when exporting as data sources. |
-| `resource` | `genesyscloud_outbound_messagingcampaign` | `email_config` | `Unknown` | `v1.77.4` | Active | Exactly-one validation now requires exactly one of email_config, sms_config, or whats_app_config. |
-| `resource` | `genesyscloud_outbound_messagingcampaign` | `sms_config` | `Unknown` | `v1.77.4` | Active | Exactly-one validation now requires exactly one of email_config, sms_config, or whats_app_config. |
-| `resource` | `genesyscloud_outbound_messagingcampaign` | `whats_app_config` | `v1.77.4` | `v1.77.4` | Active | Populated from the Genesys Cloud API during read, plan, and apply refresh. |
+| `export_behavior` | `genesyscloud_responsemanagement_response` | `library_id` | `Unknown` | `v1.77.4` | Active | Maps to library_ids when exporting as data sources. |
+| `plan_behavior` | `genesyscloud_knowledge_document` | `general plan behavior` | `v1.77.4` | `v1.77.4` | Active | Data source lookup searches published and unpublished knowledge bases by knowledge_base_name, matches documents by title, and optionally filters by category_name when multiple documents share the same title. |
+| `plan_behavior` | `genesyscloud_outbound_messagingcampaign` | `email_config` | `Unknown` | `v1.77.4` | Active | Validation now requires exactly one of email_config, sms_config, or whats_app_config. |
+| `plan_behavior` | `genesyscloud_outbound_messagingcampaign` | `sms_config` | `Unknown` | `v1.77.4` | Active | Validation now requires exactly one of email_config, sms_config, or whats_app_config. |
+| `plan_behavior` | `genesyscloud_outbound_messagingcampaign` | `whats_app_config` | `Unknown` | `v1.77.4` | Active | Populated from the Genesys Cloud API during plan refresh for campaigns configured with WhatsApp. |
+| `resource` | `genesyscloud_outbound_messagingcampaign` | `whats_app_config` | `v1.77.4` | `v1.77.4` | Active | Optional block to configure WhatsApp messaging for the campaign; exactly one of email_config, sms_config, or whats_app_config must be set. |
 | `resource` | `genesyscloud_outbound_messagingcampaign` | `whats_app_config.content_template_id` | `v1.77.4` | `v1.77.4` | Active | Content template used to formulate the WhatsApp message sent to contacts. |
 | `resource` | `genesyscloud_outbound_messagingcampaign` | `whats_app_config.whats_app_columns` | `v1.77.4` | `v1.77.4` | Active | Contact list columns that specify the WhatsApp address(es) for each contact. |
 | `resource` | `genesyscloud_outbound_messagingcampaign` | `whats_app_config.whats_app_integration_id` | `v1.77.4` | `v1.77.4` | Active | WhatsApp integration used to send messages to contacts. |
@@ -752,8 +754,6 @@ This index is generated from the release notes available on this site. `Introduc
 | `plan_behavior` | `genesyscloud_organization_authentication_settings` | `timeout_settings` | `Unknown` | `v1.65.0` | Active | Refresh populates timeout_settings from the API even when omitted from configuration. |
 | `plan_behavior` | `genesyscloud_organization_presence_definition` | `language_labels` | `Unknown` | `v1.65.0` | Active | Map keys are no longer validated at plan time. |
 | `plan_behavior` | `genesyscloud_organization_presence_definition` | `system_presence` | `Unknown` | `v1.65.0` | Active | OnQueue, Offline, and Idle are accepted values at plan time. |
-| `plan_behavior` | `genesyscloud_outbound_messagingcampaign` | `email_config` | `Unknown` | `v1.65.0` | Active | Exactly one of email_config or sms_config must be set; email_config is read into state on refresh. |
-| `plan_behavior` | `genesyscloud_outbound_messagingcampaign` | `sms_config` | `Unknown` | `v1.65.0` | Active | Validation runs only when sms_config is present in configuration. |
 | `plan_behavior` | `genesyscloud_quality_forms_evaluation` | `context_id` | `Unknown` | `v1.65.0` | Active | Refresh populates computed context_id from the API. |
 | `plan_behavior` | `genesyscloud_quality_forms_evaluation` | `published` | `Unknown` | `v1.65.0` | Active | published is no longer synced from the API on normal read; it is only set during bulk export. |
 | `plan_behavior` | `genesyscloud_quality_forms_evaluation` | `published_id` | `Unknown` | `v1.65.0` | Active | Refresh populates computed published_id from published-version lookup. |
@@ -765,6 +765,8 @@ This index is generated from the release notes available on this site. `Introduc
 | `resource` | `genesyscloud_organization_authentication_settings` | `timeout_settings` | `Unknown` | `v1.65.0` | Active | Now computed in addition to optional so API values are populated on read. |
 | `resource` | `genesyscloud_organization_presence_definition` | `language_labels` | `Unknown` | `v1.65.0` | Active | Map key validation at plan time was removed; pt was added to the documented valid label list. |
 | `resource` | `genesyscloud_organization_presence_definition` | `system_presence` | `Unknown` | `v1.65.0` | Active | OnQueue, Offline, and Idle are now accepted values. |
+| `resource` | `genesyscloud_outbound_messagingcampaign` | `email_config` | `Unknown` | `v1.65.0` | Active | Exactly one of email_config or sms_config must be configured. |
+| `resource` | `genesyscloud_outbound_messagingcampaign` | `sms_config` | `Unknown` | `v1.65.0` | Active | Exactly one of email_config or sms_config must be configured; validation runs only when the block is present. |
 | `resource` | `genesyscloud_quality_forms_evaluation` | `context_id` | `v1.65.0` | `v1.65.0` | Active | Computed ID that groups all versions of the evaluation form. |
 | `resource` | `genesyscloud_quality_forms_evaluation` | `published` | `Unknown` | `v1.65.0` | Active | On normal read, published is no longer synced from the API Published flag; during bulk export it is set from published-version lookup. |
 | `resource` | `genesyscloud_quality_forms_evaluation` | `published_id` | `v1.65.0` | `v1.65.0` | Active | Computed ID of the published evaluation form version. |

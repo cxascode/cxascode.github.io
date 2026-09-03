@@ -310,7 +310,7 @@
       {
         "version": "v1.77.4",
         "change": "updated",
-        "summary": "Export sanitization now invokes custom attribute resolvers that require provider client configuration, which may update exported attribute values where those resolvers are defined."
+        "summary": "Export sanitization now invokes custom attribute resolvers that require provider client configuration, which may populate or update exported attribute values where those resolvers are defined."
       },
       {
         "version": "v1.78.0",

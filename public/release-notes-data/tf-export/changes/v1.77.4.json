@@ -15,7 +15,7 @@
             "resource": "genesyscloud_tf_export",
             "attribute": null,
             "change": "updated",
-            "summary": "Export sanitization now invokes custom attribute resolvers that require provider client configuration, which may update exported attribute values where those resolvers are defined."
+            "summary": "Export sanitization now invokes custom attribute resolvers that require provider client configuration, which may populate or update exported attribute values where those resolvers are defined."
         }
     ],
     "related_export_changes": [
@@ -24,7 +24,7 @@
             "resource": null,
             "attribute": null,
             "change": "updated",
-            "summary": "Exported string attributes that reference other resources and use ID transformation during resolution may now have the entire attribute value resolved as a Terraform reference, rather than preserving surrounding text while substituting only the embedded identifier portion."
+            "summary": "Exported string attributes that reference other resources and previously used ID transformation during resolution may now have the entire attribute value resolved as a Terraform reference, rather than preserving surrounding text while substituting only the embedded identifier portion."
         }
     ]
 }
