@@ -3,11 +3,18 @@
     "previous": "v1.82.0",
     "changes": [
         {
-            "kind": "resource_behavior",
+            "kind": "export_behavior",
             "resource": "genesyscloud_ai_studio_summary_setting",
             "attribute": null,
             "change": "updated",
-            "summary": "Summary settings are now listed and refreshed with correct pagination and name filtering, so plan and apply return the expected resources instead of missing or mismatched results."
+            "summary": "Export enumeration now passes page number, page size, and name filter to the list API in the correct argument positions, so exported summary settings are complete and correctly filtered."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_business_rules_decision_table",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Queue ID reference resolution during export now matches row input and output literal values using exact attribute paths instead of wildcard paths that did not match."
         },
         {
             "kind": "provider_configuration",

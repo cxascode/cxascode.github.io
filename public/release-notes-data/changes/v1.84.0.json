@@ -17,18 +17,32 @@
             "summary": "Maximum allowed value increased from 20 to 50; description documents OAuth startup cost, rate-limit risk, and alignment with max_concurrent_pages."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
             "resource": "genesyscloud_architect_grammar_language",
             "attribute": "voice_file_data.file_name",
             "change": "updated",
             "summary": "Plan diffs ignore Windows-style path separator and drive-letter differences because values are normalized before being sent to the API."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
             "resource": "genesyscloud_architect_grammar_language",
             "attribute": "dtmf_file_data.file_name",
             "change": "updated",
             "summary": "Plan diffs ignore Windows-style path separator and drive-letter differences because values are normalized before being sent to the API."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_architect_grammar_language",
+            "attribute": "voice_file_data.file_name",
+            "change": "updated",
+            "summary": "File paths are normalized to forward slashes and Windows drive prefixes are stripped before upload."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_architect_grammar_language",
+            "attribute": "dtmf_file_data.file_name",
+            "change": "updated",
+            "summary": "File paths are normalized to forward slashes and Windows drive prefixes are stripped before upload."
         },
         {
             "kind": "resource_attribute",
@@ -66,6 +80,20 @@
             "summary": "Computed from the API when omitted from configuration."
         },
         {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_journey_segment",
+            "attribute": "color",
+            "change": "updated",
+            "summary": "Populated from the API on refresh when omitted from configuration, which can surface new values during plan."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_journey_segment",
+            "attribute": "should_display_to_agent",
+            "change": "updated",
+            "summary": "Populated from the API on refresh when omitted from configuration, which can surface new values during plan."
+        },
+        {
             "kind": "resource_attribute",
             "resource": "genesyscloud_outbound_callabletimeset",
             "attribute": "callable_times.name",
@@ -73,18 +101,18 @@
             "summary": "Optional name for each callable-time block; populated from the API on read."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "apply_behavior",
             "resource": "genesyscloud_outbound_contact_list",
             "attribute": "phone_columns.callable_time_column_name",
             "change": "updated",
-            "summary": "Values are now written to and read from the API using the callable-time column name field, improving round-trip accuracy for callable-time mappings."
+            "summary": "Values are written to and read from the API using the callable-time column name field, improving round-trip accuracy for callable-time mappings."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "apply_behavior",
             "resource": "genesyscloud_outbound_contact_list",
             "attribute": "email_columns.contactable_time_column_name",
             "change": "updated",
-            "summary": "Values are now written to and read from the API using the contactable-time column name field, improving round-trip accuracy for contactable-time mappings."
+            "summary": "Values are written to and read from the API using the contactable-time column name field, improving round-trip accuracy for contactable-time mappings."
         },
         {
             "kind": "resource_attribute",
@@ -99,6 +127,13 @@
             "attribute": "rules.actions.set_content_template_action_settings.email_content_template_id",
             "change": "updated",
             "summary": "No longer required; SMS and email template actions can be configured independently."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_outbound_digitalruleset",
+            "attribute": "rules.actions.set_content_template_action_settings",
+            "change": "updated",
+            "summary": "Plan validation fails when a set_content_template_action_settings block is present but both sms_content_template_id and email_content_template_id are empty."
         },
         {
             "kind": "export_behavior",
@@ -122,11 +157,18 @@
             "summary": "Empty sms_content_template_id or email_content_template_id values are removed from exported set_content_template_action_settings blocks."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
             "resource": "genesyscloud_responsemanagement_responseasset",
             "attribute": "name",
             "change": "updated",
             "summary": "Plan diffs ignore Windows-style path separator and drive-letter differences because values are normalized before being sent to the API."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_responsemanagement_responseasset",
+            "attribute": "name",
+            "change": "updated",
+            "summary": "Asset name values are normalized to forward slashes and Windows drive prefixes are stripped before API calls."
         },
         {
             "kind": "resource_attribute",
@@ -134,6 +176,13 @@
             "attribute": "media_settings_message.enable_inactivity_timeout",
             "change": "updated",
             "summary": "Schema default of false removed; when omitted, the value comes from the API on read."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "media_settings_message.enable_inactivity_timeout",
+            "change": "updated",
+            "summary": "Omitting the attribute no longer assumes false locally; refresh reads the API value into state."
         },
         {
             "kind": "export_behavior",
@@ -197,6 +246,97 @@
             "attribute": "custom_i18n_labels.localized_labels.key",
             "change": "updated",
             "summary": "Accepts MessengerLauncherButtonText for launcher button label localization."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_architect_flow",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during read operations."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_group",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during read operations."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during read operations."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_routing_skill",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during read operations."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_scripts",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during read operations."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_user",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during read operations."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_architect_flow",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during export enumeration."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_group",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during export enumeration."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during export enumeration."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_routing_skill",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during export enumeration."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_scripts",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during export enumeration."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_user",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during export enumeration."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_user",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Inactive user export stops at 10,000 users; page counts above the API limit are capped before parallel fetches, and unexpected 400 responses beyond that limit are treated as end-of-results."
         }
     ]
 }

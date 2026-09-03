@@ -212,6 +212,11 @@
     "latest_summary": "Failed queue, member, and wrapup-code updates preserve prior Terraform state; bullseye ring member-group clearing runs whenever bullseye_rings changes.",
     "history": [
       {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during read operations."
+      },
+      {
         "version": "v1.86.0",
         "change": "updated",
         "summary": "Failed queue, member, and wrapup-code updates preserve prior Terraform state; bullseye ring member-group clearing runs whenever bullseye_rings changes."
@@ -336,6 +341,11 @@
     "latest_summary": "Row data exports to a CSV file under a rows subdirectory instead of nested rows blocks.",
     "history": [
       {
+        "version": "v1.83.0",
+        "change": "updated",
+        "summary": "Queue ID reference resolution during export now matches row input and output literal values using exact attribute paths instead of wildcard paths that did not match."
+      },
+      {
         "version": "v1.86.0",
         "change": "updated",
         "summary": "Row data exports to a CSV file under a rows subdirectory instead of nested rows blocks."
@@ -454,6 +464,11 @@
         "version": "v1.62.0",
         "change": "updated",
         "summary": "Bulk export queue listing handles empty API responses without error."
+      },
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during export enumeration."
       },
       {
         "version": "v1.85.0",
@@ -1889,6 +1904,16 @@
         "summary": "Bulk export block labels now use {email}."
       },
       {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during export enumeration."
+      },
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Inactive user export stops at 10,000 users; page counts above the API limit are capped before parallel fetches, and unexpected 400 responses beyond that limit are treated as end-of-results."
+      },
+      {
         "version": "v1.85.0",
         "change": "updated",
         "summary": "Setting the GENESYSCLOUD_SKIP_INACTIVE_USER_EXPORT environment variable omits inactive users from org export listings."
@@ -3273,6 +3298,215 @@
     ]
   },
   {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_architect_flow",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during read operations.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during read operations."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_architect_grammar_language",
+    "attribute": "dtmf_file_data.file_name",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "File paths are normalized to forward slashes and Windows drive prefixes are stripped before upload.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "File paths are normalized to forward slashes and Windows drive prefixes are stripped before upload."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_architect_grammar_language",
+    "attribute": "voice_file_data.file_name",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "File paths are normalized to forward slashes and Windows drive prefixes are stripped before upload.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "File paths are normalized to forward slashes and Windows drive prefixes are stripped before upload."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_group",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during read operations.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during read operations."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_outbound_contact_list",
+    "attribute": "email_columns.contactable_time_column_name",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Values are written to and read from the API using the contactable-time column name field, improving round-trip accuracy for contactable-time mappings.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Values are written to and read from the API using the contactable-time column name field, improving round-trip accuracy for contactable-time mappings."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_outbound_contact_list",
+    "attribute": "phone_columns.callable_time_column_name",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Values are written to and read from the API using the callable-time column name field, improving round-trip accuracy for callable-time mappings.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Values are written to and read from the API using the callable-time column name field, improving round-trip accuracy for callable-time mappings."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_responsemanagement_responseasset",
+    "attribute": "name",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Asset name values are normalized to forward slashes and Windows drive prefixes are stripped before API calls.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Asset name values are normalized to forward slashes and Windows drive prefixes are stripped before API calls."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_routing_skill",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during read operations.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during read operations."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_scripts",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during read operations.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during read operations."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_user",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during read operations.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during read operations."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_architect_flow",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during export enumeration.",
+    "history": [
+      {
+        "version": "v1.66.0",
+        "change": "updated",
+        "summary": "Bulk export block labels now use {type}_{name}."
+      },
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during export enumeration."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_group",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during export enumeration.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during export enumeration."
+      }
+    ]
+  },
+  {
     "type": "export_behavior",
     "resource": "genesyscloud_outbound_digitalruleset",
     "attribute": "rules.actions.set_content_template_action_settings",
@@ -3320,6 +3554,40 @@
         "version": "v1.84.0",
         "change": "updated",
         "summary": "Content template IDs are resolved to genesyscloud_responsemanagement_response references during export."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_routing_skill",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during export enumeration.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during export enumeration."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_scripts",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during export enumeration.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during export enumeration."
       }
     ]
   },
@@ -3409,6 +3677,125 @@
     ]
   },
   {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_architect_grammar_language",
+    "attribute": "dtmf_file_data.file_name",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Plan diffs ignore Windows-style path separator and drive-letter differences because values are normalized before being sent to the API.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Plan diffs ignore Windows-style path separator and drive-letter differences because values are normalized before being sent to the API."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_architect_grammar_language",
+    "attribute": "voice_file_data.file_name",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Plan diffs ignore Windows-style path separator and drive-letter differences because values are normalized before being sent to the API.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Plan diffs ignore Windows-style path separator and drive-letter differences because values are normalized before being sent to the API."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_journey_segment",
+    "attribute": "color",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Populated from the API on refresh when omitted from configuration, which can surface new values during plan.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Populated from the API on refresh when omitted from configuration, which can surface new values during plan."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_journey_segment",
+    "attribute": "should_display_to_agent",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Populated from the API on refresh when omitted from configuration, which can surface new values during plan.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Populated from the API on refresh when omitted from configuration, which can surface new values during plan."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_outbound_digitalruleset",
+    "attribute": "rules.actions.set_content_template_action_settings",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Plan validation fails when a set_content_template_action_settings block is present but both sms_content_template_id and email_content_template_id are empty.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Plan validation fails when a set_content_template_action_settings block is present but both sms_content_template_id and email_content_template_id are empty."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_responsemanagement_responseasset",
+    "attribute": "name",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Plan diffs ignore Windows-style path separator and drive-letter differences because values are normalized before being sent to the API.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Plan diffs ignore Windows-style path separator and drive-letter differences because values are normalized before being sent to the API."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "media_settings_message.enable_inactivity_timeout",
+    "introduced": "Unknown",
+    "last_updated": "v1.84.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Omitting the attribute no longer assumes false locally; refresh reads the API value into state.",
+    "history": [
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Omitting the attribute no longer assumes false locally; refresh reads the API value into state."
+      }
+    ]
+  },
+  {
     "type": "provider_configuration",
     "resource": "provider",
     "attribute": "max_concurrent_pages",
@@ -3439,50 +3826,6 @@
         "version": "v1.84.0",
         "change": "updated",
         "summary": "Maximum allowed value increased from 20 to 50; description documents OAuth startup cost, rate-limit risk, and alignment with max_concurrent_pages."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_architect_grammar_language",
-    "attribute": "dtmf_file_data.file_name",
-    "introduced": "Unknown",
-    "last_updated": "v1.84.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Plan diffs ignore Windows-style path separator and drive-letter differences because values are normalized before being sent to the API.",
-    "history": [
-      {
-        "version": "v1.69.0",
-        "change": "updated",
-        "summary": "S3 paths are supported for grammar language files; changes to files stored in S3 are not detected by Terraform."
-      },
-      {
-        "version": "v1.84.0",
-        "change": "updated",
-        "summary": "Plan diffs ignore Windows-style path separator and drive-letter differences because values are normalized before being sent to the API."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_architect_grammar_language",
-    "attribute": "voice_file_data.file_name",
-    "introduced": "Unknown",
-    "last_updated": "v1.84.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Plan diffs ignore Windows-style path separator and drive-letter differences because values are normalized before being sent to the API.",
-    "history": [
-      {
-        "version": "v1.69.0",
-        "change": "updated",
-        "summary": "S3 paths are supported for grammar language files; changes to files stored in S3 are not detected by Terraform."
-      },
-      {
-        "version": "v1.84.0",
-        "change": "updated",
-        "summary": "Plan diffs ignore Windows-style path separator and drive-letter differences because values are normalized before being sent to the API."
       }
     ]
   },
@@ -3539,55 +3882,6 @@
   },
   {
     "type": "resource",
-    "resource": "genesyscloud_outbound_contact_list",
-    "attribute": "email_columns.contactable_time_column_name",
-    "introduced": "v1.79.0",
-    "last_updated": "v1.84.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Values are now written to and read from the API using the contactable-time column name field, improving round-trip accuracy for contactable-time mappings.",
-    "history": [
-      {
-        "version": "v1.79.0",
-        "change": "added",
-        "summary": "Column name that indicates the timezone to use when checking contactable times; optional and computed."
-      },
-      {
-        "version": "v1.84.0",
-        "change": "updated",
-        "summary": "Values are now written to and read from the API using the contactable-time column name field, improving round-trip accuracy for contactable-time mappings."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_outbound_contact_list",
-    "attribute": "phone_columns.callable_time_column_name",
-    "introduced": "v1.79.0",
-    "last_updated": "v1.84.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Values are now written to and read from the API using the callable-time column name field, improving round-trip accuracy for callable-time mappings.",
-    "history": [
-      {
-        "version": "v1.79.0",
-        "change": "added",
-        "summary": "Column name that indicates the timezone to use when checking callable times; optional and computed."
-      },
-      {
-        "version": "v1.79.0",
-        "change": "updated",
-        "summary": "Plan diffs are suppressed when automatic_time_zone_mapping is true because the API may omit these values."
-      },
-      {
-        "version": "v1.84.0",
-        "change": "updated",
-        "summary": "Values are now written to and read from the API using the callable-time column name field, improving round-trip accuracy for callable-time mappings."
-      }
-    ]
-  },
-  {
-    "type": "resource",
     "resource": "genesyscloud_outbound_digitalruleset",
     "attribute": "rules.actions.set_content_template_action_settings.email_content_template_id",
     "introduced": "Unknown",
@@ -3617,28 +3911,6 @@
         "version": "v1.84.0",
         "change": "updated",
         "summary": "No longer required; SMS and email template actions can be configured independently."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_responsemanagement_responseasset",
-    "attribute": "name",
-    "introduced": "v1.71.0",
-    "last_updated": "v1.84.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Plan diffs ignore Windows-style path separator and drive-letter differences because values are normalized before being sent to the API.",
-    "history": [
-      {
-        "version": "v1.71.0",
-        "change": "added",
-        "summary": "Optional display name for the response asset; can differ from the uploaded filename. Changing name forces replacement."
-      },
-      {
-        "version": "v1.84.0",
-        "change": "updated",
-        "summary": "Plan diffs ignore Windows-style path separator and drive-letter differences because values are normalized before being sent to the API."
       }
     ]
   },
@@ -3738,6 +4010,23 @@
     ]
   },
   {
+    "type": "export_behavior",
+    "resource": "genesyscloud_ai_studio_summary_setting",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.83.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Export enumeration now passes page number, page size, and name filter to the list API in the correct argument positions, so exported summary settings are complete and correctly filtered.",
+    "history": [
+      {
+        "version": "v1.83.0",
+        "change": "updated",
+        "summary": "Export enumeration now passes page number, page size, and name filter to the list API in the correct argument positions, so exported summary settings are complete and correctly filtered."
+      }
+    ]
+  },
+  {
     "type": "provider_configuration",
     "resource": "provider",
     "attribute": "aws_region",
@@ -3751,28 +4040,6 @@
         "version": "v1.83.0",
         "change": "updated",
         "summary": "Accepts eusc-de-east-1 for EU Sovereign Cloud (Germany) orgs, routing API calls to edee1.eusc-pure.cloud."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_ai_studio_summary_setting",
-    "attribute": "(resource-level behavior)",
-    "introduced": "v1.72.2",
-    "last_updated": "v1.83.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Summary settings are now listed and refreshed with correct pagination and name filtering, so plan and apply return the expected resources instead of missing or mismatched results.",
-    "history": [
-      {
-        "version": "v1.72.2",
-        "change": "added",
-        "summary": "New resource for managing AI Studio summary settings."
-      },
-      {
-        "version": "v1.83.0",
-        "change": "updated",
-        "summary": "Summary settings are now listed and refreshed with correct pagination and name filtering, so plan and apply return the expected resources instead of missing or mismatched results."
       }
     ]
   },
@@ -5361,6 +5628,23 @@
   {
     "type": "resource",
     "resource": "genesyscloud_outbound_contact_list",
+    "attribute": "email_columns.contactable_time_column_name",
+    "introduced": "v1.79.0",
+    "last_updated": "v1.79.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Column name that indicates the timezone to use when checking contactable times; optional and computed.",
+    "history": [
+      {
+        "version": "v1.79.0",
+        "change": "added",
+        "summary": "Column name that indicates the timezone to use when checking contactable times; optional and computed."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_outbound_contact_list",
     "attribute": "phone_columns",
     "introduced": "Unknown",
     "last_updated": "v1.79.0",
@@ -5377,6 +5661,28 @@
         "version": "v1.79.0",
         "change": "updated",
         "summary": "Read preserves timezone column names from the API response, reducing drift after UI edits or refresh."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_outbound_contact_list",
+    "attribute": "phone_columns.callable_time_column_name",
+    "introduced": "v1.79.0",
+    "last_updated": "v1.79.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Plan diffs are suppressed when automatic_time_zone_mapping is true because the API may omit these values.",
+    "history": [
+      {
+        "version": "v1.79.0",
+        "change": "added",
+        "summary": "Column name that indicates the timezone to use when checking callable times; optional and computed."
+      },
+      {
+        "version": "v1.79.0",
+        "change": "updated",
+        "summary": "Plan diffs are suppressed when automatic_time_zone_mapping is true because the API may omit these values."
       }
     ]
   },
@@ -9951,6 +10257,23 @@
   },
   {
     "type": "resource",
+    "resource": "genesyscloud_ai_studio_summary_setting",
+    "attribute": "(resource-level behavior)",
+    "introduced": "v1.72.2",
+    "last_updated": "v1.72.2",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "New resource for managing AI Studio summary settings.",
+    "history": [
+      {
+        "version": "v1.72.2",
+        "change": "added",
+        "summary": "New resource for managing AI Studio summary settings."
+      }
+    ]
+  },
+  {
+    "type": "resource",
     "resource": "genesyscloud_conversations_messaging_integrations_apple",
     "attribute": "(resource-level behavior)",
     "introduced": "v1.72.2",
@@ -10520,6 +10843,23 @@
   },
   {
     "type": "resource",
+    "resource": "genesyscloud_responsemanagement_responseasset",
+    "attribute": "name",
+    "introduced": "v1.71.0",
+    "last_updated": "v1.71.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional display name for the response asset; can differ from the uploaded filename. Changing name forces replacement.",
+    "history": [
+      {
+        "version": "v1.71.0",
+        "change": "added",
+        "summary": "Optional display name for the response asset; can differ from the uploaded filename. Changing name forces replacement."
+      }
+    ]
+  },
+  {
+    "type": "resource",
     "resource": "genesyscloud_routing_queue",
     "attribute": "(resource-level behavior)",
     "introduced": "Unknown",
@@ -10969,6 +11309,23 @@
   {
     "type": "resource",
     "resource": "genesyscloud_architect_grammar_language",
+    "attribute": "dtmf_file_data.file_name",
+    "introduced": "Unknown",
+    "last_updated": "v1.69.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "S3 paths are supported for grammar language files; changes to files stored in S3 are not detected by Terraform.",
+    "history": [
+      {
+        "version": "v1.69.0",
+        "change": "updated",
+        "summary": "S3 paths are supported for grammar language files; changes to files stored in S3 are not detected by Terraform."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_architect_grammar_language",
     "attribute": "voice_file_data.file_content_hash",
     "introduced": "Unknown",
     "last_updated": "v1.69.0",
@@ -10980,6 +11337,23 @@
         "version": "v1.69.0",
         "change": "updated",
         "summary": "Optional in configuration; still required at apply time when the corresponding file_name is not an S3 path."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_architect_grammar_language",
+    "attribute": "voice_file_data.file_name",
+    "introduced": "Unknown",
+    "last_updated": "v1.69.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "S3 paths are supported for grammar language files; changes to files stored in S3 are not detected by Terraform.",
+    "history": [
+      {
+        "version": "v1.69.0",
+        "change": "updated",
+        "summary": "S3 paths are supported for grammar language files; changes to files stored in S3 are not detected by Terraform."
       }
     ]
   },
@@ -12259,23 +12633,6 @@
         "version": "v1.66.0",
         "change": "updated",
         "summary": "Returns a retryable error when no extension pool matches the requested start and end numbers."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
-    "resource": "genesyscloud_architect_flow",
-    "attribute": "general export behavior",
-    "introduced": "Unknown",
-    "last_updated": "v1.66.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Bulk export block labels now use {type}_{name}.",
-    "history": [
-      {
-        "version": "v1.66.0",
-        "change": "updated",
-        "summary": "Bulk export block labels now use {type}_{name}."
       }
     ]
   },
