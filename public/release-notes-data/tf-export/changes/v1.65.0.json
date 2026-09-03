@@ -36,10 +36,24 @@
             "resource": "genesyscloud_tf_export",
             "attribute": null,
             "change": "updated",
+            "summary": "When multiple resources sanitize to the same block label, the third and later occurrences now receive one _<hash> suffix keyed to the occurrence number, instead of multiple repeated hash suffixes."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
             "summary": "Resource state reads during export are synchronized, which may reduce intermittent failures when exporting large configurations."
         }
     ],
     "related_export_changes": [
+        {
+            "kind": "export_behavior",
+            "resource": null,
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exported resource block labels for duplicate-name edge cases may differ from v1.64.1 output because disambiguation suffixes now use one occurrence-specific hash instead of stacked identical hashes."
+        },
         {
             "kind": "export_behavior",
             "resource": null,

@@ -17,32 +17,11 @@
             "summary": "New resource for managing worktype status transition rules."
         },
         {
-            "kind": "resource_behavior",
-            "resource": "genesyscloud_architect_ivr",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Create and update retry transient HTTP 400 responses before failing."
-        },
-        {
-            "kind": "resource_behavior",
-            "resource": "genesyscloud_integration_credential",
-            "attribute": null,
-            "change": "updated",
-            "summary": "For pureCloudOAuthClient credentials without clientSecret in fields, the provider attempts to populate the secret from a matching OAuth client or provider metadata cache."
-        },
-        {
             "kind": "resource_attribute",
             "resource": "genesyscloud_knowledge_document",
             "attribute": "published",
             "change": "updated",
             "summary": "Now optional, computed, and deprecated; documents are created as drafts, no longer auto-published on create, and the value is no longer synced from the API on read."
-        },
-        {
-            "kind": "resource_behavior",
-            "resource": "genesyscloud_knowledge_document",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Publishing is no longer performed through this resource; use genesyscloud_knowledge_document_variation to publish documents."
         },
         {
             "kind": "resource_attribute",
@@ -64,13 +43,6 @@
             "attribute": "directory_client_secret",
             "change": "added",
             "summary": "Optional directory path where the client secret is written to a file on create."
-        },
-        {
-            "kind": "resource_behavior",
-            "resource": "genesyscloud_oauth_client",
-            "attribute": null,
-            "change": "updated",
-            "summary": "When creating or updating a linked integration credential, client_id is written to state and client_secret is cleared from state."
         },
         {
             "kind": "resource_attribute",
@@ -143,13 +115,6 @@
             "summary": "No longer computed; omit this attribute to manage queue members outside Terraform without plan diffs."
         },
         {
-            "kind": "resource_behavior",
-            "resource": "genesyscloud_routing_queue",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Queue member ring number updates retry transient HTTP 404 responses before failing."
-        },
-        {
             "kind": "resource_attribute",
             "resource": "genesyscloud_task_management_worktype",
             "attribute": "disable_default_status_creation",
@@ -192,6 +157,181 @@
             "summary": "Deprecated and computed; use genesyscloud_task_management_worktype_status_transition instead."
         },
         {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_knowledge_document",
+            "attribute": "published",
+            "change": "updated",
+            "summary": "Refresh no longer syncs published from the API; documents are read in draft state when published is false."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "users",
+            "change": "updated",
+            "summary": "Omitting users avoids API-populated member lists in state and reduces plan diffs when members are managed outside Terraform."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "last_agent_routing_mode",
+            "change": "added",
+            "summary": "New optional attribute accepts Disabled, QueueMembersOnly, or AnyAgent."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_outbound_campaign",
+            "attribute": "dynamic_contact_queueing_settings",
+            "change": "updated",
+            "summary": "sort is optional and computed; filter is new; changing sort or filter forces replacement with a new campaign ID."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_oauth_client",
+            "attribute": "client_id",
+            "change": "added",
+            "summary": "Computed placeholders appear in state for referencing from integration credentials."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_task_management_worktype_status",
+            "attribute": "category",
+            "change": "updated",
+            "summary": "Unknown is no longer accepted; transition-related attributes are deprecated and computed."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_architect_ivr",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Create and update retry transient HTTP 400 responses before failing."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_knowledge_document",
+            "attribute": "published",
+            "change": "updated",
+            "summary": "Create no longer publishes documents; update sets published to false after apply."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_integration_credential",
+            "attribute": null,
+            "change": "updated",
+            "summary": "For pureCloudOAuthClient credentials without clientSecret in fields, the provider attempts to populate the secret from a matching OAuth client or provider metadata cache."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_oauth_client",
+            "attribute": "directory_client_secret",
+            "change": "added",
+            "summary": "When set, the client secret is written to a file on create; linked integration credential create/update writes client_id to state and clears client_secret from state."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "last_agent_routing_mode",
+            "change": "added",
+            "summary": "last_agent_routing_mode is sent on create and update."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "users",
+            "change": "updated",
+            "summary": "Member ring number updates retry transient HTTP 404 responses before failing."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_task_management_worktype",
+            "attribute": "disable_default_status_creation",
+            "change": "added",
+            "summary": "disable_default_status_creation is applied on create."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_flow",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exported block labels may include flow-type hashes when names collide."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_integration",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exported block labels may include integration-type hashes when names collide."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_integration_action",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exported block labels may include category hashes when names collide."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_knowledge_document",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exported block labels may include category-name hashes; enumeration reads category details during export."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_responsemanagement_response",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exported block labels may include library-name hashes when names collide."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_responsemanagement_responseasset",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exported block labels may include content-length hashes when names collide."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_telephony_providers_edges_did_pool",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exported block labels may include phone-range and provider hashes when names collide."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_user",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exported block labels may include profile-field hashes when names collide."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_outbound_contact_list",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Contact export waits longer with exponential backoff before retrieving signed export URLs."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_recording_media_retention_policy",
+            "attribute": "conditions.team_ids",
+            "change": "updated",
+            "summary": "Export resolves team_ids to genesyscloud_team references."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_widget_deployment",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Removed from dependent-consumer export dependency mapping for widget resources."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": null,
+            "attribute": null,
+            "change": "updated",
+            "summary": "When the optimized export label sanitizer is enabled (GENESYS_SANITIZER_OPTIMIZED or ENABLE_OPTIMIZED_SANITIZER), duplicate exported block labels receive hash suffixes using a consistent algorithm."
+        },
+        {
             "kind": "data_source",
             "resource": "genesyscloud_knowledge_document_variation",
             "attribute": null,
@@ -204,55 +344,6 @@
             "attribute": null,
             "change": "updated",
             "summary": "Data source ID format is now worktype_id/status_id instead of the status ID alone."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_flow",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Bulk export block labels may include uniqueness hashes when names collide."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_integration",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Bulk export block labels may include uniqueness hashes when names collide."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_integration_action",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Bulk export block labels may include uniqueness hashes when names collide."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_knowledge_document",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Bulk export block labels may include category-based uniqueness hashes."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_user",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Bulk export block labels may include uniqueness hashes when names collide."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_outbound_contact_list",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Bulk export for contacts waits longer with exponential backoff before retrieving signed export URLs."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_recording_media_retention_policy",
-            "attribute": "conditions.team_ids",
-            "change": "updated",
-            "summary": "Bulk export resolves team_ids to genesyscloud_team resource references."
         }
     ]
 }

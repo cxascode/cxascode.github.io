@@ -25,6 +25,13 @@
         },
         {
             "kind": "export_behavior",
+            "resource": "genesyscloud_knowledge_document",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Knowledge base enumeration stops when pagination returns a repeated cursor."
+        },
+        {
+            "kind": "export_behavior",
             "resource": "genesyscloud_knowledge_document_variation",
             "attribute": null,
             "change": "updated",
@@ -52,14 +59,14 @@
             "summary": "Bulk export filename values use forward slashes instead of backslashes."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "apply_behavior",
             "resource": "genesyscloud_routing_email_domain",
             "attribute": null,
             "change": "updated",
             "summary": "Delete completes successfully when the domain is already absent (HTTP 404)."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
             "resource": "genesyscloud_routing_email_route",
             "attribute": null,
             "change": "updated",
@@ -73,21 +80,28 @@
             "summary": "Bulk export excludes Genesys Cloud default scripts (Default Outbound Script, Default Inbound Script, Default Callback Script)."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "export_behavior",
+            "resource": "genesyscloud_script",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Published scripts are listed via the published-scripts API instead of per-script publication lookups."
+        },
+        {
+            "kind": "apply_behavior",
             "resource": "genesyscloud_script",
             "attribute": null,
             "change": "updated",
             "summary": "Delete completes successfully when the script is already absent (HTTP 404)."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
             "resource": "genesyscloud_script",
             "attribute": null,
             "change": "updated",
             "summary": "Read treats HTTP 404 as retryable."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "resource_attribute",
             "resource": "genesyscloud_user",
             "attribute": "addresses",
             "change": "updated",
@@ -108,11 +122,32 @@
             "summary": "Bulk export block labels now use {email}."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "export_behavior",
+            "resource": "genesyscloud_user",
+            "attribute": null,
+            "change": "updated",
+            "summary": "The fixed 5-second delay before user enumeration was removed."
+        },
+        {
+            "kind": "apply_behavior",
             "resource": "genesyscloud_user",
             "attribute": null,
             "change": "updated",
             "summary": "Post-delete verification waits up to 3 minutes for the user to appear in deleted state."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_user",
+            "attribute": "addresses",
+            "change": "updated",
+            "summary": "Removing addresses from configuration is detected as a change that clears addresses on apply."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_user",
+            "attribute": "employer_info",
+            "change": "updated",
+            "summary": "employer_info is no longer populated from the API on refresh unless explicitly configured."
         },
         {
             "kind": "data_source_behavior",
@@ -122,7 +157,7 @@
             "summary": "Returns a retryable error when no extension pool matches the requested start and end numbers."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
             "resource": null,
             "attribute": null,
             "change": "updated",

@@ -3,11 +3,32 @@
     "previous": "v1.68.5",
     "changes": [
         {
-            "kind": "resource_behavior",
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_knowledge_document_variation",
+            "attribute": "document_version",
+            "change": "updated",
+            "summary": "No longer settable in configuration; now computed only (was previously optional)."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_knowledge_document_variation",
+            "attribute": "document_version",
+            "change": "updated",
+            "summary": "document_version is no longer accepted as a configuration argument; plans will fail if it remains set in .tf files."
+        },
+        {
+            "kind": "apply_behavior",
             "resource": "genesyscloud_group",
             "attribute": "addresses",
             "change": "updated",
-            "summary": "Setting an empty list clears existing group addresses on update instead of leaving them unchanged."
+            "summary": "Setting addresses = [] now clears existing group addresses on update instead of leaving them unchanged."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_journey_segment",
+            "attribute": "assignment_expiration_days",
+            "change": "updated",
+            "summary": "Changes to assignment_expiration_days are now applied during resource updates."
         },
         {
             "kind": "export_behavior",
@@ -22,20 +43,6 @@
             "attribute": "owner_ids",
             "change": "updated",
             "summary": "Exported configurations preserve empty owner_ids arrays instead of omitting them."
-        },
-        {
-            "kind": "resource_behavior",
-            "resource": "genesyscloud_journey_segment",
-            "attribute": "assignment_expiration_days",
-            "change": "updated",
-            "summary": "Changes to assignment_expiration_days are now applied during resource updates."
-        },
-        {
-            "kind": "resource_attribute",
-            "resource": "genesyscloud_knowledge_document_variation",
-            "attribute": "document_version",
-            "change": "updated",
-            "summary": "No longer settable in configuration; now computed only (was previously optional)."
         },
         {
             "kind": "export_behavior",

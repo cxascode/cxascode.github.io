@@ -17,11 +17,67 @@
             "summary": "Message media settings are now mapped with message-specific read and write logic, including sub_type_settings and service-level fields."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_group",
+            "attribute": "calls_enabled",
+            "change": "updated",
+            "summary": "Refresh populates calls_enabled from the API."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "media_settings_message",
+            "change": "updated",
+            "summary": "Refresh maps media_settings_message with message-specific fields, which can surface sub_type_settings and service-level values that were previously omitted or flattened incorrectly."
+        },
+        {
+            "kind": "plan_behavior",
             "resource": "genesyscloud_routing_email_route",
             "attribute": null,
             "change": "updated",
-            "summary": "Read and refresh retries when the API returns empty or missing route lists instead of clearing the resource from state."
+            "summary": "Read retries when the API returns an empty route list or when the route is not found in its domain, instead of clearing the resource from state."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_group",
+            "attribute": "calls_enabled",
+            "change": "updated",
+            "summary": "Create and update send calls_enabled to the Genesys Cloud API."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": null,
+            "attribute": "token_acquire_timeout",
+            "change": "updated",
+            "summary": "Plan and apply operations that cannot obtain a pooled OAuth client within token_acquire_timeout fail with a timeout error instead of blocking indefinitely."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": null,
+            "attribute": "token_init_timeout",
+            "change": "updated",
+            "summary": "Provider startup fails if the token pool cannot be initialized within token_init_timeout."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_integration_credential",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exported Terraform block labels now use Integration-{integration_name} instead of {integration_name}_{credential_name}."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_integration_action",
+            "attribute": "config_response.translation_map_defaults",
+            "change": "updated",
+            "summary": "Export preserves zero-value entries in translation_map_defaults."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": null,
+            "attribute": null,
+            "change": "updated",
+            "summary": "Bulk export limits concurrent resource enumeration to the configured token_pool_size."
         },
         {
             "kind": "provider_configuration",
@@ -43,27 +99,6 @@
             "attribute": "sdk_client_pool_debug",
             "change": "added",
             "summary": "Optional boolean that enables debug logging for token pool operations."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_integration_credential",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Exported block labels now use the format Integration-{integration_name} instead of {integration_name}_{credential_name}."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_integration_action",
-            "attribute": "config_response.translation_map_defaults",
-            "change": "updated",
-            "summary": "Export now preserves zero-value entries in translation_map_defaults."
-        },
-        {
-            "kind": "export_behavior",
-            "resource": null,
-            "attribute": null,
-            "change": "updated",
-            "summary": "Bulk resource export limits concurrent API operations to the configured token_pool_size."
         }
     ]
 }

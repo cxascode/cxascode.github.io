@@ -34,6 +34,13 @@
         {
             "kind": "export_behavior",
             "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Errors during dependent-resource config map building and attribute resolution are now returned instead of being ignored."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
             "attribute": "use_legacy_architect_flow_exporter",
             "change": "updated",
             "summary": "When use_legacy_architect_flow_exporter is false, architect flows are processed with the new flow exporter, which downloads flow configuration files during export."

@@ -31,7 +31,7 @@
             "summary": "No longer configurable on this resource."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "apply_behavior",
             "resource": "genesyscloud_flow_outcome",
             "attribute": null,
             "change": "updated",
@@ -43,6 +43,13 @@
             "attribute": "scope",
             "change": "removed",
             "summary": "Deprecated attribute removed from the schema."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_journey_segment",
+            "attribute": "scope",
+            "change": "removed",
+            "summary": "Scope is no longer accepted in configuration."
         },
         {
             "kind": "resource_attribute",
@@ -59,6 +66,13 @@
             "summary": "Optional computed live speaker detection level (Disabled, Low, Medium, or High)."
         },
         {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_outbound_callanalysisresponseset",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Create and update send amd_speech_distinguish_enabled and live_speaker_detection_mode; refresh reads live_speaker_detection_mode from the platform."
+        },
+        {
             "kind": "resource_attribute",
             "resource": "genesyscloud_outbound_campaign",
             "attribute": "caller_name",
@@ -73,11 +87,39 @@
             "summary": "Now optional instead of required; omitted values are no longer sent to the API as empty strings."
         },
         {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_outbound_campaign",
+            "attribute": null,
+            "change": "updated",
+            "summary": "caller_name and caller_address are optional instead of required."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_outbound_campaign",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Omitted caller_name and caller_address are no longer sent as empty strings."
+        },
+        {
             "kind": "resource_attribute",
             "resource": "genesyscloud_recording_media_retention_policy",
             "attribute": "actions.assign_metered_assignment_by_agent.time_interval",
             "change": "updated",
             "summary": "Nested interval block now accepts hours, days, weeks, and months instead of months, weeks, and days only."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_recording_media_retention_policy",
+            "attribute": "actions.assign_metered_assignment_by_agent.time_interval",
+            "change": "updated",
+            "summary": "Time interval blocks accept hours in addition to days, weeks, and months."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_recording_media_retention_policy",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Create and update return policy build errors instead of continuing silently; empty call media policy blocks are skipped instead of failing apply."
         },
         {
             "kind": "resource_attribute",
@@ -122,11 +164,18 @@
             "summary": "Validation now requires either this flag or both domain_id and route_id."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
             "resource": "genesyscloud_routing_email_route",
             "attribute": null,
             "change": "updated",
-            "summary": "Reply email address updates now include the route pattern in API requests."
+            "summary": "from_email, auto_bcc, and reply_email_address are mutually exclusive; reply_email_address nested fields use stricter RequiredWith, AtLeastOneOf, and ConflictsWith validation."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_routing_email_route",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Reply email address updates include the referenced route pattern in API requests."
         },
         {
             "kind": "resource_attribute",
@@ -150,11 +199,18 @@
             "summary": "Now computed in addition to optional."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
             "resource": "genesyscloud_routing_queue",
             "attribute": null,
             "change": "updated",
-            "summary": "When ignore_members is true, members are not read from the API or updated on apply."
+            "summary": "ignore_members conflicts with members; members requires block syntax and diffs are suppressed when ignore_members is true; last_agent_routing_mode is computed on refresh."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When ignore_members is true, queue members are not read from the API or updated on apply."
         },
         {
             "kind": "resource_attribute",
@@ -164,11 +220,25 @@
             "summary": "Now optional instead of required."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_routing_sms_address",
+            "attribute": "name",
+            "change": "updated",
+            "summary": "name is optional instead of required."
+        },
+        {
+            "kind": "apply_behavior",
             "resource": "genesyscloud_routing_sms_address",
             "attribute": null,
             "change": "updated",
             "summary": "Create always sends address fields and sends name as an empty string when omitted."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_routing_sms_address",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exported block labels fall back to postal_code when name is not set."
         },
         {
             "kind": "resource_attribute",
@@ -178,14 +248,21 @@
             "summary": "Optional computed division for the script."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_script",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Optional division_id is applied on create and update; failed publish attempts attempt cleanup of the unpublished script."
+        },
+        {
+            "kind": "apply_behavior",
             "resource": "genesyscloud_task_management_worktype_status_transition",
             "attribute": null,
             "change": "updated",
             "summary": "Destroy preserves destination statuses not managed in Terraform state and adjusts default_destination_status_id handling."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "apply_behavior",
             "resource": "genesyscloud_team",
             "attribute": null,
             "change": "updated",
@@ -196,7 +273,35 @@
             "resource": "genesyscloud_user",
             "attribute": "addresses.phone_numbers.extension_pool_id",
             "change": "added",
-            "summary": "Optional extension pool ID for phone extensions; populated on read when resolvable."
+            "summary": "Optional extension pool ID for phone extensions; populated on read when an extension pool can be resolved."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_user",
+            "attribute": "addresses.phone_numbers.extension_pool_id",
+            "change": "added",
+            "summary": "Refresh may populate computed extension_pool_id for extensions when a matching extension pool is found."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_user",
+            "attribute": "addresses.phone_numbers.extension_pool_id",
+            "change": "added",
+            "summary": "Export resolves extension_pool_id to genesyscloud_telephony_providers_edges_extension_pool references."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_externalcontacts_contact",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exported block labels use organization name and contact name instead of the contact ID alone; external ID hashes may be appended for uniqueness."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": null,
+            "attribute": null,
+            "change": "updated",
+            "summary": "Default export label sanitization transliterates non-Latin characters to ASCII, and duplicate exported block labels receive updated hash suffix handling."
         }
     ]
 }

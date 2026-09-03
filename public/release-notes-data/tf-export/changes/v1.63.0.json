@@ -9,7 +9,22 @@
             "attribute": null,
             "change": "updated",
             "summary": "When tf-export auto-resolves duplicate Terraform block labels for the same resource type, the appended suffix changes from _<numeric_hash> to _BRCM<numeric_hash>. Exported resource block names in this edge case will differ from v1.62.0 output."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Resource block label sanitization now returns an empty label when a resource name is empty or sanitizes to no valid characters, instead of failing during label processing. This applies to both the default sanitizer and the time-optimized sanitizer (GENESYS_SANITIZER_TIME_OPTIMIZED)."
         }
     ],
-    "related_export_changes": []
+    "related_export_changes": [
+        {
+            "kind": "export_behavior",
+            "resource": null,
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exported resource block labels may be empty when a resource name is empty or sanitizes to no valid characters, instead of the export failing during label processing."
+        }
+    ]
 }

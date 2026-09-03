@@ -3,7 +3,7 @@
     "previous": "v1.66.0",
     "changes": [
         {
-            "kind": "resource_behavior",
+            "kind": "apply_behavior",
             "resource": "genesyscloud_auth_role",
             "attribute": null,
             "change": "updated",
@@ -31,7 +31,7 @@
             "summary": "Now optional in configuration while remaining computed from the API."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
             "resource": "genesyscloud_guide",
             "attribute": null,
             "change": "updated",
@@ -49,38 +49,38 @@
             "resource": "genesyscloud_location",
             "attribute": null,
             "change": "updated",
-            "summary": "Bulk export exports the Default PCV Location as a data source block instead of a managed resource."
+            "summary": "Bulk export exports Default PCV Location as a data source block instead of a managed resource."
         },
         {
             "kind": "export_behavior",
             "resource": "genesyscloud_routing_utilization_label",
             "attribute": null,
             "change": "updated",
-            "summary": "Bulk export exports the System Default Label as a data source block instead of a managed resource."
+            "summary": "Bulk export exports System Default Label as a data source block instead of a managed resource."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "resource_attribute",
             "resource": "genesyscloud_task_management_worktype",
             "attribute": "default_expiration_seconds",
             "change": "updated",
             "summary": "Updates now send the configured default_expiration_seconds value to the API instead of reading the wrong attribute."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "apply_behavior",
             "resource": "genesyscloud_task_management_worktype",
             "attribute": null,
             "change": "updated",
             "summary": "Create and update retry automatically on HTTP 409 conflict responses."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "apply_behavior",
             "resource": "genesyscloud_task_management_worktype_status",
             "attribute": null,
             "change": "updated",
             "summary": "Create, update, and delete retry automatically on HTTP 409 conflict responses."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "apply_behavior",
             "resource": "genesyscloud_task_management_worktype_status_transition",
             "attribute": null,
             "change": "updated",
@@ -129,6 +129,27 @@
             "summary": "Deprecated; has no effect and will be removed in a later version."
         },
         {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_webdeployments_configuration",
+            "attribute": "journey_events.tracking_settings.excluded_query_parameters",
+            "change": "updated",
+            "summary": "Deprecated tracking_settings attribute has no effect."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_webdeployments_configuration",
+            "attribute": "journey_events.tracking_settings.should_keep_url_fragment",
+            "change": "updated",
+            "summary": "Deprecated tracking_settings attribute has no effect."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_webdeployments_configuration",
+            "attribute": "journey_events.tracking_settings.search_query_parameters",
+            "change": "updated",
+            "summary": "Deprecated tracking_settings attribute has no effect."
+        },
+        {
             "kind": "data_source",
             "resource": "genesyscloud_integration_webhook",
             "attribute": null,
@@ -150,11 +171,53 @@
             "summary": "Lookup failures surface the API error message in diagnostics instead of a separate generic not-found retry message."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_flow",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Flow lookup by name now includes flows with virtual agent enabled in addition to standard flows."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_routing_wrapupcode",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Lookup failures surface the API error message in retry and non-retryable diagnostics instead of a separate generic not-found retry message."
+        },
+        {
+            "kind": "plan_behavior",
             "resource": null,
             "attribute": null,
             "change": "updated",
-            "summary": "Shared retry helpers retry a broader set of timeout conditions across resources that use them."
+            "summary": "Shared retry helpers retry a broader set of timeout conditions during read and plan operations."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_task_management_worktype",
+            "attribute": "default_expiration_seconds",
+            "change": "updated",
+            "summary": "Updates now send the configured default_expiration_seconds value to the API instead of reading the wrong attribute."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": null,
+            "attribute": null,
+            "change": "updated",
+            "summary": "Shared retry helpers retry a broader set of timeout conditions during create, update, and delete operations."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_architect_flow",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Flow enumeration for export now includes flows with virtual agent enabled in addition to standard flows."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_integration_credential",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Credential enumeration during export uses cursor-based paging instead of page-number paging."
         }
     ]
 }

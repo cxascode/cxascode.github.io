@@ -10,18 +10,25 @@
             "summary": "No longer required in configuration; now optional and computed from the flow file after a successful apply."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "apply_behavior",
             "resource": "genesyscloud_flow",
             "attribute": "filepath",
             "change": "updated",
             "summary": "Accepts Amazon S3 URIs (s3://) in addition to local paths and HTTP(S) URLs."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "apply_behavior",
             "resource": "genesyscloud_flow",
             "attribute": "file_content_hash",
             "change": "updated",
-            "summary": "Plan and apply emit a warning when file_content_hash is still set in configuration, noting it will become read-only in a future release."
+            "summary": "Apply emits a warning when file_content_hash is still set in configuration, noting it will become read-only in a future release, and computes the hash from filepath after a successful apply."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_flow",
+            "attribute": "file_content_hash",
+            "change": "updated",
+            "summary": "Plan diff evaluation computes file_content_hash from filepath, including s3:// paths, when the attribute is not set in configuration."
         },
         {
             "kind": "export_behavior",
@@ -59,21 +66,21 @@
             "summary": "Documentation clarifies API values Draft and ProductionReady."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "apply_behavior",
             "resource": "genesyscloud_guide",
             "attribute": null,
             "change": "updated",
             "summary": "Create runs a content-generation job and creates an initial guide version when source is Prompt; other sources also receive an initial guide version on create."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
             "resource": "genesyscloud_guide",
             "attribute": null,
             "change": "updated",
             "summary": "Read refreshes status and source from the API and sets latest_saved_version and latest_production_ready_version to null when the API returns no version."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "apply_behavior",
             "resource": "genesyscloud_guide_version",
             "attribute": null,
             "change": "updated",

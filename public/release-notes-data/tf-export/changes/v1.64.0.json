@@ -8,6 +8,27 @@
             "resource": "genesyscloud_tf_export",
             "attribute": null,
             "change": "updated",
+            "summary": "Default resource block label sanitization now transliterates non-Latin characters to ASCII. This behavior was previously available only when the optional time-optimized sanitizer (GENESYS_SANITIZER_TIME_OPTIMIZED) was enabled; that separate sanitizer path is removed and all standard exports use the unified default sanitizer."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When tf-export auto-resolves duplicate Terraform block labels, the disambiguation hash suffix changes from a numeric FNV-based value to a hexadecimal SHA-256-based value (first 10 characters)."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When multiple resources sanitize to the same block label, the second occurrence receives one _<hash> suffix, the third receives two _<hash> suffixes, and so on."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
             "summary": "When tf-export resolves depends_on references, dependencies on data sources now include the required data. prefix (for example, data.genesyscloud_<type>.<label> instead of genesyscloud_<type>.<label>)."
         },
         {
@@ -19,6 +40,20 @@
         }
     ],
     "related_export_changes": [
+        {
+            "kind": "export_behavior",
+            "resource": null,
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exported resource block labels may differ for resources with non-Latin names because transliteration now runs in the default sanitizer."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": null,
+            "attribute": null,
+            "change": "updated",
+            "summary": "Exported resource block labels for duplicate-name edge cases may differ from v1.63.0 output because of the new hash format and occurrence-based suffix logic."
+        },
         {
             "kind": "export_behavior",
             "resource": null,

@@ -2,6 +2,35 @@
     "version": "v1.60.0",
     "previous": "v1.59.1",
     "resource": "genesyscloud_tf_export",
-    "changes": [],
+    "changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When no resources match the export scope, the error message is now \"No resources found to export\" instead of \"resources cannot be empty\"."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Resource-type enumeration during export sanitization is now limited to the provider max_clients setting, which can change export speed and API load for large exports."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When sanitization fails for one resource type, remaining in-flight resource-type enumerations are cancelled instead of continuing."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Export sanitization now respects parent request cancellation, so interrupted exports can stop in-flight resource enumeration sooner."
+        }
+    ],
     "related_export_changes": []
 }

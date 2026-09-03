@@ -117,6 +117,16 @@
     "latest_summary": "Read operations that hit timeouts now retry at most once (two attempts total) instead of looping indefinitely; retries use the parent Terraform operation context so cancellation and deadlines still apply.",
     "history": [
       {
+        "version": "v1.66.0",
+        "change": "updated",
+        "summary": "Phone number validation requires a leading + and accepts any viable E.164 number instead of requiring an exact canonical format match."
+      },
+      {
+        "version": "v1.67.0",
+        "change": "updated",
+        "summary": "Shared retry helpers retry a broader set of timeout conditions during read and plan operations."
+      },
+      {
         "version": "v1.86.1",
         "change": "updated",
         "summary": "Read operations that hit timeouts now retry at most once (two attempts total) instead of looping indefinitely; retries use the parent Terraform operation context so cancellation and deadlines still apply."
@@ -178,6 +188,11 @@
     "latest_summary": "Read preserves configured function_config.file_path and function_config.file_content_hash because the API does not return zip binaries.",
     "history": [
       {
+        "version": "v1.68.3",
+        "change": "updated",
+        "summary": "Function zip uploads set an explicit content length instead of using chunked transfer encoding, improving upload reliability."
+      },
+      {
         "version": "v1.86.0",
         "change": "updated",
         "summary": "Read preserves configured function_config.file_path and function_config.file_content_hash because the API does not return zip binaries."
@@ -211,6 +226,16 @@
     "status": "Active",
     "latest_summary": "Failed queue, member, and wrapup-code updates preserve prior Terraform state; bullseye ring member-group clearing runs whenever bullseye_rings changes.",
     "history": [
+      {
+        "version": "v1.64.0",
+        "change": "updated",
+        "summary": "When ignore_members is true, queue members are not read from the API or updated on apply."
+      },
+      {
+        "version": "v1.68.2",
+        "change": "updated",
+        "summary": "Create, read, update, delete, member, and wrapup code API calls honor a configurable delay when ROUTING_QUEUE_DELAY_MAX is set."
+      },
       {
         "version": "v1.84.0",
         "change": "updated",
@@ -363,6 +388,11 @@
     "latest_summary": "Contact listing during export uses the division-views scan API, which may return a different contact set than the prior scan endpoint.",
     "history": [
       {
+        "version": "v1.64.0",
+        "change": "updated",
+        "summary": "Exported block labels use organization name and contact name instead of the contact ID alone; external ID hashes may be appended for uniqueness."
+      },
+      {
         "version": "v1.69.0",
         "change": "updated",
         "summary": "Exported resource block labels use organization name, last name, and first name, falling back to external_system_url or the contact ID."
@@ -387,7 +417,7 @@
       {
         "version": "v1.63.0",
         "change": "updated",
-        "summary": "Bulk export block labels may include uniqueness hashes when names collide."
+        "summary": "Exported block labels may include category hashes when names collide."
       },
       {
         "version": "v1.78.0",
@@ -436,12 +466,17 @@
       {
         "version": "v1.63.0",
         "change": "updated",
-        "summary": "Bulk export block labels may include category-based uniqueness hashes."
+        "summary": "Exported block labels may include category-name hashes; enumeration reads category details during export."
       },
       {
         "version": "v1.66.0",
         "change": "updated",
         "summary": "Bulk export block labels now use {parent knowledge base name}_{title}."
+      },
+      {
+        "version": "v1.66.0",
+        "change": "updated",
+        "summary": "Knowledge base enumeration stops when pagination returns a repeated cursor."
       },
       {
         "version": "v1.86.0",
@@ -463,7 +498,7 @@
       {
         "version": "v1.62.0",
         "change": "updated",
-        "summary": "Bulk export queue listing handles empty API responses without error."
+        "summary": "Bulk export queue enumeration handles empty API responses without error."
       },
       {
         "version": "v1.84.0",
@@ -1612,6 +1647,36 @@
     "latest_summary": "Integrations of type function-data-actions are now treated as function data actions even when the action category text does not contain function data action.",
     "history": [
       {
+        "version": "v1.68.2",
+        "change": "updated",
+        "summary": "Function data action categories are created through a draft-and-publish workflow that uploads function_config.file_path, applies function settings, and publishes the draft; file_path is required for these actions."
+      },
+      {
+        "version": "v1.68.2",
+        "change": "updated",
+        "summary": "Function data action categories use the draft workflow on update to upload an updated zip and publish changes."
+      },
+      {
+        "version": "v1.68.2",
+        "change": "updated",
+        "summary": "Create and update operations retry API calls on HTTP 400 responses during the draft workflow."
+      },
+      {
+        "version": "v1.68.3",
+        "change": "updated",
+        "summary": "When updating a function data action, creates or updates the action draft using current integration_id, name, category, secure, contract, and config from Terraform state before uploading the function zip from function_config.file_path."
+      },
+      {
+        "version": "v1.68.3",
+        "change": "updated",
+        "summary": "Retries fetching the function zip ID when it is not immediately available after upload, reducing transient apply failures during function data action updates."
+      },
+      {
+        "version": "v1.68.3",
+        "change": "updated",
+        "summary": "Reads the latest draft version from the API before publishing instead of assuming version 1, reducing version-mismatch errors during apply."
+      },
+      {
         "version": "v1.85.0",
         "change": "updated",
         "summary": "Integrations of type function-data-actions are now treated as function data actions even when the action category text does not contain function data action."
@@ -1662,6 +1727,11 @@
     "status": "Active",
     "latest_summary": "Failed create or update operations now preserve prior Terraform state instead of writing partial configuration values into state.",
     "history": [
+      {
+        "version": "v1.64.0",
+        "change": "updated",
+        "summary": "Create and update return policy build errors instead of continuing silently; empty call media policy blocks are skipped instead of failing apply."
+      },
       {
         "version": "v1.85.0",
         "change": "updated",
@@ -1730,6 +1800,16 @@
     "status": "Active",
     "latest_summary": "Clearing status_transition_delay_seconds or status_transition_time in configuration now sends null to the API to remove those values from the status.",
     "history": [
+      {
+        "version": "v1.64.0",
+        "change": "updated",
+        "summary": "Destroy preserves destination statuses not managed in Terraform state and adjusts default_destination_status_id handling."
+      },
+      {
+        "version": "v1.67.0",
+        "change": "updated",
+        "summary": "Update retries automatically on HTTP 409 conflict responses."
+      },
       {
         "version": "v1.85.0",
         "change": "updated",
@@ -1896,12 +1976,17 @@
       {
         "version": "v1.63.0",
         "change": "updated",
-        "summary": "Bulk export block labels may include uniqueness hashes when names collide."
+        "summary": "Exported block labels may include profile-field hashes when names collide."
       },
       {
         "version": "v1.66.0",
         "change": "updated",
         "summary": "Bulk export block labels now use {email}."
+      },
+      {
+        "version": "v1.66.0",
+        "change": "updated",
+        "summary": "The fixed 5-second delay before user enumeration was removed."
       },
       {
         "version": "v1.84.0",
@@ -3094,11 +3179,6 @@
     "latest_summary": "imap_settings and graph_api_settings are now read from the API and can be patched on create and update alongside existing mail-from and SMTP settings.",
     "history": [
       {
-        "version": "v1.66.0",
-        "change": "updated",
-        "summary": "Delete completes successfully when the domain is already absent (HTTP 404)."
-      },
-      {
         "version": "v1.84.1",
         "change": "updated",
         "summary": "If create returns a 400 domain-already-exists error during an eventual-consistency race, the provider adopts the existing domain into state instead of failing apply, then updates or refreshes it as needed."
@@ -3461,6 +3541,11 @@
     "latest_summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during read operations.",
     "history": [
       {
+        "version": "v1.66.0",
+        "change": "updated",
+        "summary": "Post-delete verification waits up to 3 minutes for the user to appear in deleted state."
+      },
+      {
         "version": "v1.84.0",
         "change": "updated",
         "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during read operations."
@@ -3481,6 +3566,11 @@
         "version": "v1.66.0",
         "change": "updated",
         "summary": "Bulk export block labels now use {type}_{name}."
+      },
+      {
+        "version": "v1.67.0",
+        "change": "updated",
+        "summary": "Flow enumeration for export now includes flows with virtual agent enabled in addition to standard flows."
       },
       {
         "version": "v1.84.0",
@@ -4207,41 +4297,6 @@
     "latest_summary": "Publishing an integration action draft now sends the correct version number to the API.",
     "history": [
       {
-        "version": "v1.68.2",
-        "change": "updated",
-        "summary": "Function data action categories are created through a draft-and-publish workflow that uploads function_config.file_path, applies function settings, and publishes the draft; file_path is required for these actions."
-      },
-      {
-        "version": "v1.68.2",
-        "change": "updated",
-        "summary": "Function data action categories use the draft workflow on update to upload an updated zip and publish changes."
-      },
-      {
-        "version": "v1.68.2",
-        "change": "updated",
-        "summary": "Read refreshes function_config from the API when the action category is a function data action."
-      },
-      {
-        "version": "v1.68.2",
-        "change": "updated",
-        "summary": "Consistency state validation is no longer performed on refresh, which may surface plan diffs that were previously suppressed."
-      },
-      {
-        "version": "v1.68.3",
-        "change": "updated",
-        "summary": "When updating a function-type integration action, creates or updates the action draft with current integration_id, name, category, secure, contract, and config before uploading the function zip from function_config.file_path."
-      },
-      {
-        "version": "v1.68.3",
-        "change": "updated",
-        "summary": "Retries when the function zip ID is not immediately available after upload, reducing transient apply failures."
-      },
-      {
-        "version": "v1.68.3",
-        "change": "updated",
-        "summary": "Retrieves the latest draft version before publishing, reducing version-mismatch errors during apply."
-      },
-      {
         "version": "v1.82.0",
         "change": "updated",
         "summary": "Publishing an integration action draft now sends the correct version number to the API."
@@ -4655,11 +4710,6 @@
     "latest_summary": "When linked to an integration credential and the API returns an empty secret, cascade update now restores the secret from the shared cache before updating the credential.",
     "history": [
       {
-        "version": "v1.63.0",
-        "change": "updated",
-        "summary": "When creating or updating a linked integration credential, client_id is written to state and client_secret is cleared from state."
-      },
-      {
         "version": "v1.81.0",
         "change": "updated",
         "summary": "When linked to an integration credential and the API returns an empty secret, cascade update now restores the secret from the shared cache before updating the credential."
@@ -4910,7 +4960,17 @@
       {
         "version": "v1.61.0",
         "change": "updated",
-        "summary": "State schema upgraded to version 2 with an automatic upgrader from version 1."
+        "summary": "State is automatically migrated from schema version 1 to version 2, removing deprecated auto-dial fields from non-callback media settings in stored state."
+      },
+      {
+        "version": "v1.62.0",
+        "change": "updated",
+        "summary": "New callback media settings are read from the API on refresh."
+      },
+      {
+        "version": "v1.64.0",
+        "change": "updated",
+        "summary": "ignore_members conflicts with members; members requires block syntax and diffs are suppressed when ignore_members is true; last_agent_routing_mode is computed on refresh."
       },
       {
         "version": "v1.80.0",
@@ -5565,11 +5625,6 @@
     "latest_summary": "Deleting a variation publishes the parent knowledge document version using the correct knowledge base and document identifiers when other variations remain.",
     "history": [
       {
-        "version": "v1.65.0",
-        "change": "updated",
-        "summary": "ordered_type and unordered_type in variation body list block properties are now read into state correctly."
-      },
-      {
         "version": "v1.73.0",
         "change": "updated",
         "summary": "When deletion fails with a bot-flow dependency tracking error, the provider rebuilds dependency tracking, waits, and retries the delete."
@@ -5909,9 +5964,14 @@
     "latest_summary": "Only flows with a published version are exported; flows without a published version are skipped or cause export to fail with an explicit error.",
     "history": [
       {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "Flow enumeration during export now paginates through all results instead of stopping after the first page, so large organizations export the full flow inventory."
+      },
+      {
         "version": "v1.63.0",
         "change": "updated",
-        "summary": "Bulk export block labels may include uniqueness hashes when names collide."
+        "summary": "Exported block labels may include flow-type hashes when names collide."
       },
       {
         "version": "v1.69.0",
@@ -6119,7 +6179,7 @@
       {
         "version": "v1.63.0",
         "change": "updated",
-        "summary": "Bulk export for contacts waits longer with exponential backoff before retrieving signed export URLs."
+        "summary": "Contact export waits longer with exponential backoff before retrieving signed export URLs."
       },
       {
         "version": "v1.66.0",
@@ -8776,6 +8836,11 @@
     "latest_summary": "No longer written to Terraform state on read, create, or update.",
     "history": [
       {
+        "version": "v1.68.5",
+        "change": "updated",
+        "summary": "client_secret is populated in state only when expose_client_secret is true; otherwise it is cleared from state during refresh."
+      },
+      {
         "version": "v1.75.0",
         "change": "updated",
         "summary": "No longer written to Terraform state on read, create, or update."
@@ -8792,6 +8857,11 @@
     "status": "Active",
     "latest_summary": "Removes the resource from state when the script was deleted outside Terraform.",
     "history": [
+      {
+        "version": "v1.66.0",
+        "change": "updated",
+        "summary": "Read treats HTTP 404 as retryable."
+      },
       {
         "version": "v1.75.0",
         "change": "updated",
@@ -9154,11 +9224,6 @@
     "status": "Active",
     "latest_summary": "On member update failure, the provider re-reads the team to refresh state before returning errors.",
     "history": [
-      {
-        "version": "v1.64.0",
-        "change": "updated",
-        "summary": "Partial failures when adding team members now fail the apply with per-member error details."
-      },
       {
         "version": "v1.75.0",
         "change": "updated",
@@ -9723,11 +9788,6 @@
     "status": "Active",
     "latest_summary": "When deletion fails with a bot-flow dependency tracking error, the provider rebuilds dependency tracking, waits, and retries the delete.",
     "history": [
-      {
-        "version": "v1.63.0",
-        "change": "updated",
-        "summary": "Publishing is no longer performed through this resource; use genesyscloud_knowledge_document_variation to publish documents."
-      },
       {
         "version": "v1.73.0",
         "change": "updated",
@@ -10611,11 +10671,6 @@
     "latest_summary": "Create and update wait 5 seconds when a referenced extension pool was created less than 5 seconds ago to reduce timing-related failures.",
     "history": [
       {
-        "version": "v1.66.0",
-        "change": "updated",
-        "summary": "Post-delete verification waits up to 3 minutes for the user to appear in deleted state."
-      },
-      {
         "version": "v1.72.2",
         "change": "updated",
         "summary": "Create and update wait 5 seconds when a referenced extension pool was created less than 5 seconds ago to reduce timing-related failures."
@@ -10869,21 +10924,6 @@
     "latest_summary": "When bullseye_rings is removed from configuration, the provider clears member_groups from existing bullseye rings before applying the update.",
     "history": [
       {
-        "version": "v1.63.0",
-        "change": "updated",
-        "summary": "Queue member ring number updates retry transient HTTP 404 responses before failing."
-      },
-      {
-        "version": "v1.64.0",
-        "change": "updated",
-        "summary": "When ignore_members is true, members are not read from the API or updated on apply."
-      },
-      {
-        "version": "v1.68.2",
-        "change": "updated",
-        "summary": "Create, read, update, and delete API calls honor a configurable delay when ROUTING_QUEUE_DELAY_MAX is set."
-      },
-      {
         "version": "v1.71.0",
         "change": "updated",
         "summary": "When bullseye_rings is removed from configuration, the provider clears member_groups from existing bullseye rings before applying the update."
@@ -10934,16 +10974,6 @@
     "status": "Active",
     "latest_summary": "Create no longer rejects requests when a script with the same name already exists; duplicate-name conflicts are returned by the Genesys Cloud API.",
     "history": [
-      {
-        "version": "v1.66.0",
-        "change": "updated",
-        "summary": "Delete completes successfully when the script is already absent (HTTP 404)."
-      },
-      {
-        "version": "v1.66.0",
-        "change": "updated",
-        "summary": "Read treats HTTP 404 as retryable."
-      },
       {
         "version": "v1.71.0",
         "change": "updated",
@@ -11504,11 +11534,6 @@
     "latest_summary": "Bulk contact upload runs only when contacts_filepath is set; existing contacts are cleared only when the list already has contacts; zero-row uploads are skipped; apply waits for import completion after upload.",
     "history": [
       {
-        "version": "v1.68.5",
-        "change": "updated",
-        "summary": "When contacts_filepath is empty, the bulk contact upload step is skipped instead of failing with an error."
-      },
-      {
         "version": "v1.69.0",
         "change": "updated",
         "summary": "S3 paths are supported for bulk contact CSV uploads; local CSV column validation is skipped for S3 paths."
@@ -11623,6 +11648,40 @@
     ]
   },
   {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_group",
+    "attribute": "addresses",
+    "introduced": "Unknown",
+    "last_updated": "v1.68.6",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Setting addresses = [] now clears existing group addresses on update instead of leaving them unchanged.",
+    "history": [
+      {
+        "version": "v1.68.6",
+        "change": "updated",
+        "summary": "Setting addresses = [] now clears existing group addresses on update instead of leaving them unchanged."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_journey_segment",
+    "attribute": "assignment_expiration_days",
+    "introduced": "Unknown",
+    "last_updated": "v1.68.6",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Changes to assignment_expiration_days are now applied during resource updates.",
+    "history": [
+      {
+        "version": "v1.68.6",
+        "change": "updated",
+        "summary": "Changes to assignment_expiration_days are now applied during resource updates."
+      }
+    ]
+  },
+  {
     "type": "export_behavior",
     "resource": "genesyscloud_group",
     "attribute": "owner_ids",
@@ -11657,41 +11716,19 @@
     ]
   },
   {
-    "type": "resource",
-    "resource": "genesyscloud_group",
-    "attribute": "addresses",
+    "type": "plan_behavior",
+    "resource": "genesyscloud_knowledge_document_variation",
+    "attribute": "document_version",
     "introduced": "Unknown",
     "last_updated": "v1.68.6",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Setting an empty list clears existing group addresses on update instead of leaving them unchanged.",
+    "latest_summary": "document_version is no longer accepted as a configuration argument; plans will fail if it remains set in .tf files.",
     "history": [
       {
         "version": "v1.68.6",
         "change": "updated",
-        "summary": "Setting an empty list clears existing group addresses on update instead of leaving them unchanged."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_journey_segment",
-    "attribute": "assignment_expiration_days",
-    "introduced": "v1.62.0",
-    "last_updated": "v1.68.6",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Changes to assignment_expiration_days are now applied during resource updates.",
-    "history": [
-      {
-        "version": "v1.62.0",
-        "change": "added",
-        "summary": "Optional number of days after assignment before the segment is automatically unassigned."
-      },
-      {
-        "version": "v1.68.6",
-        "change": "updated",
-        "summary": "Changes to assignment_expiration_days are now applied during resource updates."
+        "summary": "document_version is no longer accepted as a configuration argument; plans will fail if it remains set in .tf files."
       }
     ]
   },
@@ -11713,6 +11750,62 @@
     ]
   },
   {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_flow",
+    "attribute": "file_content_hash",
+    "introduced": "Unknown",
+    "last_updated": "v1.68.5",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Update no longer emits a deprecation warning when file_content_hash changes.",
+    "history": [
+      {
+        "version": "v1.68.1",
+        "change": "updated",
+        "summary": "Apply emits a warning when file_content_hash is still set in configuration, noting it will become read-only in a future release, and computes the hash from filepath after a successful apply."
+      },
+      {
+        "version": "v1.68.5",
+        "change": "updated",
+        "summary": "Update no longer emits a deprecation warning when file_content_hash changes."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_oauth_client",
+    "attribute": "client_secret",
+    "introduced": "Unknown",
+    "last_updated": "v1.68.5",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Create, read, and integration-credential create/update populate client_secret in state only when expose_client_secret is true.",
+    "history": [
+      {
+        "version": "v1.68.5",
+        "change": "updated",
+        "summary": "Create, read, and integration-credential create/update populate client_secret in state only when expose_client_secret is true."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_outbound_contact_list",
+    "attribute": "contacts_filepath",
+    "introduced": "Unknown",
+    "last_updated": "v1.68.5",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When contacts_filepath is empty, bulk contact upload is skipped instead of returning an error.",
+    "history": [
+      {
+        "version": "v1.68.5",
+        "change": "updated",
+        "summary": "When contacts_filepath is empty, bulk contact upload is skipped instead of returning an error."
+      }
+    ]
+  },
+  {
     "type": "export_behavior",
     "resource": "genesyscloud_flow",
     "attribute": "update_trigger_hash",
@@ -11720,12 +11813,12 @@
     "last_updated": "v1.68.5",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Exported flow configurations use update_trigger_hash instead of file_content_hash to trigger updates.",
+    "latest_summary": "Exported flow configurations use update_trigger_hash = filesha256(...) instead of file_content_hash to trigger updates.",
     "history": [
       {
         "version": "v1.68.5",
         "change": "updated",
-        "summary": "Exported flow configurations use update_trigger_hash instead of file_content_hash to trigger updates."
+        "summary": "Exported flow configurations use update_trigger_hash = filesha256(...) instead of file_content_hash to trigger updates."
       }
     ]
   },
@@ -11743,6 +11836,50 @@
         "version": "v1.68.5",
         "change": "updated",
         "summary": "label_names values are exported as references to genesyscloud_knowledge_label resources instead of plain label name strings, ensuring correct resource creation order."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_flow",
+    "attribute": "file_content_hash",
+    "introduced": "Unknown",
+    "last_updated": "v1.68.5",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "file_content_hash is no longer accepted as a configuration argument; plans will fail if it remains set in .tf files.",
+    "history": [
+      {
+        "version": "v1.68.1",
+        "change": "updated",
+        "summary": "Plan diff evaluation computes file_content_hash from filepath, including s3:// paths, when the attribute is not set in configuration."
+      },
+      {
+        "version": "v1.68.5",
+        "change": "updated",
+        "summary": "file_content_hash is no longer accepted as a configuration argument; plans will fail if it remains set in .tf files."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_oauth_client",
+    "attribute": "client_id",
+    "introduced": "v1.63.0",
+    "last_updated": "v1.68.5",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Refresh now populates client_id in state.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "added",
+        "summary": "Computed placeholders appear in state for referencing from integration credentials."
+      },
+      {
+        "version": "v1.68.5",
+        "change": "updated",
+        "summary": "Refresh now populates client_id in state."
       }
     ]
   },
@@ -11784,11 +11921,6 @@
         "summary": "No longer required in configuration; now optional and computed from the flow file after a successful apply."
       },
       {
-        "version": "v1.68.1",
-        "change": "updated",
-        "summary": "Plan and apply emit a warning when file_content_hash is still set in configuration, noting it will become read-only in a future release."
-      },
-      {
         "version": "v1.68.5",
         "change": "updated",
         "summary": "No longer settable in configuration; now computed only (was previously optional and computed)."
@@ -11809,28 +11941,6 @@
         "version": "v1.68.5",
         "change": "added",
         "summary": "Optional hash used to trigger resource updates when external values change; alternative to file_content_hash for controlling when updates run."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_oauth_client",
-    "attribute": "client_id",
-    "introduced": "v1.63.0",
-    "last_updated": "v1.68.5",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "client_id is now populated during read operations.",
-    "history": [
-      {
-        "version": "v1.63.0",
-        "change": "added",
-        "summary": "Computed placeholder that can be referenced from genesyscloud_integration_credential fields."
-      },
-      {
-        "version": "v1.68.5",
-        "change": "updated",
-        "summary": "client_id is now populated during read operations."
       }
     ]
   },
@@ -11864,12 +11974,93 @@
     "last_updated": "v1.68.5",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Optional boolean (default false) that stores the OAuth client secret in Terraform state as a sensitive output when set to true.",
+    "latest_summary": "Optional boolean (default false) that stores the OAuth client secret in Terraform state as a sensitive value when set to true.",
     "history": [
       {
         "version": "v1.68.5",
         "change": "added",
-        "summary": "Optional boolean (default false) that stores the OAuth client secret in Terraform state as a sensitive output when set to true."
+        "summary": "Optional boolean (default false) that stores the OAuth client secret in Terraform state as a sensitive value when set to true."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_guide",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.68.4",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Create no longer runs prompt-based content generation or automatically creates an initial guide version; manage content with genesyscloud_guide_version separately.",
+    "history": [
+      {
+        "version": "v1.68.1",
+        "change": "updated",
+        "summary": "Create runs a content-generation job and creates an initial guide version when source is Prompt; other sources also receive an initial guide version on create."
+      },
+      {
+        "version": "v1.68.4",
+        "change": "updated",
+        "summary": "Create always sets source to Manual and no longer reads source, prompt, or url from configuration."
+      },
+      {
+        "version": "v1.68.4",
+        "change": "updated",
+        "summary": "Create no longer runs prompt-based content generation or automatically creates an initial guide version; manage content with genesyscloud_guide_version separately."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_guide_version",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.68.4",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When create fails because the latest version is not production-ready, the provider retries by updating the existing version instead of requiring a 409 response.",
+    "history": [
+      {
+        "version": "v1.68.1",
+        "change": "updated",
+        "summary": "Create updates the latest saved version instead of failing when the API returns HTTP 409 because the latest version is not Production Ready."
+      },
+      {
+        "version": "v1.68.4",
+        "change": "updated",
+        "summary": "Create always attempts to publish the version to ProductionReady; draft-only creation via state is no longer supported."
+      },
+      {
+        "version": "v1.68.4",
+        "change": "updated",
+        "summary": "When the parent guide already has a production-ready version, update creates a new version instead of patching the existing one; otherwise it updates the latest saved version."
+      },
+      {
+        "version": "v1.68.4",
+        "change": "updated",
+        "summary": "Update always attempts to publish the version to ProductionReady."
+      },
+      {
+        "version": "v1.68.4",
+        "change": "updated",
+        "summary": "When create fails because the latest version is not production-ready, the provider retries by updating the existing version instead of requiring a 409 response."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_guide",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.68.4",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Exported configuration includes only name; source, prompt, and url are no longer written to generated Terraform.",
+    "history": [
+      {
+        "version": "v1.68.4",
+        "change": "updated",
+        "summary": "Exported configuration includes only name; source, prompt, and url are no longer written to generated Terraform."
       }
     ]
   },
@@ -11925,29 +12116,19 @@
     ]
   },
   {
-    "type": "resource",
+    "type": "plan_behavior",
     "resource": "genesyscloud_guide",
-    "attribute": "(resource-level behavior)",
-    "introduced": "v1.66.0",
+    "attribute": "general plan behavior",
+    "introduced": "Unknown",
     "last_updated": "v1.68.4",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Create no longer runs prompt-based content generation or automatically creates an initial guide version; manage versions with genesyscloud_guide_version separately.",
+    "latest_summary": "Refresh no longer populates status, source, latest_saved_version, or latest_production_ready_version; plans may show these values removed from state after upgrade.",
     "history": [
-      {
-        "version": "v1.66.0",
-        "change": "added",
-        "summary": "New resource for managing Genesys Cloud guides."
-      },
       {
         "version": "v1.67.0",
         "change": "updated",
         "summary": "Read refreshes the Terraform resource ID from the API."
-      },
-      {
-        "version": "v1.68.1",
-        "change": "updated",
-        "summary": "Create runs a content-generation job and creates an initial guide version when source is Prompt; other sources also receive an initial guide version on create."
       },
       {
         "version": "v1.68.1",
@@ -11957,12 +12138,24 @@
       {
         "version": "v1.68.4",
         "change": "updated",
-        "summary": "Create always uses a Manual source; source, prompt, and url are no longer read from configuration."
-      },
+        "summary": "Refresh no longer populates status, source, latest_saved_version, or latest_production_ready_version; plans may show these values removed from state after upgrade."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_guide_version",
+    "attribute": "general plan behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.68.4",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Refresh no longer populates state; plans may show state removed from state after upgrade.",
+    "history": [
       {
         "version": "v1.68.4",
         "change": "updated",
-        "summary": "Create no longer runs prompt-based content generation or automatically creates an initial guide version; manage versions with genesyscloud_guide_version separately."
+        "summary": "Refresh no longer populates state; plans may show state removed from state after upgrade."
       }
     ]
   },
@@ -12106,38 +12299,6 @@
   {
     "type": "resource",
     "resource": "genesyscloud_guide_version",
-    "attribute": "(resource-level behavior)",
-    "introduced": "Unknown",
-    "last_updated": "v1.68.4",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "After update, the provider always attempts to publish the version to ProductionReady.",
-    "history": [
-      {
-        "version": "v1.68.1",
-        "change": "updated",
-        "summary": "Create updates the latest saved version instead of failing when the API returns HTTP 409 because the latest version is not Production Ready."
-      },
-      {
-        "version": "v1.68.4",
-        "change": "updated",
-        "summary": "After create, the provider always attempts to publish the version to ProductionReady; draft-only creation via state is no longer supported."
-      },
-      {
-        "version": "v1.68.4",
-        "change": "updated",
-        "summary": "When the parent guide already has a production-ready version, update creates a new version instead of patching the existing one; otherwise it updates the latest saved version."
-      },
-      {
-        "version": "v1.68.4",
-        "change": "updated",
-        "summary": "After update, the provider always attempts to publish the version to ProductionReady."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_guide_version",
     "attribute": "state",
     "introduced": "Unknown",
     "last_updated": "v1.68.4",
@@ -12153,31 +12314,9 @@
     ]
   },
   {
-    "type": "resource",
-    "resource": "genesyscloud_integration_action",
-    "attribute": "function_config.file_path",
-    "introduced": "v1.68.2",
-    "last_updated": "v1.68.3",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Function zip uploads send an explicit content length instead of chunked transfer encoding, improving upload reliability.",
-    "history": [
-      {
-        "version": "v1.68.2",
-        "change": "added",
-        "summary": "Required path to the zip file containing function code when using function_config for create or update."
-      },
-      {
-        "version": "v1.68.3",
-        "change": "updated",
-        "summary": "Function zip uploads send an explicit content length instead of chunked transfer encoding, improving upload reliability."
-      }
-    ]
-  },
-  {
     "type": "data_source",
     "resource": "genesyscloud_quality_forms_survey",
-    "attribute": "(resource-level behavior)",
+    "attribute": "name",
     "introduced": "Unknown",
     "last_updated": "v1.68.2",
     "removed": null,
@@ -12188,6 +12327,74 @@
         "version": "v1.68.2",
         "change": "updated",
         "summary": "Lookup by name filters surveys by name through the provider proxy instead of paging all surveys, fixing incorrect name resolution."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_integration_action",
+    "attribute": "function_config",
+    "introduced": "Unknown",
+    "last_updated": "v1.68.2",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Export includes function_config for function data action categories; function_config.file_path is exported as the zip file name rather than a full local path.",
+    "history": [
+      {
+        "version": "v1.68.2",
+        "change": "updated",
+        "summary": "Export includes function_config for function data action categories; function_config.file_path is exported as the zip file name rather than a full local path."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_integration_action",
+    "attribute": "config_request.request_url_template",
+    "introduced": "Unknown",
+    "last_updated": "v1.68.2",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional and computed; can be omitted from configuration when the API supplies a value.",
+    "history": [
+      {
+        "version": "v1.68.2",
+        "change": "updated",
+        "summary": "Optional and computed; can be omitted from configuration when the API supplies a value."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_integration_action",
+    "attribute": "function_config",
+    "introduced": "Unknown",
+    "last_updated": "v1.68.2",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Refresh populates function_config from the API when the action category is a function data action.",
+    "history": [
+      {
+        "version": "v1.68.2",
+        "change": "updated",
+        "summary": "Refresh populates function_config from the API when the action category is a function data action."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_integration_action",
+    "attribute": "general plan behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.68.2",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Consistency state validation is no longer performed on refresh, which may surface plan diffs that were previously suppressed.",
+    "history": [
+      {
+        "version": "v1.68.2",
+        "change": "updated",
+        "summary": "Consistency state validation is no longer performed on refresh, which may surface plan diffs that were previously suppressed."
       }
     ]
   },
@@ -12262,6 +12469,23 @@
   {
     "type": "resource",
     "resource": "genesyscloud_integration_action",
+    "attribute": "function_config.file_path",
+    "introduced": "v1.68.2",
+    "last_updated": "v1.68.2",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Required path to the zip file containing function code when using function_config for create or update.",
+    "history": [
+      {
+        "version": "v1.68.2",
+        "change": "added",
+        "summary": "Required path to the zip file containing function code when using function_config for create or update."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_integration_action",
     "attribute": "function_config.handler",
     "introduced": "v1.68.2",
     "last_updated": "v1.68.2",
@@ -12328,6 +12552,23 @@
     ]
   },
   {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_flow",
+    "attribute": "filepath",
+    "introduced": "Unknown",
+    "last_updated": "v1.68.1",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Accepts Amazon S3 URIs (s3://) in addition to local paths and HTTP(S) URLs.",
+    "history": [
+      {
+        "version": "v1.68.1",
+        "change": "updated",
+        "summary": "Accepts Amazon S3 URIs (s3://) in addition to local paths and HTTP(S) URLs."
+      }
+    ]
+  },
+  {
     "type": "data_source",
     "resource": "genesyscloud_flow",
     "attribute": "(resource-level behavior)",
@@ -12372,19 +12613,87 @@
     ]
   },
   {
-    "type": "resource",
-    "resource": "genesyscloud_flow",
-    "attribute": "filepath",
+    "type": "apply_behavior",
+    "resource": "genesyscloud_auth_role",
+    "attribute": "general apply behavior",
     "introduced": "Unknown",
-    "last_updated": "v1.68.1",
+    "last_updated": "v1.67.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Accepts Amazon S3 URIs (s3://) in addition to local paths and HTTP(S) URLs.",
+    "latest_summary": "Create and update no longer fail when a configured permission policy cannot be validated; a warning is logged instead.",
     "history": [
       {
-        "version": "v1.68.1",
+        "version": "v1.67.0",
         "change": "updated",
-        "summary": "Accepts Amazon S3 URIs (s3://) in addition to local paths and HTTP(S) URLs."
+        "summary": "Create and update no longer fail when a configured permission policy cannot be validated; a warning is logged instead."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_task_management_worktype",
+    "attribute": "default_expiration_seconds",
+    "introduced": "Unknown",
+    "last_updated": "v1.67.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Updates now send the configured default_expiration_seconds value to the API instead of reading the wrong attribute.",
+    "history": [
+      {
+        "version": "v1.67.0",
+        "change": "updated",
+        "summary": "Updates now send the configured default_expiration_seconds value to the API instead of reading the wrong attribute."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_task_management_worktype",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.67.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Create and update retry automatically on HTTP 409 conflict responses.",
+    "history": [
+      {
+        "version": "v1.67.0",
+        "change": "updated",
+        "summary": "Create and update retry automatically on HTTP 409 conflict responses."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_task_management_worktype_status",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.67.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Create, update, and delete retry automatically on HTTP 409 conflict responses.",
+    "history": [
+      {
+        "version": "v1.67.0",
+        "change": "updated",
+        "summary": "Create, update, and delete retry automatically on HTTP 409 conflict responses."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "provider apply",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.67.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Shared retry helpers retry a broader set of timeout conditions during create, update, and delete operations.",
+    "history": [
+      {
+        "version": "v1.67.0",
+        "change": "updated",
+        "summary": "Shared retry helpers retry a broader set of timeout conditions during create, update, and delete operations."
       }
     ]
   },
@@ -12441,18 +12750,40 @@
   },
   {
     "type": "export_behavior",
+    "resource": "genesyscloud_integration_credential",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.67.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Credential enumeration during export uses cursor-based paging instead of page-number paging.",
+    "history": [
+      {
+        "version": "v1.60.0",
+        "change": "updated",
+        "summary": "Exported Terraform block labels now use Integration-{integration_name} instead of {integration_name}_{credential_name}."
+      },
+      {
+        "version": "v1.67.0",
+        "change": "updated",
+        "summary": "Credential enumeration during export uses cursor-based paging instead of page-number paging."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
     "resource": "genesyscloud_location",
     "attribute": "general export behavior",
     "introduced": "Unknown",
     "last_updated": "v1.67.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Bulk export exports the Default PCV Location as a data source block instead of a managed resource.",
+    "latest_summary": "Bulk export exports Default PCV Location as a data source block instead of a managed resource.",
     "history": [
       {
         "version": "v1.67.0",
         "change": "updated",
-        "summary": "Bulk export exports the Default PCV Location as a data source block instead of a managed resource."
+        "summary": "Bulk export exports Default PCV Location as a data source block instead of a managed resource."
       }
     ]
   },
@@ -12464,12 +12795,12 @@
     "last_updated": "v1.67.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Bulk export exports the System Default Label as a data source block instead of a managed resource.",
+    "latest_summary": "Bulk export exports System Default Label as a data source block instead of a managed resource.",
     "history": [
       {
         "version": "v1.67.0",
         "change": "updated",
-        "summary": "Bulk export exports the System Default Label as a data source block instead of a managed resource."
+        "summary": "Bulk export exports System Default Label as a data source block instead of a managed resource."
       }
     ]
   },
@@ -12525,36 +12856,92 @@
     ]
   },
   {
-    "type": "resource",
-    "resource": "genesyscloud_auth_role",
-    "attribute": "(resource-level behavior)",
+    "type": "plan_behavior",
+    "resource": "genesyscloud_flow",
+    "attribute": "general plan behavior",
     "introduced": "Unknown",
     "last_updated": "v1.67.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Create and update no longer fail when a configured permission policy cannot be validated; a warning is logged instead.",
+    "latest_summary": "Flow lookup by name now includes flows with virtual agent enabled in addition to standard flows.",
     "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "When multiple flows share the same name, lookup uses type to select the matching flow; if multiple matches exist and none match the requested type, lookup fails with an error."
+      },
       {
         "version": "v1.67.0",
         "change": "updated",
-        "summary": "Create and update no longer fail when a configured permission policy cannot be validated; a warning is logged instead."
+        "summary": "Flow lookup by name now includes flows with virtual agent enabled in addition to standard flows."
       }
     ]
   },
   {
-    "type": "resource",
-    "resource": "genesyscloud_task_management_worktype",
-    "attribute": "(resource-level behavior)",
+    "type": "plan_behavior",
+    "resource": "genesyscloud_routing_wrapupcode",
+    "attribute": "general plan behavior",
     "introduced": "Unknown",
     "last_updated": "v1.67.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Create and update retry automatically on HTTP 409 conflict responses.",
+    "latest_summary": "Lookup failures surface the API error message in retry and non-retryable diagnostics instead of a separate generic not-found retry message.",
     "history": [
       {
         "version": "v1.67.0",
         "change": "updated",
-        "summary": "Create and update retry automatically on HTTP 409 conflict responses."
+        "summary": "Lookup failures surface the API error message in retry and non-retryable diagnostics instead of a separate generic not-found retry message."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_webdeployments_configuration",
+    "attribute": "journey_events.tracking_settings.excluded_query_parameters",
+    "introduced": "Unknown",
+    "last_updated": "v1.67.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Deprecated tracking_settings attribute has no effect.",
+    "history": [
+      {
+        "version": "v1.67.0",
+        "change": "updated",
+        "summary": "Deprecated tracking_settings attribute has no effect."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_webdeployments_configuration",
+    "attribute": "journey_events.tracking_settings.search_query_parameters",
+    "introduced": "Unknown",
+    "last_updated": "v1.67.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Deprecated tracking_settings attribute has no effect.",
+    "history": [
+      {
+        "version": "v1.67.0",
+        "change": "updated",
+        "summary": "Deprecated tracking_settings attribute has no effect."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_webdeployments_configuration",
+    "attribute": "journey_events.tracking_settings.should_keep_url_fragment",
+    "introduced": "Unknown",
+    "last_updated": "v1.67.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Deprecated tracking_settings attribute has no effect.",
+    "history": [
+      {
+        "version": "v1.67.0",
+        "change": "updated",
+        "summary": "Deprecated tracking_settings attribute has no effect."
       }
     ]
   },
@@ -12576,46 +12963,41 @@
     ]
   },
   {
-    "type": "resource",
-    "resource": "genesyscloud_task_management_worktype_status",
-    "attribute": "(resource-level behavior)",
+    "type": "apply_behavior",
+    "resource": "genesyscloud_routing_email_domain",
+    "attribute": "general apply behavior",
     "introduced": "Unknown",
-    "last_updated": "v1.67.0",
+    "last_updated": "v1.66.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Create, update, and delete retry automatically on HTTP 409 conflict responses.",
+    "latest_summary": "Delete completes successfully when the domain is already absent (HTTP 404).",
     "history": [
       {
-        "version": "v1.67.0",
+        "version": "v1.66.0",
         "change": "updated",
-        "summary": "Create, update, and delete retry automatically on HTTP 409 conflict responses."
+        "summary": "Delete completes successfully when the domain is already absent (HTTP 404)."
       }
     ]
   },
   {
-    "type": "resource",
-    "resource": "genesyscloud_task_management_worktype_status_transition",
-    "attribute": "(resource-level behavior)",
-    "introduced": "v1.63.0",
-    "last_updated": "v1.67.0",
+    "type": "apply_behavior",
+    "resource": "genesyscloud_script",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.66.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Update retries automatically on HTTP 409 conflict responses.",
+    "latest_summary": "Delete completes successfully when the script is already absent (HTTP 404).",
     "history": [
-      {
-        "version": "v1.63.0",
-        "change": "added",
-        "summary": "New resource for managing worktype status transition rules."
-      },
       {
         "version": "v1.64.0",
         "change": "updated",
-        "summary": "Destroy preserves destination statuses not managed in Terraform state and adjusts default_destination_status_id handling."
+        "summary": "Optional division_id is applied on create and update; failed publish attempts attempt cleanup of the unpublished script."
       },
       {
-        "version": "v1.67.0",
+        "version": "v1.66.0",
         "change": "updated",
-        "summary": "Update retries automatically on HTTP 409 conflict responses."
+        "summary": "Delete completes successfully when the script is already absent (HTTP 404)."
       }
     ]
   },
@@ -12695,19 +13077,24 @@
     "last_updated": "v1.66.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Bulk export excludes Genesys Cloud default scripts (Default Outbound Script, Default Inbound Script, Default Callback Script).",
+    "latest_summary": "Published scripts are listed via the published-scripts API instead of per-script publication lookups.",
     "history": [
       {
         "version": "v1.66.0",
         "change": "updated",
         "summary": "Bulk export excludes Genesys Cloud default scripts (Default Outbound Script, Default Inbound Script, Default Callback Script)."
+      },
+      {
+        "version": "v1.66.0",
+        "change": "updated",
+        "summary": "Published scripts are listed via the published-scripts API instead of per-script publication lookups."
       }
     ]
   },
   {
-    "type": "resource",
+    "type": "plan_behavior",
     "resource": "genesyscloud_routing_email_route",
-    "attribute": "(resource-level behavior)",
+    "attribute": "general plan behavior",
     "introduced": "Unknown",
     "last_updated": "v1.66.0",
     "removed": null,
@@ -12717,22 +13104,68 @@
       {
         "version": "v1.60.0",
         "change": "updated",
-        "summary": "Read and refresh retries when the API returns empty or missing route lists instead of clearing the resource from state."
-      },
-      {
-        "version": "v1.62.0",
-        "change": "updated",
-        "summary": "Destroy treats HTTP 404 responses as success when the route is already deleted."
+        "summary": "Read retries when the API returns an empty route list or when the route is not found in its domain, instead of clearing the resource from state."
       },
       {
         "version": "v1.64.0",
         "change": "updated",
-        "summary": "Reply email address updates now include the route pattern in API requests."
+        "summary": "from_email, auto_bcc, and reply_email_address are mutually exclusive; reply_email_address nested fields use stricter RequiredWith, AtLeastOneOf, and ConflictsWith validation."
       },
       {
         "version": "v1.66.0",
         "change": "updated",
         "summary": "Read fetches the route directly by ID with up to a 7-minute retry window instead of listing all domain routes."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_user",
+    "attribute": "addresses",
+    "introduced": "Unknown",
+    "last_updated": "v1.66.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Removing addresses from configuration is detected as a change that clears addresses on apply.",
+    "history": [
+      {
+        "version": "v1.66.0",
+        "change": "updated",
+        "summary": "Removing addresses from configuration is detected as a change that clears addresses on apply."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_user",
+    "attribute": "employer_info",
+    "introduced": "Unknown",
+    "last_updated": "v1.66.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "employer_info is no longer populated from the API on refresh unless explicitly configured.",
+    "history": [
+      {
+        "version": "v1.66.0",
+        "change": "updated",
+        "summary": "employer_info is no longer populated from the API on refresh unless explicitly configured."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_guide",
+    "attribute": "(resource-level behavior)",
+    "introduced": "v1.66.0",
+    "last_updated": "v1.66.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "New resource for managing Genesys Cloud guides.",
+    "history": [
+      {
+        "version": "v1.66.0",
+        "change": "added",
+        "summary": "New resource for managing Genesys Cloud guides."
       }
     ]
   },
@@ -12767,6 +13200,91 @@
         "version": "v1.66.0",
         "change": "updated",
         "summary": "No longer computed; values are not populated from the API on read unless explicitly configured."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_group",
+    "attribute": "include_owners",
+    "introduced": "Unknown",
+    "last_updated": "v1.65.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Create and update send include_owners to the API.",
+    "history": [
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "Create and update send include_owners to the API."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_knowledge_document_variation",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.65.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Publish and delete failures now report the underlying API error instead of a misleading unrelated error.",
+    "history": [
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "Publish and delete failures now report the underlying API error instead of a misleading unrelated error."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_outbound_messagingcampaign",
+    "attribute": "email_config",
+    "introduced": "Unknown",
+    "last_updated": "v1.65.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Create and update send email_config to the API.",
+    "history": [
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "Create and update send email_config to the API."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_outbound_messagingcampaign",
+    "attribute": "sms_config",
+    "introduced": "Unknown",
+    "last_updated": "v1.65.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "sms_config is validated only when configured.",
+    "history": [
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "sms_config is validated only when configured."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "published",
+    "introduced": "Unknown",
+    "last_updated": "v1.65.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Publishing on create or update stores the published form ID in published_id and changes the Terraform resource ID to the new draft form ID.",
+    "history": [
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "Publishing on create or update stores the published form ID in published_id and changes the Terraform resource ID to the new draft form ID."
       }
     ]
   },
@@ -12806,18 +13324,69 @@
   },
   {
     "type": "export_behavior",
+    "resource": "genesyscloud_knowledge_knowledgebase",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.65.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Export pagination stops when the API returns a repeated page token, avoiding incomplete or looping enumeration.",
+    "history": [
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "Export pagination stops when the API returns a repeated page token, avoiding incomplete or looping enumeration."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_outbound_messagingcampaign",
+    "attribute": "email_config.from_address",
+    "introduced": "Unknown",
+    "last_updated": "v1.65.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Bulk export no longer resolves from_address route_id and domain_id to routing email references.",
+    "history": [
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "Bulk export no longer resolves from_address route_id and domain_id to routing email references."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
     "resource": "genesyscloud_outbound_messagingcampaign",
     "attribute": "email_config.reply_to_address",
     "introduced": "Unknown",
     "last_updated": "v1.65.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Bulk export resolves reply_to_address route_id and domain_id to routing email references instead of from_address paths.",
+    "latest_summary": "Bulk export resolves reply_to_address route_id and domain_id to routing email references.",
     "history": [
       {
         "version": "v1.65.0",
         "change": "updated",
-        "summary": "Bulk export resolves reply_to_address route_id and domain_id to routing email references instead of from_address paths."
+        "summary": "Bulk export resolves reply_to_address route_id and domain_id to routing email references."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "published",
+    "introduced": "Unknown",
+    "last_updated": "v1.65.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "published is set from published-version lookup during export.",
+    "history": [
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "published is set from published-version lookup during export."
       }
     ]
   },
@@ -12831,6 +13400,11 @@
     "status": "Active",
     "latest_summary": "Bulk export block labels now prefix the response name with its library name(s).",
     "history": [
+      {
+        "version": "v1.63.0",
+        "change": "updated",
+        "summary": "Exported block labels may include library-name hashes when names collide."
+      },
       {
         "version": "v1.65.0",
         "change": "updated",
@@ -12873,19 +13447,272 @@
     ]
   },
   {
-    "type": "plan_behavior",
-    "resource": "genesyscloud_quality_forms_evaluation",
-    "attribute": "general plan behavior",
+    "type": "export_behavior",
+    "resource": "provider export",
+    "attribute": "general export behavior",
     "introduced": "Unknown",
     "last_updated": "v1.65.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Setting published to true on create or update stores the published form ID in published_id and changes the Terraform resource ID to the new draft form ID.",
+    "latest_summary": "Duplicate exported block labels receive hash suffixes based on the label plus occurrence count, which can change resource block names when names collide.",
+    "history": [
+      {
+        "version": "v1.60.0",
+        "change": "updated",
+        "summary": "Bulk export limits concurrent resource enumeration to the configured token_pool_size."
+      },
+      {
+        "version": "v1.63.0",
+        "change": "updated",
+        "summary": "When the optimized export label sanitizer is enabled (GENESYS_SANITIZER_OPTIMIZED or ENABLE_OPTIMIZED_SANITIZER), duplicate exported block labels receive hash suffixes using a consistent algorithm."
+      },
+      {
+        "version": "v1.64.0",
+        "change": "updated",
+        "summary": "Default export label sanitization transliterates non-Latin characters to ASCII, and duplicate exported block labels receive updated hash suffix handling."
+      },
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "Duplicate exported block labels receive hash suffixes based on the label plus occurrence count, which can change resource block names when names collide."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_group",
+    "attribute": "include_owners",
+    "introduced": "Unknown",
+    "last_updated": "v1.65.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Refresh populates include_owners from the API; defaults to true when omitted.",
     "history": [
       {
         "version": "v1.65.0",
         "change": "updated",
-        "summary": "Setting published to true on create or update stores the published form ID in published_id and changes the Terraform resource ID to the new draft form ID."
+        "summary": "Refresh populates include_owners from the API; defaults to true when omitted."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_knowledge_document_variation",
+    "attribute": "body.list.properties.ordered_type",
+    "introduced": "Unknown",
+    "last_updated": "v1.65.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Refresh now writes ordered_type for list block properties into state when returned by the API.",
+    "history": [
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "Refresh now writes ordered_type for list block properties into state when returned by the API."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_knowledge_document_variation",
+    "attribute": "body.list.properties.unordered_type",
+    "introduced": "Unknown",
+    "last_updated": "v1.65.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Refresh now writes unordered_type for list block properties into state when returned by the API.",
+    "history": [
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "Refresh now writes unordered_type for list block properties into state when returned by the API."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_organization_authentication_settings",
+    "attribute": "timeout_settings",
+    "introduced": "Unknown",
+    "last_updated": "v1.65.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Refresh populates timeout_settings from the API even when omitted from configuration.",
+    "history": [
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "Refresh populates timeout_settings from the API even when omitted from configuration."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_organization_presence_definition",
+    "attribute": "language_labels",
+    "introduced": "Unknown",
+    "last_updated": "v1.65.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Map keys are no longer validated at plan time.",
+    "history": [
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "Map keys are no longer validated at plan time."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_organization_presence_definition",
+    "attribute": "system_presence",
+    "introduced": "Unknown",
+    "last_updated": "v1.65.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "OnQueue, Offline, and Idle are accepted values at plan time.",
+    "history": [
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "OnQueue, Offline, and Idle are accepted values at plan time."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_outbound_messagingcampaign",
+    "attribute": "email_config",
+    "introduced": "Unknown",
+    "last_updated": "v1.65.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Exactly one of email_config or sms_config must be set; email_config is read into state on refresh.",
+    "history": [
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "Exactly one of email_config or sms_config must be set; email_config is read into state on refresh."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_outbound_messagingcampaign",
+    "attribute": "sms_config",
+    "introduced": "Unknown",
+    "last_updated": "v1.65.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Validation runs only when sms_config is present in configuration.",
+    "history": [
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "Validation runs only when sms_config is present in configuration."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "context_id",
+    "introduced": "Unknown",
+    "last_updated": "v1.65.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Refresh populates computed context_id from the API.",
+    "history": [
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "Refresh populates computed context_id from the API."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "published",
+    "introduced": "Unknown",
+    "last_updated": "v1.65.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "published is no longer synced from the API on normal read; it is only set during bulk export.",
+    "history": [
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "published is no longer synced from the API on normal read; it is only set during bulk export."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "published_id",
+    "introduced": "Unknown",
+    "last_updated": "v1.65.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Refresh populates computed published_id from published-version lookup.",
+    "history": [
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "Refresh populates computed published_id from published-version lookup."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_task_management_workitem_schema",
+    "attribute": "version",
+    "introduced": "Unknown",
+    "last_updated": "v1.65.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Refresh populates computed version from the API.",
+    "history": [
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "Refresh populates computed version from the API."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_webdeployments_configuration",
+    "attribute": "cobrowse.pause_criteria.condition",
+    "introduced": "Unknown",
+    "last_updated": "v1.65.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Plan diffs ignore case for operator values.",
+    "history": [
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "Plan diffs ignore case for operator values."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_webdeployments_configuration",
+    "attribute": "messenger.styles.primary_color",
+    "introduced": "Unknown",
+    "last_updated": "v1.65.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "primary_color is validated as a hexadecimal color at plan time.",
+    "history": [
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "primary_color is validated as a hexadecimal color at plan time."
       }
     ]
   },
@@ -13094,6 +13921,237 @@
     ]
   },
   {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_flow_outcome",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.64.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Create adopts an existing outcome with the same name instead of failing, then updates it.",
+    "history": [
+      {
+        "version": "v1.64.0",
+        "change": "updated",
+        "summary": "Create adopts an existing outcome with the same name instead of failing, then updates it."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_outbound_callanalysisresponseset",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.64.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Create and update send amd_speech_distinguish_enabled and live_speaker_detection_mode; refresh reads live_speaker_detection_mode from the platform.",
+    "history": [
+      {
+        "version": "v1.64.0",
+        "change": "updated",
+        "summary": "Create and update send amd_speech_distinguish_enabled and live_speaker_detection_mode; refresh reads live_speaker_detection_mode from the platform."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_outbound_campaign",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.64.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Omitted caller_name and caller_address are no longer sent as empty strings.",
+    "history": [
+      {
+        "version": "v1.64.0",
+        "change": "updated",
+        "summary": "Omitted caller_name and caller_address are no longer sent as empty strings."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_routing_email_route",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.64.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Reply email address updates include the referenced route pattern in API requests.",
+    "history": [
+      {
+        "version": "v1.62.0",
+        "change": "updated",
+        "summary": "Destroy succeeds when the API returns HTTP 404 because the route is already deleted."
+      },
+      {
+        "version": "v1.64.0",
+        "change": "updated",
+        "summary": "Reply email address updates include the referenced route pattern in API requests."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_routing_sms_address",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.64.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Create always sends address fields and sends name as an empty string when omitted.",
+    "history": [
+      {
+        "version": "v1.64.0",
+        "change": "updated",
+        "summary": "Create always sends address fields and sends name as an empty string when omitted."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_team",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.64.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Partial failures when adding team members now fail the apply with per-member error details.",
+    "history": [
+      {
+        "version": "v1.64.0",
+        "change": "updated",
+        "summary": "Partial failures when adding team members now fail the apply with per-member error details."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_routing_sms_address",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.64.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Exported block labels fall back to postal_code when name is not set.",
+    "history": [
+      {
+        "version": "v1.64.0",
+        "change": "updated",
+        "summary": "Exported block labels fall back to postal_code when name is not set."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_user",
+    "attribute": "addresses.phone_numbers.extension_pool_id",
+    "introduced": "v1.64.0",
+    "last_updated": "v1.64.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Export resolves extension_pool_id to genesyscloud_telephony_providers_edges_extension_pool references.",
+    "history": [
+      {
+        "version": "v1.64.0",
+        "change": "added",
+        "summary": "Export resolves extension_pool_id to genesyscloud_telephony_providers_edges_extension_pool references."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_journey_segment",
+    "attribute": "scope",
+    "introduced": "Unknown",
+    "last_updated": "v1.64.0",
+    "removed": "v1.64.0",
+    "status": "Removed",
+    "latest_summary": "Scope is no longer accepted in configuration.",
+    "history": [
+      {
+        "version": "v1.62.0",
+        "change": "updated",
+        "summary": "Plans show a deprecation notice for scope."
+      },
+      {
+        "version": "v1.64.0",
+        "change": "removed",
+        "summary": "Scope is no longer accepted in configuration."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_outbound_campaign",
+    "attribute": "general plan behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.64.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "caller_name and caller_address are optional instead of required.",
+    "history": [
+      {
+        "version": "v1.64.0",
+        "change": "updated",
+        "summary": "caller_name and caller_address are optional instead of required."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_recording_media_retention_policy",
+    "attribute": "actions.assign_metered_assignment_by_agent.time_interval",
+    "introduced": "Unknown",
+    "last_updated": "v1.64.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Time interval blocks accept hours in addition to days, weeks, and months.",
+    "history": [
+      {
+        "version": "v1.64.0",
+        "change": "updated",
+        "summary": "Time interval blocks accept hours in addition to days, weeks, and months."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_routing_sms_address",
+    "attribute": "name",
+    "introduced": "Unknown",
+    "last_updated": "v1.64.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "name is optional instead of required.",
+    "history": [
+      {
+        "version": "v1.64.0",
+        "change": "updated",
+        "summary": "name is optional instead of required."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_user",
+    "attribute": "addresses.phone_numbers.extension_pool_id",
+    "introduced": "v1.64.0",
+    "last_updated": "v1.64.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Refresh may populate computed extension_pool_id for extensions when a matching extension pool is found.",
+    "history": [
+      {
+        "version": "v1.64.0",
+        "change": "added",
+        "summary": "Refresh may populate computed extension_pool_id for extensions when a matching extension pool is found."
+      }
+    ]
+  },
+  {
     "type": "resource",
     "resource": "genesyscloud_externalcontacts_organization",
     "attribute": "primary_contact_id",
@@ -13107,23 +14165,6 @@
         "version": "v1.64.0",
         "change": "removed",
         "summary": "No longer configurable on this resource."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_flow_outcome",
-    "attribute": "(resource-level behavior)",
-    "introduced": "Unknown",
-    "last_updated": "v1.64.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Create adopts an existing outcome with the same name instead of failing, then updates it.",
-    "history": [
-      {
-        "version": "v1.64.0",
-        "change": "updated",
-        "summary": "Create adopts an existing outcome with the same name instead of failing, then updates it."
       }
     ]
   },
@@ -13429,23 +14470,6 @@
   {
     "type": "resource",
     "resource": "genesyscloud_routing_sms_address",
-    "attribute": "(resource-level behavior)",
-    "introduced": "Unknown",
-    "last_updated": "v1.64.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Create always sends address fields and sends name as an empty string when omitted.",
-    "history": [
-      {
-        "version": "v1.64.0",
-        "change": "updated",
-        "summary": "Create always sends address fields and sends name as an empty string when omitted."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_routing_sms_address",
     "attribute": "name",
     "introduced": "Unknown",
     "last_updated": "v1.64.0",
@@ -13485,12 +14509,131 @@
     "last_updated": "v1.64.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Optional extension pool ID for phone extensions; populated on read when resolvable.",
+    "latest_summary": "Optional extension pool ID for phone extensions; populated on read when an extension pool can be resolved.",
     "history": [
       {
         "version": "v1.64.0",
         "change": "added",
-        "summary": "Optional extension pool ID for phone extensions; populated on read when resolvable."
+        "summary": "Optional extension pool ID for phone extensions; populated on read when an extension pool can be resolved."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_architect_ivr",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.63.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Create and update retry transient HTTP 400 responses before failing.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "updated",
+        "summary": "Create and update retry transient HTTP 400 responses before failing."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_integration_credential",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.63.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "For pureCloudOAuthClient credentials without clientSecret in fields, the provider attempts to populate the secret from a matching OAuth client or provider metadata cache.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "updated",
+        "summary": "For pureCloudOAuthClient credentials without clientSecret in fields, the provider attempts to populate the secret from a matching OAuth client or provider metadata cache."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_knowledge_document",
+    "attribute": "published",
+    "introduced": "Unknown",
+    "last_updated": "v1.63.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Create no longer publishes documents; update sets published to false after apply.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "updated",
+        "summary": "Create no longer publishes documents; update sets published to false after apply."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_oauth_client",
+    "attribute": "directory_client_secret",
+    "introduced": "v1.63.0",
+    "last_updated": "v1.63.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When set, the client secret is written to a file on create; linked integration credential create/update writes client_id to state and clears client_secret from state.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "added",
+        "summary": "When set, the client secret is written to a file on create; linked integration credential create/update writes client_id to state and clears client_secret from state."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "last_agent_routing_mode",
+    "introduced": "v1.63.0",
+    "last_updated": "v1.63.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "last_agent_routing_mode is sent on create and update.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "added",
+        "summary": "last_agent_routing_mode is sent on create and update."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "users",
+    "introduced": "Unknown",
+    "last_updated": "v1.63.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Member ring number updates retry transient HTTP 404 responses before failing.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "updated",
+        "summary": "Member ring number updates retry transient HTTP 404 responses before failing."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_task_management_worktype",
+    "attribute": "disable_default_status_creation",
+    "introduced": "v1.63.0",
+    "last_updated": "v1.63.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "disable_default_status_creation is applied on create.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "added",
+        "summary": "disable_default_status_creation is applied on create."
       }
     ]
   },
@@ -13536,12 +14679,12 @@
     "last_updated": "v1.63.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Bulk export block labels may include uniqueness hashes when names collide.",
+    "latest_summary": "Exported block labels may include integration-type hashes when names collide.",
     "history": [
       {
         "version": "v1.63.0",
         "change": "updated",
-        "summary": "Bulk export block labels may include uniqueness hashes when names collide."
+        "summary": "Exported block labels may include integration-type hashes when names collide."
       }
     ]
   },
@@ -13553,29 +14696,148 @@
     "last_updated": "v1.63.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Bulk export resolves team_ids to genesyscloud_team resource references.",
+    "latest_summary": "Export resolves team_ids to genesyscloud_team references.",
     "history": [
       {
         "version": "v1.63.0",
         "change": "updated",
-        "summary": "Bulk export resolves team_ids to genesyscloud_team resource references."
+        "summary": "Export resolves team_ids to genesyscloud_team references."
       }
     ]
   },
   {
-    "type": "resource",
-    "resource": "genesyscloud_architect_ivr",
-    "attribute": "(resource-level behavior)",
+    "type": "export_behavior",
+    "resource": "genesyscloud_responsemanagement_responseasset",
+    "attribute": "general export behavior",
     "introduced": "Unknown",
     "last_updated": "v1.63.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Create and update retry transient HTTP 400 responses before failing.",
+    "latest_summary": "Exported block labels may include content-length hashes when names collide.",
     "history": [
       {
         "version": "v1.63.0",
         "change": "updated",
-        "summary": "Create and update retry transient HTTP 400 responses before failing."
+        "summary": "Exported block labels may include content-length hashes when names collide."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_telephony_providers_edges_did_pool",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.63.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Exported block labels may include phone-range and provider hashes when names collide.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "updated",
+        "summary": "Exported block labels may include phone-range and provider hashes when names collide."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_widget_deployment",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.63.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Removed from dependent-consumer export dependency mapping for widget resources.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "updated",
+        "summary": "Removed from dependent-consumer export dependency mapping for widget resources."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_knowledge_document",
+    "attribute": "published",
+    "introduced": "Unknown",
+    "last_updated": "v1.63.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Refresh no longer syncs published from the API; documents are read in draft state when published is false.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "updated",
+        "summary": "Refresh no longer syncs published from the API; documents are read in draft state when published is false."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_outbound_campaign",
+    "attribute": "dynamic_contact_queueing_settings",
+    "introduced": "Unknown",
+    "last_updated": "v1.63.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "sort is optional and computed; filter is new; changing sort or filter forces replacement with a new campaign ID.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "updated",
+        "summary": "sort is optional and computed; filter is new; changing sort or filter forces replacement with a new campaign ID."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "last_agent_routing_mode",
+    "introduced": "v1.63.0",
+    "last_updated": "v1.63.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "New optional attribute accepts Disabled, QueueMembersOnly, or AnyAgent.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "added",
+        "summary": "New optional attribute accepts Disabled, QueueMembersOnly, or AnyAgent."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "users",
+    "introduced": "Unknown",
+    "last_updated": "v1.63.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Omitting users avoids API-populated member lists in state and reduces plan diffs when members are managed outside Terraform.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "updated",
+        "summary": "Omitting users avoids API-populated member lists in state and reduces plan diffs when members are managed outside Terraform."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_task_management_worktype_status",
+    "attribute": "category",
+    "introduced": "Unknown",
+    "last_updated": "v1.63.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Unknown is no longer accepted; transition-related attributes are deprecated and computed.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "updated",
+        "summary": "Unknown is no longer accepted; transition-related attributes are deprecated and computed."
       }
     ]
   },
@@ -13598,23 +14860,6 @@
   },
   {
     "type": "resource",
-    "resource": "genesyscloud_integration_credential",
-    "attribute": "(resource-level behavior)",
-    "introduced": "Unknown",
-    "last_updated": "v1.63.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "For pureCloudOAuthClient credentials without clientSecret in fields, the provider attempts to populate the secret from a matching OAuth client or provider metadata cache.",
-    "history": [
-      {
-        "version": "v1.63.0",
-        "change": "updated",
-        "summary": "For pureCloudOAuthClient credentials without clientSecret in fields, the provider attempts to populate the secret from a matching OAuth client or provider metadata cache."
-      }
-    ]
-  },
-  {
-    "type": "resource",
     "resource": "genesyscloud_knowledge_document",
     "attribute": "published",
     "introduced": "Unknown",
@@ -13627,6 +14872,23 @@
         "version": "v1.63.0",
         "change": "updated",
         "summary": "Now optional, computed, and deprecated; documents are created as drafts, no longer auto-published on create, and the value is no longer synced from the API on read."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_oauth_client",
+    "attribute": "client_id",
+    "introduced": "v1.63.0",
+    "last_updated": "v1.63.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Computed placeholder that can be referenced from genesyscloud_integration_credential fields.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "added",
+        "summary": "Computed placeholder that can be referenced from genesyscloud_integration_credential fields."
       }
     ]
   },
@@ -13801,6 +15063,74 @@
     ]
   },
   {
+    "type": "resource",
+    "resource": "genesyscloud_task_management_worktype_status_transition",
+    "attribute": "(resource-level behavior)",
+    "introduced": "v1.63.0",
+    "last_updated": "v1.63.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "New resource for managing worktype status transition rules.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "added",
+        "summary": "New resource for managing worktype status transition rules."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "media_settings_callback",
+    "introduced": "Unknown",
+    "last_updated": "v1.62.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Empty media_settings_callback blocks are no longer sent to the API during create or update.",
+    "history": [
+      {
+        "version": "v1.62.0",
+        "change": "updated",
+        "summary": "Empty media_settings_callback blocks are no longer sent to the API during create or update."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_telephony_providers_edges_trunkbasesettings",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.62.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Destroy retries transient HTTP 400 responses for up to 50 seconds before failing; HTTP 404 is treated as a successful delete.",
+    "history": [
+      {
+        "version": "v1.62.0",
+        "change": "updated",
+        "summary": "Destroy retries transient HTTP 400 responses for up to 50 seconds before failing; HTTP 404 is treated as a successful delete."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_webdeployments_configuration",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.62.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Support-center module settings with enabled = false or an empty type continue to be sent to the API instead of being omitted.",
+    "history": [
+      {
+        "version": "v1.62.0",
+        "change": "updated",
+        "summary": "Support-center module settings with enabled = false or an empty type continue to be sent to the API instead of being omitted."
+      }
+    ]
+  },
+  {
     "type": "export_behavior",
     "resource": "genesyscloud_routing_queue",
     "attribute": "media_settings_callback.answering_machine_flow_id",
@@ -13836,6 +15166,23 @@
   },
   {
     "type": "export_behavior",
+    "resource": "genesyscloud_task_management_worktype",
+    "attribute": "default_script_id",
+    "introduced": "Unknown",
+    "last_updated": "v1.62.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Bulk export now resolves default_script_id to genesyscloud_script resource references.",
+    "history": [
+      {
+        "version": "v1.62.0",
+        "change": "updated",
+        "summary": "Bulk export now resolves default_script_id to genesyscloud_script resource references."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
     "resource": "genesyscloud_telephony_providers_edges_site",
     "attribute": "outbound_routes.external_trunk_base_ids",
     "introduced": "Unknown",
@@ -13848,6 +15195,79 @@
         "version": "v1.62.0",
         "change": "updated",
         "summary": "Bulk export no longer resolves external trunk base IDs to genesyscloud_telephony_providers_edges_trunkbasesettings references."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_architect_ivr",
+    "attribute": "dnis",
+    "introduced": "Unknown",
+    "last_updated": "v1.62.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "dnis is no longer populated from the API during refresh when omitted from configuration; plans may show drift for resources that previously relied on computed dnis values.",
+    "history": [
+      {
+        "version": "v1.62.0",
+        "change": "updated",
+        "summary": "dnis is no longer populated from the API during refresh when omitted from configuration; plans may show drift for resources that previously relied on computed dnis values."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "canned_response_libraries.library_ids",
+    "introduced": "Unknown",
+    "last_updated": "v1.62.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "May show a type-migration plan diff after upgrade from list to set.",
+    "history": [
+      {
+        "version": "v1.62.0",
+        "change": "updated",
+        "summary": "May show a type-migration plan diff after upgrade from list to set."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "media_settings_callback.mode",
+    "introduced": "Unknown",
+    "last_updated": "v1.62.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Mode is refreshed from the API when not configured.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "media_settings_callback.mode is no longer auto-populated from the API; omitting it in configuration may produce plan diffs where a value was previously computed."
+      },
+      {
+        "version": "v1.62.0",
+        "change": "updated",
+        "summary": "Mode is refreshed from the API when not configured."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_task_management_worktype",
+    "attribute": "default_script_id",
+    "introduced": "Unknown",
+    "last_updated": "v1.62.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Refresh now populates default_script_id from the API when set on the worktype.",
+    "history": [
+      {
+        "version": "v1.62.0",
+        "change": "updated",
+        "summary": "Refresh now populates default_script_id from the API when set on the worktype."
       }
     ]
   },
@@ -13865,6 +15285,23 @@
         "version": "v1.62.0",
         "change": "updated",
         "summary": "No longer computed from the API; configure phone numbers explicitly if you want them managed in Terraform."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_journey_segment",
+    "attribute": "assignment_expiration_days",
+    "introduced": "v1.62.0",
+    "last_updated": "v1.62.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional number of days after assignment before the segment is automatically unassigned.",
+    "history": [
+      {
+        "version": "v1.62.0",
+        "change": "added",
+        "summary": "Optional number of days after assignment before the segment is automatically unassigned."
       }
     ]
   },
@@ -14044,23 +15481,6 @@
     ]
   },
   {
-    "type": "resource",
-    "resource": "genesyscloud_telephony_providers_edges_trunkbasesettings",
-    "attribute": "(resource-level behavior)",
-    "introduced": "Unknown",
-    "last_updated": "v1.62.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Destroy retries transient HTTP 400 responses for up to 50 seconds before failing.",
-    "history": [
-      {
-        "version": "v1.62.0",
-        "change": "updated",
-        "summary": "Destroy retries transient HTTP 400 responses for up to 50 seconds before failing."
-      }
-    ]
-  },
-  {
     "type": "export_behavior",
     "resource": "genesyscloud_routing_queue",
     "attribute": "canned_response_libraries.library_ids",
@@ -14074,6 +15494,57 @@
         "version": "v1.61.1",
         "change": "updated",
         "summary": "Bulk export now resolves library IDs to genesyscloud_responsemanagement_library resource references."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_telephony_providers_edges_phonebasesettings",
+    "attribute": "line_base.station_persistent_webrtc_enabled",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Create and update send line_base.station_persistent_webrtc_enabled to the Genesys Cloud API.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "Create and update send line_base.station_persistent_webrtc_enabled to the Genesys Cloud API."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_telephony_providers_edges_site",
+    "attribute": "outbound_routes",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Create, read, and update no longer manage inline outbound_routes; outbound routes must be managed with genesyscloud_telephony_providers_edges_site_outbound_route resources.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "Create, read, and update no longer manage inline outbound_routes; outbound routes must be managed with genesyscloud_telephony_providers_edges_site_outbound_route resources."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_telephony_providers_edges_site_outbound_route",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Create, read, update, and delete succeed without setting ENABLE_STANDALONE_OUTBOUND_ROUTES.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "Create, read, update, and delete succeed without setting ENABLE_STANDALONE_OUTBOUND_ROUTES."
       }
     ]
   },
@@ -14102,12 +15573,114 @@
     "last_updated": "v1.61.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Export now preserves zero values for idle_token_timeout_seconds.",
+    "latest_summary": "Export preserves zero values for idle_token_timeout_seconds.",
     "history": [
       {
         "version": "v1.61.0",
         "change": "updated",
-        "summary": "Export now preserves zero values for idle_token_timeout_seconds."
+        "summary": "Export preserves zero values for idle_token_timeout_seconds."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_telephony_providers_edges_site_outbound_route",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Export runs without requiring ENABLE_STANDALONE_OUTBOUND_ROUTES.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "Export runs without requiring ENABLE_STANDALONE_OUTBOUND_ROUTES."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_flow",
+    "attribute": "type",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "The data source emits a warning when type is omitted, noting that it will become required in a future release.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "The data source emits a warning when type is omitted, noting that it will become required in a future release."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_outbound_contact_list_contact",
+    "attribute": "general plan behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Read no longer runs post-read state consistency validation, which may change plan output for existing resources.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "Read no longer runs post-read state consistency validation, which may change plan output for existing resources."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_responsemanagement_response",
+    "attribute": "library_ids",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "library_ids is stored and compared as a set rather than an ordered list, which can change plan output when list order previously differed from API order.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "library_ids is stored and compared as a set rather than an ordered list, which can change plan output when list order previously differed from API order."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "canned_response_library_mode",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "canned_response_library_mode is populated from the API during refresh when not set in configuration.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "canned_response_library_mode is populated from the API during refresh when not set in configuration."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_telephony_providers_edges_phonebasesettings",
+    "attribute": "line_base.station_persistent_webrtc_enabled",
+    "introduced": "Unknown",
+    "last_updated": "v1.61.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Refresh reads and writes line_base.station_persistent_webrtc_enabled from line base properties.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "Refresh reads and writes line_base.station_persistent_webrtc_enabled from line base properties."
       }
     ]
   },
@@ -14119,12 +15692,12 @@
     "last_updated": "v1.61.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "State schema upgraded to version 2 with an automatic upgrader that removes outbound_routes from stored state.",
+    "latest_summary": "State is automatically migrated from schema version 1 to version 2, removing outbound_routes from stored state.",
     "history": [
       {
         "version": "v1.61.0",
         "change": "updated",
-        "summary": "State schema upgraded to version 2 with an automatic upgrader that removes outbound_routes from stored state."
+        "summary": "State is automatically migrated from schema version 1 to version 2, removing outbound_routes from stored state."
       }
     ]
   },
@@ -14282,6 +15855,57 @@
     ]
   },
   {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_group",
+    "attribute": "calls_enabled",
+    "introduced": "Unknown",
+    "last_updated": "v1.60.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Create and update send calls_enabled to the Genesys Cloud API.",
+    "history": [
+      {
+        "version": "v1.60.0",
+        "change": "updated",
+        "summary": "Create and update send calls_enabled to the Genesys Cloud API."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "provider apply",
+    "attribute": "token_acquire_timeout",
+    "introduced": "Unknown",
+    "last_updated": "v1.60.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Plan and apply operations that cannot obtain a pooled OAuth client within token_acquire_timeout fail with a timeout error instead of blocking indefinitely.",
+    "history": [
+      {
+        "version": "v1.60.0",
+        "change": "updated",
+        "summary": "Plan and apply operations that cannot obtain a pooled OAuth client within token_acquire_timeout fail with a timeout error instead of blocking indefinitely."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "provider apply",
+    "attribute": "token_init_timeout",
+    "introduced": "Unknown",
+    "last_updated": "v1.60.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Provider startup fails if the token pool cannot be initialized within token_init_timeout.",
+    "history": [
+      {
+        "version": "v1.60.0",
+        "change": "updated",
+        "summary": "Provider startup fails if the token pool cannot be initialized within token_init_timeout."
+      }
+    ]
+  },
+  {
     "type": "export_behavior",
     "resource": "genesyscloud_integration_action",
     "attribute": "config_response.translation_map_defaults",
@@ -14289,46 +15913,46 @@
     "last_updated": "v1.60.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Export now preserves zero-value entries in translation_map_defaults.",
+    "latest_summary": "Export preserves zero-value entries in translation_map_defaults.",
     "history": [
       {
         "version": "v1.60.0",
         "change": "updated",
-        "summary": "Export now preserves zero-value entries in translation_map_defaults."
+        "summary": "Export preserves zero-value entries in translation_map_defaults."
       }
     ]
   },
   {
-    "type": "export_behavior",
-    "resource": "genesyscloud_integration_credential",
-    "attribute": "general export behavior",
+    "type": "plan_behavior",
+    "resource": "genesyscloud_group",
+    "attribute": "calls_enabled",
     "introduced": "Unknown",
     "last_updated": "v1.60.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Exported block labels now use the format Integration-{integration_name} instead of {integration_name}_{credential_name}.",
+    "latest_summary": "Refresh populates calls_enabled from the API.",
     "history": [
       {
         "version": "v1.60.0",
         "change": "updated",
-        "summary": "Exported block labels now use the format Integration-{integration_name} instead of {integration_name}_{credential_name}."
+        "summary": "Refresh populates calls_enabled from the API."
       }
     ]
   },
   {
-    "type": "export_behavior",
-    "resource": "provider export",
-    "attribute": "general export behavior",
+    "type": "plan_behavior",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "media_settings_message",
     "introduced": "Unknown",
     "last_updated": "v1.60.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Bulk resource export limits concurrent API operations to the configured token_pool_size.",
+    "latest_summary": "Refresh maps media_settings_message with message-specific fields, which can surface sub_type_settings and service-level values that were previously omitted or flattened incorrectly.",
     "history": [
       {
         "version": "v1.60.0",
         "change": "updated",
-        "summary": "Bulk resource export limits concurrent API operations to the configured token_pool_size."
+        "summary": "Refresh maps media_settings_message with message-specific fields, which can surface sub_type_settings and service-level values that were previously omitted or flattened incorrectly."
       }
     ]
   },

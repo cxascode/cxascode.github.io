@@ -45,11 +45,11 @@
             "summary": "Now uses the shared media settings schema instead of an email-specific schema that included deprecated auto-dial fields."
         },
         {
-            "kind": "state_behavior",
+            "kind": "plan_behavior",
             "resource": "genesyscloud_routing_queue",
             "attribute": null,
             "change": "updated",
-            "summary": "State schema upgraded to version 2 with an automatic upgrader from version 1."
+            "summary": "State is automatically migrated from schema version 1 to version 2, removing deprecated auto-dial fields from non-callback media settings in stored state."
         },
         {
             "kind": "resource_attribute",
@@ -73,11 +73,11 @@
             "summary": "Use genesyscloud_telephony_providers_edges_site_outbound_route resources to manage site outbound routes instead."
         },
         {
-            "kind": "state_behavior",
+            "kind": "plan_behavior",
             "resource": "genesyscloud_telephony_providers_edges_site",
             "attribute": null,
             "change": "updated",
-            "summary": "State schema upgraded to version 2 with an automatic upgrader that removes outbound_routes from stored state."
+            "summary": "State is automatically migrated from schema version 1 to version 2, removing outbound_routes from stored state."
         },
         {
             "kind": "resource_behavior",
@@ -101,11 +101,95 @@
             "summary": "When multiple flows share the same name, lookup uses type to select the matching flow; if multiple matches exist and none match the requested type, lookup fails with an error."
         },
         {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_flow",
+            "attribute": "type",
+            "change": "updated",
+            "summary": "The data source emits a warning when type is omitted, noting that it will become required in a future release."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_flow",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When multiple flows share the same name, lookup uses type to select the matching flow; if multiple matches exist and none match the requested type, lookup fails with an error."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "canned_response_library_mode",
+            "change": "updated",
+            "summary": "canned_response_library_mode is populated from the API during refresh when not set in configuration."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "media_settings_callback.mode",
+            "change": "updated",
+            "summary": "media_settings_callback.mode is no longer auto-populated from the API; omitting it in configuration may produce plan diffs where a value was previously computed."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_responsemanagement_response",
+            "attribute": "library_ids",
+            "change": "updated",
+            "summary": "library_ids is stored and compared as a set rather than an ordered list, which can change plan output when list order previously differed from API order."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_telephony_providers_edges_phonebasesettings",
+            "attribute": "line_base.station_persistent_webrtc_enabled",
+            "change": "updated",
+            "summary": "Refresh reads and writes line_base.station_persistent_webrtc_enabled from line base properties."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_outbound_contact_list_contact",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Read no longer runs post-read state consistency validation, which may change plan output for existing resources."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_telephony_providers_edges_site",
+            "attribute": "outbound_routes",
+            "change": "updated",
+            "summary": "Create, read, and update no longer manage inline outbound_routes; outbound routes must be managed with genesyscloud_telephony_providers_edges_site_outbound_route resources."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_telephony_providers_edges_site_outbound_route",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Create, read, update, and delete succeed without setting ENABLE_STANDALONE_OUTBOUND_ROUTES."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_telephony_providers_edges_phonebasesettings",
+            "attribute": "line_base.station_persistent_webrtc_enabled",
+            "change": "updated",
+            "summary": "Create and update send line_base.station_persistent_webrtc_enabled to the Genesys Cloud API."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_flow",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Flow enumeration during export now paginates through all results instead of stopping after the first page, so large organizations export the full flow inventory."
+        },
+        {
             "kind": "export_behavior",
             "resource": "genesyscloud_organization_authentication_settings",
             "attribute": "timeout_settings.idle_token_timeout_seconds",
             "change": "updated",
-            "summary": "Export now preserves zero values for idle_token_timeout_seconds."
+            "summary": "Export preserves zero values for idle_token_timeout_seconds."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_telephony_providers_edges_site_outbound_route",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Export runs without requiring ENABLE_STANDALONE_OUTBOUND_ROUTES."
         },
         {
             "kind": "export_behavior",

@@ -17,18 +17,11 @@
             "summary": "No longer settable in configuration; now computed only (was previously optional and computed)."
         },
         {
-            "kind": "export_behavior",
-            "resource": "genesyscloud_flow",
-            "attribute": "update_trigger_hash",
-            "change": "updated",
-            "summary": "Exported flow configurations use update_trigger_hash instead of file_content_hash to trigger updates."
-        },
-        {
             "kind": "resource_attribute",
             "resource": "genesyscloud_oauth_client",
             "attribute": "expose_client_secret",
             "change": "added",
-            "summary": "Optional boolean (default false) that stores the OAuth client secret in Terraform state as a sensitive output when set to true."
+            "summary": "Optional boolean (default false) that stores the OAuth client secret in Terraform state as a sensitive value when set to true."
         },
         {
             "kind": "resource_attribute",
@@ -38,18 +31,53 @@
             "summary": "Populated in Terraform state only when expose_client_secret is true; otherwise remains empty in state."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_flow",
+            "attribute": "file_content_hash",
+            "change": "updated",
+            "summary": "file_content_hash is no longer accepted as a configuration argument; plans will fail if it remains set in .tf files."
+        },
+        {
+            "kind": "plan_behavior",
             "resource": "genesyscloud_oauth_client",
             "attribute": "client_id",
             "change": "updated",
-            "summary": "client_id is now populated during read operations."
+            "summary": "Refresh now populates client_id in state."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_oauth_client",
+            "attribute": "client_secret",
+            "change": "updated",
+            "summary": "client_secret is populated in state only when expose_client_secret is true; otherwise it is cleared from state during refresh."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_flow",
+            "attribute": "file_content_hash",
+            "change": "updated",
+            "summary": "Update no longer emits a deprecation warning when file_content_hash changes."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_oauth_client",
+            "attribute": "client_secret",
+            "change": "updated",
+            "summary": "Create, read, and integration-credential create/update populate client_secret in state only when expose_client_secret is true."
+        },
+        {
+            "kind": "apply_behavior",
             "resource": "genesyscloud_outbound_contact_list",
             "attribute": "contacts_filepath",
             "change": "updated",
-            "summary": "When contacts_filepath is empty, the bulk contact upload step is skipped instead of failing with an error."
+            "summary": "When contacts_filepath is empty, bulk contact upload is skipped instead of returning an error."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_flow",
+            "attribute": "update_trigger_hash",
+            "change": "updated",
+            "summary": "Exported flow configurations use update_trigger_hash = filesha256(...) instead of file_content_hash to trigger updates."
         },
         {
             "kind": "export_behavior",

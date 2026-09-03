@@ -98,6 +98,26 @@
     "latest_summary": "Custom file writers for exported resources retry transient failures up to three times with exponential backoff before reporting an error.",
     "history": [
       {
+        "version": "v1.60.0",
+        "change": "updated",
+        "summary": "When no resources match the export scope, the error message is now \"No resources found to export\" instead of \"resources cannot be empty\"."
+      },
+      {
+        "version": "v1.60.0",
+        "change": "updated",
+        "summary": "Resource-type enumeration during export sanitization is now limited to the provider max_clients setting, which can change export speed and API load for large exports."
+      },
+      {
+        "version": "v1.60.0",
+        "change": "updated",
+        "summary": "When sanitization fails for one resource type, remaining in-flight resource-type enumerations are cancelled instead of continuing."
+      },
+      {
+        "version": "v1.60.0",
+        "change": "updated",
+        "summary": "Export sanitization now respects parent request cancellation, so interrupted exports can stop in-flight resource enumeration sooner."
+      },
+      {
         "version": "v1.61.0",
         "change": "updated",
         "summary": "Post-export Terraform state verification results are now returned to the user instead of being ignored."
@@ -110,12 +130,37 @@
       {
         "version": "v1.61.0",
         "change": "updated",
+        "summary": "Errors during dependent-resource config map building and attribute resolution are now returned instead of being ignored."
+      },
+      {
+        "version": "v1.61.0",
+        "change": "updated",
         "summary": "Exported data source blocks no longer rewrite unresolvable attributes as ${var.*} placeholder references."
       },
       {
         "version": "v1.63.0",
         "change": "updated",
         "summary": "When tf-export auto-resolves duplicate Terraform block labels for the same resource type, the appended suffix changes from _<numeric_hash> to _BRCM<numeric_hash>. Exported resource block names in this edge case will differ from v1.62.0 output."
+      },
+      {
+        "version": "v1.63.0",
+        "change": "updated",
+        "summary": "Resource block label sanitization now returns an empty label when a resource name is empty or sanitizes to no valid characters, instead of failing during label processing. This applies to both the default sanitizer and the time-optimized sanitizer (GENESYS_SANITIZER_TIME_OPTIMIZED)."
+      },
+      {
+        "version": "v1.64.0",
+        "change": "updated",
+        "summary": "Default resource block label sanitization now transliterates non-Latin characters to ASCII. This behavior was previously available only when the optional time-optimized sanitizer (GENESYS_SANITIZER_TIME_OPTIMIZED) was enabled; that separate sanitizer path is removed and all standard exports use the unified default sanitizer."
+      },
+      {
+        "version": "v1.64.0",
+        "change": "updated",
+        "summary": "When tf-export auto-resolves duplicate Terraform block labels, the disambiguation hash suffix changes from a numeric FNV-based value to a hexadecimal SHA-256-based value (first 10 characters)."
+      },
+      {
+        "version": "v1.64.0",
+        "change": "updated",
+        "summary": "When multiple resources sanitize to the same block label, the second occurrence receives one _<hash> suffix, the third receives two _<hash> suffixes, and so on."
       },
       {
         "version": "v1.64.0",
@@ -146,6 +191,11 @@
         "version": "v1.65.0",
         "change": "updated",
         "summary": "Data source instances are no longer tracked in managed-resource type maps during export assembly, preventing empty managed-resource entries for data-source-only types."
+      },
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "When multiple resources sanitize to the same block label, the third and later occurrences now receive one _<hash> suffix keyed to the occurrence number, instead of multiple repeated hash suffixes."
       },
       {
         "version": "v1.65.0",
@@ -200,7 +250,7 @@
       {
         "version": "v1.68.6",
         "change": "updated",
-        "summary": "During export sanitization, attribute values that reference the same resource's own ID are removed from the generated Terraform configuration instead of being written to the export output."
+        "summary": "During export sanitization, attribute values that equal the exporting resource's own ID are removed from the generated Terraform configuration instead of being written to the export output."
       },
       {
         "version": "v1.70.0",

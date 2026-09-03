@@ -10,6 +10,13 @@
             "summary": "No longer computed from the API; configure phone numbers explicitly if you want them managed in Terraform."
         },
         {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_architect_ivr",
+            "attribute": "dnis",
+            "change": "updated",
+            "summary": "dnis is no longer populated from the API during refresh when omitted from configuration; plans may show drift for resources that previously relied on computed dnis values."
+        },
+        {
             "kind": "resource_attribute",
             "resource": "genesyscloud_journey_segment",
             "attribute": "assignment_expiration_days",
@@ -22,6 +29,13 @@
             "attribute": "scope",
             "change": "updated",
             "summary": "Deprecated as redundant; scheduled for removal in a future provider release."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_journey_segment",
+            "attribute": "scope",
+            "change": "updated",
+            "summary": "Plans show a deprecation notice for scope."
         },
         {
             "kind": "resource_attribute",
@@ -87,6 +101,34 @@
             "summary": "Optional inbound flow ID for answering-machine handling when reaction type is TransferToFlow."
         },
         {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "canned_response_libraries.library_ids",
+            "change": "updated",
+            "summary": "May show a type-migration plan diff after upgrade from list to set."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "media_settings_callback.mode",
+            "change": "updated",
+            "summary": "Mode is refreshed from the API when not configured."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": null,
+            "change": "updated",
+            "summary": "New callback media settings are read from the API on refresh."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "media_settings_callback",
+            "change": "updated",
+            "summary": "Empty media_settings_callback blocks are no longer sent to the API during create or update."
+        },
+        {
             "kind": "export_behavior",
             "resource": "genesyscloud_routing_queue",
             "attribute": "media_settings_callback.live_voice_flow_id",
@@ -105,7 +147,7 @@
             "resource": "genesyscloud_routing_queue",
             "attribute": null,
             "change": "updated",
-            "summary": "Bulk export queue listing handles empty API responses without error."
+            "summary": "Bulk export queue enumeration handles empty API responses without error."
         },
         {
             "kind": "resource_attribute",
@@ -115,18 +157,39 @@
             "summary": "Optional default script applied to workitems created from the worktype."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_task_management_worktype",
+            "attribute": "default_script_id",
+            "change": "updated",
+            "summary": "Refresh now populates default_script_id from the API when set on the worktype."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_task_management_worktype",
+            "attribute": "default_script_id",
+            "change": "updated",
+            "summary": "Bulk export now resolves default_script_id to genesyscloud_script resource references."
+        },
+        {
+            "kind": "apply_behavior",
             "resource": "genesyscloud_routing_email_route",
             "attribute": null,
             "change": "updated",
-            "summary": "Destroy treats HTTP 404 responses as success when the route is already deleted."
+            "summary": "Destroy succeeds when the API returns HTTP 404 because the route is already deleted."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "apply_behavior",
             "resource": "genesyscloud_telephony_providers_edges_trunkbasesettings",
             "attribute": null,
             "change": "updated",
-            "summary": "Destroy retries transient HTTP 400 responses for up to 50 seconds before failing."
+            "summary": "Destroy retries transient HTTP 400 responses for up to 50 seconds before failing; HTTP 404 is treated as a successful delete."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_webdeployments_configuration",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Support-center module settings with enabled = false or an empty type continue to be sent to the API instead of being omitted."
         },
         {
             "kind": "export_behavior",

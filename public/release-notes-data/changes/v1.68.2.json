@@ -59,44 +59,65 @@
             "summary": "No longer required; now optional and computed."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
             "resource": "genesyscloud_integration_action",
-            "attribute": null,
+            "attribute": "config_request.request_url_template",
             "change": "updated",
-            "summary": "Function data action categories are created through a draft-and-publish workflow that uploads function_config.file_path, applies function settings, and publishes the draft; file_path is required for these actions."
+            "summary": "Optional and computed; can be omitted from configuration when the API supplies a value."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
             "resource": "genesyscloud_integration_action",
-            "attribute": null,
+            "attribute": "function_config",
             "change": "updated",
-            "summary": "Function data action categories use the draft workflow on update to upload an updated zip and publish changes."
+            "summary": "Refresh populates function_config from the API when the action category is a function data action."
         },
         {
-            "kind": "resource_behavior",
-            "resource": "genesyscloud_integration_action",
-            "attribute": null,
-            "change": "updated",
-            "summary": "Read refreshes function_config from the API when the action category is a function data action."
-        },
-        {
-            "kind": "resource_behavior",
+            "kind": "plan_behavior",
             "resource": "genesyscloud_integration_action",
             "attribute": null,
             "change": "updated",
             "summary": "Consistency state validation is no longer performed on refresh, which may surface plan diffs that were previously suppressed."
         },
         {
-            "kind": "resource_behavior",
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_integration_action",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Function data action categories are created through a draft-and-publish workflow that uploads function_config.file_path, applies function settings, and publishes the draft; file_path is required for these actions."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_integration_action",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Function data action categories use the draft workflow on update to upload an updated zip and publish changes."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_integration_action",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Create and update operations retry API calls on HTTP 400 responses during the draft workflow."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_integration_action",
+            "attribute": "function_config",
+            "change": "updated",
+            "summary": "Export includes function_config for function data action categories; function_config.file_path is exported as the zip file name rather than a full local path."
+        },
+        {
+            "kind": "apply_behavior",
             "resource": "genesyscloud_routing_queue",
             "attribute": null,
             "change": "updated",
-            "summary": "Create, read, update, and delete API calls honor a configurable delay when ROUTING_QUEUE_DELAY_MAX is set."
+            "summary": "Create, read, update, delete, member, and wrapup code API calls honor a configurable delay when ROUTING_QUEUE_DELAY_MAX is set."
         },
         {
             "kind": "data_source_behavior",
             "resource": "genesyscloud_quality_forms_survey",
-            "attribute": null,
+            "attribute": "name",
             "change": "updated",
             "summary": "Lookup by name filters surveys by name through the provider proxy instead of paging all surveys, fixing incorrect name resolution."
         },

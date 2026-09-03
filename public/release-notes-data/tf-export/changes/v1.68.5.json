@@ -3,5 +3,13 @@
     "previous": "v1.68.4",
     "resource": "genesyscloud_tf_export",
     "changes": [],
-    "related_export_changes": []
+    "related_export_changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_knowledge_document",
+            "attribute": "label_names",
+            "change": "updated",
+            "summary": "Exported genesyscloud_knowledge_document resources can now resolve label_names from plain label name strings to Terraform references for matching genesyscloud_knowledge_label resources when those labels are included in the export run, improving creation-order dependencies in re-imported configuration."
+        }
+    ]
 }
