@@ -36,7 +36,8 @@
     }
   },
   "tfExportResourceNames": {
-    "genesyscloud_location": "<name>"
+    "genesyscloud_location": "<name>",
+    "genesyscloud_user_roles": "<email>"
   },
   "tfExportExcludeAttributes": {
     "genesyscloud_architect_ivr": {
