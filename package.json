@@ -30,7 +30,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "genesys-spark": "^4.262.1",
+    "genesys-spark": "^5.0.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-markdown": "^10.1.0",
