@@ -65,6 +65,11 @@
       "exclude_attributes": ["genesyscloud_responsemanagement_responseasset.content_location"],
       "ignore_changes": []
     },
+    "genesyscloud_routing_email_domain": {
+      "attributes": ["custom_smtp_server_id"],
+      "exclude_attributes": ["genesyscloud_routing_email_domain.custom_smtp_server_id"],
+      "ignore_changes": ["custom_smtp_server_id"]
+    },
     "genesyscloud_routing_queue": {
       "attributes": ["members"],
       "exclude_attributes": ["genesyscloud_routing_queue.members"],
