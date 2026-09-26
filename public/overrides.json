@@ -45,6 +45,11 @@
       "exclude_attributes": ["genesyscloud_architect_ivr.dnis"],
       "ignore_changes": ["dnis"]
     },
+    "genesyscloud_oauth_client": {
+      "attributes": ["roles"],
+      "exclude_attributes": ["genesyscgenesyscloud_oauth_client.roles"],
+      "ignore_changes": ["roles"]
+    },
     "genesyscloud_integration": {
       "attributes": ["credentials"],
       "exclude_attributes": ["genesyscloud_integration.config.credentials"],
