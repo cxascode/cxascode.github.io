@@ -126,7 +126,7 @@ function formatAttributeListForProse(attributes) {
 }
 
 /**
- * Build the Good To Know markdown note for exclude_attributes guidance.
+ * Build the Recommendation markdown note for exclude_attributes guidance.
  */
 export function buildTfExportExcludeAttributesNote(
   resourceType,
@@ -152,7 +152,7 @@ export function buildTfExportExcludeAttributesNote(
   const excludeLine = `exclude_attributes = ${formatTfExportExcludeAttributesList(excludeAttributes)}`;
 
   const lines = [
-    `**Good To Know:** For this resource type, consider excluding ${formatAttributeListForProse(attributes)}.`,
+    `**Recommendation:** For this resource type, consider excluding ${formatAttributeListForProse(attributes)}.`,
     "",
     "If you use `exclude_attributes`, add a matching `lifecycle { ignore_changes = [...] }` block on each exported resource. Otherwise Terraform may plan to remove those attributes from the org on apply.",
     "",
@@ -183,7 +183,7 @@ export function buildTfExportExcludeAttributesNote(
 }
 
 /**
- * Per-type Good To Know note for the export template panel. Empty when the type
+ * Per-type Recommendation note for the export template panel. Empty when the type
  * has no tfExportExcludeAttributes entry in overrides.json.
  */
 export function resolveTfExportNote(resourceType, overrides, resourceName) {

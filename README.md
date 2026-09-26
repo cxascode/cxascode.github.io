@@ -135,7 +135,7 @@ npm run download-provider-versions
 
 - `addDependencies` / `replaceDependencies` — adjust dependency trees from the provider release JSON. At build time these patches are baked into `public/dependency-tree-merged-json/` (published as `https://cxascode.github.io/dependency-tree-merged-json/{version}.json`, with `latest.json` and `index.json`). The app loads that merged tree at runtime (includes `genesyscloud_flow` deps from `dependent_consumers.go`).
 - `tfExportResourceNames` — optional per-type override for **genesyscloud_tf_export template** filter placeholders; wins over the generated map in `tf-export-resource-names.json`
-- `tfExportExcludeAttributes` — per resource type, `attributes` (labels for the Good To Know prose), plus literal list entries for `exclude_attributes` and `ignore_changes` (what goes inside each `[...]` in HCL). Types not listed show no note.
+- `tfExportExcludeAttributes` — per resource type, `attributes` (labels for the Recommendation prose), plus literal list entries for `exclude_attributes` and `ignore_changes` (what goes inside each `[...]` in HCL). Types not listed show no note.
 - `dependencyNotes` — per resource type, Markdown note (GFM) shown at the bottom of Resource Type Details when that type is selected. Use `\n` in JSON for line breaks (not `\\n`).
 - `guiMenuPaths` — optional per-type override for Genesys Cloud admin menu paths shown in Resource Type Details and the GUI list view; wins over `src/gui-menu-paths.json`
 - `hiddenResourceTypes` — resource types omitted from the left-hand list (still appear in Depends on / Dependency for when referenced)
@@ -278,7 +278,7 @@ node scripts/generate-tf-export-resource-names.mjs --version=1.82.0 --provider=/
 
 **Local:** `npm run generate-tf-export-singletons`
 
-`tfExportExcludeAttributes` in `overrides.json` drives the per-type **Good To Know** note shown below the export template block.
+`tfExportExcludeAttributes` in `overrides.json` drives the per-type **Recommendation** note shown below the export template block.
 
 ## schema-force-new/
 
