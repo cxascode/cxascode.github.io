@@ -47,7 +47,7 @@
     },
     "genesyscloud_oauth_client": {
       "attributes": ["roles"],
-      "exclude_attributes": ["genesyscgenesyscloud_oauth_client.roles"],
+      "exclude_attributes": ["genesyscloud_oauth_client.roles"],
       "ignore_changes": ["roles"]
     },
     "genesyscloud_integration": {
