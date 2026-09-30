@@ -1,6 +1,255 @@
 [
   {
     "type": "apply_behavior",
+    "resource": "genesyscloud_organization_authentication_settings",
+    "attribute": "universal_logout",
+    "introduced": "Unknown",
+    "last_updated": "v1.86.2",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Create and update send universal_logout to the organization authentication settings API.",
+    "history": [
+      {
+        "version": "v1.86.2",
+        "change": "updated",
+        "summary": "Create and update send universal_logout to the organization authentication settings API."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "all_outbound_email_addresses",
+    "introduced": "Unknown",
+    "last_updated": "v1.86.2",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Create and update include all_outbound_email_addresses in queue email media settings when configured.",
+    "history": [
+      {
+        "version": "v1.86.2",
+        "change": "updated",
+        "summary": "Create and update include all_outbound_email_addresses in queue email media settings when configured."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_routing_skill",
+    "attribute": "division_id",
+    "introduced": "Unknown",
+    "last_updated": "v1.86.2",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Create assigns division_id on the initial create request instead of a follow-up move update.",
+    "history": [
+      {
+        "version": "v1.86.0",
+        "change": "updated",
+        "summary": "Create can assign division_id after creation; update supports in-place division_id changes."
+      },
+      {
+        "version": "v1.86.2",
+        "change": "updated",
+        "summary": "Create assigns division_id on the initial create request instead of a follow-up move update."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_speechandtextanalytics_dictionaryfeedback",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.86.2",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "After delete, the provider waits up to 10 minutes for a not-found response before completing destroy, up from 3 minutes.",
+    "history": [
+      {
+        "version": "v1.86.2",
+        "change": "updated",
+        "summary": "After delete, the provider waits up to 10 minutes for a not-found response before completing destroy, up from 3 minutes."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "all_outbound_email_addresses",
+    "introduced": "Unknown",
+    "last_updated": "v1.86.2",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Export resolves domain_id and route_id references for all_outbound_email_addresses and drops entries missing route_id from export output.",
+    "history": [
+      {
+        "version": "v1.86.2",
+        "change": "updated",
+        "summary": "Export resolves domain_id and route_id references for all_outbound_email_addresses and drops entries missing route_id from export output."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_business_rules_decision_table",
+    "attribute": "general plan behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.86.2",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Refresh no longer runs the consistency checker after read, avoiding read loops on large tables; nested defaults_to blocks are written with stable empty value, special, and values siblings to prevent null versus empty string perpetual diffs.",
+    "history": [
+      {
+        "version": "v1.86.1",
+        "change": "updated",
+        "summary": "Refresh of tables with many rows fetches additional row pages concurrently after the first page."
+      },
+      {
+        "version": "v1.86.2",
+        "change": "updated",
+        "summary": "Refresh no longer runs the consistency checker after read, avoiding read loops on large tables; nested defaults_to blocks are written with stable empty value, special, and values siblings to prevent null versus empty string perpetual diffs."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_outbound_dnclist",
+    "attribute": "entries",
+    "introduced": "Unknown",
+    "last_updated": "v1.86.2",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "For RDS-type lists, entries are fetched into state only when configuration declares a non-empty entries block; omitting entries leaves state unchanged and avoids phantom diffs and full-list reads on refresh.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "entries is populated from the API on read when omitted from configuration."
+      },
+      {
+        "version": "v1.86.2",
+        "change": "updated",
+        "summary": "For RDS-type lists, entries are fetched into state only when configuration declares a non-empty entries block; omitting entries leaves state unchanged and avoids phantom diffs and full-list reads on refresh."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "all_outbound_email_addresses",
+    "introduced": "Unknown",
+    "last_updated": "v1.86.2",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Plan validates that outbound_email_address is set and listed in all_outbound_email_addresses when that block is used; refresh preserves configured list order when the set of addresses matches the API.",
+    "history": [
+      {
+        "version": "v1.86.2",
+        "change": "updated",
+        "summary": "Plan validates that outbound_email_address is set and listed in all_outbound_email_addresses when that block is used; refresh preserves configured list order when the set of addresses matches the API."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_speechandtextanalytics_dictionaryfeedback",
+    "attribute": "example_phrases",
+    "introduced": "Unknown",
+    "last_updated": "v1.86.2",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Refresh preserves existing example_phrases in state when the API returns none, preventing perpetual diffs for dialects that do not round-trip example phrases on read.",
+    "history": [
+      {
+        "version": "v1.86.2",
+        "change": "updated",
+        "summary": "Refresh preserves existing example_phrases in state when the API returns none, preventing perpetual diffs for dialects that do not round-trip example phrases on read."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_organization_authentication_settings",
+    "attribute": "universal_logout",
+    "introduced": "v1.86.2",
+    "last_updated": "v1.86.2",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional boolean (default false) for whether universal logout is enabled for the organization.",
+    "history": [
+      {
+        "version": "v1.86.2",
+        "change": "added",
+        "summary": "Optional boolean (default false) for whether universal logout is enabled for the organization."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_outbound_dnclist",
+    "attribute": "entries",
+    "introduced": "Unknown",
+    "last_updated": "v1.86.2",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "No longer computed; optional only. Refresh no longer auto-populates or clears entries when the block is omitted from configuration.",
+    "history": [
+      {
+        "version": "v1.76.0",
+        "change": "updated",
+        "summary": "For internal (rds) DNC lists, refresh reads phone entries from the API via export and updates state; when API data matches configured entries (ignoring list order), existing configuration ordering is kept to avoid unnecessary plan changes."
+      },
+      {
+        "version": "v1.77.0",
+        "change": "updated",
+        "summary": "On read, entries are normalized (grouped by expiration date, duplicates merged, phone lists sorted); for non-internal lists, entries are cleared in state because phone entries are only supported on internal (rds) lists."
+      },
+      {
+        "version": "v1.77.0",
+        "change": "updated",
+        "summary": "Entry export retries when the API returns 404 while the export is still being prepared, in addition to existing 400 retries."
+      },
+      {
+        "version": "v1.77.0",
+        "change": "updated",
+        "summary": "Changing entries deletes existing phone entries first; uploads proceed only for internal (rds) lists, with a clear error if entries are changed on other list types."
+      },
+      {
+        "version": "v1.79.0",
+        "change": "updated",
+        "summary": "Updating phone entries is rejected up front unless dnc_source_type is rds (internal DNC list)."
+      },
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "Now computed as well as optional so existing phone numbers can be read into state without being listed in configuration."
+      },
+      {
+        "version": "v1.86.2",
+        "change": "updated",
+        "summary": "No longer computed; optional only. Refresh no longer auto-populates or clears entries when the block is omitted from configuration."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "all_outbound_email_addresses",
+    "introduced": "v1.86.2",
+    "last_updated": "v1.86.2",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional and computed list of outbound email domain_id and route_id pairs for queues with multiple outbound email addresses; when set, outbound_email_address must be set and must match one list entry.",
+    "history": [
+      {
+        "version": "v1.86.2",
+        "change": "added",
+        "summary": "Optional and computed list of outbound email domain_id and route_id pairs for queues with multiple outbound email addresses; when set, outbound_email_address must be set and must match one list entry."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
     "resource": "genesyscloud_business_rules_decision_table",
     "attribute": "general apply behavior",
     "introduced": "Unknown",
@@ -69,23 +318,6 @@
         "version": "v1.86.1",
         "change": "updated",
         "summary": "On refresh, resources[].filename is set only when the API returns a non-empty filename tag; missing or empty filename tags are no longer written into state."
-      }
-    ]
-  },
-  {
-    "type": "plan_behavior",
-    "resource": "genesyscloud_business_rules_decision_table",
-    "attribute": "general plan behavior",
-    "introduced": "Unknown",
-    "last_updated": "v1.86.1",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Refresh of tables with many rows fetches additional row pages concurrently after the first page.",
-    "history": [
-      {
-        "version": "v1.86.1",
-        "change": "updated",
-        "summary": "Refresh of tables with many rows fetches additional row pages concurrently after the first page."
       }
     ]
   },
@@ -245,23 +477,6 @@
         "version": "v1.86.0",
         "change": "updated",
         "summary": "Failed queue, member, and wrapup-code updates preserve prior Terraform state; bullseye ring member-group clearing runs whenever bullseye_rings changes."
-      }
-    ]
-  },
-  {
-    "type": "apply_behavior",
-    "resource": "genesyscloud_routing_skill",
-    "attribute": "division_id",
-    "introduced": "Unknown",
-    "last_updated": "v1.86.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Create can assign division_id after creation; update supports in-place division_id changes.",
-    "history": [
-      {
-        "version": "v1.86.0",
-        "change": "updated",
-        "summary": "Create can assign division_id after creation; update supports in-place division_id changes."
       }
     ]
   },
@@ -2024,23 +2239,6 @@
   },
   {
     "type": "plan_behavior",
-    "resource": "genesyscloud_outbound_dnclist",
-    "attribute": "entries",
-    "introduced": "Unknown",
-    "last_updated": "v1.85.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "entries is populated from the API on read when omitted from configuration.",
-    "history": [
-      {
-        "version": "v1.85.0",
-        "change": "updated",
-        "summary": "entries is populated from the API on read when omitted from configuration."
-      }
-    ]
-  },
-  {
-    "type": "plan_behavior",
     "resource": "genesyscloud_recording_media_retention_policy",
     "attribute": "conditions.team_ids",
     "introduced": "Unknown",
@@ -2104,48 +2302,6 @@
         "version": "v1.85.0",
         "change": "updated",
         "summary": "No longer required; the attribute is now optional for text columns used in dynamic queueing."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_outbound_dnclist",
-    "attribute": "entries",
-    "introduced": "Unknown",
-    "last_updated": "v1.85.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Now computed as well as optional so existing phone numbers can be read into state without being listed in configuration.",
-    "history": [
-      {
-        "version": "v1.76.0",
-        "change": "updated",
-        "summary": "For internal (rds) DNC lists, refresh reads phone entries from the API via export and updates state; when API data matches configured entries (ignoring list order), existing configuration ordering is kept to avoid unnecessary plan changes."
-      },
-      {
-        "version": "v1.77.0",
-        "change": "updated",
-        "summary": "On read, entries are normalized (grouped by expiration date, duplicates merged, phone lists sorted); for non-internal lists, entries are cleared in state because phone entries are only supported on internal (rds) lists."
-      },
-      {
-        "version": "v1.77.0",
-        "change": "updated",
-        "summary": "Entry export retries when the API returns 404 while the export is still being prepared, in addition to existing 400 retries."
-      },
-      {
-        "version": "v1.77.0",
-        "change": "updated",
-        "summary": "Changing entries deletes existing phone entries first; uploads proceed only for internal (rds) lists, with a clear error if entries are changed on other list types."
-      },
-      {
-        "version": "v1.79.0",
-        "change": "updated",
-        "summary": "Updating phone entries is rejected up front unless dnc_source_type is rds (internal DNC list)."
-      },
-      {
-        "version": "v1.85.0",
-        "change": "updated",
-        "summary": "Now computed as well as optional so existing phone numbers can be read into state without being listed in configuration."
       }
     ]
   },
