@@ -1,0 +1,90 @@
+{
+    "version": "v1.86.2",
+    "previous": "v1.86.1",
+    "changes": [
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_organization_authentication_settings",
+            "attribute": "universal_logout",
+            "change": "added",
+            "summary": "Optional boolean (default false) for whether universal logout is enabled for the organization."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_dnclist",
+            "attribute": "entries",
+            "change": "updated",
+            "summary": "No longer computed; optional only. Refresh no longer auto-populates or clears entries when the block is omitted from configuration."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "all_outbound_email_addresses",
+            "change": "added",
+            "summary": "Optional and computed list of outbound email domain_id and route_id pairs for queues with multiple outbound email addresses; when set, outbound_email_address must be set and must match one list entry."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_business_rules_decision_table",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Refresh no longer runs the consistency checker after read, avoiding read loops on large tables; nested defaults_to blocks are written with stable empty value, special, and values siblings to prevent null versus empty string perpetual diffs."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_outbound_dnclist",
+            "attribute": "entries",
+            "change": "updated",
+            "summary": "For RDS-type lists, entries are fetched into state only when configuration declares a non-empty entries block; omitting entries leaves state unchanged and avoids phantom diffs and full-list reads on refresh."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "all_outbound_email_addresses",
+            "change": "updated",
+            "summary": "Plan validates that outbound_email_address is set and listed in all_outbound_email_addresses when that block is used; refresh preserves configured list order when the set of addresses matches the API."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_speechandtextanalytics_dictionaryfeedback",
+            "attribute": "example_phrases",
+            "change": "updated",
+            "summary": "Refresh preserves existing example_phrases in state when the API returns none, preventing perpetual diffs for dialects that do not round-trip example phrases on read."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_organization_authentication_settings",
+            "attribute": "universal_logout",
+            "change": "updated",
+            "summary": "Create and update send universal_logout to the organization authentication settings API."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "all_outbound_email_addresses",
+            "change": "updated",
+            "summary": "Create and update include all_outbound_email_addresses in queue email media settings when configured."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_routing_skill",
+            "attribute": "division_id",
+            "change": "updated",
+            "summary": "Create assigns division_id on the initial create request instead of a follow-up move update."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_speechandtextanalytics_dictionaryfeedback",
+            "attribute": null,
+            "change": "updated",
+            "summary": "After delete, the provider waits up to 10 minutes for a not-found response before completing destroy, up from 3 minutes."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "all_outbound_email_addresses",
+            "change": "updated",
+            "summary": "Export resolves domain_id and route_id references for all_outbound_email_addresses and drops entries missing route_id from export output."
+        }
+    ]
+}
