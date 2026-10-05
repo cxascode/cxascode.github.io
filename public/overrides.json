@@ -114,11 +114,16 @@
     "cannotBeDestroyedResourceTypes": []
   },
   "addReadWritePermissions": {
-    "genesyscloud_out bound_dnclist": [
+    "genesyscloud_outbound_dnclist": [
       "outbound:dnc:add",
       "outbound:dnc:delete",
       "outbound:dnc:edit",
       "outbound:dnc:view"
+    ],
+    "genesyscloud_organization_authentication_settings": [
+      "directory:organization:admin",
+      "limits:organization:view",
+      "usage:organization:view"
     ],
     "genesyscloud_flow": [
       "architect:ui:view",
@@ -130,7 +135,6 @@
       "architect:flow:publish",
       "architect:flow:unlock",
       "languageUnderstanding:nluDomainVersion:view",
-      "limits:organization:view",
       "architect:dependencyTracking:view",
       "assistants:copilot:edit",
       "assistants:copilot:view"
@@ -215,16 +219,12 @@
     "genesyscloud_telephony_providers_edges_site": [
       "telephony:plugin:all"
     ],
-    "genesyscloud_organization_authentication_settings": [
-      "directory:organization:admin"
-    ],
     "genesyscloud_flow": [
       "architect:ui:view",
       "architect:jobExport:create",
       "architect:jobExport:view",
       "architect:flow:view",
       "languageUnderstanding:nluDomainVersion:view",
-      "limits:organization:view",
       "architect:dependencyTracking:view",
       "assistants:copilot:view"
     ],
@@ -257,6 +257,10 @@
     "genesyscloud_knowledge_knowledgebase": [
       "knowledge:knowledgeSetting:view",
       "knowledge:knowledgeSetting:search"
+    ],
+    "genesyscloud_organization_authentication_settings": [
+      "limits:organization:view",
+      "usage:organization:view"
     ],
     "genesyscloud_routing_queue": [
       "routing:queue:search"
