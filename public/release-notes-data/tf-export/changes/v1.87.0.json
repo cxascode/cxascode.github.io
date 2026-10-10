@@ -1,0 +1,65 @@
+{
+    "version": "v1.87.0",
+    "previous": "v1.86.2",
+    "resource": "genesyscloud_tf_export",
+    "changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "export_computed",
+            "change": "updated",
+            "summary": "With export_computed false, nested blocks marked computed on the container but containing user-settable children are no longer excluded entirely; only computed leaf attributes inside those blocks are omitted from export output."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "export_computed",
+            "change": "updated",
+            "summary": "With export_computed false, nested blocks whose fields are all nil after sanitization are removed from exported configuration instead of appearing as empty block shells."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "export_computed",
+            "change": "updated",
+            "summary": "With export_computed false, when every direct child of a nested block is excluded as computed, the whole nested block path is omitted rather than exporting an empty block."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Unresolvable optional references inside nested maps or list elements are tracked using full attribute paths, and generated unresolvable-reference names use path segments instead of leaf names only."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "include_state_file",
+            "change": "updated",
+            "summary": "When include_state_file is enabled, exported terraform.tfstate sets meta.schema_version from each resource type's provider schema version instead of always using 0."
+        }
+    ],
+    "related_export_changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_integration",
+            "attribute": "config",
+            "change": "updated",
+            "summary": "With export_computed false, user-settable fields inside the config nested block are retained in export output instead of the whole block being dropped as computed."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": null,
+            "attribute": null,
+            "change": "updated",
+            "summary": "Unresolvable-reference sidecar output may include nested optional references that were previously missed and may use path-based generated variable names."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": null,
+            "attribute": null,
+            "change": "updated",
+            "summary": "Re-exported terraform.tfstate may contain non-zero meta.schema_version values for resource types with migrated schemas, affecting plan after import or refresh."
+        }
+    ]
+}
