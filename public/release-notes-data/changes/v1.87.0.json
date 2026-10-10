@@ -1,0 +1,461 @@
+{
+    "version": "v1.87.0",
+    "previous": "v1.86.2",
+    "changes": [
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_recording_settings",
+            "attribute": null,
+            "change": "added",
+            "summary": "Recording settings resource registered for use in Terraform."
+        },
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_speechandtextanalytics_category",
+            "attribute": null,
+            "change": "added",
+            "summary": "Speech and text analytics category resource registered for use in Terraform."
+        },
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_speechandtextanalytics_program",
+            "attribute": null,
+            "change": "added",
+            "summary": "Speech and text analytics program resource registered for use in Terraform."
+        },
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_speechandtextanalytics_sentimentfeedback",
+            "attribute": null,
+            "change": "added",
+            "summary": "Speech and text analytics sentiment feedback resource registered for use in Terraform."
+        },
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_speechandtextanalytics_settings",
+            "attribute": null,
+            "change": "added",
+            "summary": "Speech and text analytics settings resource registered for use in Terraform."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_agentic_virtual_agent_version",
+            "attribute": "dynamic_turn_instructions",
+            "change": "added",
+            "summary": "Optional version settings block for dynamic turn instructions, including repetition checks."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_flow",
+            "attribute": "create_stubs",
+            "change": "added",
+            "summary": "Optional boolean to create flow stubs for missing dependencies when publishing."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_integration_action",
+            "attribute": "timeout_seconds",
+            "change": "updated",
+            "summary": "Plan-time validation restricts values to 1\u201315 seconds."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_journey_views",
+            "attribute": "rank",
+            "change": "added",
+            "summary": "Optional chart rank for display ordering within charts blocks."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_location",
+            "attribute": "notes",
+            "change": "updated",
+            "summary": "Diff suppression treats whitespace-only and empty notes as equivalent."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_attempt_limit",
+            "attribute": "reset_period",
+            "change": "updated",
+            "summary": "Validation allows DAYS_2 through DAYS_30 in addition to NEVER and TODAY."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_contact_list",
+            "attribute": "retention_type",
+            "change": "added",
+            "summary": "Optional and computed contact list retention mode: Never, Today, or RetentionDays."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_contact_list",
+            "attribute": "retention_days",
+            "change": "added",
+            "summary": "Optional and computed retention day count when retention_type is RetentionDays."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_contact_list",
+            "attribute": "time_zone",
+            "change": "added",
+            "summary": "Optional and computed IANA time zone for list retention."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_contact_list",
+            "attribute": "date_expiration",
+            "change": "added",
+            "summary": "Computed ISO-8601 expiration from retention settings."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_contact_list_contact",
+            "attribute": "retention_type",
+            "change": "added",
+            "summary": "Optional and computed per-contact retention override."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_contact_list_contact",
+            "attribute": "retention_days",
+            "change": "added",
+            "summary": "Optional and computed retention days for the contact when type is RetentionDays."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_contact_list_contact",
+            "attribute": "date_expiration",
+            "change": "added",
+            "summary": "Computed ISO-8601 contact expiration from retention settings."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_contact_list_template",
+            "attribute": "retention_type",
+            "change": "added",
+            "summary": "Optional and computed default retention for lists created from the template."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_contact_list_template",
+            "attribute": "retention_days",
+            "change": "added",
+            "summary": "Optional and computed default retention days for template-created lists."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_contact_list_template",
+            "attribute": "time_zone",
+            "change": "added",
+            "summary": "Optional and computed default IANA time zone for template retention."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_settings",
+            "attribute": "contact_list_default_retention_type",
+            "change": "added",
+            "summary": "Optional org default retention type for new contact lists and templates."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_settings",
+            "attribute": "contact_list_default_retention_days",
+            "change": "added",
+            "summary": "Optional default retention days when the org default type is RetentionDays."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_settings",
+            "attribute": "time_zone",
+            "change": "added",
+            "summary": "Optional IANA time zone for org default retention when type is Today."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_responsemanagement_response",
+            "attribute": "form",
+            "change": "added",
+            "summary": "Optional form template block for Form response types."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_responsemanagement_response",
+            "attribute": "response_type",
+            "change": "updated",
+            "summary": "Form is now an allowed response_type value."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_responsemanagement_response",
+            "attribute": "texts",
+            "change": "updated",
+            "summary": "Optional instead of required; unused for Form responses and can conflict with form in plan."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "default_media_language",
+            "change": "added",
+            "summary": "Optional canonical language code for the queue default media language."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_task_management_worktype",
+            "attribute": "service_level_target",
+            "change": "added",
+            "summary": "Optional and computed workitem service level target from 1 to 100."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_task_management_worktype",
+            "attribute": "unassigned_division_contacts_enabled",
+            "change": "added",
+            "summary": "Optional and computed flag for linking workitems to unassigned external contacts."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_task_management_worktype",
+            "attribute": "open_status_default",
+            "change": "added",
+            "summary": "Optional and computed flag to set the auto-created Open status as default."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_task_management_worktype",
+            "attribute": "closed_status_auto_terminate",
+            "change": "added",
+            "summary": "Optional and computed auto-terminate setting for the auto-created Closed status."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_user",
+            "attribute": "skills",
+            "change": "updated",
+            "summary": "No longer computed; optional only so omitted skills are not auto-managed on refresh."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_user",
+            "attribute": "languages",
+            "change": "updated",
+            "summary": "No longer computed; optional only so omitted languages are not auto-managed on refresh."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_user",
+            "attribute": "locations",
+            "change": "updated",
+            "summary": "No longer computed; optional only so omitted locations are not auto-managed on refresh."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_user",
+            "attribute": "profile_skills",
+            "change": "updated",
+            "summary": "No longer computed; optional only so omitted profile skills are not auto-managed on refresh."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_user",
+            "attribute": "certifications",
+            "change": "updated",
+            "summary": "No longer computed; optional only so omitted certifications are not auto-managed on refresh."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_user",
+            "attribute": "employer_info",
+            "change": "updated",
+            "summary": "No longer computed; optional only so omitted employer info is not auto-managed on refresh."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_user",
+            "attribute": "voicemail_policies",
+            "change": "updated",
+            "summary": "No longer computed; optional only so omitted voicemail policies are not auto-managed on refresh."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_agentic_virtual_agent_version",
+            "attribute": "repetition_check.similarity",
+            "change": "updated",
+            "summary": "Validation accepts only Moderate and VeryStrict, matching the live API."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_flow",
+            "attribute": "create_stubs",
+            "change": "updated",
+            "summary": "Publish job registration includes create_stubs from configuration."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_integration_action",
+            "attribute": "timeout_seconds",
+            "change": "updated",
+            "summary": "Values outside 1\u201315 fail validation at plan time."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_location",
+            "attribute": "notes",
+            "change": "updated",
+            "summary": "Blank or whitespace-only notes no longer cause perpetual plan diffs after refresh."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Refresh uses GET-by-id instead of list cache to avoid incomplete bullseye member_groups in state."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_task_management_worktype",
+            "attribute": "open_status_default",
+            "change": "updated",
+            "summary": "Setting open_status_default to false is rejected with guidance to change default on another status resource."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_task_management_worktype_status_transition",
+            "attribute": "destination_status_ids",
+            "change": "updated",
+            "summary": "Empty or omitted destination_status_ids stays empty in state instead of storing API-expanded IDs, avoiding perpetual diffs."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_telephony_providers_edges_phone",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Refresh sets line_base_settings_id, phone_meta_base_id, and web_rtc_user_id only when API IDs are non-null."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_user",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Refresh maps phone contacts more reliably for display-only E.164 values and pool-mapped extensions."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_flow",
+            "attribute": "create_stubs",
+            "change": "updated",
+            "summary": "Flow publish passes create_stubs to the architect jobs API; publish errors include stable diagnostic codes in messages."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_location",
+            "attribute": "notes",
+            "change": "updated",
+            "summary": "Clearing notes sends an API-accepted placeholder and read normalizes notes in state."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_outbound_contact_list",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Create and update map retention_type, retention_days, and time_zone to API retention semantics."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_outbound_contact_list_contact",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Create and update map per-contact retention fields to the dialer contact API."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_outbound_contact_list_template",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Create and update map template default retention fields to the API."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_outbound_settings",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Update applies org default contact list retention settings with correct null handling for Never and Today."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_task_management_worktype",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Create and update configure auto-created Open/Closed statuses; base PATCH skipped when only status helper fields change."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_task_management_worktype_status",
+            "attribute": null,
+            "change": "updated",
+            "summary": "No-change API 400 responses for default or auto_terminate_workitem-only updates are treated as success when state matches."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_task_management_worktype_status_transition",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Updates and deletes handle empty destination lists and no-change responses; optional fields clear via null PATCH on update."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_business_rules_decision_table",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Export job creation retries on capacity and throttle responses within a time budget."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_architect_datatable_row",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Export filter logic better matches anchored datatable name patterns when deciding which tables to scan."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_integration_action",
+            "attribute": "function_config.file_path",
+            "change": "updated",
+            "summary": "Export emits a Terraform variable for file_path and omits org-specific zip_id, file_content_hash, and request_url_template."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_responsemanagement_response",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Form exports preserve required empty strings; library response listing paginates through all pages."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "default_script_ids",
+            "change": "updated",
+            "summary": "Unresolved script GUIDs are removed from export; export uses fresh queue list reads."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_task_management_worktype_status",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Status reference resolution handles composite and bare status IDs in export output."
+        },
+        {
+            "kind": "data_source",
+            "resource": "genesyscloud_organization_presence_definition",
+            "attribute": null,
+            "change": "added",
+            "summary": "Data source to look up organization presence definitions by localized label with optional disambiguators."
+        },
+        {
+            "kind": "data_source_attribute",
+            "resource": "genesyscloud_integration",
+            "attribute": "integration_type",
+            "change": "added",
+            "summary": "Optional filter to select an integration when multiple share the same name."
+        }
+    ]
+}

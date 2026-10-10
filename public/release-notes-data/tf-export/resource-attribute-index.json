@@ -2,88 +2,27 @@
   {
     "type": "export_behavior",
     "resource": "genesyscloud_tf_export",
-    "attribute": "enable_dependency_resolution",
+    "attribute": "export_computed",
     "introduced": "Unknown",
-    "last_updated": "v1.86.0",
+    "last_updated": "v1.87.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Dependency resolution processes resources in a stable order sorted by resource ID, so depends_on attribute ordering is consistent across repeated export runs.",
+    "latest_summary": "With export_computed false, when every direct child of a nested block is excluded as computed, the whole nested block path is omitted rather than exporting an empty block.",
     "history": [
       {
-        "version": "v1.77.3",
+        "version": "v1.87.0",
         "change": "updated",
-        "summary": "When using include_filter_resources or include_filter_resources_by_id, setting enable_dependency_resolution to true now generates depends_on blocks without requiring a non-empty resource-type filter list."
+        "summary": "With export_computed false, nested blocks marked computed on the container but containing user-settable children are no longer excluded entirely; only computed leaf attributes inside those blocks are omitted from export output."
       },
       {
-        "version": "v1.77.3",
+        "version": "v1.87.0",
         "change": "updated",
-        "summary": "When using exclude_filter_resources or the default export mode (no include/exclude filter), enable_dependency_resolution no longer adds depends_on blocks, even when set to true."
+        "summary": "With export_computed false, nested blocks whose fields are all nil after sanitization are removed from exported configuration instead of appearing as empty block shells."
       },
       {
-        "version": "v1.86.0",
+        "version": "v1.87.0",
         "change": "updated",
-        "summary": "When enable_dependency_resolution is enabled, the exporter checks that the Architect dependency tracking index is operational before resolving flow dependencies. If the index is not ready, it triggers a rebuild and waits (up to approximately five minutes) before continuing."
-      },
-      {
-        "version": "v1.86.0",
-        "change": "updated",
-        "summary": "Dependency resolution processes resources in a stable order sorted by resource ID, so depends_on attribute ordering is consistent across repeated export runs."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
-    "resource": "genesyscloud_tf_export",
-    "attribute": "ignore_cyclic_deps",
-    "introduced": "Unknown",
-    "last_updated": "v1.86.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "When ignore_cyclic_deps is enabled, bidirectional cyclic dependencies are automatically removed from generated depends_on attributes to reduce Terraform cycle errors during apply.",
-    "history": [
-      {
-        "version": "v1.86.0",
-        "change": "updated",
-        "summary": "When ignore_cyclic_deps is enabled, bidirectional cyclic dependencies are automatically removed from generated depends_on attributes to reduce Terraform cycle errors during apply."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_tf_export",
-    "attribute": "enable_dependency_resolution",
-    "introduced": "Unknown",
-    "last_updated": "v1.86.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Description updated to document that dependency resolution adds a depends_on attribute to both genesyscloud_flow and genesyscloud_script resources, and that referenced dependencies inside flow or script configuration are resolved and exported.",
-    "history": [
-      {
-        "version": "v1.86.0",
-        "change": "updated",
-        "summary": "Description updated to document that dependency resolution adds a depends_on attribute to both genesyscloud_flow and genesyscloud_script resources, and that referenced dependencies inside flow or script configuration are resolved and exported."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
-    "resource": "genesyscloud_tf_export",
-    "attribute": "export_deprecated",
-    "introduced": "Unknown",
-    "last_updated": "v1.85.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "When export_deprecated is false, entire deprecated resource types are excluded from export runs. Previously, only deprecated attributes within a resource type were omitted while the resource type itself could still be exported.",
-    "history": [
-      {
-        "version": "v1.82.0",
-        "change": "updated",
-        "summary": "When export_deprecated is false, deprecated schema attributes are omitted from exported configuration; the default true preserves prior behavior that included deprecated attributes."
-      },
-      {
-        "version": "v1.85.0",
-        "change": "updated",
-        "summary": "When export_deprecated is false, entire deprecated resource types are excluded from export runs. Previously, only deprecated attributes within a resource type were omitted while the resource type itself could still be exported."
+        "summary": "With export_computed false, when every direct child of a nested block is excluded as computed, the whole nested block path is omitted rather than exporting an empty block."
       }
     ]
   },
@@ -92,10 +31,10 @@
     "resource": "genesyscloud_tf_export",
     "attribute": "general export behavior",
     "introduced": "Unknown",
-    "last_updated": "v1.84.2",
+    "last_updated": "v1.87.0",
     "removed": null,
     "status": "Active",
-    "latest_summary": "Custom file writers for exported resources retry transient failures up to three times with exponential backoff before reporting an error.",
+    "latest_summary": "Unresolvable optional references inside nested maps or list elements are tracked using full attribute paths, and generated unresolvable-reference names use path segments instead of leaf names only.",
     "history": [
       {
         "version": "v1.60.0",
@@ -346,6 +285,116 @@
         "version": "v1.84.2",
         "change": "updated",
         "summary": "Custom file writers for exported resources retry transient failures up to three times with exponential backoff before reporting an error."
+      },
+      {
+        "version": "v1.87.0",
+        "change": "updated",
+        "summary": "Unresolvable optional references inside nested maps or list elements are tracked using full attribute paths, and generated unresolvable-reference names use path segments instead of leaf names only."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_tf_export",
+    "attribute": "include_state_file",
+    "introduced": "Unknown",
+    "last_updated": "v1.87.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When include_state_file is enabled, exported terraform.tfstate sets meta.schema_version from each resource type's provider schema version instead of always using 0.",
+    "history": [
+      {
+        "version": "v1.87.0",
+        "change": "updated",
+        "summary": "When include_state_file is enabled, exported terraform.tfstate sets meta.schema_version from each resource type's provider schema version instead of always using 0."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_tf_export",
+    "attribute": "enable_dependency_resolution",
+    "introduced": "Unknown",
+    "last_updated": "v1.86.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Dependency resolution processes resources in a stable order sorted by resource ID, so depends_on attribute ordering is consistent across repeated export runs.",
+    "history": [
+      {
+        "version": "v1.77.3",
+        "change": "updated",
+        "summary": "When using include_filter_resources or include_filter_resources_by_id, setting enable_dependency_resolution to true now generates depends_on blocks without requiring a non-empty resource-type filter list."
+      },
+      {
+        "version": "v1.77.3",
+        "change": "updated",
+        "summary": "When using exclude_filter_resources or the default export mode (no include/exclude filter), enable_dependency_resolution no longer adds depends_on blocks, even when set to true."
+      },
+      {
+        "version": "v1.86.0",
+        "change": "updated",
+        "summary": "When enable_dependency_resolution is enabled, the exporter checks that the Architect dependency tracking index is operational before resolving flow dependencies. If the index is not ready, it triggers a rebuild and waits (up to approximately five minutes) before continuing."
+      },
+      {
+        "version": "v1.86.0",
+        "change": "updated",
+        "summary": "Dependency resolution processes resources in a stable order sorted by resource ID, so depends_on attribute ordering is consistent across repeated export runs."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_tf_export",
+    "attribute": "ignore_cyclic_deps",
+    "introduced": "Unknown",
+    "last_updated": "v1.86.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When ignore_cyclic_deps is enabled, bidirectional cyclic dependencies are automatically removed from generated depends_on attributes to reduce Terraform cycle errors during apply.",
+    "history": [
+      {
+        "version": "v1.86.0",
+        "change": "updated",
+        "summary": "When ignore_cyclic_deps is enabled, bidirectional cyclic dependencies are automatically removed from generated depends_on attributes to reduce Terraform cycle errors during apply."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_tf_export",
+    "attribute": "enable_dependency_resolution",
+    "introduced": "Unknown",
+    "last_updated": "v1.86.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Description updated to document that dependency resolution adds a depends_on attribute to both genesyscloud_flow and genesyscloud_script resources, and that referenced dependencies inside flow or script configuration are resolved and exported.",
+    "history": [
+      {
+        "version": "v1.86.0",
+        "change": "updated",
+        "summary": "Description updated to document that dependency resolution adds a depends_on attribute to both genesyscloud_flow and genesyscloud_script resources, and that referenced dependencies inside flow or script configuration are resolved and exported."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_tf_export",
+    "attribute": "export_deprecated",
+    "introduced": "Unknown",
+    "last_updated": "v1.85.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When export_deprecated is false, entire deprecated resource types are excluded from export runs. Previously, only deprecated attributes within a resource type were omitted while the resource type itself could still be exported.",
+    "history": [
+      {
+        "version": "v1.82.0",
+        "change": "updated",
+        "summary": "When export_deprecated is false, deprecated schema attributes are omitted from exported configuration; the default true preserves prior behavior that included deprecated attributes."
+      },
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "When export_deprecated is false, entire deprecated resource types are excluded from export runs. Previously, only deprecated attributes within a resource type were omitted while the resource type itself could still be exported."
       }
     ]
   },
