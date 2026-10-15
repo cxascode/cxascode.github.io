@@ -313,6 +313,22 @@
       "export-template": [
         "genesyscloud_integration_config"
       ]
+    },
+    {
+      "name": "GENESYSCLOUD_EXTERNAL_CONTACTS_SIMPLE_BLOCK_LABEL",
+      "valueHint": "1",
+      "description": "Omit the organization name from the exported resource label",
+      "export-template": [
+        "genesyscloud_externalcontacts_contact"
+      ]
+    },
+    {
+      "name": "GENESYSCLOUD_OUTBOUND_DNCLIST_UNMANAGED_ENTRIES",
+      "valueHint": "1",
+      "description": "Prevents CX as Code from managing DNC list entries entirely",
+      "export-template": [
+        "genesyscloud_outbound_dnclist"
+      ]
     }
   ],
   "providerEnvVarsIgnore": [
