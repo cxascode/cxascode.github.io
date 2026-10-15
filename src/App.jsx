@@ -37,6 +37,7 @@ import {
   buildTerraformRegistryDocsUrl,
   buildTerraformRegistryProviderDocsUrl,
 } from "./terraformRegistry.js";
+import { API_CALCULATOR_BASE_URL } from "./apiCalculator.js";
 import { buildExportBuilderUrl, EXPORT_BUILDER_BASE_URL } from "./exportBuilder.js";
 import {
   DIVISION_FILTER_ALL,
@@ -1649,6 +1650,11 @@ export default function App() {
                   id: "export-builder",
                   label: "Export builder",
                   href: EXPORT_BUILDER_BASE_URL,
+                },
+                {
+                  id: "api-calculator",
+                  label: "API calculator",
+                  href: API_CALCULATOR_BASE_URL,
                 },
                 {
                   id: "stagehand",
