@@ -1,0 +1,34 @@
+{
+    "version": "v1.87.1",
+    "previous": "v1.87.0",
+    "changes": [
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_dnclist",
+            "attribute": "entries",
+            "change": "updated",
+            "summary": "Schema description documents GENESYSCLOUD_OUTBOUND_DNCLIST_UNMANAGED_ENTRIES for managing entries outside Terraform."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_outbound_dnclist",
+            "attribute": "entries",
+            "change": "updated",
+            "summary": "When GENESYSCLOUD_OUTBOUND_DNCLIST_UNMANAGED_ENTRIES is unset, refresh loads all RDS list entries into state even if entries are omitted from configuration; when set, refresh only loads entries when configuration declares a non-empty entries block and otherwise clears entries in state."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_outbound_dnclist",
+            "attribute": "entries",
+            "change": "updated",
+            "summary": "When GENESYSCLOUD_OUTBOUND_DNCLIST_UNMANAGED_ENTRIES is unset, updates reconcile API entries whenever HasChange(\"entries\") without skipping omitted entries blocks as in v1.87.0; when set, apply only reconciles when configuration includes at least one entry row."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_externalcontacts_contact",
+            "attribute": null,
+            "change": "updated",
+            "summary": "When the simple external contact block-label environment toggle is enabled, export skips organization lookups and block labels may omit the organization name prefix."
+        }
+    ]
+}

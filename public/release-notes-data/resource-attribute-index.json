@@ -1,6 +1,139 @@
 [
   {
     "type": "apply_behavior",
+    "resource": "genesyscloud_outbound_dnclist",
+    "attribute": "entries",
+    "introduced": "Unknown",
+    "last_updated": "v1.87.1",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When GENESYSCLOUD_OUTBOUND_DNCLIST_UNMANAGED_ENTRIES is unset, updates reconcile API entries whenever HasChange(\"entries\") without skipping omitted entries blocks as in v1.87.0; when set, apply only reconciles when configuration includes at least one entry row.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "When entries is omitted from configuration, apply no longer deletes and re-uploads all phone numbers on unrelated updates."
+      },
+      {
+        "version": "v1.87.1",
+        "change": "updated",
+        "summary": "When GENESYSCLOUD_OUTBOUND_DNCLIST_UNMANAGED_ENTRIES is unset, updates reconcile API entries whenever HasChange(\"entries\") without skipping omitted entries blocks as in v1.87.0; when set, apply only reconciles when configuration includes at least one entry row."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_externalcontacts_contact",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.87.1",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When the simple external contact block-label environment toggle is enabled, export skips organization lookups and block labels may omit the organization name prefix.",
+    "history": [
+      {
+        "version": "v1.64.0",
+        "change": "updated",
+        "summary": "Exported block labels use organization name and contact name instead of the contact ID alone; external ID hashes may be appended for uniqueness."
+      },
+      {
+        "version": "v1.69.0",
+        "change": "updated",
+        "summary": "Exported resource block labels use organization name, last name, and first name, falling back to external_system_url or the contact ID."
+      },
+      {
+        "version": "v1.86.0",
+        "change": "updated",
+        "summary": "Contact listing during export uses the division-views scan API, which may return a different contact set than the prior scan endpoint."
+      },
+      {
+        "version": "v1.87.1",
+        "change": "updated",
+        "summary": "When the simple external contact block-label environment toggle is enabled, export skips organization lookups and block labels may omit the organization name prefix."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_outbound_dnclist",
+    "attribute": "entries",
+    "introduced": "Unknown",
+    "last_updated": "v1.87.1",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When GENESYSCLOUD_OUTBOUND_DNCLIST_UNMANAGED_ENTRIES is unset, refresh loads all RDS list entries into state even if entries are omitted from configuration; when set, refresh only loads entries when configuration declares a non-empty entries block and otherwise clears entries in state.",
+    "history": [
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "entries is populated from the API on read when omitted from configuration."
+      },
+      {
+        "version": "v1.86.2",
+        "change": "updated",
+        "summary": "For RDS-type lists, entries are fetched into state only when configuration declares a non-empty entries block; omitting entries leaves state unchanged and avoids phantom diffs and full-list reads on refresh."
+      },
+      {
+        "version": "v1.87.1",
+        "change": "updated",
+        "summary": "When GENESYSCLOUD_OUTBOUND_DNCLIST_UNMANAGED_ENTRIES is unset, refresh loads all RDS list entries into state even if entries are omitted from configuration; when set, refresh only loads entries when configuration declares a non-empty entries block and otherwise clears entries in state."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_outbound_dnclist",
+    "attribute": "entries",
+    "introduced": "Unknown",
+    "last_updated": "v1.87.1",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Schema description documents GENESYSCLOUD_OUTBOUND_DNCLIST_UNMANAGED_ENTRIES for managing entries outside Terraform.",
+    "history": [
+      {
+        "version": "v1.76.0",
+        "change": "updated",
+        "summary": "For internal (rds) DNC lists, refresh reads phone entries from the API via export and updates state; when API data matches configured entries (ignoring list order), existing configuration ordering is kept to avoid unnecessary plan changes."
+      },
+      {
+        "version": "v1.77.0",
+        "change": "updated",
+        "summary": "On read, entries are normalized (grouped by expiration date, duplicates merged, phone lists sorted); for non-internal lists, entries are cleared in state because phone entries are only supported on internal (rds) lists."
+      },
+      {
+        "version": "v1.77.0",
+        "change": "updated",
+        "summary": "Entry export retries when the API returns 404 while the export is still being prepared, in addition to existing 400 retries."
+      },
+      {
+        "version": "v1.77.0",
+        "change": "updated",
+        "summary": "Changing entries deletes existing phone entries first; uploads proceed only for internal (rds) lists, with a clear error if entries are changed on other list types."
+      },
+      {
+        "version": "v1.79.0",
+        "change": "updated",
+        "summary": "Updating phone entries is rejected up front unless dnc_source_type is rds (internal DNC list)."
+      },
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "Now computed as well as optional so existing phone numbers can be read into state without being listed in configuration."
+      },
+      {
+        "version": "v1.86.2",
+        "change": "updated",
+        "summary": "No longer computed; optional only. Refresh no longer auto-populates or clears entries when the block is omitted from configuration."
+      },
+      {
+        "version": "v1.87.1",
+        "change": "updated",
+        "summary": "Schema description documents GENESYSCLOUD_OUTBOUND_DNCLIST_UNMANAGED_ENTRIES for managing entries outside Terraform."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
     "resource": "genesyscloud_business_rules_decision_table",
     "attribute": "general apply behavior",
     "introduced": "Unknown",
@@ -1298,28 +1431,6 @@
   },
   {
     "type": "plan_behavior",
-    "resource": "genesyscloud_outbound_dnclist",
-    "attribute": "entries",
-    "introduced": "Unknown",
-    "last_updated": "v1.86.2",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "For RDS-type lists, entries are fetched into state only when configuration declares a non-empty entries block; omitting entries leaves state unchanged and avoids phantom diffs and full-list reads on refresh.",
-    "history": [
-      {
-        "version": "v1.85.0",
-        "change": "updated",
-        "summary": "entries is populated from the API on read when omitted from configuration."
-      },
-      {
-        "version": "v1.86.2",
-        "change": "updated",
-        "summary": "For RDS-type lists, entries are fetched into state only when configuration declares a non-empty entries block; omitting entries leaves state unchanged and avoids phantom diffs and full-list reads on refresh."
-      }
-    ]
-  },
-  {
-    "type": "plan_behavior",
     "resource": "genesyscloud_routing_queue",
     "attribute": "all_outbound_email_addresses",
     "introduced": "Unknown",
@@ -1366,53 +1477,6 @@
         "version": "v1.86.2",
         "change": "added",
         "summary": "Optional boolean (default false) for whether universal logout is enabled for the organization."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_outbound_dnclist",
-    "attribute": "entries",
-    "introduced": "Unknown",
-    "last_updated": "v1.86.2",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "No longer computed; optional only. Refresh no longer auto-populates or clears entries when the block is omitted from configuration.",
-    "history": [
-      {
-        "version": "v1.76.0",
-        "change": "updated",
-        "summary": "For internal (rds) DNC lists, refresh reads phone entries from the API via export and updates state; when API data matches configured entries (ignoring list order), existing configuration ordering is kept to avoid unnecessary plan changes."
-      },
-      {
-        "version": "v1.77.0",
-        "change": "updated",
-        "summary": "On read, entries are normalized (grouped by expiration date, duplicates merged, phone lists sorted); for non-internal lists, entries are cleared in state because phone entries are only supported on internal (rds) lists."
-      },
-      {
-        "version": "v1.77.0",
-        "change": "updated",
-        "summary": "Entry export retries when the API returns 404 while the export is still being prepared, in addition to existing 400 retries."
-      },
-      {
-        "version": "v1.77.0",
-        "change": "updated",
-        "summary": "Changing entries deletes existing phone entries first; uploads proceed only for internal (rds) lists, with a clear error if entries are changed on other list types."
-      },
-      {
-        "version": "v1.79.0",
-        "change": "updated",
-        "summary": "Updating phone entries is rejected up front unless dnc_source_type is rds (internal DNC list)."
-      },
-      {
-        "version": "v1.85.0",
-        "change": "updated",
-        "summary": "Now computed as well as optional so existing phone numbers can be read into state without being listed in configuration."
-      },
-      {
-        "version": "v1.86.2",
-        "change": "updated",
-        "summary": "No longer computed; optional only. Refresh no longer auto-populates or clears entries when the block is omitted from configuration."
       }
     ]
   },
@@ -1735,33 +1799,6 @@
         "version": "v1.86.0",
         "change": "updated",
         "summary": "Row data exports to a CSV file under a rows subdirectory instead of nested rows blocks."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
-    "resource": "genesyscloud_externalcontacts_contact",
-    "attribute": "general export behavior",
-    "introduced": "Unknown",
-    "last_updated": "v1.86.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Contact listing during export uses the division-views scan API, which may return a different contact set than the prior scan endpoint.",
-    "history": [
-      {
-        "version": "v1.64.0",
-        "change": "updated",
-        "summary": "Exported block labels use organization name and contact name instead of the contact ID alone; external ID hashes may be appended for uniqueness."
-      },
-      {
-        "version": "v1.69.0",
-        "change": "updated",
-        "summary": "Exported resource block labels use organization name, last name, and first name, falling back to external_system_url or the contact ID."
-      },
-      {
-        "version": "v1.86.0",
-        "change": "updated",
-        "summary": "Contact listing during export uses the division-views scan API, which may return a different contact set than the prior scan endpoint."
       }
     ]
   },
@@ -3024,23 +3061,6 @@
         "version": "v1.85.0",
         "change": "updated",
         "summary": "Integrations of type function-data-actions are now treated as function data actions even when the action category text does not contain function data action."
-      }
-    ]
-  },
-  {
-    "type": "apply_behavior",
-    "resource": "genesyscloud_outbound_dnclist",
-    "attribute": "entries",
-    "introduced": "Unknown",
-    "last_updated": "v1.85.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "When entries is omitted from configuration, apply no longer deletes and re-uploads all phone numbers on unrelated updates.",
-    "history": [
-      {
-        "version": "v1.85.0",
-        "change": "updated",
-        "summary": "When entries is omitted from configuration, apply no longer deletes and re-uploads all phone numbers on unrelated updates."
       }
     ]
   },

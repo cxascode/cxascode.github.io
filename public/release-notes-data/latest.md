@@ -1,39 +1,13 @@
-## CX as Code v1.87.0
+## CX as Code v1.87.1
 
-[View release changelog](https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.87.0)
+[View release changelog](https://github.com/MyPureCloud/terraform-provider-genesyscloud/releases/tag/v1.87.1)
 
 ### Resources added
-- `genesyscloud_recording_settings`
-- `genesyscloud_speechandtextanalytics_category`
-- `genesyscloud_speechandtextanalytics_program`
-- `genesyscloud_speechandtextanalytics_sentimentfeedback`
-- `genesyscloud_speechandtextanalytics_settings`
+None detected.
 
 ### Resources changed
 
-#### genesyscloud_agentic_virtual_agent_version
-
-Added:
-- `dynamic_turn_instructions` — Optional block under version settings for instructions injected during a turn (for example repetition checks under `repetition_check` with `type`, `messages`, `similarity`, and `instruction`).
-
-Removed:
-- None detected.
-
-Changed:
-- None detected.
-
-#### genesyscloud_flow
-
-Added:
-- `create_stubs` — Optional boolean (default `false`). When `true`, publishing creates flow stubs for dependencies that do not yet exist in the org.
-
-Removed:
-- None detected.
-
-Changed:
-- None detected.
-
-#### genesyscloud_integration_action
+#### genesyscloud_outbound_dnclist
 
 Added:
 - None detected.
@@ -42,179 +16,27 @@ Removed:
 - None detected.
 
 Changed:
-- `timeout_seconds` — Plan-time validation now enforces 1–15 seconds, matching the API range.
-
-#### genesyscloud_journey_views
-
-Added:
-- `rank` — Optional integer on each `charts` entry for chart display ordering.
-
-Removed:
-- None detected.
-
-Changed:
-- None detected.
-
-#### genesyscloud_location
-
-Added:
-- None detected.
-
-Removed:
-- None detected.
-
-Changed:
-- `notes` — Whitespace-only and empty values are treated as equivalent in plan to avoid perpetual diffs when notes are cleared.
-
-#### genesyscloud_outbound_attempt_limit
-
-Added:
-- None detected.
-
-Removed:
-- None detected.
-
-Changed:
-- `reset_period` — Validation and description now allow `DAYS_2` through `DAYS_30` in addition to `NEVER` and `TODAY`.
-
-#### genesyscloud_outbound_contact_list
-
-Added:
-- `retention_type` — Optional and computed retention mode: `Never`, `Today`, or `RetentionDays`.
-- `retention_days` — Optional and computed day count when `retention_type` is `RetentionDays`.
-- `time_zone` — Optional and computed IANA time zone used for retention.
-- `date_expiration` — Computed ISO-8601 expiration derived from retention settings.
-
-Removed:
-- None detected.
-
-Changed:
-- None detected.
-
-#### genesyscloud_outbound_contact_list_contact
-
-Added:
-- `retention_type` — Optional and computed per-contact retention override: `Never`, `Today`, or `RetentionDays`.
-- `retention_days` — Optional and computed day count when `retention_type` is `RetentionDays`.
-- `date_expiration` — Computed ISO-8601 expiration for the contact.
-
-Removed:
-- None detected.
-
-Changed:
-- None detected.
-
-#### genesyscloud_outbound_contact_list_template
-
-Added:
-- `retention_type` — Optional and computed default retention for lists created from the template.
-- `retention_days` — Optional and computed default day count when `retention_type` is `RetentionDays`.
-- `time_zone` — Optional and computed default IANA time zone for retention.
-
-Removed:
-- None detected.
-
-Changed:
-- None detected.
-
-#### genesyscloud_outbound_settings
-
-Added:
-- `contact_list_default_retention_type` — Optional org default for new contact lists and templates: `Never`, `Today`, or `RetentionDays`.
-- `contact_list_default_retention_days` — Optional default day count when the default retention type is `RetentionDays`.
-- `time_zone` — Optional IANA time zone for default retention when the default type is `Today`.
-
-Removed:
-- None detected.
-
-Changed:
-- None detected.
-
-#### genesyscloud_responsemanagement_response
-
-Added:
-- `form` — Optional block for `Form` response types (pages, components, messages, and related nested fields).
-- `response_type` — New allowed value `Form`.
-
-Removed:
-- None detected.
-
-Changed:
-- `texts` — Optional instead of required; not used for `Form` responses (the API returns an empty list). Configuring `texts` together with `form` can cause a permanent diff.
-
-#### genesyscloud_routing_queue
-
-Added:
-- `default_media_language` — Optional canonical language code (for example `en-US`) for the queue default media language.
-
-Removed:
-- None detected.
-
-Changed:
-- None detected.
-
-#### genesyscloud_task_management_worktype
-
-Added:
-- `service_level_target` — Optional and computed target service level (1–100) for workitems from this worktype.
-- `unassigned_division_contacts_enabled` — Optional and computed flag allowing workitems to link to external contacts not assigned to a division.
-- `open_status_default` — Optional and computed flag to mark the auto-created Open status as the worktype default.
-- `closed_status_auto_terminate` — Optional and computed flag controlling auto-terminate on the auto-created Closed status.
-
-Removed:
-- None detected.
-
-Changed:
-- None detected.
-
-#### genesyscloud_user
-
-Added:
-- None detected.
-
-Removed:
-- None detected.
-
-Changed:
-- `skills`, `languages`, `locations`, `profile_skills`, `certifications`, `employer_info`, `voicemail_policies` — No longer computed; optional only. When omitted, the resource does not manage those values and refresh no longer auto-populates them into state.
+- `entries` — Schema description now documents optional process environment variable `GENESYSCLOUD_OUTBOUND_DNCLIST_UNMANAGED_ENTRIES` for lists whose phone numbers are managed outside Terraform.
 
 ### Runtime behavior changes
 
 #### Plan behavior
-- genesyscloud_agentic_virtual_agent_version — `repetition_check.similarity` validates against `Moderate` and `VeryStrict` only, matching live API acceptance.
-- genesyscloud_flow — `create_stubs` is sent when registering the publish job so stub creation is explicit in configuration.
-- genesyscloud_integration_action — Invalid `timeout_seconds` outside 1–15 fails at plan time.
-- genesyscloud_location — Blank or whitespace-only `notes` no longer produce endless plan diffs after refresh.
-- genesyscloud_routing_queue — Refresh loads each queue by ID instead of a shared list cache, avoiding incomplete `bullseye_rings` / `member_groups` in state after concurrent export or pagination.
-- genesyscloud_task_management_worktype — Setting `open_status_default` to `false` fails plan/apply with guidance to set `default = true` on another status resource instead.
-- genesyscloud_task_management_worktype_status_transition — When `destination_status_ids` is omitted or empty (meaning all other statuses), refresh keeps an empty list instead of writing the API-expanded ID list, preventing perpetual diffs.
-- genesyscloud_telephony_providers_edges_phone — Refresh only sets `line_base_settings_id`, `phone_meta_base_id`, and `web_rtc_user_id` when the API returns non-null IDs.
-- genesyscloud_user — Refresh maps display-only and pool-extension phone contacts more reliably, including E.164 values in `display` and direct-dial numbers on pool-mapped extensions.
+- genesyscloud_outbound_dnclist — When `GENESYSCLOUD_OUTBOUND_DNCLIST_UNMANAGED_ENTRIES` is **not** set, refresh again downloads all phone entries for internal (RDS-type) lists into state, including when your configuration omits the `entries` block. When the variable **is** set, refresh only loads entries if your configuration declares a non-empty `entries` block; otherwise refresh sets `entries` to an empty list in state so plans do not show phantom removals for unmanaged numbers.
 
 #### Apply behavior
-- genesyscloud_flow — Publish/register job honors `create_stubs`; publish failure and timeout diagnostics include stable error codes in the message text.
-- genesyscloud_location — Clearing `notes` in configuration sends a placeholder the API accepts; read normalizes notes so state stays clean.
-- genesyscloud_outbound_contact_list, genesyscloud_outbound_contact_list_contact, genesyscloud_outbound_contact_list_template, genesyscloud_outbound_settings — Create and update map retention fields to API semantics (for example null retention days when type is `Never`).
-- genesyscloud_task_management_worktype — Create/update can configure auto-created Open/Closed statuses via `open_status_default` and `closed_status_auto_terminate`; base worktype PATCH is skipped when only those status fields change.
-- genesyscloud_task_management_worktype_status — Updates that only change `default` or `auto_terminate_workitem` treat API “no change” 400 responses as success when state already matches.
-- genesyscloud_task_management_worktype_status_transition — Updates and deletes handle empty `destination_status_ids` and “no change” responses without failing; optional transition fields can be cleared with null on update.
-- genesyscloud_business_rules_decision_table — Internal export job creation retries on capacity (403) and throttle (429) responses within a time budget before surfacing failure.
+- genesyscloud_outbound_dnclist — When `GENESYSCLOUD_OUTBOUND_DNCLIST_UNMANAGED_ENTRIES` is **not** set, updates reconcile API phone entries whenever Terraform reports a change to `entries` (the v1.87.0 path that skipped reconciliation when `entries` was omitted from configuration is removed). When the variable **is** set, apply only deletes and re-uploads numbers if your configuration includes at least one `entries` row; omitting `entries` or leaving it empty does not remove existing numbers on the API.
 
 #### Export behavior
-- genesyscloud_architect_datatable_row — Filtered export skips datatable scans more accurately for anchored name patterns, reducing missed or over-broad row export.
-- genesyscloud_integration_action — Function actions export `function_config.file_path` as a Terraform variable reference; export omits `file_content_hash`, `zip_id`, and function `request_url_template` so apply in another org does not drift on org-specific GUIDs.
-- genesyscloud_responsemanagement_response — Form responses export with required empty strings preserved; listing responses for export paginates through full libraries.
-- genesyscloud_routing_queue — Unresolved script GUIDs in `default_script_ids` are dropped from export; queue export refresh bypasses stale list cache entries.
-- genesyscloud_task_management_worktype_status — Status reference resolution matches composite and bare status IDs more reliably in export output.
+- genesyscloud_externalcontacts_contact — Export enumeration can skip per-contact external organization lookups when the provider’s simple external contact block-label environment toggle is enabled; exported resource block labels may omit the organization name prefix compared with exports that resolved organization names.
 
 ### Resources removed
 None detected.
 
 ### Data sources added
-- `genesyscloud_organization_presence_definition` — Lookup by localized label (`name`), with optional `system_presence` and `division_id` to disambiguate.
+None detected.
 
 ### Data sources changed
-- `genesyscloud_integration` — Optional `integration_type` argument filters by integration type when multiple integrations share the same name.
+None detected.
 
 ### Data sources removed
 None detected.
@@ -223,12 +45,11 @@ None detected.
 None detected.
 
 ### Upgrade impact
-- Most orgs can upgrade without configuration changes unless they use the new recording, speech analytics, retention, form response, journey chart, flow stub, queue language, task worktype, integration action, or user optional-field behaviors above.
-- New Terraform resources become available for recording settings and several speech and text analytics objects that were wired into provider registration in this release.
-- `genesyscloud_user` resources that relied on computed skills, languages, locations, or related blocks may show plan changes until those blocks are explicitly added or left omitted intentionally.
-- `genesyscloud_integration_action` exports and cross-org applies for function actions should use the new variable-based `file_path` pattern and expect org-specific function fields to be omitted from export.
-- `genesyscloud_routing_queue` refresh after upgrade should stabilize bullseye and member group membership in state; export may omit built-in script IDs that cannot be resolved.
+- Most configurations are unaffected unless you manage `genesyscloud_outbound_dnclist` or export large numbers of external contacts.
+- For internal DNC lists where Terraform should **not** manage phone numbers, set `GENESYSCLOUD_OUTBOUND_DNCLIST_UNMANAGED_ENTRIES` before plan/apply to avoid full entry downloads on refresh and accidental entry reconciliation on update.
+- Without that variable, upgrading from v1.87.0 can increase refresh time and produce `entries` plan diffs for RDS lists that omit `entries` in configuration.
+- External contact exports may use different block labels when the simple block-label environment toggle is enabled.
 
 ---
 
-_Generated by AI from source-code diffs. Review against [provider documentation](https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.87.0/docs) before making upgrade decisions._
+_Generated by AI from source-code diffs. Review against [provider documentation](https://registry.terraform.io/providers/MyPureCloud/genesyscloud/1.87.1/docs) before making upgrade decisions._
