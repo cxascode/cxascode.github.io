@@ -124,7 +124,8 @@
       "directory:organization:admin",
       "limits:organization:view",
       "usage:organization:view",
-      "billing:subscription:view"
+      "billing:subscription:view",
+      "authorization:license:view"
     ],
     "genesyscloud_flow": [
       "architect:ui:view",
@@ -262,7 +263,8 @@
     "genesyscloud_organization_authentication_settings": [
       "limits:organization:view",
       "usage:organization:view",
-      "billing:subscription:view"
+      "billing:subscription:view",
+      "authorization:license:view"
     ],
     "genesyscloud_routing_queue": [
       "routing:queue:search"
