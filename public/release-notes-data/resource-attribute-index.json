@@ -1,6 +1,555 @@
 [
   {
     "type": "apply_behavior",
+    "resource": "genesyscloud_agentic_virtual_agent_version",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.88.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Create and update build tool payloads from raw configuration so optional nested booleans match declared configuration.",
+    "history": [
+      {
+        "version": "v1.88.0",
+        "change": "updated",
+        "summary": "Create and update build tool payloads from raw configuration so optional nested booleans match declared configuration."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_task_management_worktype",
+    "attribute": "disable_default_status_creation",
+    "introduced": "v1.63.0",
+    "last_updated": "v1.88.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "When disable_default_status_creation is true, create and update skip Open/Closed auto-status configuration.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "added",
+        "summary": "disable_default_status_creation is applied on create."
+      },
+      {
+        "version": "v1.88.0",
+        "change": "updated",
+        "summary": "When disable_default_status_creation is true, create and update skip Open/Closed auto-status configuration."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_task_management_worktype",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.88.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Failed post-create status configuration triggers deletion of the new worktype and clears state ID.",
+    "history": [
+      {
+        "version": "v1.67.0",
+        "change": "updated",
+        "summary": "Create and update retry automatically on HTTP 409 conflict responses."
+      },
+      {
+        "version": "v1.87.0",
+        "change": "updated",
+        "summary": "Create and update configure auto-created Open/Closed statuses; base PATCH skipped when only status helper fields change."
+      },
+      {
+        "version": "v1.88.0",
+        "change": "updated",
+        "summary": "Failed post-create status configuration triggers deletion of the new worktype and clears state ID."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_agentic_virtual_agent_version",
+    "attribute": "definition.tools.context_retention_enabled",
+    "introduced": "Unknown",
+    "last_updated": "v1.88.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Export omits context_retention_enabled when the API value is unset and uses version listing cache when resolving agent_id.",
+    "history": [
+      {
+        "version": "v1.88.0",
+        "change": "updated",
+        "summary": "Export omits context_retention_enabled when the API value is unset and uses version listing cache when resolving agent_id."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_greeting_user",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.88.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Export discovers greetings with concurrent per-user pagination, skips 403 permission errors, and uses the user exporter user list.",
+    "history": [
+      {
+        "version": "v1.88.0",
+        "change": "updated",
+        "summary": "Export discovers greetings with concurrent per-user pagination, skips 403 permission errors, and uses the user exporter user list."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_outbound_callabletimeset",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.88.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "ID-filtered exports can fetch only named callable time set IDs instead of listing the entire org.",
+    "history": [
+      {
+        "version": "v1.88.0",
+        "change": "updated",
+        "summary": "ID-filtered exports can fetch only named callable time set IDs instead of listing the entire org."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_outbound_callanalysisresponseset",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.88.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "ID-filtered exports can fetch only named call analysis response set IDs instead of listing the entire org.",
+    "history": [
+      {
+        "version": "v1.88.0",
+        "change": "updated",
+        "summary": "ID-filtered exports can fetch only named call analysis response set IDs instead of listing the entire org."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_outbound_contact_list",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.88.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "ID-filtered exports can fetch only named contact list IDs instead of listing the entire org.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "updated",
+        "summary": "Contact export waits longer with exponential backoff before retrieving signed export URLs."
+      },
+      {
+        "version": "v1.66.0",
+        "change": "updated",
+        "summary": "Bulk export contact download uses exponential backoff starting at 2 seconds and retries on HTTP 400 while waiting for the signed export URL."
+      },
+      {
+        "version": "v1.78.0",
+        "change": "updated",
+        "summary": "Exported contact CSV files keep only column_names plus inin-outbound-id, stripping system-generated columns that can cause import failures when moving lists between orgs."
+      },
+      {
+        "version": "v1.88.0",
+        "change": "updated",
+        "summary": "ID-filtered exports can fetch only named contact list IDs instead of listing the entire org."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_outbound_contactlistfilter",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.88.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "ID-filtered exports can fetch only named contact list filter IDs instead of listing the entire org.",
+    "history": [
+      {
+        "version": "v1.88.0",
+        "change": "updated",
+        "summary": "ID-filtered exports can fetch only named contact list filter IDs instead of listing the entire org."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_outbound_dnclist",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.88.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "ID-filtered exports can fetch only named DNC list IDs instead of listing the entire org.",
+    "history": [
+      {
+        "version": "v1.88.0",
+        "change": "updated",
+        "summary": "ID-filtered exports can fetch only named DNC list IDs instead of listing the entire org."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_responsemanagement_response",
+    "attribute": "asset_ids",
+    "introduced": "Unknown",
+    "last_updated": "v1.88.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Export resolves asset_ids references to genesyscloud_responsemanagement_responseasset.",
+    "history": [
+      {
+        "version": "v1.88.0",
+        "change": "updated",
+        "summary": "Export resolves asset_ids references to genesyscloud_responsemanagement_responseasset."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.88.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "ID-filtered exports can fetch only named queue IDs instead of listing every queue in the org.",
+    "history": [
+      {
+        "version": "v1.62.0",
+        "change": "updated",
+        "summary": "Bulk export queue enumeration handles empty API responses without error."
+      },
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during export enumeration."
+      },
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "media_settings_callback.site_id resolves to genesyscloud_telephony_providers_edges_site references; zero-value conditional_group_activation condition values are retained in export output."
+      },
+      {
+        "version": "v1.86.0",
+        "change": "updated",
+        "summary": "media_settings_callback.edge_group_id resolves to genesyscloud_telephony_providers_edges_edge_group references."
+      },
+      {
+        "version": "v1.88.0",
+        "change": "updated",
+        "summary": "ID-filtered exports can fetch only named queue IDs instead of listing every queue in the org."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_task_management_workbin",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.88.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Workbin list queries omit empty after cursor on the first page so export enumeration succeeds.",
+    "history": [
+      {
+        "version": "v1.88.0",
+        "change": "updated",
+        "summary": "Workbin list queries omit empty after cursor on the first page so export enumeration succeeds."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_task_management_workitem",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.88.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Workbin and workitem list queries omit empty after cursor on the first page during export-related listing.",
+    "history": [
+      {
+        "version": "v1.88.0",
+        "change": "updated",
+        "summary": "Workbin and workitem list queries omit empty after cursor on the first page during export-related listing."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_task_management_worktype",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.88.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Worktype list queries omit empty after cursor on the first page during export enumeration.",
+    "history": [
+      {
+        "version": "v1.88.0",
+        "change": "updated",
+        "summary": "Worktype list queries omit empty after cursor on the first page during export enumeration."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_task_management_worktype",
+    "attribute": "open_status_default",
+    "introduced": "Unknown",
+    "last_updated": "v1.88.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Export excludes open_status_default and closed_status_auto_terminate; those settings appear on worktype status resources.",
+    "history": [
+      {
+        "version": "v1.88.0",
+        "change": "updated",
+        "summary": "Export excludes open_status_default and closed_status_auto_terminate; those settings appear on worktype status resources."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_user",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.88.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "ID-filtered exports load only requested users with standard expands and inactive or deleted filtering instead of full org listing.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "Bulk export skips users that lack an ID or email address."
+      },
+      {
+        "version": "v1.63.0",
+        "change": "updated",
+        "summary": "Exported block labels may include profile-field hashes when names collide."
+      },
+      {
+        "version": "v1.66.0",
+        "change": "updated",
+        "summary": "Bulk export block labels now use {email}."
+      },
+      {
+        "version": "v1.66.0",
+        "change": "updated",
+        "summary": "The fixed 5-second delay before user enumeration was removed."
+      },
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during export enumeration."
+      },
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "Inactive user export stops at 10,000 users; page counts above the API limit are capped before parallel fetches, and unexpected 400 responses beyond that limit are treated as end-of-results."
+      },
+      {
+        "version": "v1.85.0",
+        "change": "updated",
+        "summary": "Setting the GENESYSCLOUD_SKIP_INACTIVE_USER_EXPORT environment variable omits inactive users from org export listings."
+      },
+      {
+        "version": "v1.88.0",
+        "change": "updated",
+        "summary": "ID-filtered exports load only requested users with standard expands and inactive or deleted filtering instead of full org listing."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_agentic_virtual_agent_version",
+    "attribute": "definition.tools.context_retention_enabled",
+    "introduced": "Unknown",
+    "last_updated": "v1.88.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Plan and refresh treat omitted context_retention_enabled separately from false and skip consistency-check diffs for omitted API values and the presence marker.",
+    "history": [
+      {
+        "version": "v1.88.0",
+        "change": "updated",
+        "summary": "Plan and refresh treat omitted context_retention_enabled separately from false and skip consistency-check diffs for omitted API values and the presence marker."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_task_management_worktype",
+    "attribute": "closed_status_auto_terminate",
+    "introduced": "Unknown",
+    "last_updated": "v1.88.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Same explicit-configuration behavior as open_status_default for closed status auto-terminate settings.",
+    "history": [
+      {
+        "version": "v1.88.0",
+        "change": "updated",
+        "summary": "Same explicit-configuration behavior as open_status_default for closed status auto-terminate settings."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_task_management_worktype",
+    "attribute": "disable_default_status_creation",
+    "introduced": "Unknown",
+    "last_updated": "v1.88.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Diff suppression for disable_default_status_creation applies only after the resource exists so create still sends the configured value.",
+    "history": [
+      {
+        "version": "v1.88.0",
+        "change": "updated",
+        "summary": "Diff suppression for disable_default_status_creation applies only after the resource exists so create still sends the configured value."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_task_management_worktype",
+    "attribute": "open_status_default",
+    "introduced": "Unknown",
+    "last_updated": "v1.88.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Auto-created status settings run only when open_status_default or closed_status_auto_terminate are explicitly in configuration, not from values read into state on refresh.",
+    "history": [
+      {
+        "version": "v1.87.0",
+        "change": "updated",
+        "summary": "Setting open_status_default to false is rejected with guidance to change default on another status resource."
+      },
+      {
+        "version": "v1.88.0",
+        "change": "updated",
+        "summary": "Auto-created status settings run only when open_status_default or closed_status_auto_terminate are explicitly in configuration, not from values read into state on refresh."
+      }
+    ]
+  },
+  {
+    "type": "provider_configuration",
+    "resource": "provider",
+    "attribute": "proxy",
+    "introduced": "Unknown",
+    "last_updated": "v1.88.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Provider proxy settings and HTTP(S)_PROXY env vars apply to file download, upload, S3, and related HTTP operations used during apply and export.",
+    "history": [
+      {
+        "version": "v1.88.0",
+        "change": "updated",
+        "summary": "Provider proxy settings and HTTP(S)_PROXY env vars apply to file download, upload, S3, and related HTTP operations used during apply and export."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_agentic_virtual_agent_version",
+    "attribute": "context_retention_enabled_presence",
+    "introduced": "v1.88.0",
+    "last_updated": "v1.88.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Computed marker records whether each tool explicitly set context_retention_enabled so plan can distinguish omitted from false.",
+    "history": [
+      {
+        "version": "v1.88.0",
+        "change": "added",
+        "summary": "Computed marker records whether each tool explicitly set context_retention_enabled so plan can distinguish omitted from false."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_agentic_virtual_agent_version",
+    "attribute": "definition.tools.context_retention_enabled",
+    "introduced": "v1.88.0",
+    "last_updated": "v1.88.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional boolean on DataAction tools controls whether call and result stay in conversation context when older turns are pruned.",
+    "history": [
+      {
+        "version": "v1.88.0",
+        "change": "added",
+        "summary": "Optional boolean on DataAction tools controls whether call and result stay in conversation context when older turns are pruned."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_agentic_virtual_agent_version",
+    "attribute": "definition.tools.input_validation",
+    "introduced": "Unknown",
+    "last_updated": "v1.88.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Description now states validation applies to DataAction and Knowledge tools.",
+    "history": [
+      {
+        "version": "v1.88.0",
+        "change": "updated",
+        "summary": "Description now states validation applies to DataAction and Knowledge tools."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_agentic_virtual_agent_version",
+    "attribute": "definition.tools.inputs",
+    "introduced": "Unknown",
+    "last_updated": "v1.88.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Description now covers DataAction and Knowledge tools and documents dependency_only requirements for Knowledge tools.",
+    "history": [
+      {
+        "version": "v1.88.0",
+        "change": "updated",
+        "summary": "Description now covers DataAction and Knowledge tools and documents dependency_only requirements for Knowledge tools."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_agentic_virtual_agent_version",
+    "attribute": "definition.tools.inputs.dependency_only",
+    "introduced": "v1.88.0",
+    "last_updated": "v1.88.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional boolean marks dependency-only inputs; must be true for Knowledge tool inputs that gate on prior tool output.",
+    "history": [
+      {
+        "version": "v1.88.0",
+        "change": "added",
+        "summary": "Optional boolean marks dependency-only inputs; must be true for Knowledge tool inputs that gate on prior tool output."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
     "resource": "genesyscloud_outbound_dnclist",
     "attribute": "entries",
     "introduced": "Unknown",
@@ -258,28 +807,6 @@
         "version": "v1.87.0",
         "change": "updated",
         "summary": "Update applies org default contact list retention settings with correct null handling for Never and Today."
-      }
-    ]
-  },
-  {
-    "type": "apply_behavior",
-    "resource": "genesyscloud_task_management_worktype",
-    "attribute": "general apply behavior",
-    "introduced": "Unknown",
-    "last_updated": "v1.87.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Create and update configure auto-created Open/Closed statuses; base PATCH skipped when only status helper fields change.",
-    "history": [
-      {
-        "version": "v1.67.0",
-        "change": "updated",
-        "summary": "Create and update retry automatically on HTTP 409 conflict responses."
-      },
-      {
-        "version": "v1.87.0",
-        "change": "updated",
-        "summary": "Create and update configure auto-created Open/Closed statuses; base PATCH skipped when only status helper fields change."
       }
     ]
   },
@@ -578,23 +1105,6 @@
         "version": "v1.87.0",
         "change": "updated",
         "summary": "Refresh uses GET-by-id instead of list cache to avoid incomplete bullseye member_groups in state."
-      }
-    ]
-  },
-  {
-    "type": "plan_behavior",
-    "resource": "genesyscloud_task_management_worktype",
-    "attribute": "open_status_default",
-    "introduced": "Unknown",
-    "last_updated": "v1.87.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Setting open_status_default to false is rejected with guidance to change default on another status resource.",
-    "history": [
-      {
-        "version": "v1.87.0",
-        "change": "updated",
-        "summary": "Setting open_status_default to false is rejected with guidance to change default on another status resource."
       }
     ]
   },
@@ -1880,38 +2390,6 @@
         "version": "v1.86.0",
         "change": "updated",
         "summary": "Label and category references resolve through genesyscloud_knowledge_label and genesyscloud_knowledge_category; helper label_ids and category_id values are stripped from generated configuration."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
-    "resource": "genesyscloud_routing_queue",
-    "attribute": "general export behavior",
-    "introduced": "Unknown",
-    "last_updated": "v1.86.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "media_settings_callback.edge_group_id resolves to genesyscloud_telephony_providers_edges_edge_group references.",
-    "history": [
-      {
-        "version": "v1.62.0",
-        "change": "updated",
-        "summary": "Bulk export queue enumeration handles empty API responses without error."
-      },
-      {
-        "version": "v1.84.0",
-        "change": "updated",
-        "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during export enumeration."
-      },
-      {
-        "version": "v1.85.0",
-        "change": "updated",
-        "summary": "media_settings_callback.site_id resolves to genesyscloud_telephony_providers_edges_site references; zero-value conditional_group_activation condition values are retained in export output."
-      },
-      {
-        "version": "v1.86.0",
-        "change": "updated",
-        "summary": "media_settings_callback.edge_group_id resolves to genesyscloud_telephony_providers_edges_edge_group references."
       }
     ]
   },
@@ -3292,53 +3770,6 @@
         "version": "v1.85.0",
         "change": "updated",
         "summary": "Wrap-up code listing during export uses a page size of 500 instead of 100, improving completeness for large orgs."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
-    "resource": "genesyscloud_user",
-    "attribute": "general export behavior",
-    "introduced": "Unknown",
-    "last_updated": "v1.85.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Setting the GENESYSCLOUD_SKIP_INACTIVE_USER_EXPORT environment variable omits inactive users from org export listings.",
-    "history": [
-      {
-        "version": "v1.61.0",
-        "change": "updated",
-        "summary": "Bulk export skips users that lack an ID or email address."
-      },
-      {
-        "version": "v1.63.0",
-        "change": "updated",
-        "summary": "Exported block labels may include profile-field hashes when names collide."
-      },
-      {
-        "version": "v1.66.0",
-        "change": "updated",
-        "summary": "Bulk export block labels now use {email}."
-      },
-      {
-        "version": "v1.66.0",
-        "change": "updated",
-        "summary": "The fixed 5-second delay before user enumeration was removed."
-      },
-      {
-        "version": "v1.84.0",
-        "change": "updated",
-        "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during export enumeration."
-      },
-      {
-        "version": "v1.84.0",
-        "change": "updated",
-        "summary": "Inactive user export stops at 10,000 users; page counts above the API limit are capped before parallel fetches, and unexpected 400 responses beyond that limit are treated as end-of-results."
-      },
-      {
-        "version": "v1.85.0",
-        "change": "updated",
-        "summary": "Setting the GENESYSCLOUD_SKIP_INACTIVE_USER_EXPORT environment variable omits inactive users from org export listings."
       }
     ]
   },
@@ -7409,33 +7840,6 @@
         "version": "v1.78.0",
         "change": "updated",
         "summary": "Singleton org-wide resource is exported using the resource type identifier instead of a generic numeric key."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
-    "resource": "genesyscloud_outbound_contact_list",
-    "attribute": "general export behavior",
-    "introduced": "Unknown",
-    "last_updated": "v1.78.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Exported contact CSV files keep only column_names plus inin-outbound-id, stripping system-generated columns that can cause import failures when moving lists between orgs.",
-    "history": [
-      {
-        "version": "v1.63.0",
-        "change": "updated",
-        "summary": "Contact export waits longer with exponential backoff before retrieving signed export URLs."
-      },
-      {
-        "version": "v1.66.0",
-        "change": "updated",
-        "summary": "Bulk export contact download uses exponential backoff starting at 2 seconds and retries on HTTP 400 while waiting for the signed export URL."
-      },
-      {
-        "version": "v1.78.0",
-        "change": "updated",
-        "summary": "Exported contact CSV files keep only column_names plus inin-outbound-id, stripping system-generated columns that can cause import failures when moving lists between orgs."
       }
     ]
   },
@@ -15819,23 +16223,6 @@
         "version": "v1.63.0",
         "change": "updated",
         "summary": "Member ring number updates retry transient HTTP 404 responses before failing."
-      }
-    ]
-  },
-  {
-    "type": "apply_behavior",
-    "resource": "genesyscloud_task_management_worktype",
-    "attribute": "disable_default_status_creation",
-    "introduced": "v1.63.0",
-    "last_updated": "v1.63.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "disable_default_status_creation is applied on create.",
-    "history": [
-      {
-        "version": "v1.63.0",
-        "change": "added",
-        "summary": "disable_default_status_creation is applied on create."
       }
     ]
   },

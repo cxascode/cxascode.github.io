@@ -4,8 +4,8 @@ This index is generated from the release notes available on this site. `Introduc
 
 | Type | Resource / Data Source | Attribute | Introduced | Last Updated | Status | Notes |
 |---|---|---|---:|---:|---|---|
+| `export_behavior` | `genesyscloud_tf_export` | `general export behavior` | `Unknown` | `v1.88.0` | Active | Targeted ID metadata fetches run with up to ten concurrent requests, which can reduce export time for large ID-filtered runs when targeted lookup is supported. |
 | `export_behavior` | `genesyscloud_tf_export` | `export_computed` | `Unknown` | `v1.87.0` | Active | With export_computed false, when every direct child of a nested block is excluded as computed, the whole nested block path is omitted rather than exporting an empty block. |
-| `export_behavior` | `genesyscloud_tf_export` | `general export behavior` | `Unknown` | `v1.87.0` | Active | Unresolvable optional references inside nested maps or list elements are tracked using full attribute paths, and generated unresolvable-reference names use path segments instead of leaf names only. |
 | `export_behavior` | `genesyscloud_tf_export` | `include_state_file` | `Unknown` | `v1.87.0` | Active | When include_state_file is enabled, exported terraform.tfstate sets meta.schema_version from each resource type's provider schema version instead of always using 0. |
 | `export_behavior` | `genesyscloud_tf_export` | `enable_dependency_resolution` | `Unknown` | `v1.86.0` | Active | Dependency resolution processes resources in a stable order sorted by resource ID, so depends_on attribute ordering is consistent across repeated export runs. |
 | `export_behavior` | `genesyscloud_tf_export` | `ignore_cyclic_deps` | `Unknown` | `v1.86.0` | Active | When ignore_cyclic_deps is enabled, bidirectional cyclic dependencies are automatically removed from generated depends_on attributes to reduce Terraform cycle errors during apply. |

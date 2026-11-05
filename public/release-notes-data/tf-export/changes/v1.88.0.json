@@ -1,0 +1,37 @@
+{
+    "version": "v1.88.0",
+    "previous": "v1.87.1",
+    "resource": "genesyscloud_tf_export",
+    "changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "With resource_filters in resource_type::id form, export metadata loading can fetch only the listed IDs (including during dependency resolution) instead of listing every resource of that type, when the type's exporter supports targeted ID lookup; regex and label filters still list the full type."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "IDs in an ID filter that no longer exist are omitted from export metadata without failing the run, consistent with list-then-filter behavior."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Targeted ID metadata fetches run with up to ten concurrent requests, which can reduce export time for large ID-filtered runs when targeted lookup is supported."
+        }
+    ],
+    "related_export_changes": [
+        {
+            "kind": "export_behavior",
+            "resource": null,
+            "attribute": null,
+            "change": "updated",
+            "summary": "Entities exported as Terraform data sources now serialize from a separate data-source state copy so generated data blocks reflect data source schema attributes instead of incorrectly reusing enumeration state that was overwritten in place."
+        }
+    ]
+}
