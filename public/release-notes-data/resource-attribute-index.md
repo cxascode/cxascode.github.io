@@ -4,6 +4,66 @@ This index is generated from the release notes available on this site. `Introduc
 
 | Type | Resource / Data Source | Attribute | Introduced | Last Updated | Status | Notes |
 |---|---|---|---:|---:|---|---|
+| `apply_behavior` | `genesyscloud_architect_ivr` | `general apply behavior` | `Unknown` | `v1.89.0` | Active | Failed updates retain accurate prior state when DNIS chunk uploads fail. |
+| `apply_behavior` | `genesyscloud_case_management_caseplan` | `general apply behavior` | `Unknown` | `v1.89.0` | Active | Create and update reconcile stageplans and publish versioned configuration. |
+| `apply_behavior` | `genesyscloud_group_roles` | `general apply behavior` | `Unknown` | `v1.89.0` | Active | Grant reconciliation errors fail the update instead of proceeding with nil config grants. |
+| `apply_behavior` | `genesyscloud_integration_credential` | `fields_wo_version` | `Unknown` | `v1.89.0` | Active | Changing fields_wo_version sends credential fields again and clears stale plaintext fields after write-only migration. |
+| `apply_behavior` | `genesyscloud_knowledge_category` | `general apply behavior` | `Unknown` | `v1.89.0` | Active | Delete retries when bot-flow dependency tracking still references the category. |
+| `apply_behavior` | `genesyscloud_knowledge_document` | `general apply behavior` | `Unknown` | `v1.89.0` | Active | Delete retries when bot-flow dependency tracking still references the document. |
+| `apply_behavior` | `genesyscloud_knowledge_document_variation` | `general apply behavior` | `Unknown` | `v1.89.0` | Active | Delete retries when bot-flow dependency tracking still references the variation. |
+| `apply_behavior` | `genesyscloud_knowledge_knowledgebase` | `general apply behavior` | `Unknown` | `v1.89.0` | Active | Delete retries when bot-flow dependency tracking still references the knowledge base. |
+| `apply_behavior` | `genesyscloud_knowledge_label` | `general apply behavior` | `Unknown` | `v1.89.0` | Active | Delete retries when bot-flow dependency tracking still references the label. |
+| `apply_behavior` | `genesyscloud_routing_queue` | `general apply behavior` | `Unknown` | `v1.89.0` | Active | Non-zero alert tone and service level values are only sent when explicitly configured. |
+| `data_source` | `genesyscloud_case_management_stageplan` | `(resource-level behavior)` | `Unknown` | `v1.89.0` | Removed | Removed with the stageplan resource consolidation. |
+| `data_source` | `genesyscloud_case_management_stepplan` | `(resource-level behavior)` | `Unknown` | `v1.89.0` | Removed | Removed with the stepplan resource consolidation. |
+| `data_source` | `genesyscloud_flow_validation` | `(resource-level behavior)` | `v1.89.0` | `v1.89.0` | Active | New data source registered to run Architect flow validate jobs. |
+| `export_behavior` | `genesyscloud_agentic_virtual_agent_version` | `definition.tools.target.id` | `Unknown` | `v1.89.0` | Active | Export resolves MCP and other tool target id references. |
+| `export_behavior` | `genesyscloud_case_management_caseplan` | `general export behavior` | `Unknown` | `v1.89.0` | Active | Export includes only published caseplans and resolves stageplan worktype references. |
+| `export_behavior` | `genesyscloud_integration_credential` | `general export behavior` | `Unknown` | `v1.89.0` | Active | Export omits write-only credential attributes from generated configuration. |
+| `export_behavior` | `genesyscloud_outbound_campaign` | `script_id` | `Unknown` | `v1.89.0` | Active | Export always resolves script_id to a data source reference when possible. |
+| `export_behavior` | `genesyscloud_speechandtextanalytics_settings` | `default_program_id` | `Unknown` | `v1.89.0` | Active | Export resolves default_program_id to genesyscloud_speechandtextanalytics_program. |
+| `plan_behavior` | `genesyscloud_agentic_virtual_agent_version` | `definition.tools.inputs.fallback_to_failure` | `Unknown` | `v1.89.0` | Active | Plan validates fallback_to_failure preconditions when tool definitions are fully known. |
+| `plan_behavior` | `genesyscloud_architect_ivr` | `dnis` | `Unknown` | `v1.89.0` | Active | Refresh keeps DNIS list order aligned with prior configuration to reduce spurious diffs. |
+| `plan_behavior` | `genesyscloud_case_management_caseplan` | `general plan behavior` | `Unknown` | `v1.89.0` | Active | Read and customize-diff logic target published content and expose draft or version metadata. |
+| `plan_behavior` | `genesyscloud_integration_credential` | `fields_wo` | `Unknown` | `v1.89.0` | Active | Plan validates write-only JSON; state keeps empty fields map when using fields_wo to avoid perpetual updates. |
+| `plan_behavior` | `genesyscloud_oauth_client` | `roles` | `Unknown` | `v1.89.0` | Active | Home division for role bindings resolves using the active org client configuration. |
+| `plan_behavior` | `genesyscloud_outbound_callabletimeset` | `callable_times.name` | `Unknown` | `v1.89.0` | Active | Refresh avoids writing API-filled names into state when configuration omitted name. |
+| `plan_behavior` | `genesyscloud_outbound_campaignrule` | `for_duration` | `Unknown` | `v1.89.0` | Active | Plan rejects for_duration in legacy campaign_rule_conditions. |
+| `plan_behavior` | `genesyscloud_outbound_contact_list` | `phone_columns` | `Unknown` | `v1.89.0` | Active | Refresh strips deprecated callable_time_column when only callable_time_column_name is used. |
+| `plan_behavior` | `genesyscloud_routing_queue` | `general plan behavior` | `Unknown` | `v1.89.0` | Active | Unset or zero optional media settings are omitted from API payloads so org defaults apply. |
+| `resource` | `genesyscloud_agentic_virtual_agent_version` | `definition.tools.context_retention_enabled` | `v1.88.0` | `v1.89.0` | Active | Applies to MCP tools as well as DataAction tools. |
+| `resource` | `genesyscloud_agentic_virtual_agent_version` | `definition.tools.inputs.fallback_to_failure` | `v1.89.0` | `v1.89.0` | Active | Optional boolean to terminate the session on unavailable required External inputs instead of prompting the user; mutually exclusive with fallback_to_user. |
+| `resource` | `genesyscloud_agentic_virtual_agent_version` | `definition.tools.type` | `Unknown` | `v1.89.0` | Active | Tool type validation now accepts MCP. |
+| `resource` | `genesyscloud_agentic_virtual_agent_version` | `definition.types.error_codes` | `v1.89.0` | `v1.89.0` | Active | Optional list of MCP error codes handled by an McpError type definition. |
+| `resource` | `genesyscloud_agentic_virtual_agent_version` | `definition.types.type` | `Unknown` | `v1.89.0` | Active | Type definition validation now accepts McpError. |
+| `resource` | `genesyscloud_analytics_dataretention_settings` | `(resource-level behavior)` | `v1.89.0` | `v1.89.0` | Active | New provider resource registered for analytics data retention settings. |
+| `resource` | `genesyscloud_architect_ivr` | `dnis` | `Unknown` | `v1.89.0` | Active | Changed from set to list with schema version 2 state upgrade; order is preserved and phone validation uses pool number rules. |
+| `resource` | `genesyscloud_authorization_roles_settings` | `(resource-level behavior)` | `v1.89.0` | `v1.89.0` | Active | New provider resource registered for authorization roles settings. |
+| `resource` | `genesyscloud_case_management_caseplan` | `(resource-level behavior)` | `v1.82.0` | `v1.89.0` | Active | Resource manages the published caseplan; versioned changes draft and publish, and overwrites external drafts on apply. |
+| `resource` | `genesyscloud_case_management_caseplan` | `default_due_duration_in_seconds` | `Unknown` | `v1.89.0` | Active | Now optional and computed. |
+| `resource` | `genesyscloud_case_management_caseplan` | `default_ttl_seconds` | `Unknown` | `v1.89.0` | Active | Now optional and computed. |
+| `resource` | `genesyscloud_case_management_caseplan` | `has_draft` | `v1.89.0` | `v1.89.0` | Active | Computed flag when an unpublished draft exists. |
+| `resource` | `genesyscloud_case_management_caseplan` | `published_version` | `v1.89.0` | `v1.89.0` | Active | Computed published version number. |
+| `resource` | `genesyscloud_case_management_caseplan` | `stageplan` | `v1.89.0` | `v1.89.0` | Active | Optional ordered stageplans with nested stepplans managed on the published caseplan. |
+| `resource` | `genesyscloud_case_management_caseplan_create_version` | `(resource-level behavior)` | `Unknown` | `v1.89.0` | Removed | Removed; draft and publish are handled on genesyscloud_case_management_caseplan. |
+| `resource` | `genesyscloud_case_management_caseplan_publish` | `(resource-level behavior)` | `Unknown` | `v1.89.0` | Removed | Removed; publishing is handled on genesyscloud_case_management_caseplan. |
+| `resource` | `genesyscloud_case_management_stageplan` | `(resource-level behavior)` | `v1.82.0` | `v1.89.0` | Removed | Removed; use genesyscloud_case_management_caseplan stageplan blocks. |
+| `resource` | `genesyscloud_case_management_stepplan` | `(resource-level behavior)` | `v1.82.0` | `v1.89.0` | Removed | Removed; use nested stepplan blocks on genesyscloud_case_management_caseplan. |
+| `resource` | `genesyscloud_integration_credential` | `fields_wo` | `v1.89.0` | `v1.89.0` | Active | Write-only JSON credential fields not stored in plan or state; requires Terraform 1.11 or later. |
+| `resource` | `genesyscloud_integration_credential` | `fields_wo_version` | `v1.89.0` | `v1.89.0` | Active | Stored version counter to trigger resending write-only credential fields on rotation. |
+| `resource` | `genesyscloud_journey_views` | `metrics.aggregate` | `Unknown` | `v1.89.0` | Active | Accepts Minimum, Maximum, Average, and Sum aggregation modes. |
+| `resource` | `genesyscloud_journey_views` | `metrics.attribute` | `v1.89.0` | `v1.89.0` | Active | Optional attribute name on chart metrics. |
+| `resource` | `genesyscloud_outbound_campaignrule` | `(resource-level behavior)` | `Unknown` | `v1.89.0` | Active | Time-of-day fields use HH:mm:ss normalization and diff suppression for equivalent spellings. |
+| `resource` | `genesyscloud_outbound_campaignrule` | `campaign_rule_conditions.parameters.for_duration` | `v1.89.0` | `v1.89.0` | Active | Optional duration in whole seconds for v2 condition processing. |
+| `resource` | `genesyscloud_outbound_contact_list` | `phone_columns` | `Unknown` | `v1.89.0` | Active | Changed from set to list with schema version 4 upgrade; order is preserved and duplicate column_name values fail validation. |
+| `resource` | `genesyscloud_quality_forms_evaluation` | `division_id` | `v1.89.0` | `v1.89.0` | Active | Optional and computed division for the evaluation form. |
+| `resource` | `genesyscloud_quality_forms_evaluation` | `latest_version_form_name` | `v1.89.0` | `v1.89.0` | Active | Computed name of the latest published form version. |
+| `resource` | `genesyscloud_quality_forms_evaluation` | `weight_mode` | `v1.89.0` | `v1.89.0` | Active | Computed weight mode from the API. |
+| `resource` | `genesyscloud_quality_forms_survey` | `division_id` | `v1.89.0` | `v1.89.0` | Active | Optional and computed division for the survey form. |
+| `resource` | `genesyscloud_quality_miner` | `(resource-level behavior)` | `v1.89.0` | `v1.89.0` | Active | New provider resource registered for quality miner. |
+| `resource` | `genesyscloud_routing_queue` | `(resource-level behavior)` | `Unknown` | `v1.89.0` | Active | Per-media-type schema defaults match Genesys Cloud defaults for alerting timeout and service level fields. |
+| `resource` | `genesyscloud_routing_queue` | `media_settings_call.auto_answer_alert_tone_seconds` | `v1.89.0` | `v1.89.0` | Active | Optional auto-answer alert tone duration on call media settings. |
+| `resource` | `genesyscloud_routing_queue` | `media_settings_call.manual_answer_alert_tone_seconds` | `v1.89.0` | `v1.89.0` | Active | Optional manual-answer alert tone duration on call media settings. |
 | `apply_behavior` | `genesyscloud_agentic_virtual_agent_version` | `general apply behavior` | `Unknown` | `v1.88.0` | Active | Create and update build tool payloads from raw configuration so optional nested booleans match declared configuration. |
 | `apply_behavior` | `genesyscloud_task_management_worktype` | `disable_default_status_creation` | `v1.63.0` | `v1.88.0` | Active | When disable_default_status_creation is true, create and update skip Open/Closed auto-status configuration. |
 | `apply_behavior` | `genesyscloud_task_management_worktype` | `general apply behavior` | `Unknown` | `v1.88.0` | Active | Failed post-create status configuration triggers deletion of the new worktype and clears state ID. |
@@ -27,7 +87,6 @@ This index is generated from the release notes available on this site. `Introduc
 | `plan_behavior` | `genesyscloud_task_management_worktype` | `open_status_default` | `Unknown` | `v1.88.0` | Active | Auto-created status settings run only when open_status_default or closed_status_auto_terminate are explicitly in configuration, not from values read into state on refresh. |
 | `provider_configuration` | `provider` | `proxy` | `Unknown` | `v1.88.0` | Active | Provider proxy settings and HTTP(S)_PROXY env vars apply to file download, upload, S3, and related HTTP operations used during apply and export. |
 | `resource` | `genesyscloud_agentic_virtual_agent_version` | `context_retention_enabled_presence` | `v1.88.0` | `v1.88.0` | Active | Computed marker records whether each tool explicitly set context_retention_enabled so plan can distinguish omitted from false. |
-| `resource` | `genesyscloud_agentic_virtual_agent_version` | `definition.tools.context_retention_enabled` | `v1.88.0` | `v1.88.0` | Active | Optional boolean on DataAction tools controls whether call and result stay in conversation context when older turns are pruned. |
 | `resource` | `genesyscloud_agentic_virtual_agent_version` | `definition.tools.input_validation` | `Unknown` | `v1.88.0` | Active | Description now states validation applies to DataAction and Knowledge tools. |
 | `resource` | `genesyscloud_agentic_virtual_agent_version` | `definition.tools.inputs` | `Unknown` | `v1.88.0` | Active | Description now covers DataAction and Knowledge tools and documents dependency_only requirements for Knowledge tools. |
 | `resource` | `genesyscloud_agentic_virtual_agent_version` | `definition.tools.inputs.dependency_only` | `v1.88.0` | `v1.88.0` | Active | Optional boolean marks dependency-only inputs; must be true for Knowledge tool inputs that gate on prior tool output. |
@@ -55,7 +114,6 @@ This index is generated from the release notes available on this site. `Introduc
 | `plan_behavior` | `genesyscloud_flow` | `create_stubs` | `Unknown` | `v1.87.0` | Active | Publish job registration includes create_stubs from configuration. |
 | `plan_behavior` | `genesyscloud_integration_action` | `timeout_seconds` | `Unknown` | `v1.87.0` | Active | Values outside 1–15 fail validation at plan time. |
 | `plan_behavior` | `genesyscloud_location` | `notes` | `Unknown` | `v1.87.0` | Active | Blank or whitespace-only notes no longer cause perpetual plan diffs after refresh. |
-| `plan_behavior` | `genesyscloud_routing_queue` | `general plan behavior` | `Unknown` | `v1.87.0` | Active | Refresh uses GET-by-id instead of list cache to avoid incomplete bullseye member_groups in state. |
 | `plan_behavior` | `genesyscloud_task_management_worktype_status_transition` | `destination_status_ids` | `Unknown` | `v1.87.0` | Active | Empty or omitted destination_status_ids stays empty in state instead of storing API-expanded IDs, avoiding perpetual diffs. |
 | `plan_behavior` | `genesyscloud_telephony_providers_edges_phone` | `general plan behavior` | `Unknown` | `v1.87.0` | Active | Refresh sets line_base_settings_id, phone_meta_base_id, and web_rtc_user_id only when API IDs are non-null. |
 | `plan_behavior` | `genesyscloud_user` | `general plan behavior` | `Unknown` | `v1.87.0` | Active | Refresh maps phone contacts more reliably for display-only E.164 values and pool-mapped extensions. |
@@ -117,7 +175,6 @@ This index is generated from the release notes available on this site. `Introduc
 | `resource` | `genesyscloud_routing_utilization` | `max_inbound_calls` | `v1.86.1` | `v1.86.1` | Active | Optional and computed integer that limits the total inbound voice calls (ACD and non-ACD) an agent can receive. |
 | `apply_behavior` | `genesyscloud_integration_action` | `function_config.file_path` | `Unknown` | `v1.86.0` | Active | Read preserves configured function_config.file_path and function_config.file_content_hash because the API does not return zip binaries. |
 | `apply_behavior` | `genesyscloud_outbound_campaignrule` | `general apply behavior` | `Unknown` | `v1.86.0` | Active | Apply-time validation rejects v2-only condition types and nested date/time blocks in legacy campaign_rule_conditions. |
-| `apply_behavior` | `genesyscloud_routing_queue` | `general apply behavior` | `Unknown` | `v1.86.0` | Active | Failed queue, member, and wrapup-code updates preserve prior Terraform state; bullseye ring member-group clearing runs whenever bullseye_rings changes. |
 | `apply_behavior` | `genesyscloud_team` | `member_ids` | `Unknown` | `v1.86.0` | Active | Failed member add operations no longer write partially applied member IDs into state. |
 | `data_source` | `genesyscloud_journey_outcome` | `(resource-level behavior)` | `Unknown` | `v1.86.0` | Removed | Data source removed from the provider. |
 | `data_source` | `genesyscloud_speechandtextanalytics_dictionaryfeedback` | `dialect` | `v1.86.0` | `v1.86.0` | Active | Optional dialect argument to disambiguate lookups when the same term exists for multiple dialects. |
@@ -320,9 +377,6 @@ This index is generated from the release notes available on this site. `Introduc
 | `provider_configuration` | `provider` | `aws_region` | `Unknown` | `v1.83.0` | Active | Accepts eusc-de-east-1 for EU Sovereign Cloud (Germany) orgs, routing API calls to edee1.eusc-pure.cloud. |
 | `data_source` | `genesyscloud_integration_action` | `integration_id` | `v1.82.0` | `v1.82.0` | Active | Optional integration ID to disambiguate static data action lookups when names collide across integration instances. |
 | `resource` | `genesyscloud_auth_role` | `permission_policies.conditions` | `Unknown` | `v1.82.0` | Active | When a policy uses a wildcard in action_set, refresh and read preserve conditions from configuration if the API omits them after wildcard expansion. |
-| `resource` | `genesyscloud_case_management_caseplan` | `(resource-level behavior)` | `v1.82.0` | `v1.82.0` | Active | Newly registered resource for managing case management caseplans. |
-| `resource` | `genesyscloud_case_management_stageplan` | `(resource-level behavior)` | `v1.82.0` | `v1.82.0` | Active | Newly registered resource for managing case management stageplans. |
-| `resource` | `genesyscloud_case_management_stepplan` | `(resource-level behavior)` | `v1.82.0` | `v1.82.0` | Active | Newly registered resource for managing case management stepplans. |
 | `resource` | `genesyscloud_greeting` | `audio_file_content_hash` | `v1.82.0` | `v1.82.0` | Active | Optional computed hash of greeting audio file content used to detect changes. |
 | `resource` | `genesyscloud_greeting` | `audio_filename` | `v1.82.0` | `v1.82.0` | Active | Optional computed path to the greeting audio file used during export and import. |
 | `resource` | `genesyscloud_greeting_user` | `(resource-level behavior)` | `v1.82.0` | `v1.82.0` | Active | Newly registered resource for managing user greetings. |
@@ -404,7 +458,6 @@ This index is generated from the release notes available on this site. `Introduc
 | `resource` | `genesyscloud_outbound_contact_list` | `email_columns` | `Unknown` | `v1.79.0` | Active | Read preserves timezone column names from the API response, reducing drift after UI edits or refresh. |
 | `resource` | `genesyscloud_outbound_contact_list` | `email_columns.contactable_time_column` | `Unknown` | `v1.79.0` | Active | Deprecated in favor of contactable_time_column_name; still accepted for backward compatibility. |
 | `resource` | `genesyscloud_outbound_contact_list` | `email_columns.contactable_time_column_name` | `v1.79.0` | `v1.79.0` | Active | Column name that indicates the timezone to use when checking contactable times; optional and computed. |
-| `resource` | `genesyscloud_outbound_contact_list` | `phone_columns` | `Unknown` | `v1.79.0` | Active | Read preserves timezone column names from the API response, reducing drift after UI edits or refresh. |
 | `resource` | `genesyscloud_outbound_contact_list` | `phone_columns.callable_time_column_name` | `v1.79.0` | `v1.79.0` | Active | Plan diffs are suppressed when automatic_time_zone_mapping is true because the API may omit these values. |
 | `resource` | `genesyscloud_outbound_contact_list_template` | `email_columns` | `Unknown` | `v1.79.0` | Active | Read preserves timezone column names from the API and retains existing column settings when the API omits phone or email columns. |
 | `resource` | `genesyscloud_outbound_contact_list_template` | `email_columns.contactable_time_column` | `Unknown` | `v1.79.0` | Active | Deprecated in favor of contactable_time_column_name; still accepted for backward compatibility. |
@@ -698,7 +751,6 @@ This index is generated from the release notes available on this site. `Introduc
 | `resource` | `genesyscloud_responsemanagement_responseasset` | `(resource-level behavior)` | `Unknown` | `v1.71.0` | Active | Updates send name to the API when set; otherwise the filename is used as the asset name. |
 | `resource` | `genesyscloud_responsemanagement_responseasset` | `filename` | `Unknown` | `v1.71.0` | Active | Read no longer overwrites filename with the API asset name for non-S3 paths; the configured file path is preserved in state. |
 | `resource` | `genesyscloud_responsemanagement_responseasset` | `name` | `v1.71.0` | `v1.71.0` | Active | Optional display name for the response asset; can differ from the uploaded filename. Changing name forces replacement. |
-| `resource` | `genesyscloud_routing_queue` | `(resource-level behavior)` | `Unknown` | `v1.71.0` | Active | When bullseye_rings is removed from configuration, the provider clears member_groups from existing bullseye rings before applying the update. |
 | `resource` | `genesyscloud_routing_queue` | `media_settings_callback.max_retry_count` | `v1.71.0` | `v1.71.0` | Active | Optional maximum customer-first callback retry attempts (0-20) when the initial callback does not connect. |
 | `resource` | `genesyscloud_routing_queue` | `media_settings_callback.retry_delay_seconds` | `v1.71.0` | `v1.71.0` | Active | Optional delay in seconds between customer-first callback retries (60-86400). |
 | `resource` | `genesyscloud_script` | `(resource-level behavior)` | `Unknown` | `v1.71.0` | Active | Create no longer rejects requests when a script with the same name already exists; duplicate-name conflicts are returned by the Genesys Cloud API. |
@@ -796,7 +848,6 @@ This index is generated from the release notes available on this site. `Introduc
 | `data_source` | `genesyscloud_integration_webhook` | `(resource-level behavior)` | `v1.67.0` | `v1.67.0` | Active | New data source to look up a webhook integration by name and return web_hook_id and invocation_url. |
 | `data_source` | `genesyscloud_routing_wrapupcode` | `(resource-level behavior)` | `Unknown` | `v1.67.0` | Active | Lookup failures surface the API error message in diagnostics instead of a separate generic not-found retry message. |
 | `export_behavior` | `genesyscloud_integration` | `config.properties` | `Unknown` | `v1.67.0` | Active | Bulk export resolves createTimeOffRequests, timeOffBalances, timeOffTypes, updateTimeOffRequests, and userAccountIds as genesyscloud_flow references. |
-| `export_behavior` | `genesyscloud_integration_credential` | `general export behavior` | `Unknown` | `v1.67.0` | Active | Credential enumeration during export uses cursor-based paging instead of page-number paging. |
 | `export_behavior` | `genesyscloud_location` | `general export behavior` | `Unknown` | `v1.67.0` | Active | Bulk export exports Default PCV Location as a data source block instead of a managed resource. |
 | `export_behavior` | `genesyscloud_routing_utilization_label` | `general export behavior` | `Unknown` | `v1.67.0` | Active | Bulk export exports System Default Label as a data source block instead of a managed resource. |
 | `export_behavior` | `genesyscloud_telephony_providers_edges_phone` | `line_base_settings_id` | `Unknown` | `v1.67.0` | Active | Bulk export omits line_base_settings_id from exported configuration. |
@@ -821,7 +872,6 @@ This index is generated from the release notes available on this site. `Introduc
 | `resource` | `genesyscloud_guide` | `(resource-level behavior)` | `v1.66.0` | `v1.66.0` | Active | New resource for managing Genesys Cloud guides. |
 | `resource` | `genesyscloud_user` | `addresses` | `Unknown` | `v1.66.0` | Active | Removing the addresses block from configuration triggers an update that clears user addresses in Genesys Cloud. |
 | `apply_behavior` | `genesyscloud_group` | `include_owners` | `Unknown` | `v1.65.0` | Active | Create and update send include_owners to the API. |
-| `apply_behavior` | `genesyscloud_knowledge_document_variation` | `general apply behavior` | `Unknown` | `v1.65.0` | Active | Publish and delete failures now report the underlying API error instead of a misleading unrelated error. |
 | `apply_behavior` | `genesyscloud_outbound_messagingcampaign` | `email_config` | `Unknown` | `v1.65.0` | Active | Create and update send email_config to the API. |
 | `apply_behavior` | `genesyscloud_outbound_messagingcampaign` | `sms_config` | `Unknown` | `v1.65.0` | Active | sms_config is validated only when configured. |
 | `apply_behavior` | `genesyscloud_quality_forms_evaluation` | `published` | `Unknown` | `v1.65.0` | Active | Publishing on create or update stores the published form ID in published_id and changes the Terraform resource ID to the new draft form ID. |
@@ -894,7 +944,6 @@ This index is generated from the release notes available on this site. `Introduc
 | `resource` | `genesyscloud_routing_sms_address` | `name` | `Unknown` | `v1.64.0` | Active | Now optional instead of required. |
 | `resource` | `genesyscloud_script` | `division_id` | `v1.64.0` | `v1.64.0` | Active | Optional computed division for the script. |
 | `resource` | `genesyscloud_user` | `addresses.phone_numbers.extension_pool_id` | `v1.64.0` | `v1.64.0` | Active | Optional extension pool ID for phone extensions; populated on read when an extension pool can be resolved. |
-| `apply_behavior` | `genesyscloud_architect_ivr` | `general apply behavior` | `Unknown` | `v1.63.0` | Active | Create and update retry transient HTTP 400 responses before failing. |
 | `apply_behavior` | `genesyscloud_integration_credential` | `general apply behavior` | `Unknown` | `v1.63.0` | Active | For pureCloudOAuthClient credentials without clientSecret in fields, the provider attempts to populate the secret from a matching OAuth client or provider metadata cache. |
 | `apply_behavior` | `genesyscloud_knowledge_document` | `published` | `Unknown` | `v1.63.0` | Active | Create no longer publishes documents; update sets published to false after apply. |
 | `apply_behavior` | `genesyscloud_oauth_client` | `directory_client_secret` | `v1.63.0` | `v1.63.0` | Active | When set, the client secret is written to a file on create; linked integration credential create/update writes client_id to state and clears client_secret from state. |
@@ -933,11 +982,9 @@ This index is generated from the release notes available on this site. `Introduc
 | `export_behavior` | `genesyscloud_routing_queue` | `media_settings_callback.live_voice_flow_id` | `Unknown` | `v1.62.0` | Active | Bulk export now resolves live voice flow IDs to genesyscloud_architect_flow resource references. |
 | `export_behavior` | `genesyscloud_task_management_worktype` | `default_script_id` | `Unknown` | `v1.62.0` | Active | Bulk export now resolves default_script_id to genesyscloud_script resource references. |
 | `export_behavior` | `genesyscloud_telephony_providers_edges_site` | `outbound_routes.external_trunk_base_ids` | `Unknown` | `v1.62.0` | Active | Bulk export no longer resolves external trunk base IDs to genesyscloud_telephony_providers_edges_trunkbasesettings references. |
-| `plan_behavior` | `genesyscloud_architect_ivr` | `dnis` | `Unknown` | `v1.62.0` | Active | dnis is no longer populated from the API during refresh when omitted from configuration; plans may show drift for resources that previously relied on computed dnis values. |
 | `plan_behavior` | `genesyscloud_routing_queue` | `canned_response_libraries.library_ids` | `Unknown` | `v1.62.0` | Active | May show a type-migration plan diff after upgrade from list to set. |
 | `plan_behavior` | `genesyscloud_routing_queue` | `media_settings_callback.mode` | `Unknown` | `v1.62.0` | Active | Mode is refreshed from the API when not configured. |
 | `plan_behavior` | `genesyscloud_task_management_worktype` | `default_script_id` | `Unknown` | `v1.62.0` | Active | Refresh now populates default_script_id from the API when set on the worktype. |
-| `resource` | `genesyscloud_architect_ivr` | `dnis` | `Unknown` | `v1.62.0` | Active | No longer computed from the API; configure phone numbers explicitly if you want them managed in Terraform. |
 | `resource` | `genesyscloud_journey_segment` | `assignment_expiration_days` | `v1.62.0` | `v1.62.0` | Active | Optional number of days after assignment before the segment is automatically unassigned. |
 | `resource` | `genesyscloud_routing_queue` | `canned_response_libraries.library_ids` | `Unknown` | `v1.62.0` | Active | Attribute type changed from list to set; expect possible plan diffs on upgrade even when values are unchanged. |
 | `resource` | `genesyscloud_routing_queue` | `media_settings_callback.answering_machine_flow_id` | `v1.62.0` | `v1.62.0` | Active | Optional inbound flow ID for answering-machine handling when reaction type is TransferToFlow. |

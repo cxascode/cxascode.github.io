@@ -1,6 +1,1136 @@
 [
   {
     "type": "apply_behavior",
+    "resource": "genesyscloud_architect_ivr",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Failed updates retain accurate prior state when DNIS chunk uploads fail.",
+    "history": [
+      {
+        "version": "v1.63.0",
+        "change": "updated",
+        "summary": "Create and update retry transient HTTP 400 responses before failing."
+      },
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Failed updates retain accurate prior state when DNIS chunk uploads fail."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_case_management_caseplan",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Create and update reconcile stageplans and publish versioned configuration.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Create and update reconcile stageplans and publish versioned configuration."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_group_roles",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Grant reconciliation errors fail the update instead of proceeding with nil config grants.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Grant reconciliation errors fail the update instead of proceeding with nil config grants."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_integration_credential",
+    "attribute": "fields_wo_version",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Changing fields_wo_version sends credential fields again and clears stale plaintext fields after write-only migration.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Changing fields_wo_version sends credential fields again and clears stale plaintext fields after write-only migration."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_knowledge_category",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Delete retries when bot-flow dependency tracking still references the category.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Delete retries when bot-flow dependency tracking still references the category."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_knowledge_document",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Delete retries when bot-flow dependency tracking still references the document.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Delete retries when bot-flow dependency tracking still references the document."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_knowledge_document_variation",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Delete retries when bot-flow dependency tracking still references the variation.",
+    "history": [
+      {
+        "version": "v1.65.0",
+        "change": "updated",
+        "summary": "Publish and delete failures now report the underlying API error instead of a misleading unrelated error."
+      },
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Delete retries when bot-flow dependency tracking still references the variation."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_knowledge_knowledgebase",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Delete retries when bot-flow dependency tracking still references the knowledge base.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Delete retries when bot-flow dependency tracking still references the knowledge base."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_knowledge_label",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Delete retries when bot-flow dependency tracking still references the label.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Delete retries when bot-flow dependency tracking still references the label."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "general apply behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Non-zero alert tone and service level values are only sent when explicitly configured.",
+    "history": [
+      {
+        "version": "v1.64.0",
+        "change": "updated",
+        "summary": "When ignore_members is true, queue members are not read from the API or updated on apply."
+      },
+      {
+        "version": "v1.68.2",
+        "change": "updated",
+        "summary": "Create, read, update, delete, member, and wrapup code API calls honor a configurable delay when ROUTING_QUEUE_DELAY_MAX is set."
+      },
+      {
+        "version": "v1.84.0",
+        "change": "updated",
+        "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during read operations."
+      },
+      {
+        "version": "v1.86.0",
+        "change": "updated",
+        "summary": "Failed queue, member, and wrapup-code updates preserve prior Terraform state; bullseye ring member-group clearing runs whenever bullseye_rings changes."
+      },
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Non-zero alert tone and service level values are only sent when explicitly configured."
+      }
+    ]
+  },
+  {
+    "type": "data_source",
+    "resource": "genesyscloud_case_management_stageplan",
+    "attribute": "(resource-level behavior)",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": "v1.89.0",
+    "status": "Removed",
+    "latest_summary": "Removed with the stageplan resource consolidation.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "removed",
+        "summary": "Removed with the stageplan resource consolidation."
+      }
+    ]
+  },
+  {
+    "type": "data_source",
+    "resource": "genesyscloud_case_management_stepplan",
+    "attribute": "(resource-level behavior)",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": "v1.89.0",
+    "status": "Removed",
+    "latest_summary": "Removed with the stepplan resource consolidation.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "removed",
+        "summary": "Removed with the stepplan resource consolidation."
+      }
+    ]
+  },
+  {
+    "type": "data_source",
+    "resource": "genesyscloud_flow_validation",
+    "attribute": "(resource-level behavior)",
+    "introduced": "v1.89.0",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "New data source registered to run Architect flow validate jobs.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "added",
+        "summary": "New data source registered to run Architect flow validate jobs."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_agentic_virtual_agent_version",
+    "attribute": "definition.tools.target.id",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Export resolves MCP and other tool target id references.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Export resolves MCP and other tool target id references."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_case_management_caseplan",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Export includes only published caseplans and resolves stageplan worktype references.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Export includes only published caseplans and resolves stageplan worktype references."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_integration_credential",
+    "attribute": "general export behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Export omits write-only credential attributes from generated configuration.",
+    "history": [
+      {
+        "version": "v1.60.0",
+        "change": "updated",
+        "summary": "Exported Terraform block labels now use Integration-{integration_name} instead of {integration_name}_{credential_name}."
+      },
+      {
+        "version": "v1.67.0",
+        "change": "updated",
+        "summary": "Credential enumeration during export uses cursor-based paging instead of page-number paging."
+      },
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Export omits write-only credential attributes from generated configuration."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_outbound_campaign",
+    "attribute": "script_id",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Export always resolves script_id to a data source reference when possible.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Export always resolves script_id to a data source reference when possible."
+      }
+    ]
+  },
+  {
+    "type": "export_behavior",
+    "resource": "genesyscloud_speechandtextanalytics_settings",
+    "attribute": "default_program_id",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Export resolves default_program_id to genesyscloud_speechandtextanalytics_program.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Export resolves default_program_id to genesyscloud_speechandtextanalytics_program."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_agentic_virtual_agent_version",
+    "attribute": "definition.tools.inputs.fallback_to_failure",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Plan validates fallback_to_failure preconditions when tool definitions are fully known.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Plan validates fallback_to_failure preconditions when tool definitions are fully known."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_architect_ivr",
+    "attribute": "dnis",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Refresh keeps DNIS list order aligned with prior configuration to reduce spurious diffs.",
+    "history": [
+      {
+        "version": "v1.62.0",
+        "change": "updated",
+        "summary": "dnis is no longer populated from the API during refresh when omitted from configuration; plans may show drift for resources that previously relied on computed dnis values."
+      },
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Refresh keeps DNIS list order aligned with prior configuration to reduce spurious diffs."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_case_management_caseplan",
+    "attribute": "general plan behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Read and customize-diff logic target published content and expose draft or version metadata.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Read and customize-diff logic target published content and expose draft or version metadata."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_integration_credential",
+    "attribute": "fields_wo",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Plan validates write-only JSON; state keeps empty fields map when using fields_wo to avoid perpetual updates.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Plan validates write-only JSON; state keeps empty fields map when using fields_wo to avoid perpetual updates."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_oauth_client",
+    "attribute": "roles",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Home division for role bindings resolves using the active org client configuration.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Home division for role bindings resolves using the active org client configuration."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_outbound_callabletimeset",
+    "attribute": "callable_times.name",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Refresh avoids writing API-filled names into state when configuration omitted name.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Refresh avoids writing API-filled names into state when configuration omitted name."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_outbound_campaignrule",
+    "attribute": "for_duration",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Plan rejects for_duration in legacy campaign_rule_conditions.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Plan rejects for_duration in legacy campaign_rule_conditions."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_outbound_contact_list",
+    "attribute": "phone_columns",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Refresh strips deprecated callable_time_column when only callable_time_column_name is used.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Refresh strips deprecated callable_time_column when only callable_time_column_name is used."
+      }
+    ]
+  },
+  {
+    "type": "plan_behavior",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "general plan behavior",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Unset or zero optional media settings are omitted from API payloads so org defaults apply.",
+    "history": [
+      {
+        "version": "v1.61.0",
+        "change": "updated",
+        "summary": "State is automatically migrated from schema version 1 to version 2, removing deprecated auto-dial fields from non-callback media settings in stored state."
+      },
+      {
+        "version": "v1.62.0",
+        "change": "updated",
+        "summary": "New callback media settings are read from the API on refresh."
+      },
+      {
+        "version": "v1.64.0",
+        "change": "updated",
+        "summary": "ignore_members conflicts with members; members requires block syntax and diffs are suppressed when ignore_members is true; last_agent_routing_mode is computed on refresh."
+      },
+      {
+        "version": "v1.80.0",
+        "change": "updated",
+        "summary": "After partial failures updating queue members or wrap-up codes, state is refreshed from the API before returning errors."
+      },
+      {
+        "version": "v1.87.0",
+        "change": "updated",
+        "summary": "Refresh uses GET-by-id instead of list cache to avoid incomplete bullseye member_groups in state."
+      },
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Unset or zero optional media settings are omitted from API payloads so org defaults apply."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_agentic_virtual_agent_version",
+    "attribute": "definition.tools.context_retention_enabled",
+    "introduced": "v1.88.0",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Applies to MCP tools as well as DataAction tools.",
+    "history": [
+      {
+        "version": "v1.88.0",
+        "change": "added",
+        "summary": "Optional boolean on DataAction tools controls whether call and result stay in conversation context when older turns are pruned."
+      },
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Applies to MCP tools as well as DataAction tools."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_agentic_virtual_agent_version",
+    "attribute": "definition.tools.inputs.fallback_to_failure",
+    "introduced": "v1.89.0",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional boolean to terminate the session on unavailable required External inputs instead of prompting the user; mutually exclusive with fallback_to_user.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "added",
+        "summary": "Optional boolean to terminate the session on unavailable required External inputs instead of prompting the user; mutually exclusive with fallback_to_user."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_agentic_virtual_agent_version",
+    "attribute": "definition.tools.type",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Tool type validation now accepts MCP.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Tool type validation now accepts MCP."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_agentic_virtual_agent_version",
+    "attribute": "definition.types.error_codes",
+    "introduced": "v1.89.0",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional list of MCP error codes handled by an McpError type definition.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "added",
+        "summary": "Optional list of MCP error codes handled by an McpError type definition."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_agentic_virtual_agent_version",
+    "attribute": "definition.types.type",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Type definition validation now accepts McpError.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Type definition validation now accepts McpError."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_analytics_dataretention_settings",
+    "attribute": "(resource-level behavior)",
+    "introduced": "v1.89.0",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "New provider resource registered for analytics data retention settings.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "added",
+        "summary": "New provider resource registered for analytics data retention settings."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_architect_ivr",
+    "attribute": "dnis",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Changed from set to list with schema version 2 state upgrade; order is preserved and phone validation uses pool number rules.",
+    "history": [
+      {
+        "version": "v1.62.0",
+        "change": "updated",
+        "summary": "No longer computed from the API; configure phone numbers explicitly if you want them managed in Terraform."
+      },
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Changed from set to list with schema version 2 state upgrade; order is preserved and phone validation uses pool number rules."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_authorization_roles_settings",
+    "attribute": "(resource-level behavior)",
+    "introduced": "v1.89.0",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "New provider resource registered for authorization roles settings.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "added",
+        "summary": "New provider resource registered for authorization roles settings."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_case_management_caseplan",
+    "attribute": "(resource-level behavior)",
+    "introduced": "v1.82.0",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Resource manages the published caseplan; versioned changes draft and publish, and overwrites external drafts on apply.",
+    "history": [
+      {
+        "version": "v1.82.0",
+        "change": "added",
+        "summary": "Newly registered resource for managing case management caseplans."
+      },
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Resource manages the published caseplan; versioned changes draft and publish, and overwrites external drafts on apply."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_case_management_caseplan",
+    "attribute": "default_due_duration_in_seconds",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Now optional and computed.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Now optional and computed."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_case_management_caseplan",
+    "attribute": "default_ttl_seconds",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Now optional and computed.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Now optional and computed."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_case_management_caseplan",
+    "attribute": "has_draft",
+    "introduced": "v1.89.0",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Computed flag when an unpublished draft exists.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "added",
+        "summary": "Computed flag when an unpublished draft exists."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_case_management_caseplan",
+    "attribute": "published_version",
+    "introduced": "v1.89.0",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Computed published version number.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "added",
+        "summary": "Computed published version number."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_case_management_caseplan",
+    "attribute": "stageplan",
+    "introduced": "v1.89.0",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional ordered stageplans with nested stepplans managed on the published caseplan.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "added",
+        "summary": "Optional ordered stageplans with nested stepplans managed on the published caseplan."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_case_management_caseplan_create_version",
+    "attribute": "(resource-level behavior)",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": "v1.89.0",
+    "status": "Removed",
+    "latest_summary": "Removed; draft and publish are handled on genesyscloud_case_management_caseplan.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "removed",
+        "summary": "Removed; draft and publish are handled on genesyscloud_case_management_caseplan."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_case_management_caseplan_publish",
+    "attribute": "(resource-level behavior)",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": "v1.89.0",
+    "status": "Removed",
+    "latest_summary": "Removed; publishing is handled on genesyscloud_case_management_caseplan.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "removed",
+        "summary": "Removed; publishing is handled on genesyscloud_case_management_caseplan."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_case_management_stageplan",
+    "attribute": "(resource-level behavior)",
+    "introduced": "v1.82.0",
+    "last_updated": "v1.89.0",
+    "removed": "v1.89.0",
+    "status": "Removed",
+    "latest_summary": "Removed; use genesyscloud_case_management_caseplan stageplan blocks.",
+    "history": [
+      {
+        "version": "v1.82.0",
+        "change": "added",
+        "summary": "Newly registered resource for managing case management stageplans."
+      },
+      {
+        "version": "v1.89.0",
+        "change": "removed",
+        "summary": "Removed; use genesyscloud_case_management_caseplan stageplan blocks."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_case_management_stepplan",
+    "attribute": "(resource-level behavior)",
+    "introduced": "v1.82.0",
+    "last_updated": "v1.89.0",
+    "removed": "v1.89.0",
+    "status": "Removed",
+    "latest_summary": "Removed; use nested stepplan blocks on genesyscloud_case_management_caseplan.",
+    "history": [
+      {
+        "version": "v1.82.0",
+        "change": "added",
+        "summary": "Newly registered resource for managing case management stepplans."
+      },
+      {
+        "version": "v1.89.0",
+        "change": "removed",
+        "summary": "Removed; use nested stepplan blocks on genesyscloud_case_management_caseplan."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_integration_credential",
+    "attribute": "fields_wo",
+    "introduced": "v1.89.0",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Write-only JSON credential fields not stored in plan or state; requires Terraform 1.11 or later.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "added",
+        "summary": "Write-only JSON credential fields not stored in plan or state; requires Terraform 1.11 or later."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_integration_credential",
+    "attribute": "fields_wo_version",
+    "introduced": "v1.89.0",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Stored version counter to trigger resending write-only credential fields on rotation.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "added",
+        "summary": "Stored version counter to trigger resending write-only credential fields on rotation."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_journey_views",
+    "attribute": "metrics.aggregate",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Accepts Minimum, Maximum, Average, and Sum aggregation modes.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Accepts Minimum, Maximum, Average, and Sum aggregation modes."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_journey_views",
+    "attribute": "metrics.attribute",
+    "introduced": "v1.89.0",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional attribute name on chart metrics.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "added",
+        "summary": "Optional attribute name on chart metrics."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_outbound_campaignrule",
+    "attribute": "(resource-level behavior)",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Time-of-day fields use HH:mm:ss normalization and diff suppression for equivalent spellings.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Time-of-day fields use HH:mm:ss normalization and diff suppression for equivalent spellings."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_outbound_campaignrule",
+    "attribute": "campaign_rule_conditions.parameters.for_duration",
+    "introduced": "v1.89.0",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional duration in whole seconds for v2 condition processing.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "added",
+        "summary": "Optional duration in whole seconds for v2 condition processing."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_outbound_contact_list",
+    "attribute": "phone_columns",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Changed from set to list with schema version 4 upgrade; order is preserved and duplicate column_name values fail validation.",
+    "history": [
+      {
+        "version": "v1.77.2",
+        "change": "updated",
+        "summary": "Now documented as required when both email_columns and whats_app_columns are empty."
+      },
+      {
+        "version": "v1.79.0",
+        "change": "updated",
+        "summary": "Read preserves timezone column names from the API response, reducing drift after UI edits or refresh."
+      },
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Changed from set to list with schema version 4 upgrade; order is preserved and duplicate column_name values fail validation."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "division_id",
+    "introduced": "v1.89.0",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional and computed division for the evaluation form.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "added",
+        "summary": "Optional and computed division for the evaluation form."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "latest_version_form_name",
+    "introduced": "v1.89.0",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Computed name of the latest published form version.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "added",
+        "summary": "Computed name of the latest published form version."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_evaluation",
+    "attribute": "weight_mode",
+    "introduced": "v1.89.0",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Computed weight mode from the API.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "added",
+        "summary": "Computed weight mode from the API."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_forms_survey",
+    "attribute": "division_id",
+    "introduced": "v1.89.0",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional and computed division for the survey form.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "added",
+        "summary": "Optional and computed division for the survey form."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_quality_miner",
+    "attribute": "(resource-level behavior)",
+    "introduced": "v1.89.0",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "New provider resource registered for quality miner.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "added",
+        "summary": "New provider resource registered for quality miner."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "(resource-level behavior)",
+    "introduced": "Unknown",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Per-media-type schema defaults match Genesys Cloud defaults for alerting timeout and service level fields.",
+    "history": [
+      {
+        "version": "v1.71.0",
+        "change": "updated",
+        "summary": "When bullseye_rings is removed from configuration, the provider clears member_groups from existing bullseye rings before applying the update."
+      },
+      {
+        "version": "v1.89.0",
+        "change": "updated",
+        "summary": "Per-media-type schema defaults match Genesys Cloud defaults for alerting timeout and service level fields."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "media_settings_call.auto_answer_alert_tone_seconds",
+    "introduced": "v1.89.0",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional auto-answer alert tone duration on call media settings.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "added",
+        "summary": "Optional auto-answer alert tone duration on call media settings."
+      }
+    ]
+  },
+  {
+    "type": "resource",
+    "resource": "genesyscloud_routing_queue",
+    "attribute": "media_settings_call.manual_answer_alert_tone_seconds",
+    "introduced": "v1.89.0",
+    "last_updated": "v1.89.0",
+    "removed": null,
+    "status": "Active",
+    "latest_summary": "Optional manual-answer alert tone duration on call media settings.",
+    "history": [
+      {
+        "version": "v1.89.0",
+        "change": "added",
+        "summary": "Optional manual-answer alert tone duration on call media settings."
+      }
+    ]
+  },
+  {
+    "type": "apply_behavior",
     "resource": "genesyscloud_agentic_virtual_agent_version",
     "attribute": "general apply behavior",
     "introduced": "Unknown",
@@ -477,23 +1607,6 @@
         "version": "v1.88.0",
         "change": "added",
         "summary": "Computed marker records whether each tool explicitly set context_retention_enabled so plan can distinguish omitted from false."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_agentic_virtual_agent_version",
-    "attribute": "definition.tools.context_retention_enabled",
-    "introduced": "v1.88.0",
-    "last_updated": "v1.88.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Optional boolean on DataAction tools controls whether call and result stay in conversation context when older turns are pruned.",
-    "history": [
-      {
-        "version": "v1.88.0",
-        "change": "added",
-        "summary": "Optional boolean on DataAction tools controls whether call and result stay in conversation context when older turns are pruned."
       }
     ]
   },
@@ -1068,43 +2181,6 @@
         "version": "v1.87.0",
         "change": "updated",
         "summary": "Blank or whitespace-only notes no longer cause perpetual plan diffs after refresh."
-      }
-    ]
-  },
-  {
-    "type": "plan_behavior",
-    "resource": "genesyscloud_routing_queue",
-    "attribute": "general plan behavior",
-    "introduced": "Unknown",
-    "last_updated": "v1.87.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Refresh uses GET-by-id instead of list cache to avoid incomplete bullseye member_groups in state.",
-    "history": [
-      {
-        "version": "v1.61.0",
-        "change": "updated",
-        "summary": "State is automatically migrated from schema version 1 to version 2, removing deprecated auto-dial fields from non-callback media settings in stored state."
-      },
-      {
-        "version": "v1.62.0",
-        "change": "updated",
-        "summary": "New callback media settings are read from the API on refresh."
-      },
-      {
-        "version": "v1.64.0",
-        "change": "updated",
-        "summary": "ignore_members conflicts with members; members requires block syntax and diffs are suppressed when ignore_members is true; last_agent_routing_mode is computed on refresh."
-      },
-      {
-        "version": "v1.80.0",
-        "change": "updated",
-        "summary": "After partial failures updating queue members or wrap-up codes, state is refreshed from the API before returning errors."
-      },
-      {
-        "version": "v1.87.0",
-        "change": "updated",
-        "summary": "Refresh uses GET-by-id instead of list cache to avoid incomplete bullseye member_groups in state."
       }
     ]
   },
@@ -2182,38 +3258,6 @@
         "version": "v1.86.0",
         "change": "updated",
         "summary": "Apply-time validation rejects v2-only condition types and nested date/time blocks in legacy campaign_rule_conditions."
-      }
-    ]
-  },
-  {
-    "type": "apply_behavior",
-    "resource": "genesyscloud_routing_queue",
-    "attribute": "general apply behavior",
-    "introduced": "Unknown",
-    "last_updated": "v1.86.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Failed queue, member, and wrapup-code updates preserve prior Terraform state; bullseye ring member-group clearing runs whenever bullseye_rings changes.",
-    "history": [
-      {
-        "version": "v1.64.0",
-        "change": "updated",
-        "summary": "When ignore_members is true, queue members are not read from the API or updated on apply."
-      },
-      {
-        "version": "v1.68.2",
-        "change": "updated",
-        "summary": "Create, read, update, delete, member, and wrapup code API calls honor a configurable delay when ROUTING_QUEUE_DELAY_MAX is set."
-      },
-      {
-        "version": "v1.84.0",
-        "change": "updated",
-        "summary": "When max_concurrent_pages is greater than 1, remaining list API pages are fetched in parallel during read operations."
-      },
-      {
-        "version": "v1.86.0",
-        "change": "updated",
-        "summary": "Failed queue, member, and wrapup-code updates preserve prior Terraform state; bullseye ring member-group clearing runs whenever bullseye_rings changes."
       }
     ]
   },
@@ -5878,57 +6922,6 @@
   },
   {
     "type": "resource",
-    "resource": "genesyscloud_case_management_caseplan",
-    "attribute": "(resource-level behavior)",
-    "introduced": "v1.82.0",
-    "last_updated": "v1.82.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Newly registered resource for managing case management caseplans.",
-    "history": [
-      {
-        "version": "v1.82.0",
-        "change": "added",
-        "summary": "Newly registered resource for managing case management caseplans."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_case_management_stageplan",
-    "attribute": "(resource-level behavior)",
-    "introduced": "v1.82.0",
-    "last_updated": "v1.82.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Newly registered resource for managing case management stageplans.",
-    "history": [
-      {
-        "version": "v1.82.0",
-        "change": "added",
-        "summary": "Newly registered resource for managing case management stageplans."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_case_management_stepplan",
-    "attribute": "(resource-level behavior)",
-    "introduced": "v1.82.0",
-    "last_updated": "v1.82.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Newly registered resource for managing case management stepplans.",
-    "history": [
-      {
-        "version": "v1.82.0",
-        "change": "added",
-        "summary": "Newly registered resource for managing case management stepplans."
-      }
-    ]
-  },
-  {
-    "type": "resource",
     "resource": "genesyscloud_greeting",
     "attribute": "audio_file_content_hash",
     "introduced": "v1.82.0",
@@ -7371,28 +8364,6 @@
         "version": "v1.79.0",
         "change": "added",
         "summary": "Column name that indicates the timezone to use when checking contactable times; optional and computed."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_outbound_contact_list",
-    "attribute": "phone_columns",
-    "introduced": "Unknown",
-    "last_updated": "v1.79.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Read preserves timezone column names from the API response, reducing drift after UI edits or refresh.",
-    "history": [
-      {
-        "version": "v1.77.2",
-        "change": "updated",
-        "summary": "Now documented as required when both email_columns and whats_app_columns are empty."
-      },
-      {
-        "version": "v1.79.0",
-        "change": "updated",
-        "summary": "Read preserves timezone column names from the API response, reducing drift after UI edits or refresh."
       }
     ]
   },
@@ -12590,23 +13561,6 @@
   {
     "type": "resource",
     "resource": "genesyscloud_routing_queue",
-    "attribute": "(resource-level behavior)",
-    "introduced": "Unknown",
-    "last_updated": "v1.71.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "When bullseye_rings is removed from configuration, the provider clears member_groups from existing bullseye rings before applying the update.",
-    "history": [
-      {
-        "version": "v1.71.0",
-        "change": "updated",
-        "summary": "When bullseye_rings is removed from configuration, the provider clears member_groups from existing bullseye rings before applying the update."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_routing_queue",
     "attribute": "media_settings_callback.max_retry_count",
     "introduced": "v1.71.0",
     "last_updated": "v1.71.0",
@@ -14390,28 +15344,6 @@
   },
   {
     "type": "export_behavior",
-    "resource": "genesyscloud_integration_credential",
-    "attribute": "general export behavior",
-    "introduced": "Unknown",
-    "last_updated": "v1.67.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Credential enumeration during export uses cursor-based paging instead of page-number paging.",
-    "history": [
-      {
-        "version": "v1.60.0",
-        "change": "updated",
-        "summary": "Exported Terraform block labels now use Integration-{integration_name} instead of {integration_name}_{credential_name}."
-      },
-      {
-        "version": "v1.67.0",
-        "change": "updated",
-        "summary": "Credential enumeration during export uses cursor-based paging instead of page-number paging."
-      }
-    ]
-  },
-  {
-    "type": "export_behavior",
     "resource": "genesyscloud_location",
     "attribute": "general export behavior",
     "introduced": "Unknown",
@@ -14840,23 +15772,6 @@
         "version": "v1.65.0",
         "change": "updated",
         "summary": "Create and update send include_owners to the API."
-      }
-    ]
-  },
-  {
-    "type": "apply_behavior",
-    "resource": "genesyscloud_knowledge_document_variation",
-    "attribute": "general apply behavior",
-    "introduced": "Unknown",
-    "last_updated": "v1.65.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Publish and delete failures now report the underlying API error instead of a misleading unrelated error.",
-    "history": [
-      {
-        "version": "v1.65.0",
-        "change": "updated",
-        "summary": "Publish and delete failures now report the underlying API error instead of a misleading unrelated error."
       }
     ]
   },
@@ -16126,23 +17041,6 @@
   },
   {
     "type": "apply_behavior",
-    "resource": "genesyscloud_architect_ivr",
-    "attribute": "general apply behavior",
-    "introduced": "Unknown",
-    "last_updated": "v1.63.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "Create and update retry transient HTTP 400 responses before failing.",
-    "history": [
-      {
-        "version": "v1.63.0",
-        "change": "updated",
-        "summary": "Create and update retry transient HTTP 400 responses before failing."
-      }
-    ]
-  },
-  {
-    "type": "apply_behavior",
     "resource": "genesyscloud_integration_credential",
     "attribute": "general apply behavior",
     "introduced": "Unknown",
@@ -16789,23 +17687,6 @@
   },
   {
     "type": "plan_behavior",
-    "resource": "genesyscloud_architect_ivr",
-    "attribute": "dnis",
-    "introduced": "Unknown",
-    "last_updated": "v1.62.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "dnis is no longer populated from the API during refresh when omitted from configuration; plans may show drift for resources that previously relied on computed dnis values.",
-    "history": [
-      {
-        "version": "v1.62.0",
-        "change": "updated",
-        "summary": "dnis is no longer populated from the API during refresh when omitted from configuration; plans may show drift for resources that previously relied on computed dnis values."
-      }
-    ]
-  },
-  {
-    "type": "plan_behavior",
     "resource": "genesyscloud_routing_queue",
     "attribute": "canned_response_libraries.library_ids",
     "introduced": "Unknown",
@@ -16857,23 +17738,6 @@
         "version": "v1.62.0",
         "change": "updated",
         "summary": "Refresh now populates default_script_id from the API when set on the worktype."
-      }
-    ]
-  },
-  {
-    "type": "resource",
-    "resource": "genesyscloud_architect_ivr",
-    "attribute": "dnis",
-    "introduced": "Unknown",
-    "last_updated": "v1.62.0",
-    "removed": null,
-    "status": "Active",
-    "latest_summary": "No longer computed from the API; configure phone numbers explicitly if you want them managed in Terraform.",
-    "history": [
-      {
-        "version": "v1.62.0",
-        "change": "updated",
-        "summary": "No longer computed from the API; configure phone numbers explicitly if you want them managed in Terraform."
       }
     ]
   },

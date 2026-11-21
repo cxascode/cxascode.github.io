@@ -1,0 +1,426 @@
+{
+    "version": "v1.89.0",
+    "previous": "v1.88.0",
+    "changes": [
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_analytics_dataretention_settings",
+            "attribute": null,
+            "change": "added",
+            "summary": "New provider resource registered for analytics data retention settings."
+        },
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_authorization_roles_settings",
+            "attribute": null,
+            "change": "added",
+            "summary": "New provider resource registered for authorization roles settings."
+        },
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_quality_miner",
+            "attribute": null,
+            "change": "added",
+            "summary": "New provider resource registered for quality miner."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_agentic_virtual_agent_version",
+            "attribute": "definition.tools.inputs.fallback_to_failure",
+            "change": "added",
+            "summary": "Optional boolean to terminate the session on unavailable required External inputs instead of prompting the user; mutually exclusive with fallback_to_user."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_agentic_virtual_agent_version",
+            "attribute": "definition.types.error_codes",
+            "change": "added",
+            "summary": "Optional list of MCP error codes handled by an McpError type definition."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_agentic_virtual_agent_version",
+            "attribute": "definition.tools.type",
+            "change": "updated",
+            "summary": "Tool type validation now accepts MCP."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_agentic_virtual_agent_version",
+            "attribute": "definition.types.type",
+            "change": "updated",
+            "summary": "Type definition validation now accepts McpError."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_agentic_virtual_agent_version",
+            "attribute": "definition.tools.context_retention_enabled",
+            "change": "updated",
+            "summary": "Applies to MCP tools as well as DataAction tools."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_agentic_virtual_agent_version",
+            "attribute": "definition.tools.inputs.fallback_to_failure",
+            "change": "updated",
+            "summary": "Plan validates fallback_to_failure preconditions when tool definitions are fully known."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_agentic_virtual_agent_version",
+            "attribute": "definition.tools.target.id",
+            "change": "updated",
+            "summary": "Export resolves MCP and other tool target id references."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_architect_ivr",
+            "attribute": "dnis",
+            "change": "updated",
+            "summary": "Changed from set to list with schema version 2 state upgrade; order is preserved and phone validation uses pool number rules."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_architect_ivr",
+            "attribute": "dnis",
+            "change": "updated",
+            "summary": "Refresh keeps DNIS list order aligned with prior configuration to reduce spurious diffs."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_architect_ivr",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Failed updates retain accurate prior state when DNIS chunk uploads fail."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_case_management_caseplan",
+            "attribute": "stageplan",
+            "change": "added",
+            "summary": "Optional ordered stageplans with nested stepplans managed on the published caseplan."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_case_management_caseplan",
+            "attribute": "published_version",
+            "change": "added",
+            "summary": "Computed published version number."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_case_management_caseplan",
+            "attribute": "has_draft",
+            "change": "added",
+            "summary": "Computed flag when an unpublished draft exists."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_case_management_caseplan",
+            "attribute": "default_due_duration_in_seconds",
+            "change": "updated",
+            "summary": "Now optional and computed."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_case_management_caseplan",
+            "attribute": "default_ttl_seconds",
+            "change": "updated",
+            "summary": "Now optional and computed."
+        },
+        {
+            "kind": "resource_behavior",
+            "resource": "genesyscloud_case_management_caseplan",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Resource manages the published caseplan; versioned changes draft and publish, and overwrites external drafts on apply."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_case_management_caseplan",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Read and customize-diff logic target published content and expose draft or version metadata."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_case_management_caseplan",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Create and update reconcile stageplans and publish versioned configuration."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_case_management_caseplan",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Export includes only published caseplans and resolves stageplan worktype references."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_integration_credential",
+            "attribute": "fields_wo",
+            "change": "added",
+            "summary": "Write-only JSON credential fields not stored in plan or state; requires Terraform 1.11 or later."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_integration_credential",
+            "attribute": "fields_wo_version",
+            "change": "added",
+            "summary": "Stored version counter to trigger resending write-only credential fields on rotation."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_integration_credential",
+            "attribute": "fields_wo",
+            "change": "updated",
+            "summary": "Plan validates write-only JSON; state keeps empty fields map when using fields_wo to avoid perpetual updates."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_integration_credential",
+            "attribute": "fields_wo_version",
+            "change": "updated",
+            "summary": "Changing fields_wo_version sends credential fields again and clears stale plaintext fields after write-only migration."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_integration_credential",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Export omits write-only credential attributes from generated configuration."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_journey_views",
+            "attribute": "metrics.attribute",
+            "change": "added",
+            "summary": "Optional attribute name on chart metrics."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_journey_views",
+            "attribute": "metrics.aggregate",
+            "change": "updated",
+            "summary": "Accepts Minimum, Maximum, Average, and Sum aggregation modes."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "campaign_rule_conditions.parameters.for_duration",
+            "change": "added",
+            "summary": "Optional duration in whole seconds for v2 condition processing."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Time-of-day fields use HH:mm:ss normalization and diff suppression for equivalent spellings."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_outbound_campaignrule",
+            "attribute": "for_duration",
+            "change": "updated",
+            "summary": "Plan rejects for_duration in legacy campaign_rule_conditions."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_outbound_contact_list",
+            "attribute": "phone_columns",
+            "change": "updated",
+            "summary": "Changed from set to list with schema version 4 upgrade; order is preserved and duplicate column_name values fail validation."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_outbound_contact_list",
+            "attribute": "phone_columns",
+            "change": "updated",
+            "summary": "Refresh strips deprecated callable_time_column when only callable_time_column_name is used."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_outbound_callabletimeset",
+            "attribute": "callable_times.name",
+            "change": "updated",
+            "summary": "Refresh avoids writing API-filled names into state when configuration omitted name."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "division_id",
+            "change": "added",
+            "summary": "Optional and computed division for the evaluation form."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "weight_mode",
+            "change": "added",
+            "summary": "Computed weight mode from the API."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_evaluation",
+            "attribute": "latest_version_form_name",
+            "change": "added",
+            "summary": "Computed name of the latest published form version."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_quality_forms_survey",
+            "attribute": "division_id",
+            "change": "added",
+            "summary": "Optional and computed division for the survey form."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "media_settings_call.auto_answer_alert_tone_seconds",
+            "change": "added",
+            "summary": "Optional auto-answer alert tone duration on call media settings."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": "media_settings_call.manual_answer_alert_tone_seconds",
+            "change": "added",
+            "summary": "Optional manual-answer alert tone duration on call media settings."
+        },
+        {
+            "kind": "resource_attribute",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Per-media-type schema defaults match Genesys Cloud defaults for alerting timeout and service level fields."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Unset or zero optional media settings are omitted from API payloads so org defaults apply."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_routing_queue",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Non-zero alert tone and service level values are only sent when explicitly configured."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_group_roles",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Grant reconciliation errors fail the update instead of proceeding with nil config grants."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_knowledge_category",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Delete retries when bot-flow dependency tracking still references the category."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_knowledge_document",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Delete retries when bot-flow dependency tracking still references the document."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_knowledge_document_variation",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Delete retries when bot-flow dependency tracking still references the variation."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_knowledge_knowledgebase",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Delete retries when bot-flow dependency tracking still references the knowledge base."
+        },
+        {
+            "kind": "apply_behavior",
+            "resource": "genesyscloud_knowledge_label",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Delete retries when bot-flow dependency tracking still references the label."
+        },
+        {
+            "kind": "plan_behavior",
+            "resource": "genesyscloud_oauth_client",
+            "attribute": "roles",
+            "change": "updated",
+            "summary": "Home division for role bindings resolves using the active org client configuration."
+        },
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_case_management_caseplan_create_version",
+            "attribute": null,
+            "change": "removed",
+            "summary": "Removed; draft and publish are handled on genesyscloud_case_management_caseplan."
+        },
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_case_management_caseplan_publish",
+            "attribute": null,
+            "change": "removed",
+            "summary": "Removed; publishing is handled on genesyscloud_case_management_caseplan."
+        },
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_case_management_stageplan",
+            "attribute": null,
+            "change": "removed",
+            "summary": "Removed; use genesyscloud_case_management_caseplan stageplan blocks."
+        },
+        {
+            "kind": "resource",
+            "resource": "genesyscloud_case_management_stepplan",
+            "attribute": null,
+            "change": "removed",
+            "summary": "Removed; use nested stepplan blocks on genesyscloud_case_management_caseplan."
+        },
+        {
+            "kind": "data_source",
+            "resource": "genesyscloud_flow_validation",
+            "attribute": null,
+            "change": "added",
+            "summary": "New data source registered to run Architect flow validate jobs."
+        },
+        {
+            "kind": "data_source",
+            "resource": "genesyscloud_case_management_stageplan",
+            "attribute": null,
+            "change": "removed",
+            "summary": "Removed with the stageplan resource consolidation."
+        },
+        {
+            "kind": "data_source",
+            "resource": "genesyscloud_case_management_stepplan",
+            "attribute": null,
+            "change": "removed",
+            "summary": "Removed with the stepplan resource consolidation."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_outbound_campaign",
+            "attribute": "script_id",
+            "change": "updated",
+            "summary": "Export always resolves script_id to a data source reference when possible."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_speechandtextanalytics_settings",
+            "attribute": "default_program_id",
+            "change": "updated",
+            "summary": "Export resolves default_program_id to genesyscloud_speechandtextanalytics_program."
+        }
+    ]
+}

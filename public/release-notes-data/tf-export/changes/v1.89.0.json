@@ -1,0 +1,51 @@
+{
+    "version": "v1.89.0",
+    "previous": "v1.88.0",
+    "resource": "genesyscloud_tf_export",
+    "changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": "replace_with_datasource",
+            "change": "updated",
+            "summary": "Custom ResolveToDataSource reference handling during export now applies only when the target data source type is listed in replace_with_datasource, except for resolvers that always emit data source references regardless of that list."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_tf_export",
+            "attribute": null,
+            "change": "updated",
+            "summary": "After exclude_attributes are applied, users that share a DID with an IVR receive a dependency on that IVR so generated configuration tends to create the IVR first; excluded DNIS or address fields are not used for matching."
+        }
+    ],
+    "related_export_changes": [
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_user",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Users sharing a DID with an IVR may export with an explicit dependency on that IVR for apply ordering."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": null,
+            "attribute": null,
+            "change": "updated",
+            "summary": "IVRs that share a DID with exported users may be referenced as dependency targets in generated user configuration."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": "genesyscloud_speechandtextanalytics_topic",
+            "attribute": null,
+            "change": "updated",
+            "summary": "Topic GUID references export as data source blocks only when genesyscloud_speechandtextanalytics_topic is in replace_with_datasource; otherwise values remain raw topic IDs."
+        },
+        {
+            "kind": "export_behavior",
+            "resource": null,
+            "attribute": null,
+            "change": "updated",
+            "summary": "Attributes using custom data-source resolvers may omit generated data blocks when the data source type is not listed in replace_with_datasource, unless the resolver always resolves to a data source."
+        }
+    ]
+}
