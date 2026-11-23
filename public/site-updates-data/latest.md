@@ -1,6 +1,6 @@
 <!-- site-updates:auto -->
-## Site updates — September 25, 2026
+## Site updates — November 23, 2026
 
 ### What's new
 
-- Changed from Good To Know to Recommendation
+- Fixing attribute history permalink for export resource
