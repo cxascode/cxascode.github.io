@@ -1,4 +1,8 @@
-import { MIN_DEPENDENCY_TREE_VERSION } from "./public-data-path-constants.mjs";
+import { MIN_DEPENDENCY_TREE_VERSION, MIN_EXPORT_OMIT_UNRESOLVED_REFS_VERSION } from "./public-data-path-constants.mjs";
+import { providerVersionAtLeast } from "./provider-version-compare.mjs";
+
+const EXPORT_OMIT_UNRESOLVED_REFS_LINE_RE =
+  /^\s*export_omit_unresolved_refs\s*=\s*true\s*\r?\n/m;
 
 /** Match genesyscloud provider version pins in lab .tf files. */
 export const PROVIDER_VERSION_PIN_RE = /version\s*=\s*"~>\s*[\d.]+"/g;
@@ -64,4 +68,12 @@ export function patchLabReadmeProviderVersion(content, version) {
 
 export function patchProviderVersionPins(content, version) {
   return content.replace(PROVIDER_VERSION_PIN_RE, renderProviderVersionPin(version));
+}
+
+/** Omit export_omit_unresolved_refs from lab export main.tf when the pinned provider is older than v1.84.0. */
+export function patchTfExportOmitUnresolvedRefs(content, version) {
+  if (providerVersionAtLeast(version, MIN_EXPORT_OMIT_UNRESOLVED_REFS_VERSION)) {
+    return content;
+  }
+  return content.replace(EXPORT_OMIT_UNRESOLVED_REFS_LINE_RE, "");
 }

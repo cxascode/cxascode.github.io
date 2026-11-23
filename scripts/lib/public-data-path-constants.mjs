@@ -71,6 +71,9 @@ export const MIN_TF_EXPORT_RESOURCE_NAMES_VERSION = MIN_DEPENDENCY_TREE_VERSION;
 /** Provider release that introduced ResourceExporter.IsSingleton. */
 export const MIN_SINGLETON_FLAG_VERSION = "1.78.0";
 
+/** Provider release that introduced genesyscloud_tf_export.export_omit_unresolved_refs. */
+export const MIN_EXPORT_OMIT_UNRESOLVED_REFS_VERSION = "1.84.0";
+
 /** Versioned generated artifacts under public/ (reserved from resource permalinks). */
 export const GENERATED_PUBLIC_DATA_DIRS = [
   DEPENDENCY_TREE_DIR,

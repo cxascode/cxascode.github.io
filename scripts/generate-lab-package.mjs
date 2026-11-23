@@ -14,6 +14,7 @@ import {
   LAB_TEMPLATE_PROVIDER_VERSION_PLACEHOLDER,
   patchLabReadmeProviderVersion,
   patchProviderVersionPins,
+  patchTfExportOmitUnresolvedRefs,
 } from "./lib/lab-package-version.mjs";
 import {
   DEPENDENCY_TREE_MERGED_DIR,
@@ -168,7 +169,8 @@ async function patchTerraformFiles(rootDir, version) {
     if (!isLabTerraformTemplateFile(entry.name)) continue;
 
     const original = await fs.readFile(entryPath, "utf8");
-    const patched = patchProviderVersionPins(original, version);
+    let patched = patchProviderVersionPins(original, version);
+    patched = patchTfExportOmitUnresolvedRefs(patched, version);
     if (patched !== original) {
       await fs.writeFile(entryPath, patched, "utf8");
     }

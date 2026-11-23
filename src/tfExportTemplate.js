@@ -1,6 +1,14 @@
 import { effectiveDependencies } from "./effectiveDependencies.js";
+import { MIN_EXPORT_OMIT_UNRESOLVED_REFS_VERSION } from "./publicDataPaths.js";
+import { providerVersionAtLeast } from "../scripts/lib/provider-version-compare.mjs";
 
 export { effectiveDependencies };
+
+export function supportsExportOmitUnresolvedRefs(providerVersion) {
+  const version = String(providerVersion || "").trim();
+  if (!version || version === "latest") return true;
+  return providerVersionAtLeast(version, MIN_EXPORT_OMIT_UNRESOLVED_REFS_VERSION);
+}
 
 export const RESOURCE_NAME_PLACEHOLDER = "<name>";
 
@@ -215,7 +223,7 @@ export function buildTfExportAttributes(
   resourceType,
   dependencies,
   resourceName,
-  { mode = TF_EXPORT_MODE_EXPORT } = {}
+  { mode = TF_EXPORT_MODE_EXPORT, providerVersion } = {}
 ) {
   const type = (resourceType || "").trim();
   if (!type) return "";
@@ -237,10 +245,18 @@ export function buildTfExportAttributes(
     ? "[]"
     : `[${replaceEntries.map((e) => JSON.stringify(e)).join(", ")}]`;
 
-  const body = [
+  const exportBodyLines = [
     tfExportAttrLine("directory", '"./genesyscloud"'),
     tfExportAttrLine("enable_dependency_resolution", isExportState ? "false" : "true"),
     tfExportAttrLine("export_format", '"hcl"'),
+  ];
+
+  if (supportsExportOmitUnresolvedRefs(providerVersion)) {
+    exportBodyLines.push(tfExportAttrLine("export_omit_unresolved_refs", "true"));
+  }
+
+  const body = [
+    ...exportBodyLines,
     tfExportAttrLine("exclude_attributes", "[]"),
     tfExportAttrLine("include_state_file", isExportState ? "true" : "false"),
     tfExportAttrLine("include_filter_resources", includeFilter),
@@ -264,9 +280,12 @@ export function buildTfExportTemplate(
   dependencies,
   resourceName,
   envVars,
-  { mode = TF_EXPORT_MODE_EXPORT } = {}
+  { mode = TF_EXPORT_MODE_EXPORT, providerVersion } = {}
 ) {
-  const block = buildTfExportAttributes(resourceType, dependencies, resourceName, { mode });
+  const block = buildTfExportAttributes(resourceType, dependencies, resourceName, {
+    mode,
+    providerVersion,
+  });
   if (!block) return "";
 
   const preamble = (envVars || []).map(formatEnvVarComment);

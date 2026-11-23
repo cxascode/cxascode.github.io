@@ -953,16 +953,6 @@ export default function App() {
 
   const [tfExportMode, setTfExportMode] = useState(TF_EXPORT_MODE_EXPORT);
 
-  const tfExportTemplate = useMemo(
-    () =>
-      activeType
-        ? buildTfExportTemplate(activeType, dependsOn, tfExportResourceName, providerEnvVars, {
-            mode: tfExportMode,
-          })
-        : "",
-    [activeType, dependsOn, tfExportResourceName, providerEnvVars, tfExportMode]
-  );
-
   const terraformRegistryDocsUrl = useMemo(
     () =>
       detailType
@@ -1025,6 +1015,27 @@ export default function App() {
   useEffect(() => {
     newestListedReleaseRef.current = newestListedRelease;
   }, [newestListedRelease]);
+
+  const tfExportProviderVersion =
+    selectedVersion === "latest" ? newestListedRelease : selectedVersion;
+
+  const tfExportTemplate = useMemo(
+    () =>
+      activeType
+        ? buildTfExportTemplate(activeType, dependsOn, tfExportResourceName, providerEnvVars, {
+            mode: tfExportMode,
+            providerVersion: tfExportProviderVersion,
+          })
+        : "",
+    [
+      activeType,
+      dependsOn,
+      tfExportResourceName,
+      providerEnvVars,
+      tfExportMode,
+      tfExportProviderVersion,
+    ]
+  );
 
   const openDialog = useCallback((dialogId) => {
     setOrderDialogOpen(dialogId === DIALOG_CREATION_ORDER);
