@@ -23,6 +23,7 @@ import {
   getIndexVersionOptions,
   isAttributeIndexTypeLifecycleEntry,
   isExportBlockLabelHistoryRow,
+  resolveAttributeIndexScopeForFilter,
 } from "./resourceAttributeIndex.js";
 import { TF_EXPORT_RESOURCE, toReleaseNotesVersion } from "./releaseNotes.js";
 
@@ -137,6 +138,7 @@ export default function AttributeIndexDialog({
 }) {
   const dialogRef = useRef(null);
   const [scope, setScope] = useState(ATTRIBUTE_INDEX_SCOPE_PROVIDER);
+  const [scopeReady, setScopeReady] = useState(true);
   const [index, setIndex] = useState([]);
   const [blockLabelChanges, setBlockLabelChanges] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -164,15 +166,45 @@ export default function AttributeIndexDialog({
   useEffect(() => {
     if (!open) {
       setScope(ATTRIBUTE_INDEX_SCOPE_PROVIDER);
-      return;
+      setScopeReady(true);
+      return undefined;
     }
 
     setTypeFilter("");
     setViewMode(ATTRIBUTE_INDEX_VIEW_ALL);
-  }, [open]);
+
+    const trimmed = (query || "").trim();
+    if (!trimmed) {
+      setScope(ATTRIBUTE_INDEX_SCOPE_PROVIDER);
+      setScopeReady(true);
+      return undefined;
+    }
+
+    setScopeReady(false);
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const nextScope = await resolveAttributeIndexScopeForFilter(trimmed, { knownTypes });
+        if (!cancelled) {
+          setScope(nextScope);
+          setScopeReady(true);
+        }
+      } catch {
+        if (!cancelled) {
+          setScope(ATTRIBUTE_INDEX_SCOPE_PROVIDER);
+          setScopeReady(true);
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [open, query, knownTypes]);
 
   useEffect(() => {
-    if (!open) return undefined;
+    if (!open || !scopeReady) return undefined;
 
     let cancelled = false;
 
@@ -204,7 +236,7 @@ export default function AttributeIndexDialog({
     return () => {
       cancelled = true;
     };
-  }, [open, scope]);
+  }, [open, scope, scopeReady]);
 
   const providerBlockLabelChanges =
     scope === ATTRIBUTE_INDEX_SCOPE_PROVIDER ? blockLabelChanges : null;
