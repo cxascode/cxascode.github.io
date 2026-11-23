@@ -4,3 +4,4 @@
 ### What's new
 
 - Fixing attribute history permalink for export resource
+- Adding new export template attribute to restore backwards compatibility
