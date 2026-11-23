@@ -72,7 +72,7 @@ Example: `export_omit_unresolved_refs` (introduced in **v1.84.0**). Older provid
    export const MIN_EXPORT_OMIT_UNRESOLVED_REFS_VERSION = "1.84.0";
    ```
 
-   Re-export from `src/publicDataPaths.js` when the React app needs it.
+   Re-export from `src/publicDataPaths.js` when the React app needs it. In `src/tfExportTemplate.js`, import the constant from `scripts/lib/public-data-path-constants.mjs` (not `publicDataPaths.js` — that module uses Vite `import.meta.env` and breaks Node generators such as `generate-spreadsheet-template.mjs`).
 
 2. **Compare** — `scripts/lib/provider-version-compare.mjs` (`compareProviderVersions`, `providerVersionAtLeast`). Prefer this in generators; `App.jsx` still has a local `compareVersions` for a few UI gates.
 
