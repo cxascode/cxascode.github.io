@@ -3,6 +3,7 @@ import {
   RELEASE_NOTES_SCOPE_EXPORT,
   RELEASE_NOTES_SCOPE_PROVIDER,
   TF_EXPORT_DATA_PATH,
+  TF_EXPORT_RESOURCE,
   toReleaseNotesVersion,
 } from "./releaseNotes.js";
 import {
@@ -608,4 +609,46 @@ export function attributeIndexEntryKey(entry) {
 
 export function attributeIndexHistoryRowKey(row) {
   return `${row?.type || "unknown"}:${row?.resource || "unknown"}:${row?.attribute || "unknown"}:${row?.version || "unknown"}:${row?.historyIndex ?? 0}`;
+}
+
+function countAttributeIndexFilterMatches(index, query, blockLabelChanges = null) {
+  return filterIndexEntries(index, {
+    query,
+    typeFilter: "",
+    versionFilter: "",
+    typeLifecycleOnly: false,
+    blockLabelChanges,
+  }).length;
+}
+
+/**
+ * Pick provider vs export scope for an attribute-history filter (URL `filter` or search).
+ * Explorer resource types stay on the provider index; export-only filters use the export index.
+ */
+export async function resolveAttributeIndexScopeForFilter(query, { knownTypes } = {}) {
+  const trimmed = (query || "").trim();
+  if (!trimmed) return ATTRIBUTE_INDEX_SCOPE_PROVIDER;
+
+  if (knownTypes instanceof Set && knownTypes.has(trimmed)) {
+    return ATTRIBUTE_INDEX_SCOPE_PROVIDER;
+  }
+
+  if (trimmed === TF_EXPORT_RESOURCE) {
+    return ATTRIBUTE_INDEX_SCOPE_EXPORT;
+  }
+
+  const [providerIndex, exportIndex, blockLabels] = await Promise.all([
+    fetchResourceAttributeIndex(ATTRIBUTE_INDEX_SCOPE_PROVIDER),
+    fetchResourceAttributeIndex(ATTRIBUTE_INDEX_SCOPE_EXPORT),
+    fetchTfExportBlockLabelHistory(),
+  ]);
+
+  const providerMatches = countAttributeIndexFilterMatches(providerIndex, trimmed, blockLabels);
+  const exportMatches = countAttributeIndexFilterMatches(exportIndex, trimmed, null);
+
+  if (exportMatches > 0 && providerMatches === 0) {
+    return ATTRIBUTE_INDEX_SCOPE_EXPORT;
+  }
+
+  return ATTRIBUTE_INDEX_SCOPE_PROVIDER;
 }
