@@ -180,8 +180,13 @@ Directory names and **oldest supported provider versions** live in `scripts/lib/
 | `MIN_DEPENDENCY_TREE_MERGED_VERSION` | `1.60.0` | Merged dependency trees (`dependency-tree-merged-json/`) |
 | `MIN_RESOURCE_PERMISSIONS_VERSION` | `1.76.0` | Role TF downloads |
 | `MIN_SINGLETON_FLAG_VERSION` | `1.78.0` | Singleton badge (`IsSingleton`; older versions use fixed export names) |
+| `MIN_EXPORT_OMIT_UNRESOLVED_REFS_VERSION` | `1.84.0` | `export_omit_unresolved_refs` in explorer template and lab zips |
 
 CI (`deploy-pages.yml`, `download-provider-versions.sh`) uses `MIN_DEP_VERSION` / `MIN_PERM_VERSION` env vars to gate **downloading** `dependency_tree` and `resource_permissions` release assets — keep those in sync with `MIN_DEPENDENCY_TREE_VERSION` and `MIN_RESOURCE_PERMISSIONS_VERSION`. `MIN_SINGLETON_FLAG_VERSION` is app-only (badge logic); singleton JSON is generated from provider source for every cached dependency-tree version, not downloaded from releases.
+
+## Provider version gating
+
+When resources or `genesyscloud_tf_export` arguments appear or disappear across provider releases: per-version JSON, `MIN_*` constants, template conditionals, and lab zip patches. Maintainer guide: [`docs/version-gating.md`](docs/version-gating.md).
 
 ## Build chain & rerun guide
 

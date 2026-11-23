@@ -2,6 +2,7 @@ resource "genesyscloud_tf_export" "export" {
   directory                    = "./genesyscloud"
   enable_dependency_resolution = true
   export_format                = "hcl"
+  export_omit_unresolved_refs  = true
   #exclude_attributes           = ["resource_type.attribute"]
   exclude_attributes           = []
   include_state_file           = false
