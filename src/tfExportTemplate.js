@@ -1,5 +1,5 @@
 import { effectiveDependencies } from "./effectiveDependencies.js";
-import { MIN_EXPORT_OMIT_UNRESOLVED_REFS_VERSION } from "./publicDataPaths.js";
+import { MIN_EXPORT_OMIT_UNRESOLVED_REFS_VERSION } from "../scripts/lib/public-data-path-constants.mjs";
 import { providerVersionAtLeast } from "../scripts/lib/provider-version-compare.mjs";
 
 export { effectiveDependencies };
